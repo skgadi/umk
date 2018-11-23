@@ -189,7 +189,7 @@ stroke-miterlimit: 4;
  <style>
    .path {
   stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
+  stroke-dashoffset: 0;
   animation: dash 25s linear infinite;
 }
 @keyframes dash {
