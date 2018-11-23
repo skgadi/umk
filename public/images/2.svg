@@ -1,0 +1,283 @@
+<svg width="666.4" height="222.4" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <clipPath id="c0_1">
+   <path id="svg_1" d="m50.4,199.6l0,-191.2l615.1,0l0,191.2l-615.1,0z"/>
+  </clipPath>
+  <style type="text/css">
+   <![CDATA[
+text { white-space: pre; }
+path, image { pointer-events: none; }
+
+.s1_1{
+font-size: 10.07px;
+font-family: Arial-BoldMT_1x;
+fill: #333333;
+}
+.s2_1{
+font-size: 10.90px;
+font-family: ArialMT_1d;
+fill: #444444;
+}
+.s3_1{
+font-size: 10.90px;
+font-family: ArialMT_1d;
+fill: #222222;
+}
+
+.g0_1{
+fill: #FFFFFF;
+}
+.g1_1{
+fill: none;
+stroke: #C5C5C5;
+stroke-width: 0.8392487;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g2_1{
+fill: #E9E9E9;
+}
+.g3_1{
+fill: none;
+stroke: #DDDDDD;
+stroke-width: 0.8392487;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g4_1{
+fill: #F6F6F6;
+}
+.g5_1{
+fill: none;
+stroke: #C5C5C5;
+stroke-width: 0.83923376;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g6_1{
+fill: #FFC0CB;
+}
+.g7_1{
+fill: #CCCCCC;
+}
+.g8_1{
+fill: #EBEBEB;
+}
+.g9_1{
+fill: #333333;
+}
+.g10_1{
+fill: none;
+stroke: #000000;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g11_1{
+fill: none;
+stroke: #FF0000;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g12_1{
+fill: none;
+stroke: #0000FF;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g13_1{
+fill: none;
+stroke: #008000;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g14_1{
+fill: none;
+stroke: #FFFF00;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g15_1{
+fill: none;
+stroke: #A52A2A;
+stroke-width: 1.6784974;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g16_1{
+fill: none;
+stroke: #000000;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g17_1{
+fill: none;
+stroke: #FF0000;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g18_1{
+fill: none;
+stroke: #0000FF;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g19_1{
+fill: none;
+stroke: #008000;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g20_1{
+fill: none;
+stroke: #FFFF00;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g21_1{
+fill: none;
+stroke: #A52A2A;
+stroke-width: 1.6784751;
+stroke-linecap: butt;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+
+]]>
+  </style>
+ </defs>
+ <!-- Any embedded fonts defined here -->
+ <style type="text/css">
+  <![CDATA[
+
+@font-face {
+	font-family: Arial-BoldMT_1x;
+	src: url("fonts/Arial-BoldMT_1x.woff") format("woff");
+}
+
+@font-face {
+	font-family: ArialMT_1d;
+	src: url("fonts/ArialMT_1d.woff") format("woff");
+}
+
+]]>
+ </style>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="224.4" width="668.4" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_96">
+   <path id="svg_11" class="g6_1" d="m0,0l666.4,0l0,222.4l-666.4,0l0,-222.4z"/>
+   <g id="svg_12" clip-path="url(#c0_1)">
+    <path id="svg_13" class="g7_1" d="m50.4,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   </g>
+   <path id="svg_14" class="g7_1" d="m90.7,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_15" class="g7_1" d="m130.9,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_16" class="g7_1" d="m171.2,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_17" class="g7_1" d="m212.3,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_18" class="g7_1" d="m252.6,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_19" class="g7_1" d="m292.9,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_20" class="g7_1" d="m333.2,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_21" class="g7_1" d="m373.5,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_22" class="g7_1" d="m413.8,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_23" class="g7_1" d="m454.9,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_24" class="g7_1" d="m495.2,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_25" class="g7_1" d="m535.5,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_26" class="g7_1" d="m575.7,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_27" class="g7_1" d="m616,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_28" class="g7_1" d="m656.3,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_29" class="g8_1" d="m70.5,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_30" class="g8_1" d="m110.8,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_31" class="g8_1" d="m151.1,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_32" class="g8_1" d="m192.2,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_33" class="g8_1" d="m232.5,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_34" class="g8_1" d="m272.8,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_35" class="g8_1" d="m313.1,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_36" class="g8_1" d="m353.3,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_37" class="g8_1" d="m393.6,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_38" class="g8_1" d="m434.7,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_39" class="g8_1" d="m475,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_40" class="g8_1" d="m515.3,8.4l0.9,0l0,191.2l-0.9,0l0,-191.2z"/>
+   <path id="svg_41" class="g8_1" d="m555.6,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_42" class="g8_1" d="m595.9,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <path id="svg_43" class="g8_1" d="m636.2,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+   <g id="svg_44" clip-path="url(#c0_1)">
+    <path id="svg_45" class="g7_1" d="m50.4,198.7l615.1,0l0,0.9l-615.1,0l0,-0.9z"/>
+    <path id="svg_46" class="g7_1" d="m50.4,150.9l615.1,0l0,0.9l-615.1,0l0,-0.9z"/>
+    <path id="svg_47" class="g7_1" d="m50.4,104l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_48" class="g7_1" d="m50.4,56.2l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_49" class="g7_1" d="m50.4,8.4l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_50" class="g8_1" d="m50.4,175.2l615.1,0l0,0.9l-615.1,0l0,-0.9z"/>
+    <path id="svg_51" class="g8_1" d="m50.4,127.5l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_52" class="g8_1" d="m50.4,79.7l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_53" class="g8_1" d="m50.4,31.9l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+    <path id="svg_54" class="g9_1" d="m50.4,8.4l0.8,0l0,191.2l-0.8,0l0,-191.2z"/>
+    <path id="svg_55" class="g9_1" d="m50.4,104l615.1,0l0,0.8l-615.1,0l0,-0.8z"/>
+   </g>
+   <path id="svg_56" class="g10_1" d="m50.8,56.4l198,0l4.1,95.2l198,0l4.1,-95.2l198,0l4,95.2l8.1,0"/>
+   <path id="svg_57" class="g11_1" d="m50.8,104l4,-3.8l4.1,-3.8l4,-3.8l4.1,-3.7l4,-3.6l4,-3.6l4.1,-3.5l4,-3.4l4.1,-3.3l4,-3.1l4,-3l4.1,-2.9l4,-2.7l4.1,-2.5l4,-2.3l4.1,-2.2l4,-1.9l4,-1.7l4.1,-1.5l4,-1.3l4.1,-1.1l4,-0.8l4,-0.6l4.1,-0.4l4,-0.1l4.1,0.1l4,0.4l4.1,0.6l4,0.8l4,1.1l4.1,1.3l4,1.5l4.1,1.7l4,1.9l4,2.2l4.1,2.3l4,2.5l4.1,2.7l4,2.9l4.1,3l4,3.1l4,3.3l4.1,3.4l4,3.5l4.1,3.6l4,3.6l4,3.7l4.1,3.8l4,3.8l4.1,3.8l4,3.8l4.1,3.8l4,3.7l4,3.7l4.1,3.7l4,3.6l4.1,3.5l4,3.4l4,3.2l4.1,3.2l4,3l4.1,2.9l4,2.6l4.1,2.6l4,2.3l4,2.1l4.1,2l4,1.7l4.1,1.5l4,1.3l4,1.1l4.1,0.8l4,0.6l4.1,0.3l4,0.2l4.1,-0.2l4,-0.3l4,-0.6l4.1,-0.8l4,-1.1l4.1,-1.3l4,-1.5l4,-1.7l4.1,-2l4,-2.1l4.1,-2.3l4,-2.6l4.1,-2.6l4,-2.9l4,-3l4.1,-3.2l4,-3.2l4.1,-3.4l4,-3.5l4,-3.6l4.1,-3.7l4,-3.7l4.1,-3.7l4,-3.8l4.1,-3.8l4,-3.8l4,-3.8l4.1,-3.8l4,-3.7l4.1,-3.6l4,-3.6l4,-3.5l4.1,-3.4l4,-3.3l4.1,-3.1l4,-3l4.1,-2.9l4,-2.7l4,-2.5l4.1,-2.3l4,-2.2l4.1,-1.9l4,-1.7l4,-1.5l4.1,-1.3l4,-1.1l4.1,-0.8l4,-0.6l4.1,-0.4l4,-0.1l4,0.1l4.1,0.4l4,0.6l4.1,0.8l4,1.1l4,1.3l4.1,1.5l4,1.7l4.1,1.9l4,2.2l4.1,2.3l4,2.5l4,2.7l4.1,2.9l4,3l4.1,3.1l4,3.3l4,3.4l4.1,3.5l4,3.6l4.1,3.6l4,3.7l4.1,3.8l4,3.8l4,3.8l4.1,3.8l4,3.8"/>
+   <path id="svg_58" class="g12_1" d="m50.8,104l4,-7.6l4.1,-7.4l4,-7.2l4.1,-6.7l4,-6.2l4,-5.5l4.1,-4.8l4,-4l4.1,-3.1l4,-2.3l4,-1.5l4.1,-0.7l4,-0.1l4.1,0.7l4,1.1l4.1,1.6l4,1.9l4,2l4.1,2.1l4,1.9l4.1,1.8l4,1.5l4,1.2l4.1,0.7l4,0.2l4.1,-0.2l4,-0.7l4.1,-1.2l4,-1.5l4,-1.8l4.1,-1.9l4,-2.1l4.1,-2l4,-1.9l4,-1.6l4.1,-1.1l4,-0.7l4.1,0.1l4,0.7l4.1,1.5l4,2.3l4,3.1l4.1,4l4,4.8l4.1,5.5l4,6.2l4,6.7l4.1,7.2l4,7.4l4.1,7.6l4,7.6l4.1,7.4l4,7.2l4,6.7l4.1,6.1l4,5.6l4.1,4.7l4,4l4,3.2l4.1,2.3l4,1.5l4.1,0.7l4,0l4.1,-0.6l4,-1.2l4,-1.5l4.1,-1.9l4,-2l4.1,-2.1l4,-2l4,-1.8l4.1,-1.5l4,-1.1l4.1,-0.7l4,-0.2l4.1,0.2l4,0.7l4,1.1l4.1,1.5l4,1.8l4.1,2l4,2.1l4,2l4.1,1.9l4,1.5l4.1,1.2l4,0.6l4.1,0l4,-0.7l4,-1.5l4.1,-2.3l4,-3.2l4.1,-4l4,-4.7l4,-5.6l4.1,-6.1l4,-6.7l4.1,-7.2l4,-7.4l4.1,-7.6l4,-7.6l4,-7.4l4.1,-7.2l4,-6.7l4.1,-6.2l4,-5.5l4,-4.8l4.1,-4l4,-3.1l4.1,-2.3l4,-1.5l4.1,-0.7l4,-0.1l4,0.7l4.1,1.1l4,1.6l4.1,1.9l4,2l4,2.1l4.1,1.9l4,1.8l4.1,1.5l4,1.2l4.1,0.7l4,0.2l4,-0.2l4.1,-0.7l4,-1.2l4.1,-1.5l4,-1.8l4,-1.9l4.1,-2.1l4,-2l4.1,-1.9l4,-1.6l4.1,-1.1l4,-0.7l4,0.1l4.1,0.7l4,1.5l4.1,2.3l4,3.1l4,4l4.1,4.8l4,5.5l4.1,6.2l4,6.7l4.1,7.2l4,7.4l4,7.6l4.1,7.6l4,7.4"/>
+   <path id="svg_59" class="g13_1" d="m50.8,104l4,-11.4l4.1,-10.8l4,-9.8l4.1,-8.4l4,-6.8l4,-4.9l4.1,-3.1l4,-1.3l4.1,0.2l4,1.5l4,2.2l4.1,2.7l4,2.6l4.1,2.4l4,1.7l4.1,1l4,0.2l4,-0.7l4.1,-1.3l4,-1.8l4.1,-1.9l4,-1.9l4,-1.5l4.1,-1.1l4,-0.3l4.1,0.3l4,1.1l4.1,1.5l4,1.9l4,1.9l4.1,1.8l4,1.3l4.1,0.7l4,-0.2l4,-1l4.1,-1.7l4,-2.4l4.1,-2.6l4,-2.7l4.1,-2.2l4,-1.5l4,-0.2l4.1,1.3l4,3.1l4.1,4.9l4,6.8l4,8.4l4.1,9.8l4,10.8l4.1,11.4l4,11.3l4.1,10.8l4,9.9l4,8.4l4.1,6.8l4,4.9l4.1,3l4,1.3l4,-0.2l4.1,-1.4l4,-2.3l4.1,-2.6l4,-2.7l4.1,-2.3l4,-1.8l4,-1l4.1,-0.1l4,0.7l4.1,1.3l4,1.7l4,2l4.1,1.9l4,1.5l4.1,1l4,0.4l4.1,-0.4l4,-1l4,-1.5l4.1,-1.9l4,-2l4.1,-1.7l4,-1.3l4,-0.7l4.1,0.1l4,1l4.1,1.8l4,2.3l4.1,2.7l4,2.6l4,2.3l4.1,1.4l4,0.2l4.1,-1.3l4,-3l4,-4.9l4.1,-6.8l4,-8.4l4.1,-9.9l4,-10.8l4.1,-11.3l4,-11.4l4,-10.8l4.1,-9.8l4,-8.4l4.1,-6.8l4,-4.9l4,-3.1l4.1,-1.3l4,0.2l4.1,1.5l4,2.2l4.1,2.7l4,2.6l4,2.4l4.1,1.7l4,1l4.1,0.2l4,-0.7l4,-1.3l4.1,-1.8l4,-1.9l4.1,-1.9l4,-1.5l4.1,-1.1l4,-0.3l4,0.3l4.1,1.1l4,1.5l4.1,1.9l4,1.9l4,1.8l4.1,1.3l4,0.7l4.1,-0.2l4,-1l4.1,-1.7l4,-2.4l4,-2.6l4.1,-2.7l4,-2.2l4.1,-1.5l4,-0.2l4,1.3l4.1,3.1l4,4.9l4.1,6.8l4,8.4l4.1,9.8l4,10.8l4,11.4l4.1,11.3l4,10.8"/>
+   <path id="svg_60" class="g14_1" d="m50.8,104l4,-15l4.1,-13.8l4,-11.6l4.1,-8.5l4,-5.3l4,-2.1l4.1,0.6l4,2.4l4.1,3.4l4,3.3l4,2.6l4.1,1.4l4,0l4.1,-1.2l4,-2l4.1,-2.3l4,-2l4,-1.2l4.1,-0.3l4,0.7l4.1,1.6l4,1.9l4,1.8l4.1,1.3l4,0.4l4.1,-0.4l4,-1.3l4.1,-1.8l4,-1.9l4,-1.6l4.1,-0.7l4,0.3l4.1,1.2l4,2l4,2.3l4.1,2l4,1.2l4.1,0l4,-1.4l4.1,-2.6l4,-3.3l4,-3.4l4.1,-2.4l4,-0.6l4.1,2.1l4,5.3l4,8.5l4.1,11.6l4,13.8l4.1,15l4,15l4.1,13.8l4,11.5l4,8.6l4.1,5.3l4,2l4.1,-0.5l4,-2.4l4,-3.4l4.1,-3.3l4,-2.6l4.1,-1.4l4,0l4.1,1.2l4,2l4,2.3l4.1,1.9l4,1.3l4.1,0.3l4,-0.8l4,-1.5l4.1,-1.9l4,-1.8l4.1,-1.3l4,-0.5l4.1,0.5l4,1.3l4,1.8l4.1,1.9l4,1.5l4.1,0.8l4,-0.3l4,-1.3l4.1,-1.9l4,-2.3l4.1,-2l4,-1.2l4.1,0l4,1.4l4,2.6l4.1,3.3l4,3.4l4.1,2.4l4,0.5l4,-2l4.1,-5.3l4,-8.6l4.1,-11.5l4,-13.8l4.1,-15l4,-15l4,-13.8l4.1,-11.6l4,-8.5l4.1,-5.3l4,-2.1l4,0.6l4.1,2.4l4,3.4l4.1,3.3l4,2.6l4.1,1.4l4,0l4,-1.2l4.1,-2l4,-2.3l4.1,-2l4,-1.2l4,-0.3l4.1,0.7l4,1.6l4.1,1.9l4,1.8l4.1,1.3l4,0.4l4,-0.4l4.1,-1.3l4,-1.8l4.1,-1.9l4,-1.6l4,-0.7l4.1,0.3l4,1.2l4.1,2l4,2.3l4.1,2l4,1.2l4,0l4.1,-1.4l4,-2.6l4.1,-3.3l4,-3.4l4,-2.4l4.1,-0.6l4,2.1l4.1,5.3l4,8.5l4.1,11.6l4,13.8l4,15l4.1,15l4,13.8"/>
+   <path id="svg_61" class="g15_1" d="m50.8,104l4,-18.6l4.1,-16.3l4,-12.2l4.1,-7l4,-2.2l4,1.7l4.1,3.8l4,4.1l4.1,3l4,1.1l4,-1l4.1,-2.3l4,-2.6l4.1,-2l4,-0.8l4.1,0.7l4,1.8l4,2.1l4.1,1.6l4,0.6l4.1,-0.6l4,-1.5l4,-1.9l4.1,-1.5l4,-0.6l4.1,0.6l4,1.5l4.1,1.9l4,1.5l4,0.6l4.1,-0.6l4,-1.6l4.1,-2.1l4,-1.8l4,-0.7l4.1,0.8l4,2l4.1,2.6l4,2.3l4.1,1l4,-1.1l4,-3l4.1,-4.1l4,-3.8l4.1,-1.7l4,2.2l4,7l4.1,12.2l4,16.3l4.1,18.6l4,18.6l4.1,16.3l4,12.1l4,7.1l4.1,2.1l4,-1.6l4.1,-3.8l4,-4.2l4,-2.9l4.1,-1.1l4,0.9l4.1,2.3l4,2.7l4.1,2l4,0.7l4,-0.7l4.1,-1.7l4,-2.1l4.1,-1.7l4,-0.6l4,0.6l4.1,1.6l4,1.9l4.1,1.5l4,0.6l4.1,-0.6l4,-1.5l4,-1.9l4.1,-1.6l4,-0.6l4.1,0.6l4,1.7l4,2.1l4.1,1.7l4,0.7l4.1,-0.7l4,-2l4.1,-2.7l4,-2.3l4,-0.9l4.1,1.1l4,2.9l4.1,4.2l4,3.8l4,1.6l4.1,-2.1l4,-7.1l4.1,-12.1l4,-16.3l4.1,-18.6l4,-18.6l4,-16.3l4.1,-12.2l4,-7l4.1,-2.2l4,1.7l4,3.8l4.1,4.1l4,3l4.1,1.1l4,-1l4.1,-2.3l4,-2.6l4,-2l4.1,-0.8l4,0.7l4.1,1.8l4,2.1l4,1.6l4.1,0.6l4,-0.6l4.1,-1.5l4,-1.9l4.1,-1.5l4,-0.6l4,0.6l4.1,1.5l4,1.9l4.1,1.5l4,0.6l4,-0.6l4.1,-1.6l4,-2.1l4.1,-1.8l4,-0.7l4.1,0.8l4,2l4,2.6l4.1,2.3l4,1l4.1,-1.1l4,-3l4,-4.1l4.1,-3.8l4,-1.7l4.1,2.2l4,7l4.1,12.2l4,16.3l4,18.6l4.1,18.6l4,16.3"/>
+   <text id="svg_62" class="s2_1" y="210.9" x="42.4">0.0</text>
+   <text id="svg_63" class="s2_1" y="210.9" x="83.4">0.1</text>
+   <text id="svg_64" class="s2_1" y="210.9" x="123.4">0.2</text>
+   <text id="svg_65" class="s2_1" y="210.9" x="164.4">0.3</text>
+   <text id="svg_66" class="s2_1" y="210.9" x="204.4">0.4</text>
+   <text id="svg_67" class="s2_1" y="210.9" x="244.4">0.5</text>
+   <text id="svg_68" class="s2_1" y="210.9" x="285.4">0.6</text>
+   <text id="svg_69" class="s2_1" y="210.9" x="325.4">0.7</text>
+   <text id="svg_70" class="s2_1" y="210.9" x="366.4">0.8</text>
+   <text id="svg_71" class="s2_1" y="210.9" x="406.4">0.9</text>
+   <text id="svg_72" class="s2_1" y="210.9" x="446.4">1.0</text>
+   <text id="svg_73" class="s2_1" y="210.9" x="487.4">1.1</text>
+   <text id="svg_74" class="s2_1" y="210.9" x="527.4">1.2</text>
+   <text id="svg_75" class="s2_1" y="210.9" x="568.4">1.3</text>
+   <text id="svg_76" class="s2_1" y="210.9" x="608.4">1.4</text>
+   <text id="svg_77" class="s2_1" y="210.9" x="649.4">1.5</text>
+   <text id="svg_78" class="s2_1" y="202.9" x="8.4">-2.0E0</text>
+   <text id="svg_79" class="s2_1" y="154.9" x="8.4">-1.0E0</text>
+   <text id="svg_80" class="s2_1" y="106.9" x="12.4">0.0E0</text>
+   <text id="svg_81" class="s2_1" y="59.9" x="12.4">1.0E0</text>
+   <text id="svg_82" class="s2_1" y="11.9" x="12.4">2.0E0</text>
+   <text id="svg_83" class="s3_1" y="23.9" x="75.4">Square wave</text>
+   <path id="svg_84" class="g16_1" d="m50.4,20.6l21.8,0"/>
+   <text id="svg_85" class="s3_1" y="23.9" x="183.4">Fundamental</text>
+   <path id="svg_86" class="g17_1" d="m157.8,20.6l21.8,0"/>
+   <text id="svg_87" class="s3_1" y="23.9" x="290.4">First three</text>
+   <path id="svg_88" class="g18_1" d="m265.2,20.6l21.8,0"/>
+   <text id="svg_89" class="s3_1" y="23.9" x="383.4">First five</text>
+   <path id="svg_90" class="g19_1" d="m358.4,20.6l21.8,0"/>
+   <text id="svg_91" class="s3_1" y="23.9" x="468.4">First seven</text>
+   <path id="svg_92" class="g20_1" d="m443.1,20.6l21.9,0"/>
+   <text id="svg_93" class="s3_1" y="23.9" x="566.4">First nine</text>
+   <path id="svg_94" class="g21_1" d="m540.5,20.6l21.8,0"/>
+  </g>
+ </g>
+</svg>
