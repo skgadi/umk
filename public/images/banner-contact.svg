@@ -13,7 +13,7 @@ stroke-miterlimit: 4;
 }
 .g1_1{
 fill: none;
-stroke: #FF0000;
+stroke: #A52A2A;
 stroke-width: 5;
 stroke-linecap: round;
 stroke-linejoin: miter;

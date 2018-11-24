@@ -21,13 +21,17 @@
   body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
   body, html {
       height: 100%;
-      color: #777;
+      color: #000;
       line-height: 1.8;
       font-size: 15px;
+	  background: FloralWhite;
+  }
+  p{
+	text-align: justify;
   }
 
   /* Create a Parallax Effect */
-  .bgimg-1, .bgimg-2, .bgimg-3 {
+  .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
       position: relative;
       opacity: 0.65;
       background-attachment: fixed;
@@ -37,7 +41,7 @@
 
   /* First image (Logo. Full height) */
   .bgimg-1 {
-      background-image: url('/images/6.svg');
+      background-image: url('/images/banner-main.svg');
       min-height: 100%;
       background-size: 100% 100%;
       /*height: 100%;*/
@@ -45,14 +49,21 @@
 
   /* Second image (Portfolio) */
   .bgimg-2 {
-      background-image: url('/images/inf1.svg');
+      background-image: url('/images/banner-features.svg');
       min-height: 100%;
       background-size: 100% 100%;
   }
 
   /* Third image (Contact) */
   .bgimg-3 {
-      background-image: url("/images/pricing.svg");
+      background-image: url("/images/banner-pricing.svg");
+      min-height: 100%;
+      background-size: 100% 100%;
+  }
+
+  /* Third image (Contact) */
+  .bgimg-4 {
+      background-image: url("/images/banner-contact.svg");
       min-height: 100%;
       background-size: 100% 100%;
   }
@@ -62,7 +73,7 @@
 
   /* Turn off parallax scrolling for tablets and phones */
   @media only screen and (max-device-width: 400px) {
-      .bgimg-1, .bgimg-2, .bgimg-3 {
+      .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
           background-attachment: scroll;
           min-height: 400px;
       }
@@ -70,7 +81,7 @@
   .caption {
   position: absolute;
   left: 0;
-  top: 20%;
+  top: 30%;
   width: 100%;
   text-align: center;
   font-family: 'Bevan', cursive;
@@ -81,6 +92,7 @@
 }
 .caption>p{
   margin:0px;
+  text-align: center;
 }
 .SubHeadding{
   font-family: 'Parisienne', cursive;
@@ -122,132 +134,163 @@
 
 <!-- Container (About Section) -->
 <div class="w3-content w3-container w3-padding-64" id="about">
-  <h3 class="w3-center">Uyamak</h3>
+  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Uyamak</h1>
   <p class="w3-center"><em>A online simulation platform</em></p>
   <div class="w3-row">
     <div class="w3-col m6 w3-center w3-padding-large">
-      <p><b>How to simulate above graph<i class="fa fa-question"></i></b></p><br>
+      <p><b>How to simulate the above graph<i class="fa fa-question"></i></b></p><br>
       <iframe width="400" height="225" src="https://www.youtube.com/embed/SELmbpnoBJA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
     <!-- Hide this text on small devices -->
     <div class="w3-col m6 w3-hide-small w3-padding-large">
-      <p>This tool is designed for students, teachers and researchers. This video</p>
-	  <p class="w3-text-red">Debating me breeding be answered an he. Spoil event was words her off cause any. Tears woman which no is world miles woody. Wished be do mutual except in effect answer. Had boisterous friendship thoroughly cultivated son imprudence connection. Windows because concern sex its. Law allow saved views hills day ten. Examine waiting his evening day passage proceed. </p>
-	  <p class="w3-text-red">Too cultivated use solicitude frequently. Dashwood likewise up consider continue entrance ladyship oh. Wrong guest given purse power is no. Friendship to connection an am considered difficulty. Country met pursuit lasting moments why calling certain the. Middletons boisterous our way understood law. Among state cease how and sight since shall. Material did pleasure breeding our humanity she contempt had. So ye really mutual no cousin piqued summer result.</p>
+      <p>Uyamak is a fully online OS independent simulation platform which runs on your browser.  Similar to Simulink or LabVIEW, it uses visual programming to generate the mathematical models.</p>
+      <p>Uyamak simulates both static and dynamic mathematical models. Its visual programming is intuitive and self-explanatory. Hence, it is a perfect tool for the students, teacher, and researchers.</p>
+      <p>Uyamak uses your computer's processor to generate a model hence you don't have to wait for the simulation results. It loads the library on the fly, which means you don't have to spare your resources to download the whole library.</p>
+      <p>Similar to Simulink, Uyamak is also compatible with matrices. It lets the users develop the complex algorithms with a little effort.</p>
     </div>
   </div>
 </div>
 
-<div class="w3-row w3-center w3-dark-grey w3-padding-16">
-  <div class="w3-quarter w3-section">
-    <span class="w3-xlarge">5</span><br>
-    Sources
-  </div>
-  <div class="w3-quarter w3-section">
-    <span class="w3-xlarge">3</span><br>
-    Displays
-  </div>
-  <div class="w3-quarter w3-section">
-    <span class="w3-xlarge">6</span><br>
-    Functions
-  </div>
-  <div class="w3-quarter w3-section">
-    <span class="w3-xlarge">0</span><br>
-    Supporting hardware
-  </div>
-</div>
 
 <!-- Second Parallax Image with Portfolio Text -->
 <div class="bgimg-2 w3-display-container w3-opacity-min" id="home">
   <div class="caption">
-    <p>VISUAL PROGRAMMING</p>
-    <p class="SubHeadding">An intutive and easy to explain way of programming</p>
+    <p>FEATURES</p>
+    <p class="SubHeadding">Easy for programming and explaining</p>
   </div>
 </div>
 
 <!-- Container (Portfolio Section) -->
 <div class="w3-content w3-container w3-padding-64" id="portfolio">
-  <h3 class="w3-center">Advantages of visual programming</h3>
+  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Distinguished features</h1>
+  <p class="w3-center"><em>Here is the list of some of the important features that you may be interested in.</em></p>
 
   <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
   <div class="w3-row-padding w3-center">
-    <div class="w3-col m3">
-      Advantage 1
+    <div class="w3-col m4 w3-section">
+		<div class="w3-card">		
+		<header class="w3-container w3-blue">
+			<h1>No download</h1>
+		</header>
+		<span style="font-size: 5em;" class="fa-stack fa-2x">
+			<i class="fas fa-download fa-stack-1x"></i>
+			<i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+		</span>
+		<footer class="w3-container w3-blue">
+			<p>You don't have to download any software. The program is light weight and hence uses very little of your internet data.</p>
+		</footer>
+		</div>
     </div>
-
-    <div class="w3-col m3">
-      Advantage 2
+    <div class="w3-col m4 w3-section">
+		<div class="w3-card">		
+		<header class="w3-container w3-blue">
+			<h1>Instant results</h1>
+		</header>
+		<span style="font-size: 5em;" class="fa-stack fa-2x">
+			<i class="fas fa-chart-line fa-stack-1x"></i>
+			<i class="far fa-circle fa-stack-2x" style="color:Green"></i>
+		</span>
+		<footer class="w3-container w3-blue">
+			<p>Uyamak gathers just the right amount of resources to run your model and it runs on your PC. The results are available to you instantly</p>
+		</footer>
+		</div>
     </div>
-
-    <div class="w3-col m3">
-      Advantage 3
+    <div class="w3-col m4 w3-section">
+		<div class="w3-card">		
+		<header class="w3-container w3-blue">
+			<h1>No coding</h1>
+		</header>
+		<span style="font-size: 5em;" class="fa-stack fa-2x">
+			<i class="fas fa-code fa-stack-1x"></i>
+			<i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+		</span>
+		<footer class="w3-container w3-blue">
+			<p>Uyamak lets you numerically solve a mathematical problem by connecting blocks without the need of learning any programming language.</p>
+		</footer>
+		</div>
     </div>
-
-    <div class="w3-col m3">
-      Advantage 4
-    </div>
+</div>
   </div>
+<div class="w3-row w3-center w3-dark-grey w3-padding-16">
+  <div class="w3-third w3-section">
+    <span class="w3-xlarge">5</span><br>
+    Sources
+  </div>
+  <div class="w3-third w3-section">
+    <span class="w3-xlarge">3</span><br>
+    Displays
+  </div>
+  <div class="w3-third w3-section">
+    <span class="w3-xlarge">6</span><br>
+    Functions
+  </div>
+  <!--div class="w3-quarter w3-section">
+    <span class="w3-xlarge">0</span><br>
+    Supporting hardware
+  </div-->
 </div>
 
+
 <!-- Second Parallax Image with Portfolio Text -->
-<div class="bgimg-2 w3-display-container w3-opacity-min" id="home">
+<div class="bgimg-3 w3-display-container w3-opacity-min" id="home">
   <div class="caption">
     <p>Pricing</p>
-    <p class="SubHeadding">A free version is available for evaluation</p>
+    <!--p class="SubHeadding">A free version is available for evaluation</p-->
   </div>
 </div>
 <div class="w3-content w3-container w3-padding-64" id="portfolio">
- <h3 class="w3-center">Advantages of visual programming</h3>
+  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Pricing</h1>
+  <p class="w3-center"><em>You can access the evaluation version by <a href="https://github.skgadi.com/RTS/" target="_blank">clicking here</a>.</em></p>
     <!-- Pricing Tables -->
     <div class="w3-row-padding" style="margin:0 -16px">
       <div class="w3-third w3-margin-bottom">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-black w3-xlarge w3-padding-32">Basic</li>
+          <li class="w3-black w3-xlarge w3-padding-32">Evaluation</li>
           <li class="w3-padding-16">Web Design</li>
           <li class="w3-padding-16">Photography</li>
           <li class="w3-padding-16">1GB Storage</li>
           <li class="w3-padding-16">Mail Support</li>
           <li class="w3-padding-16">
-            <h2>$ 10</h2>
+            <h2>$ 00</h2>
             <span class="w3-opacity">per month</span>
           </li>
           <li class="w3-light-grey w3-padding-24">
-            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+            <a href="https://github.skgadi.com/RTS/" target="_blank" class="w3-button w3-teal w3-padding-large w3-hover-black">Access</a>
           </li>
         </ul>
       </div>
       
       <div class="w3-third w3-margin-bottom">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-teal w3-xlarge w3-padding-32">Pro</li>
+          <li class="w3-teal w3-xlarge w3-padding-32">Student</li>
           <li class="w3-padding-16">Web Design</li>
           <li class="w3-padding-16">Photography</li>
           <li class="w3-padding-16">50GB Storage</li>
           <li class="w3-padding-16">Endless Support</li>
           <li class="w3-padding-16">
-            <h2>$ 25</h2>
+            <h2>$ 5</h2>
             <span class="w3-opacity">per month</span>
           </li>
           <li class="w3-light-grey w3-padding-24">
-            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Pay</button>
           </li>
         </ul>
       </div>
       
       <div class="w3-third">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-black w3-xlarge w3-padding-32">Premium</li>
+          <li class="w3-black w3-xlarge w3-padding-32">University</li>
           <li class="w3-padding-16">Web Design</li>
           <li class="w3-padding-16">Photography</li>
           <li class="w3-padding-16">Unlimited Storage</li>
           <li class="w3-padding-16">Endless Support</li>
           <li class="w3-padding-16">
-            <h2>$ 25</h2>
-            <span class="w3-opacity">per month</span>
+            <h2>$ 2.5</h2>
+            <span class="w3-opacity">per student per month</span>
           </li>
           <li class="w3-light-grey w3-padding-24">
-            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Pay</button>
           </li>
         </ul>
       </div>
@@ -255,9 +298,9 @@
     </div>
 
 <!-- Third Parallax Image with Portfolio Text -->
-<div class="bgimg-3 w3-display-container w3-opacity-min">
-  <div class="w3-display-middle">
-     <span class="w3-xxlarge w3-text-white w3-wide">CONTACT</span>
+<div class="bgimg-4 w3-display-container w3-opacity-min" id="home">
+  <div class="caption">
+    <p>CONTACT</p>
   </div>
 </div>
 
