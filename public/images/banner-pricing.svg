@@ -5,7 +5,7 @@
 
 .g0_1{
 fill: none;
-stroke: #008000;
+stroke: url(#Kashmir);
 stroke-width: 5;
 stroke-linecap: round;
 stroke-linejoin: miter;
@@ -13,7 +13,7 @@ stroke-miterlimit: 4;
 }
 .g1_1{
 fill: none;
-stroke: #008080;
+stroke: url(#IntuitivePurple);
 stroke-width: 5;
 stroke-linecap: round;
 stroke-linejoin: miter;
@@ -37,11 +37,27 @@ stroke-miterlimit: 4;
   }
 }
  </style>
+         <linearGradient id="Ohhappiness">
+          <stop offset="5%" stop-color="#00b09b" />
+          <stop offset="95%" stop-color="#96c93d" />
+        </linearGradient>
+         <linearGradient id="Ver">
+          <stop offset="5%" stop-color="#FFE000" />
+          <stop offset="95%" stop-color="#799F0C" />
+        </linearGradient>
+         <linearGradient id="IntuitivePurple">
+          <stop offset="5%" stop-color="#DA22FF" />
+          <stop offset="95%" stop-color="#9733EE" />
+        </linearGradient>
+         <linearGradient id="Kashmir">
+          <stop offset="5%" stop-color="#614385" />
+          <stop offset="95%" stop-color="#516395" />
+        </linearGradient>
 
  </defs>
  <g>
   <title>background</title>
-  <rect fill="#ffaaff" id="canvas_background" height="252" width="752" y="-1" x="-1"/>
+  <rect fill="url(#Ohhappiness)" id="canvas_background" height="252" width="752" y="-1" x="-1"/>
  </g>
  <g>
   <title>Layer 1</title>

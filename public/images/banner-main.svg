@@ -186,7 +186,7 @@ stroke-miterlimit: 4;
 ]]>
  </style>
 
- <style>
+ <style type="text/css">
    .path {
   stroke-dasharray: 1000;
   stroke-dashoffset: 0;
@@ -201,9 +201,20 @@ stroke-miterlimit: 4;
   }
 }
  </style>
+       <defs>
+        <linearGradient id="MyGradient">
+          <stop offset="5%" stop-color="#8E2DE2" />
+          <stop offset="95%" stop-color="#4A00E0" />
+        </linearGradient>
+         <linearGradient id="Sulphur">
+          <stop offset="5%" stop-color="#CAC531" />
+          <stop offset="95%" stop-color="#F3F9A7" />
+        </linearGradient>
+
+      </defs>
  <g>
   <title>background</title>
-  <rect fill="#ffaaff" id="canvas_background" height="127" width="606" y="-1" x="-1"/>
+  <rect style="fill: url(#Sulphur)" id="canvas_background" height="127" width="606" y="-1" x="-1"/>
  </g>
  <g>
   <title>Layer 1</title>

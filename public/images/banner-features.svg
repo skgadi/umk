@@ -4,8 +4,8 @@
    <![CDATA[
 
 .g0_1{
-fill: #FFFF00;
-stroke: #008000;
+fill: url(#rFlare);
+stroke: url(#Phhappiness);
 stroke-width: 10;
 stroke-linecap: round;
 stroke-linejoin: miter;
@@ -29,10 +29,26 @@ stroke-miterlimit: 4;
   }
 }
  </style>
- </defs>
+         <linearGradient id="Flare">
+          <stop offset="5%" stop-color="#f12711" />
+          <stop offset="95%" stop-color="#f5af19" />
+        </linearGradient>
+         <linearGradient id="rFlare">
+          <stop offset="0%" stop-color="#f5af19" />
+          <stop offset="100%" stop-color="#f12711" />
+        </linearGradient>
+         <linearGradient id="Sulphur">
+          <stop offset="5%" stop-color="#CAC531" />
+          <stop offset="95%" stop-color="#F3F9A7" />
+        </linearGradient>
+         <linearGradient id="Phhappiness">
+          <stop offset="5%" stop-color="#00b09b" />
+          <stop offset="95%" stop-color="#96c93d" />
+        </linearGradient>
+</defs>
  <g>
   <title>background</title>
-  <rect fill="#ffaaff" id="canvas_background" height="252" width="727" y="-1" x="-1"/>
+  <rect fill="url(#Flare)" id="canvas_background" height="252" width="727" y="-1" x="-1"/>
  </g>
  <g>
   <title>Layer 1</title>

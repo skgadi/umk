@@ -12,7 +12,6 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css?family=Bevan" rel="stylesheet">
@@ -33,39 +32,27 @@
   /* Create a Parallax Effect */
   .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
       position: relative;
-      opacity: 0.65;
+      opacity: 1;
       background-attachment: fixed;
       background-position: center;
       background-repeat: no-repeat;
+	  background-size: 100% 100%;
   }
-
-  /* First image (Logo. Full height) */
   .bgimg-1 {
       background-image: url('/images/banner-main.svg');
-      min-height: 100%;
-      background-size: 100% 100%;
-      /*height: 100%;*/
+	  min-height: 100%;
   }
-
-  /* Second image (Portfolio) */
   .bgimg-2 {
       background-image: url('/images/banner-features.svg');
-      min-height: 100%;
-      background-size: 100% 100%;
+	  min-height: 50%;
   }
-
-  /* Third image (Contact) */
   .bgimg-3 {
       background-image: url("/images/banner-pricing.svg");
-      min-height: 100%;
-      background-size: 100% 100%;
+	  min-height: 50%;
   }
-
-  /* Third image (Contact) */
   .bgimg-4 {
       background-image: url("/images/banner-contact.svg");
-      min-height: 100%;
-      background-size: 100% 100%;
+	  min-height: 50%;
   }
 
   .w3-wide {letter-spacing: 10px;}
@@ -85,10 +72,11 @@
   width: 100%;
   text-align: center;
   font-family: 'Bevan', cursive;
-  color: #f00;
+  color: black;
   font-size: 4em;
   margin:0px;
   line-height: 0.75em;
+  text-shadow: 0 0 20px #ff0;
 }
 .caption>p{
   margin:0px;
@@ -96,7 +84,7 @@
 }
 .SubHeadding{
   font-family: 'Parisienne', cursive;
-  font-size: 0.5em;
+  font-size: 0.25em;
 }
 
 
@@ -111,16 +99,16 @@
       <i class="fa fa-bars"></i>
     </a>
     <a href="\" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red" style="font-family: 'Bevan', cursive;">UYAMAK</a>
-    <a href="#contact" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fa fa-envelope"></i> CONTACT</a>
-    <a href="https://en.wikibooks.org/wiki/Uyamak" target="_blank" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fa fa-book"></i> DOCUMENTATION</a>
-    <a href="#portfolio" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fas fa-dharmachakra"></i> PLATFORM</a>
+	<a href="#contact" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fas fa-envelope"></i> <b>Contact</b></a>
+    <a href="https://en.wikibooks.org/wiki/Uyamak" target="_blank" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fa fa-book"></i> <b>Documentation</b></a>
+    <a href="/platform" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red w3-hide-small w3-right"><i class="fas fa-dharmachakra"></i> <b>Platform</b></a>
   </div>
 
   <!-- Navbar on small screens -->
   <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-border w3-border-pink">
-    <a href="#about" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red" onclick="toggleFunction()"><i class="fas fa-dharmachakra"></i> PLATFORM</a>
-    <a href="https://en.wikibooks.org/wiki/Uyamak" target="_blank" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red"><i class="fa fa-book"></i> DOCUMENTATION</a>
-    <a href="#" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red"><i class="fa fa-envelope"></i> CONTACT</a>
+    <a href="/platform" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red" onclick="toggleFunction()"><i class="fas fa-dharmachakra"></i> <b>Platform</b></a>
+    <a href="https://en.wikibooks.org/wiki/Uyamak" target="_blank" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red"><i class="fa fa-book"></i> <b>Documentation</b></a>
+    <a href="https://skgadi.com/contact/" target="_blank" class="w3-bar-item w3-button w3-hover-red w3-ripple w3-text-red"><i class="fa fa-envelope"></i> <b>Contact</b></a>
   </div>
 </div>
 
@@ -128,14 +116,15 @@
 <div class="bgimg-1 w3-display-container w3-opacity-min" id="home">
   <div class="caption">
     <p>UYAMAK</p>
-    <p class="SubHeadding">A online simulation platform</p>
+    <p class="SubHeadding">A online simulation platform for the mathematical models</p>
   </div>
+  <div class="w3-display-bottomright" style="font-size: 0.75em;">All the trajectories shown in this website are obtained from the Uyamak application.</div>
 </div>
 
 <!-- Container (About Section) -->
 <div class="w3-content w3-container w3-padding-64" id="about">
   <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Uyamak</h1>
-  <p class="w3-center"><em>A online simulation platform</em></p>
+  <p class="w3-center"><em>A online simulation platform for the mathematical models</em></p>
   <div class="w3-row">
     <div class="w3-col m6 w3-center w3-padding-large">
       <p><b>How to simulate the above graph<i class="fa fa-question"></i></b></p><br>
@@ -163,7 +152,7 @@
 
 <!-- Container (Portfolio Section) -->
 <div class="w3-content w3-container w3-padding-64" id="portfolio">
-  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Distinguished features</h1>
+  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 1;">Distinguished features</h1>
   <p class="w3-center"><em>Here is the list of some of the important features that you may be interested in.</em></p>
 
   <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
@@ -246,14 +235,13 @@
     <div class="w3-row-padding" style="margin:0 -16px">
       <div class="w3-third w3-margin-bottom">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-black w3-xlarge w3-padding-32">Evaluation</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">1GB Storage</li>
-          <li class="w3-padding-16">Mail Support</li>
+          <li class="w3-gray w3-xlarge w3-padding-32">Evaluation</li>
+          <li class="w3-padding-16">Limited functions</li>
+          <li class="w3-padding-16">Slow software updates</li>
+          <li class="w3-padding-16">No support</li>
           <li class="w3-padding-16">
             <h2>$ 00</h2>
-            <span class="w3-opacity">per month</span>
+            <span class="w3-opacity">Free forever</span>
           </li>
           <li class="w3-light-grey w3-padding-24">
             <a href="https://github.skgadi.com/RTS/" target="_blank" class="w3-button w3-teal w3-padding-large w3-hover-black">Access</a>
@@ -263,14 +251,13 @@
       
       <div class="w3-third w3-margin-bottom">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-teal w3-xlarge w3-padding-32">Student</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">50GB Storage</li>
-          <li class="w3-padding-16">Endless Support</li>
+          <li class="w3-blue w3-xlarge w3-padding-32">Individual</li>
+          <li class="w3-padding-16">All functions</li>
+          <li class="w3-padding-16">Up to date software</li>
+          <li class="w3-padding-16">Email support</li>
           <li class="w3-padding-16">
             <h2>$ 5</h2>
-            <span class="w3-opacity">per month</span>
+            <span class="w3-opacity">per month<sup><sup style="font-size: 0.75em;">(1)</sup></sup></span>
           </li>
           <li class="w3-light-grey w3-padding-24">
             <button class="w3-button w3-teal w3-padding-large w3-hover-black">Pay</button>
@@ -280,14 +267,13 @@
       
       <div class="w3-third">
         <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-black w3-xlarge w3-padding-32">University</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">Unlimited Storage</li>
-          <li class="w3-padding-16">Endless Support</li>
+          <li class="w3-green w3-xlarge w3-padding-32">University<sup><sup style="font-size: 0.5em;">(2)</sup></sup></li>
+          <li class="w3-padding-16">All functions</li>
+          <li class="w3-padding-16">Up to date software</li>
+          <li class="w3-padding-16">Email support for teachers</li>
           <li class="w3-padding-16">
             <h2>$ 2.5</h2>
-            <span class="w3-opacity">per student per month</span>
+            <span class="w3-opacity">per individual per month<sup><sup style="font-size: 0.75em;">(1)</sup></sup></span>
           </li>
           <li class="w3-light-grey w3-padding-24">
             <button class="w3-button w3-teal w3-padding-large w3-hover-black">Pay</button>
@@ -295,6 +281,10 @@
         </ul>
       </div>
     </div>
+	<div style="font-size: 0.75em; line-height: 0.25em;">
+	<p>(1) You are allowed to make the payments in advance.</p>
+	<p>(2) The university should buy atleast 100 licenses.</p>
+	</div>
     </div>
 
 <!-- Third Parallax Image with Portfolio Text -->
@@ -306,10 +296,10 @@
 
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
-  <h3 class="w3-center">WHERE I WORK</h3>
-  <p class="w3-center"><em>I'd love your feedback!</em></p>
+  <h1 class="w3-center"style="margin: 0; padding: 0px; line-height: 0.5;">Contact us</h1>
+  <p class="w3-center"><em>You can contact us by <a href="https://skgadi.com/contact/" target="_blank">clicking here</a>.</em></p>
 
-  <div class="w3-row w3-padding-32 w3-section">
+  <!--div class="w3-row w3-padding-32 w3-section">
     <div class="w3-col m4 w3-container">
       <img src="/images/1.svg" class="w3-image w3-round" style="width:100%">
     </div>
@@ -335,13 +325,11 @@
         </button>
       </form>
     </div>
-  </div>
+  </div-->
 </div>
-
 <!-- Footer -->
-<footer class="w3-pink w3-padding-32 w3-opacity w3-hover-opacity-off">
-  <p>Developed by <a href="https://skgadi.com/" title="SKGadi" target="_blank" class="w3-hover-text-green">SKGadi</a></p>
-  <p>Copyright &copy; 2018 Suresh Kumar Gadi</p>
+<footer class="w3-display-container" style="background: url('images/banner-footer.svg'); background-size: 100% 100%; min-height: 100px;">
+<p style="font-size: 0.8em; text-align: right; text-shadow: 0 0 20px #ff0; margin: 0;" class="w3-display-bottomright"><b>Copyright &copy; 2018 Uyamak</b></p>
 </footer>
 
 <script>
