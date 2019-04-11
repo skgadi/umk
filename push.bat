@@ -1,3 +1,4 @@
 git add .
 git commit -am "Automatic push"
 git push
+firebase deploy
