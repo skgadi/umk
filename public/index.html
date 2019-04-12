@@ -428,7 +428,7 @@ var prevScrollpos = window.pageYOffset;
 window.onscroll = function() {myFunction()};
 function myFunction() {
     var navbar = document.getElementById("myNavbar");
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    if (document.body.scrollTop > 10 || document.documentElement.scrollTop > 10) {
 		var currentScrollPos = window.pageYOffset;
 		if (prevScrollpos > currentScrollPos) {
 			navbar.style.display = 'block';
