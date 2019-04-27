@@ -1,0 +1,69 @@
+<svg width="750" height="250" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+
+.g0_1{
+fill: none;
+stroke: url(#Kashmir);
+stroke-width: 5;
+stroke-linecap: round;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+.g1_1{
+fill: none;
+stroke: url(#IntuitivePurple);
+stroke-width: 5;
+stroke-linecap: round;
+stroke-linejoin: miter;
+stroke-miterlimit: 4;
+}
+
+]]>
+  </style>
+   <style>
+   .path {
+  stroke-dasharray: 1650;
+  stroke-dashoffset: 0;
+  animation: dash 25s linear infinite;
+}
+@keyframes dash {
+  from {
+    stroke-dashoffset: 1650;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+ </style>
+         <linearGradient id="Ohhappiness">
+          <stop offset="5%" stop-color="#00b09b" />
+          <stop offset="95%" stop-color="#96c93d" />
+        </linearGradient>
+         <linearGradient id="Ver">
+          <stop offset="5%" stop-color="#FFE000" />
+          <stop offset="95%" stop-color="#799F0C" />
+        </linearGradient>
+         <linearGradient id="IntuitivePurple">
+          <stop offset="5%" stop-color="#DA22FF" />
+          <stop offset="95%" stop-color="#9733EE" />
+        </linearGradient>
+         <linearGradient id="Kashmir">
+          <stop offset="5%" stop-color="#614385" />
+          <stop offset="95%" stop-color="#516395" />
+        </linearGradient>
+
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="url(#Ohhappiness)" id="canvas_background" height="252" width="752" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_4">
+   <path id="svg_2" class="g0_1 path" d="m374.949998,124.999996l11.1,-9.2l10.7,-9l10.1,-8.9l9.2,-8.5l8,-8.1l6.6,-7.6l5,-7l3.2,-6.3l1.1,-5.6l-1,-4.8l-3.3,-4l-5.5,-3l-7.8,-2.2l-10.1,-1.2l-12.3,-0.4l-14.3,0.5l-16.3,1.4l-18,2.2l-19.5,3l-20.8,3.7l-21.7,4.3l-22.4,4.9l-22.8,5.3l-22.7,5.7l-22.4,6.1l-21.7,6.2l-20.7,6.3l-19.3,6.3l-17.6,6.2l-15.5,6l-13.3,5.7l-10.8,5.5l-7.9,4.9l-5.1,4.5l-1.9,4l1.3,3.4l4.5,2.8l7.9,2.2l11,1.5l14.3,0.9l17.2,0.3l20.2,-0.3l22.8,-0.9l25.3,-1.4l27.4,-1.8l29.3,-2.2l30.8,-2.6l31.9,-2.8l32.7,-3l33.1,-3l33.2,-3l32.7,-3l31.9,-2.8l30.8,-2.6l29.3,-2.2l27.4,-1.8l25.3,-1.4l22.8,-0.9l20.2,-0.3l17.2,0.3l14.3,0.9l11,1.5l7.9,2.2l4.5,2.8l1.3,3.4l-1.9,3.9l-5.1,4.6l-7.9,4.9l-10.8,5.5l-13.3,5.7l-15.5,6l-17.6,6.2l-19.3,6.3l-20.7,6.3l-21.7,6.2l-22.4,6.1l-22.7,5.7l-22.8,5.3l-22.4,4.9l-21.7,4.3l-20.8,3.7l-19.5,3l-18,2.2l-16.3,1.4l-14.3,0.5l-12.3,-0.4l-10.1,-1.2l-7.8,-2.2l-5.5,-3l-3.3,-4l-1,-4.8l1.1,-5.6l3.2,-6.3l5,-7l6.6,-7.6l8,-8.1l9.2,-8.5l10.1,-8.9l10.7,-9l11,-9.2"/>
+   <path id="svg_3" class="g1_1 path" d="m374.949998,124.999996l11.1,9.2l10.7,9l10.1,8.9l9.2,8.5l8,8.1l6.6,7.6l5,7l3.2,6.3l1.1,5.6l-1,4.8l-3.3,4l-5.5,3l-7.8,2.2l-10.1,1.2l-12.3,0.4l-14.3,-0.5l-16.3,-1.4l-18,-2.2l-19.5,-3l-20.8,-3.7l-21.7,-4.3l-22.4,-4.9l-22.8,-5.3l-22.7,-5.7l-22.4,-6.1l-21.7,-6.2l-20.7,-6.3l-19.3,-6.3l-17.6,-6.2l-15.5,-6l-13.3,-5.7l-10.8,-5.5l-7.9,-4.9l-5.1,-4.6l-1.9,-3.9l1.3,-3.4l4.5,-2.8l7.9,-2.2l11,-1.5l14.3,-0.9l17.2,-0.3l20.2,0.3l22.8,0.9l25.3,1.4l27.4,1.8l29.3,2.2l30.8,2.6l31.9,2.8l32.7,3l33.1,3l33.2,3l32.7,3l31.9,2.8l30.8,2.6l29.3,2.2l27.4,1.8l25.3,1.4l22.8,0.9l20.2,0.3l17.2,-0.3l14.3,-0.9l11,-1.5l7.9,-2.2l4.5,-2.8l1.3,-3.4l-1.9,-4l-5.1,-4.5l-7.9,-4.9l-10.8,-5.5l-13.3,-5.7l-15.5,-6l-17.6,-6.2l-19.3,-6.3l-20.7,-6.3l-21.7,-6.2l-22.4,-6.1l-22.7,-5.7l-22.8,-5.3l-22.4,-4.9l-21.7,-4.3l-20.8,-3.7l-19.5,-3l-18,-2.2l-16.3,-1.4l-14.3,-0.5l-12.3,0.4l-10.1,1.2l-7.8,2.2l-5.5,3l-3.3,4l-1,4.8l1.1,5.6l3.2,6.3l5,7l6.6,7.6l8,8.1l9.2,8.5l10.1,8.9l10.7,9l11,9.2"/>
+  </g>
+ </g>
+</svg>

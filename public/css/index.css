@@ -1,0 +1,69 @@
+  body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
+  body, html {
+      height: 100%;
+      color: #000;
+      line-height: 1.8;
+      font-size: 15px;
+	  background: FloralWhite;
+  }
+  p{
+	text-align: justify;
+  }
+
+  /* Create a Parallax Effect */
+  .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4{
+      position: relative;
+      opacity: 1;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+	  background-size: 100% 100%;
+  }
+  .bgimg-1 {
+      background-image: url('/images/banner-main.svg');
+	  min-height: 100%;
+  }
+  .bgimg-2 {
+      background-image: url('/images/banner-features.svg');
+	  min-height: 100%;
+  }
+  .bgimg-3 {
+      background-image: url("/images/banner-pricing.svg");
+	  min-height: 100%;
+  }
+  .bgimg-4 {
+      background-image: url("/images/sinxbyx.svg");
+	  min-height: 100%;
+  }
+
+  .w3-wide {letter-spacing: 10px;}
+  .w3-hover-opacity {cursor: pointer;}
+
+  /* Turn off parallax scrolling for tablets and phones */
+  @media only screen and (max-device-width: 400px) {
+      .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
+          background-attachment: scroll;
+          min-height: 400px;
+      }
+  }
+  .caption {
+  position: absolute;
+  left: 0;
+  top: 30%;
+  width: 100%;
+  text-align: center;
+  font-family: 'Bevan', cursive;
+  color: black;
+  font-size: 4em;
+  margin:0px;
+  line-height: 0.75em;
+  text-shadow: 0 0 20px #ff0;
+}
+.caption>p{
+  margin:0px;
+  text-align: center;
+}
+.SubHeadding{
+  font-family: 'Parisienne', cursive;
+  font-size: 0.25em;
+}

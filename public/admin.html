@@ -1,3 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>FirebaseUI Auth Demo</title>
+	<link rel="manifest" href="manifest.json">
+	<script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script>
+	<script src="config.js"></script>
+
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+	<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+	<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+	<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+
+ 
+</head>
+<body>
+	<div id="container">
+	  <h3>Uyamak</h3>
+	  <div id="loading">Loading...</div>
+	  <div id="loaded" class="hidden">
+		<div id="main">
+		  <div id="user-signed-in" class="hidden">
+		  
+		  
+						<ul id="slide-out" class="sidenav sidenav-fixed" style="text-align: left;">
+						<li><div class="user-view" style="line-height: 1em;">
+						<div class="background" style="background-image: url('/images/sinxbyx.svg'); background-size: 100% 100%;">
+						</div>
+
+						<img class="circle" id="photo">
+						<b><div class="white-text" style="margin-top: 15px;" id="name"></div></b>
+						<div class="white-text" id="email"></div>
+						<div class="white-text" id="phone"></div>
+						<!--div class="white-text email" id="is-new-user"></div-->
+						<div class="white-text" class="clearfix"></div>
+						<div style="min-height: 15px;"></div>
+						</div></li>
+						<li><a class="waves-effect" id="login-history">Login history</a></li>
+						<li><div class="divider"></div></li>
+						<li><a class="subheader">Premium</a></li>
+						<li><a class="waves-effect" id="purchase-personal">Buy individual license</a></li>
+						<li><a class="waves-effect" id="purchase-university">But university license</a></li>
+						<li><a class="waves-effect" id="manage-licenses">Distribute the licenses</a></li>
+						<li><a class="waves-effect" id="purchase-history">Purchase history</a></li>
+						<li><div class="divider"></div></li>
+						<li><a class="subheader">Account settings</a></li>
+						<li><a class="waves-effect" id="sign-out">Sign out</a></li>
+						<li><a class="waves-effect" id="delete-account">Delete account</a></li>
+						</ul>
+						<a href="#" data-target="slide-out" class="sidenav-trigger hide-on-large-only"><i class="material-icons">menu</i></a>
+
+		  
+		  
+		  
+			<div id="user-info">
+			  <div id="photo-container">
+				
+			  </div>
+			  
+			</div>
+		  </div>
+		  <div id="user-signed-out" class="hidden">
+			<h4>Please sign in or register to continue.</h4>
+			<div id="firebaseui-spa">
+			  <h5>Single Page Application mode:</h5>
+			  <div id="firebaseui-container"></div>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+
+
+
+
+
+    
+<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script> <script>
+
 /*
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
@@ -12,11 +99,11 @@
  * limitations under the License.
  */
 
-/**
+/*
  * FirebaseUI initialization to be used in a Single Page application context.
  */
 
-/**
+/*
  * @return {!Object} The FirebaseUI config.
  */
 function getUiConfig() {
@@ -62,12 +149,12 @@ function getUiConfig() {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
         // Whether the display name should be displayed in Sign Up page.
         requireDisplayName: true,
-        signInMethod: getEmailSignInMethod()
+        signInMethod: 'password'
       },
       {
         provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
         recaptchaParameters: {
-          size: getRecaptchaMode()
+          size: 'invisible'
         }
       },
       /*firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID*/
@@ -92,8 +179,8 @@ ui.disableAutoSignIn();
  * @return {string} The URL of the FirebaseUI standalone widget.
  */
 function getWidgetUrl() {
-  return '/widget#recaptcha=' + getRecaptchaMode() + '&emailSignInMethod=' +
-      getEmailSignInMethod();
+  return '/widget#recaptcha=' + 'invisible' + '&emailSignInMethod=' +
+      'password';
 }
 
 
@@ -148,6 +235,7 @@ var handleSignedOutUser = function() {
   document.getElementById('user-signed-in').style.display = 'none';
   document.getElementById('user-signed-out').style.display = 'block';
   ui.start('#firebaseui-container', getUiConfig());
+  window.location.replace("/signin?redirect=admin");
 };
 
 // Listen to change in auth state so it displays the correct UI for when
@@ -199,10 +287,6 @@ function handleConfigChange() {
  * Initializes the app.
  */
 var initApp = function() {
-  document.getElementById('sign-in-with-redirect').addEventListener(
-      'click', signInWithRedirect);
-  document.getElementById('sign-in-with-popup').addEventListener(
-      'click', signInWithPopup);
   document.getElementById('sign-out').addEventListener('click', function() {
     firebase.auth().signOut();
   });
@@ -210,24 +294,15 @@ var initApp = function() {
       'click', function() {
         deleteAccount();
       });
-
-  document.getElementById('recaptcha-normal').addEventListener(
-      'change', handleConfigChange);
-  document.getElementById('recaptcha-invisible').addEventListener(
-      'change', handleConfigChange);
-  // Check the selected reCAPTCHA mode.
-  document.querySelector(
-      'input[name="recaptcha"][value="' + getRecaptchaMode() + '"]')
-      .checked = true;
-
-  document.getElementById('email-signInMethod-password').addEventListener(
-      'change', handleConfigChange);
-  document.getElementById('email-signInMethod-emailLink').addEventListener(
-      'change', handleConfigChange);
-  // Check the selected email signInMethod mode.
-  document.querySelector(
-      'input[name="emailSignInMethod"][value="' + getEmailSignInMethod() + '"]')
-      .checked = true;
 };
 
 window.addEventListener('load', initApp);
+
+$(document).ready(function(){
+    $('.sidenav').sidenav();
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+</html>
