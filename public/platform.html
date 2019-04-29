@@ -5,12 +5,105 @@
 	<title>FirebaseUI Auth Demo</title>
 	<link rel="manifest" href="manifest.json">
 	<script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script>
-	<script src="config.js"></script>
+	<script src="js/config.js"></script>
 	<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
 	<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+<style>
+html, body, select {
+	font: 9pt sans;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+}
+
+#mynetwork {
+	position:relative;
+	width: 100%;
+	height: 100%;
+	border: 0px solid lightgray;
+	box-sizing: content-box;
+}
+
+.ToolBarButton {
+	font-size: 2em;
+    color: rgba(56,207,21,.95);
+}
+</style>
 </head>
 <body>
+<div id="mynetwork"></div>
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none; left: 0px; top: 0px; width: 400px;" id="leftMenu">
+  <button onclick="closeLeftMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+  <a href="#" class="w3-bar-item w3-button">Link 1</a>
+  <a href="#" class="w3-bar-item w3-button">Link 2</a>
+  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+</div>
+
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
+  <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+  <a href="#" class="w3-bar-item w3-button">Link 1</a>
+  <a href="#" class="w3-bar-item w3-button">Link 2</a>
+  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+</div>
+
+<!--div class="w3-bar">
+	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openLeftMenu()"><i class="fas fa-bars"></i></button>
+	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openRightMenu()"><i class="fas fa-bars"></i></button>
+</div-->
+<i id="Slide1" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-bars"></i>
+
+<i id="GSK_Tool_NewFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-file ToolBarButton"></i>
+<i id="GSK_Tool_SaveFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-save ToolBarButton"></i>
+<i id="GSK_Tool_DeleteFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-folder-open ToolBarButton"></i>
+
+<i id="GSK_Tool_AddBlock" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-vector-square ToolBarButton"></i>
+<i id="GSK_Tool_EditBlock" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="far fa-edit ToolBarButton"></i>
+<i id="GSK_Tool_AddConnection" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-bezier-curve ToolBarButton"></i>
+<i id="GSK_Tool_EditConnection" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-pen ToolBarButton"></i>
+<i id="GSK_Tool_Delete" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="far fa-trash-alt ToolBarButton"></i>
+<script>
+function openLeftMenu() {
+  document.getElementById("leftMenu").style.display = "block";
+}
+
+function closeLeftMenu() {
+  document.getElementById("leftMenu").style.display = "none";
+}
+
+function openRightMenu() {
+  document.getElementById("rightMenu").style.display = "block";
+}
+
+function closeRightMenu() {
+  document.getElementById("rightMenu").style.display = "none";
+}
+</script>
+
+	
+	
+	   
+	<!--div class="fixed-action-btn"> 
+		<a class="btn-floating btn-large red">
+			<i class="large material-icons">mode_edit</i>
+		</a>
+		<ul>
+			<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+			<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+			<li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+			<li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+		</ul>
+	</div>
+
+
 	<div id="container">
 	  <h3>Uyamak</h3>
 	  <div id="loading">Loading...</div>
@@ -41,7 +134,218 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
+	</div-->
+	
+<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
+<script>
+/*Permananet Stuff Start*/
+/*Global vars*/
+var GSK_FIRST_SELECTED_NODE;
+var GSK_FIRST_SELECTED_EDGE;
+var GSK_STATE = "DESIGN" ; // DESIGN, 
+
+/*Permananet Stuff End*/
+
+  // create an array with nodes
+  var nodes = new vis.DataSet([
+    {id: "1", label: 'Node Node Node 1', title:"\\(a \\ne 0\\)"},
+    {id: "2", label: 'Node Node 2'},
+    {id: "3", label: 'Node 3'},
+    {id: "4", label: 'Node 4'},
+    {id: "5", label: 'Node 5'}
+  ]);
+
+  // create an array with edges
+  var edges = new vis.DataSet([
+    {from: 1, to: 3},
+    {from: 1, to: 2},
+    {from: 2, to: 4},
+    {from: 2, to: 5},
+    {from: 3, to: 3}
+  ]);
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+  locale : "gsk",
+		locales : {
+			"gsk" : {
+				edit : 'Edit',
+				del : 'Delete selected',
+				back : 'Back',
+				addNode : 'Add block',
+				addEdge : 'New connection',
+				editNode : 'Edit block',
+				editEdge : 'Edit connection',
+				addDescription : 'Click in an empty space to place a new block.',
+				edgeDescription : 'Click on a block and drag the connection to another block to connect them.',
+				editEdgeDescription : 'Click on the control points and drag them to a block to connect to it.',
+				createEdgeError : 'Cannot connect to a cluster.',
+				deleteClusterError : 'Clusters cannot be deleted.',
+				editClusterError : 'Clusters cannot be edited.'
+			}
+		},
+		interaction : {
+			navigationButtons : true,
+			keyboard : false,
+			multiselect : true,
+		},
+		nodes : {
+			shape : 'box',
+			color : {
+				border : '#000000',
+				background : "#ffffff",
+			},
+			font : {
+				color : '#000000',
+			},
+		},
+		edges : {
+			//smooth : false,
+			color : {
+				color : '#000000',
+			},
+			arrows : {
+				to : {
+					enabled : true,
+					scaleFactor : 1,
+					type : 'arrow'
+				}
+			},
+		},
+		physics : {
+			enabled : true,
+			solver : 'barnesHut',
+			barnesHut : {
+				centralGravity : 0,
+				springLength : 0,
+				avoidOverlap : 1,
+				damping : 1,
+				springConstant : 0.00,
+				gravitationalConstant : -1,
+			},
+			forceAtlas2Based : {
+				springLength : 50,
+				springConstant : 0,
+				avoidOverlap : 1,
+				centralGravity : 0.00,
+				gravitationalConstant : -1
+			},
+		},
+  };
+  var network = new vis.Network(container, data, options);
+network.on("oncontext", function (params) {
+console.log(params);
+});  
+network.on("showPopup", function (params) {
+    console.log("DO SOMETHING");
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+})
+network.on('click', function (params) {
+	switch (params.nodes.length) {
+		case 0:
+			GSK_FIRST_SELECTED_NODE = undefined;
+		break;
+		case 1:
+			GSK_FIRST_SELECTED_NODE = params.nodes[0];
+		break;	
+	}
+	switch (params.edges.length) {
+		case 0:
+			GSK_FIRST_SELECTED_EDGE = undefined;
+			break;
+		case 1:
+			GSK_FIRST_SELECTED_EDGE = params.edges[0];
+			break;	
+	}
+	HideAllTheTools();
+	if ((network.getSelectedNodes().length === 0) && ((network.getSelectedEdges().length === 0))) {
+		console.log(params);
+		AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y}, "top");
+	}
+});
+network.on("afterDrawing", function (params) {
+	if (GSK_STATE === "DESIGN")
+        PlaceTools();
+});
+
+function PlaceTools() {
+	var GSK_Func_Point = PreparePointToPlaceTools();
+	if (network.getSelectedNodes().length>0) {
+		HideAllTheTools();
+		var GSK_Func_Pos_X_Tool = GSK_Func_Point.x;
+		if (network.getSelectedNodes().length === 1) {
+			AddATool("GSK_Tool_EditBlock", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
+			GSK_Func_Pos_X_Tool += 36;
+			AddATool("GSK_Tool_AddConnection", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
+			GSK_Func_Pos_X_Tool += 36;
+		}
+		AddATool("GSK_Tool_Delete", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
+	} else if (network.getSelectedEdges().length>0) {
+		HideAllTheTools();
+		var GSK_Func_Pos_X_Tool = GSK_Func_Point.x;
+		if (network.getSelectedEdges().length === 1) {
+			AddATool("GSK_Tool_EditConnection", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
+			GSK_Func_Pos_X_Tool += 36;
+		}
+		AddATool("GSK_Tool_Delete", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});		
+	} else {
+		
+	}
+}
+
+function AddATool(ToolID, Position, yPos = "bottom") {
+	$("#"+ToolID).css("position", "fixed");
+	$("#"+ToolID).css("left", Position.x+"px");
+	$("#"+ToolID).css(yPos, Position.y+"px");
+	$("#"+ToolID).css("display", "block");
+	console.log('sdf');
+	
+}
+
+function HideAllTheTools() {
+	$("#GSK_Tool_NewFile").css("display", "none");
+	$("#GSK_Tool_SaveFile").css("display", "none");
+	$("#GSK_Tool_DeleteFile").css("display", "none");
+	$("#GSK_Tool_AddBlock").css("display", "none");
+	$("#GSK_Tool_EditBlock").css("display", "none");
+	$("#GSK_Tool_AddConnection").css("display", "none");
+	$("#GSK_Tool_EditConnection").css("display", "none");
+	$("#GSK_Tool_Delete").css("display", "none");
+}
+
+
+function PreparePointToPlaceTools() {
+	var GSK_Func_Point;
+	if (network.getSelectedNodes().length>0) {
+		if ((GSK_FIRST_SELECTED_NODE === undefined) || !(network.getSelectedNodes().includes(GSK_FIRST_SELECTED_NODE))) GSK_FIRST_SELECTED_NODE = network.getSelectedNodes()[0];
+		GSK_Func_Point = {
+			x: network.getScale()*(-network.getViewPosition().x + network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].x - network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.width/2) + $(window).width()/2,
+			y: network.getScale()*(+network.getViewPosition().y - network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].y + network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.height/2) + $(window).height()/2 + 5
+		};
+	} else if (network.getSelectedEdges().length>0) {
+		if (GSK_FIRST_SELECTED_EDGE === undefined) GSK_FIRST_SELECTED_EDGE = network.getSelectedEdges()[0];
+		GSK_Func_Point = {
+			x: network.getScale()*(-network.getViewPosition().x + (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.x + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.x)/2) + $(window).width()/2,
+			y: network.getScale()*(+network.getViewPosition().y - (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.y + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.y)/2) + $(window).height()/2
+		};
+	} else {
+		GSK_Func_Point = {
+			x: 0,
+			y: 0
+		};
+	}
+	if (GSK_Func_Point.x<0) GSK_Func_Point.x = 0;
+	if (GSK_Func_Point.y<0) GSK_Func_Point.y = 0;
+	return GSK_Func_Point;
+}
+</script>
 <script>
 
 /*
@@ -199,9 +503,9 @@ var handleSignedOutUser = function() {
 // Listen to change in auth state so it displays the correct UI for when
 // the user is signed in or not.
 firebase.auth().onAuthStateChanged(function(user) {
-  document.getElementById('loading').style.display = 'none';
+  /*document.getElementById('loading').style.display = 'none';
   document.getElementById('loaded').style.display = 'block';
-  user ? handleSignedInUser(user) : handleSignedOutUser();
+  user ? handleSignedInUser(user) : handleSignedOutUser();*/
 });
 
 /**
@@ -245,13 +549,13 @@ function handleConfigChange() {
  * Initializes the app.
  */
 var initApp = function() {
-  document.getElementById('sign-out').addEventListener('click', function() {
+  /*document.getElementById('sign-out').addEventListener('click', function() {
     firebase.auth().signOut();
   });
   document.getElementById('delete-account').addEventListener(
       'click', function() {
         deleteAccount();
-      });
+      });*/
 };
 
 window.addEventListener('load', initApp);
