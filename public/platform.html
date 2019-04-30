@@ -34,18 +34,36 @@ html, body, select {
 }
 
 .ToolBarButton {
-	font-size: 2em;
-    color: rgba(56,207,21,.95);
+	padding: 2px;
+	font-size: 15px;
+    color: rgba(80,197,56,1);
+	-webkit-user-drag: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	width: 34px;
+	height: 34px;
+	border-radius: 17px;
+	display: inline-block;
+	cursor: pointer;
+	position: fixed;
+}
+
+.ToolBarButton:hover {
+	box-shadow: 0 0 3px 3px rgba(56,207,21,.3);
+}
+.ToolBarButton:active {
+	box-shadow: 0 0 1px 3px rgba(56,207,21,.95);
 }
 </style>
 </head>
 <body>
 <div id="mynetwork"></div>
-<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none; left: 0px; top: 0px; width: 400px;" id="leftMenu">
-  <button onclick="closeLeftMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
-  <a href="#" class="w3-bar-item w3-button">Link 1</a>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+<div class="w3-modal" style="position: fixed; left: 0px; top: 0px;" id="ModalScreen" onclick="closeLeftMenu()">
+	<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;position: fixed; left: 0px; top: 0px;" id="mySidebar">
+		<button onclick="closeLeftMenu()" class="w3-button w3-large">Close &times;</button>
+ 		<a href="#" class="w3-bar-item w3-button">Link 1</a>
+		<a href="#" class="w3-bar-item w3-button">Link 2</a>
+		<a href="#" class="w3-bar-item w3-button">Link 3</a>
+	</div>
 </div>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
@@ -59,24 +77,52 @@ html, body, select {
 	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openLeftMenu()"><i class="fas fa-bars"></i></button>
 	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openRightMenu()"><i class="fas fa-bars"></i></button>
 </div-->
-<i id="Slide1" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-bars"></i>
 
-<i id="GSK_Tool_NewFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-file ToolBarButton"></i>
-<i id="GSK_Tool_SaveFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-save ToolBarButton"></i>
-<i id="GSK_Tool_DeleteFile" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-folder-open ToolBarButton"></i>
 
-<i id="GSK_Tool_AddBlock" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-vector-square ToolBarButton"></i>
-<i id="GSK_Tool_EditBlock" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="far fa-edit ToolBarButton"></i>
-<i id="GSK_Tool_AddConnection" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-bezier-curve ToolBarButton"></i>
-<i id="GSK_Tool_EditConnection" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="fas fa-pen ToolBarButton"></i>
-<i id="GSK_Tool_Delete" style="display: none; cursor: pointer;" onclick="openLeftMenu()" class="far fa-trash-alt ToolBarButton"></i>
+
+<span class="fa-stack ToolBarButton" style="vertical-align: top; display: inline-block; cursor: pointer; position: fixed; top: 10px; left: 15px;" id="GSK_Tool_Menu" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-bars fa-stack-1x"></i>
+</span>
+<!--span class="fa-stack ToolBarButton" style="vertical-align: top; display: inline-block; top: 10px; right: 15px;" id="GSK_Tool_Signout" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-bug fa-stack-1x"></i>
+</span-->
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_NewFile" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-file fa-stack-1x"></i>
+</span>
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-vector-square fa-stack-1x"></i>
+</span>
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_EditBlock" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-cog fa-stack-1x"></i>
+</span>
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddConnection" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-project-diagram fa-stack-1x"></i>
+</span>
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_EditConnection" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-pen fa-stack-1x"></i>
+</span>
+<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_Delete" onclick="openLeftMenu()">
+  <i class="far fa-circle fa-stack-2x"></i>
+  <i class="fas fa-trash-alt fa-stack-1x"></i>
+</span>
+
+<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
 function openLeftMenu() {
-  document.getElementById("leftMenu").style.display = "block";
+  document.getElementById("ModalScreen").style.display = "block";
 }
 
 function closeLeftMenu() {
-  document.getElementById("leftMenu").style.display = "none";
+  document.getElementById("ModalScreen").style.display = "none";
 }
 
 function openRightMenu() {
@@ -86,6 +132,13 @@ function openRightMenu() {
 function closeRightMenu() {
   document.getElementById("rightMenu").style.display = "none";
 }
+
+$(document).keyup(function(e) {
+     if (e.key === "Escape") { // escape key maps to keycode `27`
+        closeLeftMenu();
+		HideAllTheTools();
+    }
+});
 </script>
 
 	
@@ -136,14 +189,12 @@ function closeRightMenu() {
 	  </div>
 	</div-->
 	
-<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
 var GSK_FIRST_SELECTED_NODE;
 var GSK_FIRST_SELECTED_EDGE;
+var GSK_HIDE_TOOLS = true;
 var GSK_STATE = "DESIGN" ; // DESIGN, 
 
 /*Permananet Stuff End*/
@@ -193,7 +244,7 @@ var GSK_STATE = "DESIGN" ; // DESIGN,
 		},
 		interaction : {
 			navigationButtons : true,
-			keyboard : false,
+			keyboard : true,
 			multiselect : true,
 		},
 		nodes : {
@@ -267,7 +318,9 @@ network.on('click', function (params) {
 	HideAllTheTools();
 	if ((network.getSelectedNodes().length === 0) && ((network.getSelectedEdges().length === 0))) {
 		console.log(params);
-		AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y}, "top");
+		GSK_HIDE_TOOLS = false;
+		if (params.pointer.DOM.y>40) AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y-36}, "top");
+		else  AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y+36}, "top");
 	}
 });
 network.on("afterDrawing", function (params) {
@@ -276,9 +329,10 @@ network.on("afterDrawing", function (params) {
 });
 
 function PlaceTools() {
+	if (GSK_HIDE_TOOLS) HideAllTheTools();
+	else GSK_HIDE_TOOLS = true;
 	var GSK_Func_Point = PreparePointToPlaceTools();
 	if (network.getSelectedNodes().length>0) {
-		HideAllTheTools();
 		var GSK_Func_Pos_X_Tool = GSK_Func_Point.x;
 		if (network.getSelectedNodes().length === 1) {
 			AddATool("GSK_Tool_EditBlock", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
@@ -301,9 +355,11 @@ function PlaceTools() {
 }
 
 function AddATool(ToolID, Position, yPos = "bottom") {
+	if (yPos === "bottom") $("#"+ToolID).css("top", "");
+	else $("#"+ToolID).css("bottom", "");
+	$("#"+ToolID).css(yPos, Position.y+"px");
 	$("#"+ToolID).css("position", "fixed");
 	$("#"+ToolID).css("left", Position.x+"px");
-	$("#"+ToolID).css(yPos, Position.y+"px");
 	$("#"+ToolID).css("display", "block");
 	console.log('sdf');
 	
@@ -318,6 +374,8 @@ function HideAllTheTools() {
 	$("#GSK_Tool_AddConnection").css("display", "none");
 	$("#GSK_Tool_EditConnection").css("display", "none");
 	$("#GSK_Tool_Delete").css("display", "none");
+	$("#GSK_Tool_FilesView").css("display", "none");
+	$("#GSK_Tool_SimView").css("display", "none");
 }
 
 
