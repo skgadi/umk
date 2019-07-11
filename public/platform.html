@@ -33,14 +33,21 @@ html, body, select {
 	box-sizing: content-box;
 }
 
+.ToolBarButton>div {
+	border-width: 2px !important;
+	border-color: rgba(80,197,56,1) !important;
+	width: 30px;
+	height: 30px;
+}
+
 .ToolBarButton {
 	padding: 2px;
 	font-size: 15px;
     color: rgba(80,197,56,1);
 	-webkit-user-drag: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	width: 34px;
-	height: 34px;
+	width: 33px;
+	height: 33px;
 	border-radius: 17px;
 	display: inline-block;
 	cursor: pointer;
@@ -57,6 +64,7 @@ html, body, select {
 </head>
 <body>
 <div id="mynetwork"></div>
+<div id="app">
 <div class="w3-modal" style="position: fixed; left: 0px; top: 0px;" id="ModalScreen" onclick="closeLeftMenu()">
 	<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;position: fixed; left: 0px; top: 0px;" id="mySidebar">
 		<button onclick="closeLeftMenu()" class="w3-button w3-large">Close &times;</button>
@@ -92,10 +100,22 @@ html, body, select {
   <i class="far fa-circle fa-stack-2x"></i>
   <i class="fas fa-file fa-stack-1x"></i>
 </span>
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
+<template v-for="(tool, index) in tools">
+	<div v-if="tool.display" class="w3-display-container ToolBarButton" v-bind:id="'GSK_Tool_'+index" v-bind:style="'top:'+tool.top+'px; left:'+tool.left+'px;'" onclick="openLeftMenu()">
+		<div class="w3-display-middle w3-circle w3-border">
+		<i class="w3-display-middle" v-bind:class="tool.icon"></i>
+		</div>
+	</div>			
+</template>
+<div class="w3-display-container ToolBarButton" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
+	<div class="w3-display-middle w3-circle w3-border">
+	<i class="w3-display-middle fas fa-vector-square"></i>
+	</div>
+</div>
+<!--span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
   <i class="far fa-circle fa-stack-2x"></i>
   <i class="fas fa-vector-square fa-stack-1x"></i>
-</span>
+</span-->
 <span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_EditBlock" onclick="openLeftMenu()">
   <i class="far fa-circle fa-stack-2x"></i>
   <i class="fas fa-cog fa-stack-1x"></i>
@@ -112,7 +132,7 @@ html, body, select {
   <i class="far fa-circle fa-stack-2x"></i>
   <i class="fas fa-trash-alt fa-stack-1x"></i>
 </span>
-
+</div>
 <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
@@ -141,60 +161,13 @@ $(document).keyup(function(e) {
 });
 </script>
 
-	
-	
-	   
-	<!--div class="fixed-action-btn"> 
-		<a class="btn-floating btn-large red">
-			<i class="large material-icons">mode_edit</i>
-		</a>
-		<ul>
-			<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-			<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-			<li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-			<li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-		</ul>
-	</div>
-
-
-	<div id="container">
-	  <h3>Uyamak</h3>
-	  <div id="loading">Loading...</div>
-	  <div id="loaded" class="hidden">
-		<div id="main">
-		  <div id="user-signed-in" class="hidden">
-			<div id="user-info">
-			  <div id="photo-container">
-				<img id="photo">
-			  </div>
-			  <div id="name"></div>
-			  <div id="email"></div>
-			  <div id="phone"></div>
-			  <div id="is-new-user"></div>
-			  <div class="clearfix"></div>
-			</div>
-			<p>
-			  <button id="sign-out">Sign Out</button>
-			  <button id="delete-account">Delete account</button>
-			</p>
-		  </div>
-		  <div id="user-signed-out" class="hidden">
-			<h4>You are signed out.</h4>
-			<div id="firebaseui-spa">
-			  <h5>Single Page Application mode:</h5>
-			  <div id="firebaseui-container"></div>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	</div-->
-	
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
 var GSK_FIRST_SELECTED_NODE;
 var GSK_FIRST_SELECTED_EDGE;
 var GSK_HIDE_TOOLS = true;
+var GSK_TOOL_ICON_RADIUS = 15;
 var GSK_STATE = "DESIGN" ; // DESIGN, 
 
 /*Permananet Stuff End*/
@@ -299,7 +272,11 @@ network.on("showPopup", function (params) {
 	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 })
 network.on('click', function (params) {
-	switch (params.nodes.length) {
+	hideTools();
+	if ((params.nodes.length === 0) && (params.edges.length === 0)) {
+		placeATool("addBlock");
+	}
+	/*switch (params.nodes.length) {
 		case 0:
 			GSK_FIRST_SELECTED_NODE = undefined;
 		break;
@@ -319,15 +296,28 @@ network.on('click', function (params) {
 	if ((network.getSelectedNodes().length === 0) && ((network.getSelectedEdges().length === 0))) {
 		console.log(params);
 		GSK_HIDE_TOOLS = false;
-		if (params.pointer.DOM.y>40) AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y-36}, "top");
-		else  AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x, y: params.pointer.DOM.y+36}, "top");
-	}
+		if (params.pointer.DOM.y>40) AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x-GSK_TOOL_ICON_RADIUS, y: params.pointer.DOM.y-36}, "top");
+		else  AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x-GSK_TOOL_ICON_RADIUS, y: params.pointer.DOM.y+15}, "top");
+	}*/
 });
 network.on("afterDrawing", function (params) {
 	if (GSK_STATE === "DESIGN")
         PlaceTools();
 });
 
+var toolPosition_x = 50;
+var toolPosition_y = 50;
+function placeATool(toolIndex) {
+	console.log(app.$data.tools[toolIndex]);
+	app.$set(app.$data.tools[toolIndex], "display", true);
+	app.$set(app.$data.tools[toolIndex], "left", toolPosition_x);
+	app.$set(app.$data.tools[toolIndex], "top", toolPosition_y);
+}
+function hideTools() {
+	for (var tool in app.$data.tools) {
+		app.$data.tools[tool].display = false;
+	}
+}
 function PlaceTools() {
 	if (GSK_HIDE_TOOLS) HideAllTheTools();
 	else GSK_HIDE_TOOLS = true;
@@ -384,13 +374,13 @@ function PreparePointToPlaceTools() {
 	if (network.getSelectedNodes().length>0) {
 		if ((GSK_FIRST_SELECTED_NODE === undefined) || !(network.getSelectedNodes().includes(GSK_FIRST_SELECTED_NODE))) GSK_FIRST_SELECTED_NODE = network.getSelectedNodes()[0];
 		GSK_Func_Point = {
-			x: network.getScale()*(-network.getViewPosition().x + network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].x - network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.width/2) + $(window).width()/2,
+			x: network.getScale()*(-network.getViewPosition().x + network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].x - network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.width/2) + $(window).width()/2-GSK_TOOL_ICON_RADIUS,
 			y: network.getScale()*(+network.getViewPosition().y - network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].y + network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.height/2) + $(window).height()/2 + 5
 		};
 	} else if (network.getSelectedEdges().length>0) {
 		if (GSK_FIRST_SELECTED_EDGE === undefined) GSK_FIRST_SELECTED_EDGE = network.getSelectedEdges()[0];
 		GSK_Func_Point = {
-			x: network.getScale()*(-network.getViewPosition().x + (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.x + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.x)/2) + $(window).width()/2,
+			x: network.getScale()*(-network.getViewPosition().x + (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.x + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.x)/2) + $(window).width()/2-GSK_TOOL_ICON_RADIUS,
 			y: network.getScale()*(+network.getViewPosition().y - (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.y + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.y)/2) + $(window).height()/2
 		};
 	} else {
@@ -619,5 +609,17 @@ var initApp = function() {
 window.addEventListener('load', initApp);
 
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+var app = new Vue({
+  "el": '#app',
+  "data": {
+    "tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":"ture","top":"0","left":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":"ture","top":"0","left":"40"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":"ture","top":"0","left":"80"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":"ture","top":"0","left":"120"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":"ture","top":"0","left":"160"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":"ture","top":"0","left":"200"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":"ture","top":"0","left":"240"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":"ture","top":"0","left":"280"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":"ture","top":"0","left":"320"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":"ture","top":"0","left":"360"}}
+
+  }
+})
+</script>
+
 </body>
 </html>
