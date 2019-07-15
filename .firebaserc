@@ -1,5 +1,6 @@
 {
   "projects": {
-    "Simulator": "uyamak-dcc7f"
+    "Simulator": "uyamak-dcc7f",
+    "default": "uyamak-dcc7f"
   }
 }

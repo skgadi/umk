@@ -33,7 +33,7 @@ html, body, select {
 	box-sizing: content-box;
 }
 
-.ToolBarButton>div {
+.ToolBarButton>div, .ToolBarButton>img {
 	border-width: 2px !important;
 	border-color: rgba(80,197,56,1) !important;
 	width: 30px;
@@ -46,8 +46,8 @@ html, body, select {
     color: rgba(80,197,56,1);
 	-webkit-user-drag: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	width: 33px;
-	height: 33px;
+	width: 34px;
+	height: 34px;
 	border-radius: 17px;
 	display: inline-block;
 	cursor: pointer;
@@ -65,13 +65,26 @@ html, body, select {
 <body>
 <div id="mynetwork"></div>
 <div id="app">
-<div class="w3-modal" style="position: fixed; left: 0px; top: 0px;" id="ModalScreen" onclick="closeLeftMenu()">
-	<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;position: fixed; left: 0px; top: 0px;" id="mySidebar">
-		<button onclick="closeLeftMenu()" class="w3-button w3-large">Close &times;</button>
- 		<a href="#" class="w3-bar-item w3-button">Link 1</a>
-		<a href="#" class="w3-bar-item w3-button">Link 2</a>
-		<a href="#" class="w3-bar-item w3-button">Link 3</a>
+<div id="waitForProcessToFinish" class="w3-modal w3-display-container">
+	<div class="w3-display-middle w3-center w3-padding" style="background-color: rgba(255, 255, 255, 0.5);">
+			<p id="DOMWaitingHead" class="w3-large"></p>
+			<div class="fa-3x">
+					<i class="fas fa-spinner fa-pulse"></i>
+			</div>
+			<p id="DOMWaitingDesc" class="w3-large"></p>
 	</div>
+</div>
+			
+
+<div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer; position: fixed; left: 0px; top: 0px;" id="leftMenuOverlay"></div>
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu">
+	<span class="fa-stack w3-large w3-right w3-text-red" onclick="closeLeftMenu()" style="cursor: pointer;">
+		<i class="far fa-circle fa-stack-2x"></i>
+		<i class="fas fa-times fa-stack-1x"></i>
+	</span>
+	<a href="#" class="w3-bar-item w3-button">Link 1</a>
+	<a href="#" class="w3-bar-item w3-button">Link 2</a>
+	<a href="#" class="w3-bar-item w3-button">Link 3</a>
 </div>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
@@ -81,82 +94,47 @@ html, body, select {
   <a href="#" class="w3-bar-item w3-button">Link 3</a>
 </div>
 
-<!--div class="w3-bar">
-	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openLeftMenu()"><i class="fas fa-bars"></i></button>
-	<button style="padding: 0px;" class="w3-bar-item w3-button w3-xxxlarge" onclick="openRightMenu()"><i class="fas fa-bars"></i></button>
-</div-->
-
-
-
-<span class="fa-stack ToolBarButton" style="vertical-align: top; display: inline-block; cursor: pointer; position: fixed; top: 10px; left: 15px;" id="GSK_Tool_Menu" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-bars fa-stack-1x"></i>
-</span>
-<!--span class="fa-stack ToolBarButton" style="vertical-align: top; display: inline-block; top: 10px; right: 15px;" id="GSK_Tool_Signout" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-bug fa-stack-1x"></i>
-</span-->
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_NewFile" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-file fa-stack-1x"></i>
-</span>
+<div class="w3-display-container ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
+		<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
+	</div>			
+	
 <template v-for="(tool, index) in tools">
-	<div v-if="tool.display" class="w3-display-container ToolBarButton" v-bind:id="'GSK_Tool_'+index" v-bind:style="'top:'+tool.top+'px; left:'+tool.left+'px;'" onclick="openLeftMenu()">
+	<div v-if="tool.display" class="w3-display-container ToolBarButton" v-bind:id="'GSK_Tool_'+index"
+	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
+				+'px; left:'+ (toolConsts.DOM.x - 0.5*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
+	onclick="openLeftMenu()">
 		<div class="w3-display-middle w3-circle w3-border">
 		<i class="w3-display-middle" v-bind:class="tool.icon"></i>
 		</div>
 	</div>			
 </template>
-<div class="w3-display-container ToolBarButton" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
-	<div class="w3-display-middle w3-circle w3-border">
-	<i class="w3-display-middle fas fa-vector-square"></i>
-	</div>
-</div>
-<!--span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddBlock" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-vector-square fa-stack-1x"></i>
-</span-->
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_EditBlock" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-cog fa-stack-1x"></i>
-</span>
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_AddConnection" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-project-diagram fa-stack-1x"></i>
-</span>
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_EditConnection" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-pen fa-stack-1x"></i>
-</span>
-<span class="fa-stack ToolBarButton" style="vertical-align: top;" id="GSK_Tool_Delete" onclick="openLeftMenu()">
-  <i class="far fa-circle fa-stack-2x"></i>
-  <i class="fas fa-trash-alt fa-stack-1x"></i>
-</span>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
 function openLeftMenu() {
-  document.getElementById("ModalScreen").style.display = "block";
+	document.getElementById("leftMenuOverlay").style.display = "block";
+	document.getElementById("leftMenu").style.display = "block";
 }
 
 function closeLeftMenu() {
-  document.getElementById("ModalScreen").style.display = "none";
+	document.getElementById("leftMenu").style.display = "none";
+	document.getElementById("leftMenuOverlay").style.display = "none";
 }
 
 function openRightMenu() {
-  document.getElementById("rightMenu").style.display = "block";
+	document.getElementById("rightMenu").style.display = "block";
 }
 
 function closeRightMenu() {
-  document.getElementById("rightMenu").style.display = "none";
+	document.getElementById("rightMenu").style.display = "none";
 }
 
 $(document).keyup(function(e) {
      if (e.key === "Escape") { // escape key maps to keycode `27`
         closeLeftMenu();
-		HideAllTheTools();
+		hideTools();
     }
 });
 </script>
@@ -164,106 +142,102 @@ $(document).keyup(function(e) {
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
-var GSK_FIRST_SELECTED_NODE;
-var GSK_FIRST_SELECTED_EDGE;
-var GSK_HIDE_TOOLS = true;
-var GSK_TOOL_ICON_RADIUS = 15;
 var GSK_STATE = "DESIGN" ; // DESIGN, 
 
 /*Permananet Stuff End*/
 
-  // create an array with nodes
-  var nodes = new vis.DataSet([
-    {id: "1", label: 'Node Node Node 1', title:"\\(a \\ne 0\\)"},
-    {id: "2", label: 'Node Node 2'},
-    {id: "3", label: 'Node 3'},
-    {id: "4", label: 'Node 4'},
-    {id: "5", label: 'Node 5'}
-  ]);
+// create an array with nodes
+var nodes = new vis.DataSet([
+{id: "1", label: 'Node Node Node 1', title:"\\(a \\ne 0\\)"},
+{id: "2", label: 'Node Node 2'},
+{id: "3", label: 'Node 3'},
+{id: "4", label: 'Node 4'},
+{id: "5", label: 'Node 5'}
+]);
 
-  // create an array with edges
-  var edges = new vis.DataSet([
-    {from: 1, to: 3},
-    {from: 1, to: 2},
-    {from: 2, to: 4},
-    {from: 2, to: 5},
-    {from: 3, to: 3}
-  ]);
+// create an array with edges
+var edges = new vis.DataSet([
+{from: 1, to: 3},
+{from: 1, to: 2},
+{from: 2, to: 4},
+{from: 2, to: 5},
+{from: 3, to: 3}
+]);
 
-  // create a network
-  var container = document.getElementById('mynetwork');
-  var data = {
-    nodes: nodes,
-    edges: edges
-  };
-  var options = {
-  locale : "gsk",
-		locales : {
-			"gsk" : {
-				edit : 'Edit',
-				del : 'Delete selected',
-				back : 'Back',
-				addNode : 'Add block',
-				addEdge : 'New connection',
-				editNode : 'Edit block',
-				editEdge : 'Edit connection',
-				addDescription : 'Click in an empty space to place a new block.',
-				edgeDescription : 'Click on a block and drag the connection to another block to connect them.',
-				editEdgeDescription : 'Click on the control points and drag them to a block to connect to it.',
-				createEdgeError : 'Cannot connect to a cluster.',
-				deleteClusterError : 'Clusters cannot be deleted.',
-				editClusterError : 'Clusters cannot be edited.'
+// create a network
+var container = document.getElementById('mynetwork');
+var data = {
+nodes: nodes,
+edges: edges
+};
+var options = {
+locale : "gsk",
+	locales : {
+		"gsk" : {
+			edit : 'Edit',
+			del : 'Delete selected',
+			back : 'Back',
+			addNode : 'Add block',
+			addEdge : 'New connection',
+			editNode : 'Edit block',
+			editEdge : 'Edit connection',
+			addDescription : 'Click in an empty space to place a new block.',
+			edgeDescription : 'Click on a block and drag the connection to another block to connect them.',
+			editEdgeDescription : 'Click on the control points and drag them to a block to connect to it.',
+			createEdgeError : 'Cannot connect to a cluster.',
+			deleteClusterError : 'Clusters cannot be deleted.',
+			editClusterError : 'Clusters cannot be edited.'
+		}
+	},
+	interaction : {
+		navigationButtons : true,
+		keyboard : true,
+		multiselect : true,
+	},
+	nodes : {
+		shape : 'box',
+		color : {
+			border : '#000000',
+			background : "#ffffff",
+		},
+		font : {
+			color : '#000000',
+		},
+	},
+	edges : {
+		//smooth : false,
+		color : {
+			color : '#000000',
+		},
+		arrows : {
+			to : {
+				enabled : true,
+				scaleFactor : 1,
+				type : 'arrow'
 			}
 		},
-		interaction : {
-			navigationButtons : true,
-			keyboard : true,
-			multiselect : true,
+	},
+	physics : {
+		enabled : true,
+		solver : 'barnesHut',
+		barnesHut : {
+			centralGravity : 0,
+			springLength : 0,
+			avoidOverlap : 1,
+			damping : 1,
+			springConstant : 0.00,
+			gravitationalConstant : -1,
 		},
-		nodes : {
-			shape : 'box',
-			color : {
-				border : '#000000',
-				background : "#ffffff",
-			},
-			font : {
-				color : '#000000',
-			},
+		forceAtlas2Based : {
+			springLength : 50,
+			springConstant : 0,
+			avoidOverlap : 1,
+			centralGravity : 0.00,
+			gravitationalConstant : -1
 		},
-		edges : {
-			//smooth : false,
-			color : {
-				color : '#000000',
-			},
-			arrows : {
-				to : {
-					enabled : true,
-					scaleFactor : 1,
-					type : 'arrow'
-				}
-			},
-		},
-		physics : {
-			enabled : true,
-			solver : 'barnesHut',
-			barnesHut : {
-				centralGravity : 0,
-				springLength : 0,
-				avoidOverlap : 1,
-				damping : 1,
-				springConstant : 0.00,
-				gravitationalConstant : -1,
-			},
-			forceAtlas2Based : {
-				springLength : 50,
-				springConstant : 0,
-				avoidOverlap : 1,
-				centralGravity : 0.00,
-				gravitationalConstant : -1
-			},
-		},
-  };
-  var network = new vis.Network(container, data, options);
+	},
+};
+var network = new vis.Network(container, data, options);
 network.on("oncontext", function (params) {
 console.log(params);
 });  
@@ -273,341 +247,61 @@ network.on("showPopup", function (params) {
 })
 network.on('click', function (params) {
 	hideTools();
+	console.log(params);
+	tool_Order = 0;
+	var tempPoint;
 	if ((params.nodes.length === 0) && (params.edges.length === 0)) {
-		placeATool("addBlock");
+		placeATool("addBlock", params.pointer.canvas);
+		if (network.body.data.nodes.length)
+		placeATool("addConnection");
 	}
-	/*switch (params.nodes.length) {
-		case 0:
-			GSK_FIRST_SELECTED_NODE = undefined;
-		break;
-		case 1:
-			GSK_FIRST_SELECTED_NODE = params.nodes[0];
-		break;	
+	else if (params.nodes.length === 1) {
+		tempPoint = network.getPositions(params.nodes[0])[params.nodes[0]];
+		tempPoint.x = tempPoint.x - network.body.nodes[params.nodes[0]].shape.width/2;
+		tempPoint.y = tempPoint.y - network.body.nodes[params.nodes[0]].shape.height/2;
+		placeATool("addConnection", tempPoint);
+		placeATool("editBlock");
+		placeATool("delete");
 	}
-	switch (params.edges.length) {
-		case 0:
-			GSK_FIRST_SELECTED_EDGE = undefined;
-			break;
-		case 1:
-			GSK_FIRST_SELECTED_EDGE = params.edges[0];
-			break;	
+	else if ((params.nodes.length === 0) && (params.edges.length === 1)) {
+		tempPoint = {"x": 0, "y": 0};
+		tempPoint.x = (network.body.edges[params.edges[0]].from.x + network.body.edges[params.edges[0]].to.x)/2;
+		tempPoint.y = (network.body.edges[params.edges[0]].from.y + network.body.edges[params.edges[0]].to.y)/2;
+		placeATool("editConnection", tempPoint);
+		placeATool("delete");
 	}
-	HideAllTheTools();
-	if ((network.getSelectedNodes().length === 0) && ((network.getSelectedEdges().length === 0))) {
-		console.log(params);
-		GSK_HIDE_TOOLS = false;
-		if (params.pointer.DOM.y>40) AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x-GSK_TOOL_ICON_RADIUS, y: params.pointer.DOM.y-36}, "top");
-		else  AddATool("GSK_Tool_AddBlock", {x:params.pointer.DOM.x-GSK_TOOL_ICON_RADIUS, y: params.pointer.DOM.y+15}, "top");
-	}*/
+	else if ((params.nodes.length > 1) || (params.edges.length > 1)) {
+		placeATool("delete");
+	}
+
 });
 network.on("afterDrawing", function (params) {
-	if (GSK_STATE === "DESIGN")
-        PlaceTools();
+	try {
+		newDOMXY = network.canvasToDOM({"x": app.$data.toolConsts.canvas.x, "y": app.$data.toolConsts.canvas.y})
+		app.$set(app.$data.toolConsts.DOM, "x", newDOMXY.x)
+		app.$set(app.$data.toolConsts.DOM, "y", newDOMXY.y)
+	} catch (e) {
+		console.log("App is not yet ready");
+	}
+	/*if (GSK_STATE === "DESIGN")
+        PlaceTools();*/
 });
-
-var toolPosition_x = 50;
-var toolPosition_y = 50;
-function placeATool(toolIndex) {
-	console.log(app.$data.tools[toolIndex]);
+var tool_Order = 0;
+function placeATool(toolIndex, toolPoint=null) {
+	//console.log(app.$data.tools[toolIndex]);
+	if (toolPoint) {
+		app.$set(app.$data.toolConsts.canvas, "x", toolPoint.x);
+		app.$set(app.$data.toolConsts.canvas, "y", toolPoint.y);
+	}
 	app.$set(app.$data.tools[toolIndex], "display", true);
-	app.$set(app.$data.tools[toolIndex], "left", toolPosition_x);
-	app.$set(app.$data.tools[toolIndex], "top", toolPosition_y);
+	app.$set(app.$data.tools[toolIndex], "order", tool_Order);
+	tool_Order++;
 }
 function hideTools() {
 	for (var tool in app.$data.tools) {
 		app.$data.tools[tool].display = false;
 	}
 }
-function PlaceTools() {
-	if (GSK_HIDE_TOOLS) HideAllTheTools();
-	else GSK_HIDE_TOOLS = true;
-	var GSK_Func_Point = PreparePointToPlaceTools();
-	if (network.getSelectedNodes().length>0) {
-		var GSK_Func_Pos_X_Tool = GSK_Func_Point.x;
-		if (network.getSelectedNodes().length === 1) {
-			AddATool("GSK_Tool_EditBlock", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
-			GSK_Func_Pos_X_Tool += 36;
-			AddATool("GSK_Tool_AddConnection", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
-			GSK_Func_Pos_X_Tool += 36;
-		}
-		AddATool("GSK_Tool_Delete", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
-	} else if (network.getSelectedEdges().length>0) {
-		HideAllTheTools();
-		var GSK_Func_Pos_X_Tool = GSK_Func_Point.x;
-		if (network.getSelectedEdges().length === 1) {
-			AddATool("GSK_Tool_EditConnection", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});
-			GSK_Func_Pos_X_Tool += 36;
-		}
-		AddATool("GSK_Tool_Delete", {x:GSK_Func_Pos_X_Tool, y: GSK_Func_Point.y});		
-	} else {
-		
-	}
-}
-
-function AddATool(ToolID, Position, yPos = "bottom") {
-	if (yPos === "bottom") $("#"+ToolID).css("top", "");
-	else $("#"+ToolID).css("bottom", "");
-	$("#"+ToolID).css(yPos, Position.y+"px");
-	$("#"+ToolID).css("position", "fixed");
-	$("#"+ToolID).css("left", Position.x+"px");
-	$("#"+ToolID).css("display", "block");
-	console.log('sdf');
-	
-}
-
-function HideAllTheTools() {
-	$("#GSK_Tool_NewFile").css("display", "none");
-	$("#GSK_Tool_SaveFile").css("display", "none");
-	$("#GSK_Tool_DeleteFile").css("display", "none");
-	$("#GSK_Tool_AddBlock").css("display", "none");
-	$("#GSK_Tool_EditBlock").css("display", "none");
-	$("#GSK_Tool_AddConnection").css("display", "none");
-	$("#GSK_Tool_EditConnection").css("display", "none");
-	$("#GSK_Tool_Delete").css("display", "none");
-	$("#GSK_Tool_FilesView").css("display", "none");
-	$("#GSK_Tool_SimView").css("display", "none");
-}
-
-
-function PreparePointToPlaceTools() {
-	var GSK_Func_Point;
-	if (network.getSelectedNodes().length>0) {
-		if ((GSK_FIRST_SELECTED_NODE === undefined) || !(network.getSelectedNodes().includes(GSK_FIRST_SELECTED_NODE))) GSK_FIRST_SELECTED_NODE = network.getSelectedNodes()[0];
-		GSK_Func_Point = {
-			x: network.getScale()*(-network.getViewPosition().x + network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].x - network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.width/2) + $(window).width()/2-GSK_TOOL_ICON_RADIUS,
-			y: network.getScale()*(+network.getViewPosition().y - network.getPositions(GSK_FIRST_SELECTED_NODE)[GSK_FIRST_SELECTED_NODE].y + network.body.nodes[GSK_FIRST_SELECTED_NODE].shape.height/2) + $(window).height()/2 + 5
-		};
-	} else if (network.getSelectedEdges().length>0) {
-		if (GSK_FIRST_SELECTED_EDGE === undefined) GSK_FIRST_SELECTED_EDGE = network.getSelectedEdges()[0];
-		GSK_Func_Point = {
-			x: network.getScale()*(-network.getViewPosition().x + (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.x + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.x)/2) + $(window).width()/2-GSK_TOOL_ICON_RADIUS,
-			y: network.getScale()*(+network.getViewPosition().y - (network.body.edges[GSK_FIRST_SELECTED_EDGE].from.y + network.body.edges[GSK_FIRST_SELECTED_EDGE].to.y)/2) + $(window).height()/2
-		};
-	} else {
-		GSK_Func_Point = {
-			x: 0,
-			y: 0
-		};
-	}
-	if (GSK_Func_Point.x<0) GSK_Func_Point.x = 0;
-	if (GSK_Func_Point.y<0) GSK_Func_Point.y = 0;
-	return GSK_Func_Point;
-}
-</script>
-<script>
-
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * FirebaseUI initialization to be used in a Single Page application context.
- */
-
-/*
- * @return {!Object} The FirebaseUI config.
- */
-function getUiConfig() {
-  return {
-    'callbacks': {
-      // Called when the user has been successfully signed in.
-      'signInSuccessWithAuthResult': function(authResult, redirectUrl) {
-        if (authResult.user) {
-          handleSignedInUser(authResult.user);
-        }
-        if (authResult.additionalUserInfo) {
-          document.getElementById('is-new-user').textContent =
-              authResult.additionalUserInfo.isNewUser ?
-              'New User' : 'Existing User';
-        }
-        // Do not redirect.
-        return false;
-      }
-    },
-    // Opens IDP Providers sign-in flow in a popup.
-    'signInFlow': 'popup',
-    'signInOptions': [
-      // TODO(developer): Remove the providers you don't need for your app.
-      {
-        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        // Required to enable this provider in One-Tap Sign-up.
-        authMethod: 'https://accounts.google.com',
-        // Required to enable ID token credentials for this provider.
-        clientId: CLIENT_ID
-      },
-      /*{
-        provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        scopes :[
-          'public_profile',
-          'email',
-          'user_likes',
-          'user_friends'
-        ]
-      },
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-      firebase.auth.GithubAuthProvider.PROVIDER_ID,*/
-      {
-        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        // Whether the display name should be displayed in Sign Up page.
-        requireDisplayName: true,
-        signInMethod: 'password'
-      },
-      {
-        provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        recaptchaParameters: {
-          size: 'invisible'
-        }
-      },
-      /*firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID*/
-    ],
-    // Terms of service url.
-    'tosUrl': 'https://www.google.com',
-    // Privacy policy url.
-    'privacyPolicyUrl': 'https://www.google.com',
-    'credentialHelper': CLIENT_ID && CLIENT_ID != 'YOUR_OAUTH_CLIENT_ID' ?
-        firebaseui.auth.CredentialHelper.GOOGLE_YOLO :
-        firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM
-  };
-}
-
-// Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
-// Disable auto-sign in.
-ui.disableAutoSignIn();
-
-
-/**
- * @return {string} The URL of the FirebaseUI standalone widget.
- */
-function getWidgetUrl() {
-  return '/widget#recaptcha=' + 'invisible' + '&emailSignInMethod=' +
-      'password';
-}
-
-
-/**
- * Redirects to the FirebaseUI widget.
- */
-var signInWithRedirect = function() {
-  window.location.assign(getWidgetUrl());
-};
-
-
-/**
- * Open a popup with the FirebaseUI widget.
- */
-var signInWithPopup = function() {
-  window.open(getWidgetUrl(), 'Sign In', 'width=985,height=735');
-};
-
-
-/**
- * Displays the UI for a signed in user.
- * @param {!firebase.User} user
- */
-var handleSignedInUser = function(user) {
-  document.getElementById('user-signed-in').style.display = 'block';
-  document.getElementById('user-signed-out').style.display = 'none';
-  document.getElementById('name').textContent = user.displayName;
-  document.getElementById('email').textContent = user.email;
-  document.getElementById('phone').textContent = user.phoneNumber;
-  if (user.photoURL){
-    var photoURL = user.photoURL;
-    // Append size to the photo URL for Google hosted images to avoid requesting
-    // the image with its original resolution (using more bandwidth than needed)
-    // when it is going to be presented in smaller size.
-    if ((photoURL.indexOf('googleusercontent.com') != -1) ||
-        (photoURL.indexOf('ggpht.com') != -1)) {
-      photoURL = photoURL + '?sz=' +
-          document.getElementById('photo').clientHeight;
-    }
-    document.getElementById('photo').src = photoURL;
-    document.getElementById('photo').style.display = 'block';
-  } else {
-    document.getElementById('photo').style.display = 'none';
-  }
-};
-
-
-/**
- * Displays the UI for a signed out user.
- */
-var handleSignedOutUser = function() {
-  document.getElementById('user-signed-in').style.display = 'none';
-  document.getElementById('user-signed-out').style.display = 'block';
-  ui.start('#firebaseui-container', getUiConfig());
-};
-
-// Listen to change in auth state so it displays the correct UI for when
-// the user is signed in or not.
-firebase.auth().onAuthStateChanged(function(user) {
-  /*document.getElementById('loading').style.display = 'none';
-  document.getElementById('loaded').style.display = 'block';
-  user ? handleSignedInUser(user) : handleSignedOutUser();*/
-});
-
-/**
- * Deletes the user's account.
- */
-var deleteAccount = function() {
-  firebase.auth().currentUser.delete().catch(function(error) {
-    if (error.code == 'auth/requires-recent-login') {
-      // The user's credential is too old. She needs to sign in again.
-      firebase.auth().signOut().then(function() {
-        // The timeout allows the message to be displayed after the UI has
-        // changed to the signed out state.
-        setTimeout(function() {
-          alert('Please sign in again to delete your account.');
-        }, 1);
-      });
-    }
-  });
-};
-
-
-/**
- * Handles when the user changes the reCAPTCHA or email signInMethod config.
- */
-function handleConfigChange() {
-  var newRecaptchaValue = document.querySelector(
-      'input[name="recaptcha"]:checked').value;
-  var newEmailSignInMethodValue = document.querySelector(
-      'input[name="emailSignInMethod"]:checked').value;
-  location.replace(
-      location.pathname + '#recaptcha=' + newRecaptchaValue +
-      '&emailSignInMethod=' + newEmailSignInMethodValue);
-
-  // Reset the inline widget so the config changes are reflected.
-  ui.reset();
-  ui.start('#firebaseui-container', getUiConfig());
-}
-
-
-/**
- * Initializes the app.
- */
-var initApp = function() {
-  /*document.getElementById('sign-out').addEventListener('click', function() {
-    firebase.auth().signOut();
-  });
-  document.getElementById('delete-account').addEventListener(
-      'click', function() {
-        deleteAccount();
-      });*/
-};
-
-window.addEventListener('load', initApp);
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -615,11 +309,49 @@ window.addEventListener('load', initApp);
 var app = new Vue({
   "el": '#app',
   "data": {
-    "tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":"ture","top":"0","left":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":"ture","top":"0","left":"40"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":"ture","top":"0","left":"80"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":"ture","top":"0","left":"120"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":"ture","top":"0","left":"160"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":"ture","top":"0","left":"200"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":"ture","top":"0","left":"240"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":"ture","top":"0","left":"280"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":"ture","top":"0","left":"320"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":"ture","top":"0","left":"360"}}
-
+	  	"user": {"uid": "", "photoURL": ""},
+		"toolConsts":{"toolDiameter": 36, "canvas": {"x": 0, "y": 0},  "DOM": {"x": 0, "y": 0}},
+		"networkConst": {"scale": 0, "xView": 0, "yView": 1, "halfWidth": 0, "halfHeight": 0},
+		"tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":false,"y":"0","x":"0","order":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":false,"y":"0","x":"40","order":"1"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":false,"y":"0","x":"80","order":"2"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":false,"y":"0","x":"120","order":"3"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":false,"y":"0","x":"160","order":"4"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":false,"y":"0","x":"200","order":"5"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":false,"y":"0","x":"240","order":"6"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":false,"y":"0","x":"280","order":"7"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":false,"y":"0","x":"320","order":"8"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":false,"y":"0","x":"360","order":"9"}}
   }
 })
 </script>
 
+<script>
+function holdToFinishAProcess(title = null, description = null) {
+	if (title) document.getElementById("waitForProcessToFinish").style.display='block';
+	else document.getElementById("waitForProcessToFinish").style.display='none';
+	if (title) document.getElementById("DOMWaitingHead").innerText = title;
+	if (description) document.getElementById("DOMWaitingDesc").innerText = description;
+}
+holdToFinishAProcess("Connecting to database.", "Please wait while loading the app. If this process takes longer than a minute, check your internet connection and refresh the page.");
+</script>
+<script>
+firebase.auth().onAuthStateChanged(function (user) {
+	holdToFinishAProcess("Loading the app.")
+	TempRecAttempt = setInterval(function () {
+		console.log("attempt");
+		if (app) {
+			holdToFinishAProcess("Verifying the license.")
+			clearInterval(TempRecAttempt);
+			user ? handleSignedInUser(user) : handleSignedOutUser();
+		}
+	}, 500);
+});
+function handleSignedInUser(user) {
+	app.$data.user.uid = user.uid;
+	app.$data.user.photoURL = user.photoURL;
+	if (user.email && !user.emailVerified)
+		window.location.replace("/platform/verify-email?redirect=" + location.pathname);
+	else
+		loadTheGUI();
+}
+function handleSignedOutUser() {
+	window.location.replace("/sign-in?redirect=" + location.pathname);
+}
+function loadTheGUI() {
+	holdToFinishAProcess(false);
+}
+</script>
 </body>
 </html>
