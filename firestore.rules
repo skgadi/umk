@@ -5,5 +5,9 @@ service cloud.firestore {
     	allow read: if true;
       allow write: if (request.auth.uid == "4DYtf7b8cBVgvDJ1Taiz3cPK9qI2")
     }
+  	match /blocks/{summaryDoc} {
+    	allow read: if true;
+      allow write: if (request.auth.uid == "4DYtf7b8cBVgvDJ1Taiz3cPK9qI2")
+    }
   }
 }
