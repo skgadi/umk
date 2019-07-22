@@ -6,7 +6,7 @@ service cloud.firestore {
       allow write: if (request.auth.uid == "4DYtf7b8cBVgvDJ1Taiz3cPK9qI2")
     }
   	match /blocks/{summaryDoc} {
-    	allow read: if true;
+    	allow read: if (request.auth.uid != null);
       allow write: if (request.auth.uid == "4DYtf7b8cBVgvDJ1Taiz3cPK9qI2")
     }
   }
