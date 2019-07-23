@@ -478,6 +478,8 @@ function handleSignedOutUser() {
 	window.location.replace("/sign-in?redirect=" + location.pathname);
 }
 function loadTheGUI() {
+	app.$set(app.$data.user, 'uid', firebase.auth().currentUser.uid);
+	app.$set(app.$data.user, 'photoURL', firebase.auth().currentUser.photoURL);
 	db.collection("blocks-summary").get().then(function(querySnapshot) {
 		querySnapshot.forEach(function(doc) {
 			db.collection("blocks-summary").doc(doc.id).onSnapshot(function(doc) {
