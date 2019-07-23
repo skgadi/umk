@@ -79,29 +79,37 @@ html, body, select {
 <div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer; position: fixed; left: 0px; top: 0px;" id="leftMenuOverlay"></div>
 <div class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu">
 	<div>
-		<div class="w3-row">
-			<div class="w3-col s11">
-				<h3>{{hoverredBlock.name}}</h3>
-				<p>{{hoverredBlock.description}}</p>
-			</div>
-			<div class="w3-col s1 w3-center">
-				<span class="fa-stack w3-large w3-text-red" onclick="closeLeftMenu()" style="cursor: pointer;">
+			<div>
+			<span class="w3-large">Add a block to your network</span>
+			<span class="fa-stack w3-large w3-text-red w3-right" onclick="closeLeftMenu()" style="cursor: pointer; float:right;">
 					<i class="far fa-circle fa-stack-2x"></i>
 					<i class="fas fa-times fa-stack-1x"></i>
-				</span>
-			</div>
+			</span>
 		</div>
-		<input class="w3-input w3-border w3-border-theme" type="text" v-model.trim="filterForFunctions" placeholder="Search for a block"/>
+		<input class="w3-input w3-border w3-border-theme" type="text" v-model.trim="filterForFunctions" placeholder="Search for a block" :class="(!!filterForFunctions)?'w3-orange':''"/>
 		<div class="w3-border-theme w3-border">
 			<template v-for="(summaryItem, index) in blocksSummaryArray">
-				<div class="w3-theme w3-padding">{{summaryItem.name}} </div>
-				<div class="w3-row">
+				<div class="w3-theme-l3 w3-border w3-border-theme w3-padding" @click="toggleBlockDisplay(index)" style="cursor: pointer;">
+					<span v-if="blocksSummaryArray[index].display"><i class="fas fa-chevron-down"></i></span>
+					<span v-else><i class="fas fa-chevron-right"></i></span>
+					<span>{{summaryItem.name}}</span>
+				</div>
+				<div v-show="blocksSummaryArray[index].display" class="w3-row" :key="index+'_'+updatingCounter">
+					<ul class="w3-ul">
 					<template v-for="(block, index1) in getFilteredBlocks(blocksSummary[summaryItem.key].blocks)">
-						<div class="w3-col s2 w3-center" v-bind:title="block.name +'\n'+ block.description" @mouseover="setHoverredBlock(block.name, block.description)">
-							<div><img  v-bind:src="svgTextToURL(blocksSummary[summaryItem.key].preIcon + block.icon + blocksSummary[summaryItem.key].postIcon)" class="w3-bar-item tempSVGImg" style="width: 100%; padding: 0"></div>
-							<!--div>{{block.name}}</div-->
-						</div>
+						<li class="w3-row w3-hover w3-hover-theme" style="cursor: pointer;" @click="addABlock(summaryItem.key, block.key, (blocksSummary[summaryItem.key].preIcon + block.icon + blocksSummary[summaryItem.key].postIcon))">
+							<div class="w3-col s2">
+									<img v-bind:src="svgTextToURL(blocksSummary[summaryItem.key].preIcon + block.icon + blocksSummary[summaryItem.key].postIcon)" class="tempSVGImg" style="width:100%">
+							</div>
+							<div class="w3-col s10">
+								<div class="">
+									<span class="w3-large"><b>{{block.name}}</b></span><br>
+									<span class="w3-small"><i>{{block.description}}</i></span>
+								</div>
+							</div>
+						</li>
 					</template>
+					</ul>
 				</div>
 			</template>
 		</div>
@@ -134,6 +142,15 @@ html, body, select {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
+function removeAlltheObjectURLsForSVGImages() {
+	var i;
+	for (i=0; i< document.getElementsByClassName("tempSVGImg").length; i++) {
+		var url = document.getElementsByClassName("tempSVGImg")[i].src
+		URL.revokeObjectURL(url);
+	}
+	console.log("Cleaned images: "+ i);
+}
+
 function openLeftMenu() {
 	document.getElementById("leftMenuOverlay").style.display = "block";
 	document.getElementById("leftMenu").style.display = "block";
@@ -163,7 +180,7 @@ $(document).keyup(function(e) {
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
-var GSK_STATE = "DESIGN" ; // DESIGN, 
+var GSK_STATE = "DESIGN" ; // DESIGN, ADD_NODE
 
 /*Permananet Stuff End*/
 
@@ -199,7 +216,7 @@ nodes: nodes,
 edges: edges
 };
 var options = {
-locale : "gsk",
+	locale : "gsk",
 	locales : {
 		"gsk" : {
 			edit : 'Edit',
@@ -264,6 +281,16 @@ locale : "gsk",
 			gravitationalConstant : -1
 		},
 	},
+	manipulation: {
+		enabled : false,
+		addNode: function (data, callback) {
+			data.image = ICON_FOR_ADD_BLOCK;
+			data.shape = 'image';
+			callback(data);
+			document.getElementById('mynetwork').style.cursor = "";
+			GSK_STATE = 'DESIGN';
+		}
+	}
 };
 var network = new vis.Network(container, data, options);
 network.on("oncontext", function (params) {
@@ -277,29 +304,31 @@ network.on('click', function (params) {
 	hideTools();
 	console.log(params);
 	tool_Order = 0;
-	var tempPoint;
-	if ((params.nodes.length === 0) && (params.edges.length === 0)) {
-		placeATool("addBlock", params.pointer.canvas);
-		if (network.body.data.nodes.length)
-		placeATool("addConnection");
-	}
-	else if (params.nodes.length === 1) {
-		tempPoint = network.getPositions(params.nodes[0])[params.nodes[0]];
-		tempPoint.x = tempPoint.x - network.body.nodes[params.nodes[0]].shape.width/2;
-		tempPoint.y = tempPoint.y - network.body.nodes[params.nodes[0]].shape.height/2;
-		placeATool("addConnection", tempPoint);
-		placeATool("editBlock");
-		placeATool("delete");
-	}
-	else if ((params.nodes.length === 0) && (params.edges.length === 1)) {
-		tempPoint = {"x": 0, "y": 0};
-		tempPoint.x = (network.body.edges[params.edges[0]].from.x + network.body.edges[params.edges[0]].to.x)/2;
-		tempPoint.y = (network.body.edges[params.edges[0]].from.y + network.body.edges[params.edges[0]].to.y)/2;
-		placeATool("editConnection", tempPoint);
-		placeATool("delete");
-	}
-	else if ((params.nodes.length > 1) || (params.edges.length > 1)) {
-		placeATool("delete");
+	if (GSK_STATE === 'DESIGN') {
+		var tempPoint;
+		if ((params.nodes.length === 0) && (params.edges.length === 0)) {
+			placeATool("addBlock", params.pointer.canvas);
+			if (network.body.data.nodes.length)
+			placeATool("addConnection");
+		}
+		else if (params.nodes.length === 1) {
+			tempPoint = network.getPositions(params.nodes[0])[params.nodes[0]];
+			tempPoint.x = tempPoint.x - network.body.nodes[params.nodes[0]].shape.width/2;
+			tempPoint.y = tempPoint.y - network.body.nodes[params.nodes[0]].shape.height/2;
+			placeATool("addConnection", tempPoint);
+			placeATool("editBlock");
+			placeATool("delete");
+		}
+		else if ((params.nodes.length === 0) && (params.edges.length === 1)) {
+			tempPoint = {"x": 0, "y": 0};
+			tempPoint.x = (network.body.edges[params.edges[0]].from.x + network.body.edges[params.edges[0]].to.x)/2;
+			tempPoint.y = (network.body.edges[params.edges[0]].from.y + network.body.edges[params.edges[0]].to.y)/2;
+			placeATool("editConnection", tempPoint);
+			placeATool("delete");
+		}
+		else if ((params.nodes.length > 1) || (params.edges.length > 1)) {
+			placeATool("delete");
+		}
 	}
 
 });
@@ -332,11 +361,16 @@ function hideTools() {
 }
 </script>
 
+<script>
+let ICON_FOR_ADD_BLOCK=null;
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 var app = new Vue({
 	"el": '#app',
 	"data": {
+		"updatingCounter": 0,
 		"user": {"uid": "", "photoURL": ""},
 		"toolConsts":{"toolDiameter": 36, "canvas": {"x": 0, "y": 0},  "DOM": {"x": 0, "y": 0}},
 		"networkConst": {"scale": 0, "xView": 0, "yView": 1, "halfWidth": 0, "halfHeight": 0},
@@ -345,11 +379,14 @@ var app = new Vue({
 		"hoverredBlock": {"name": "", "description": ""},
 		"tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":false,"y":"0","x":"0","order":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":false,"y":"0","x":"40","order":"1"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":false,"y":"0","x":"80","order":"2"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":false,"y":"0","x":"120","order":"3"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":false,"y":"0","x":"160","order":"4"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":false,"y":"0","x":"200","order":"5"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":false,"y":"0","x":"240","order":"6"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":false,"y":"0","x":"280","order":"7"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":false,"y":"0","x":"320","order":"8"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":false,"y":"0","x":"360","order":"9"}}
 	},
+	"beforeUpdate": function () {
+		removeAlltheObjectURLsForSVGImages();
+	},
 	"computed": {
 		"blocksSummaryArray": function () {
 			try {
 				const tempSourceArray = Object.keys(this.blocksSummary).map( function (key) {
-					return {"key": key, "name": app.$data.blocksSummary[key].name, "order": app.$data.blocksSummary[key].order};
+					return {"key": key, "name": app.$data.blocksSummary[key].name, "order": app.$data.blocksSummary[key].order, "display": true};
 				});
 				console.log(tempSourceArray);
 				return tempSourceArray.sort((a, b) => (a.order - b.order));
@@ -360,6 +397,20 @@ var app = new Vue({
 		}
 	},
 	"methods": {
+		"addABlock": function (categoryID, blockID, pic){
+			let url = this.svgTextToURL("<svg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'>"+pic+"</svg>");
+			console.log(url);
+			if (!! ICON_FOR_ADD_BLOCK) URL.revokeObjectURL(ICON_FOR_ADD_BLOCK);
+			document.getElementById("mynetwork").style.cursor = "url("+url+"), auto";
+			ICON_FOR_ADD_BLOCK = url;
+			closeLeftMenu();
+			GSK_STATE="ADD_NODE";
+			network.addNodeMode();
+		},
+		"toggleBlockDisplay": function (index) {
+			this.updatingCounter++;
+			this.blocksSummaryArray[index].display = !this.blocksSummaryArray[index].display;
+		},
 		"setHoverredBlock": function (name, desc) {
 			this.hoverredBlock.name = name;
 			this.hoverredBlock.description = desc;
