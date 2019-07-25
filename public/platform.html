@@ -33,7 +33,7 @@ html, body, select {
 	box-sizing: content-box;
 }
 
-.ToolBarButton>div, .ToolBarButton>img {
+.ToolBarButton>div, .ToolBarButton>img, .ToolBarButton>i {
 	border-width: 2px !important;
 	border-color: rgba(80,197,56,1) !important;
 	width: 30px;
@@ -66,7 +66,7 @@ html, body, select {
 <div id="mynetwork"></div>
 <div id="app">
 <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
-	<div class="w3-display-middle w3-center w3-padding" style="background-color: rgba(255, 255, 255, 0.5);">
+	<div class="w3-display-middle w3-center w3-padding" style="background-color: rgba(255, 255, 255, 0.9);">
 			<p id="DOMWaitingHead" class="w3-large"></p>
 			<div class="fa-3x">
 					<i class="fas fa-spinner fa-pulse"></i>
@@ -97,14 +97,14 @@ html, body, select {
 				<div v-show="blocksSummaryArray[index].display" class="w3-row" :key="index+'_'+updatingCounter">
 					<ul class="w3-ul">
 					<template v-for="(block, index1) in getFilteredBlocks(blocksSummary[summaryItem.key].blocks)">
-						<li class="w3-row w3-hover w3-hover-theme" style="cursor: pointer;" @click="addABlock(summaryItem.key, block.key, (blocksSummary[summaryItem.key].preIcon + block.icon + blocksSummary[summaryItem.key].postIcon))">
-							<div class="w3-col s2">
-									<img v-bind:src="svgTextToURL(blocksSummary[summaryItem.key].preIcon + block.icon + blocksSummary[summaryItem.key].postIcon)" class="tempSVGImg" style="width:100%">
+						<li class="w3-row w3-hover w3-hover-theme" style="cursor: pointer; padding: 0px;" @click="addABlock(summaryItem.key, block.key)">
+							<div class="w3-col s2 w3-center">
+								<img v-bind:src="prepareSVGURL(iconText.icon1 + blocksSummary[summaryItem.key].colors.bg + iconText.icon2 + blocksSummary[summaryItem.key].colors.fg + iconText.icon3 + block.icon + iconText.icon4)" class="tempSVGImg" style="height:70px;">
 							</div>
 							<div class="w3-col s10">
 								<div class="">
-									<span class="w3-large"><b>{{block.name}}</b></span><br>
-									<span class="w3-small"><i>{{block.description}}</i></span>
+									<p class="w3-large" style="margin:0px;">{{block.name}}</p>
+									<p class="w3-small" style="margin:0px;"><i>{{block.description}}</i></p>
 								</div>
 							</div>
 						</li>
@@ -124,16 +124,20 @@ html, body, select {
 </div>
 
 <div class="w3-display-container ToolBarButton"  style="top: 10px; right: 15px;" onclick="openLeftMenu()">
-		<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
-	</div>			
+	<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
+</div>
+<div v-if="" class="w3-display-container ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
+	<i class="w3-display-middle w3-circle w3-border far fa-plus-square" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
 	
 <template v-for="(tool, index) in tools">
 	<div v-if="tool.display" class="w3-display-container ToolBarButton" v-bind:id="'GSK_Tool_'+index"
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
 				+'px; left:'+ (toolConsts.DOM.x - 0.5*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
 	onclick="openLeftMenu()">
-		<div class="w3-display-middle w3-circle w3-border">
-		<i class="w3-display-middle" v-bind:class="tool.icon"></i>
+		<i class="w3-display-middle w3-circle w3-border" v-bind:class="tool.icon" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+		<!--div class="w3-display-middle w3-circle w3-border">
+		<i class="w3-display-middle" v-bind:class="tool.icon"></i-->
 		</div>
 	</div>			
 </template>
@@ -142,15 +146,9 @@ html, body, select {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
-function removeAlltheObjectURLsForSVGImages() {
-	var i;
-	for (i=0; i< document.getElementsByClassName("tempSVGImg").length; i++) {
-		var url = document.getElementsByClassName("tempSVGImg")[i].src
-		URL.revokeObjectURL(url);
-	}
-	console.log("Cleaned images: "+ i);
+function prepareSVGURL(svg){
+	return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
 }
-
 function openLeftMenu() {
 	document.getElementById("leftMenuOverlay").style.display = "block";
 	document.getElementById("leftMenu").style.display = "block";
@@ -170,21 +168,34 @@ function closeRightMenu() {
 }
 
 $(document).keyup(function(e) {
-     if (e.key === "Escape") { // escape key maps to keycode `27`
-        closeLeftMenu();
+	if (e.key === "Escape") { // escape key maps to keycode `27`
+		if (app.$data.networkState === "ADD_NODE") app.$data.networkState = "DESIGN";
+		network.disableEditMode();
+		document.getElementById("mynetwork").style.cursor = "";
+		closeLeftMenu();
 		hideTools();
-    }
+	}
 });
 </script>
 
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
-var GSK_STATE = "DESIGN" ; // DESIGN, ADD_NODE
-
+let BLOCKS_LIB;
+//var GSK_STATE = "DESIGN" ; // DESIGN, ADD_NODE
+/*var GSK_CALLBACK;
+var GSK_DATA;*/
 /*Permananet Stuff End*/
 
-
+var changeChosenNodeSize = function(values, id, selected, hovering) {
+	values.size = 30;
+}
+var changeChosenNodeShadowColor = function(values, id, selected, hovering) {
+	values.shadowColor = app.getColorsForTheCategory().bg;
+	values.shadowX=0;
+	values.shadowY=0;
+	values.shadowSize = 20;
+}
 let svg ="<svg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='2' dy='2' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='#04FB6B' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='#FC36A9' stroke-width='10'><line x1='10' y1='50' x2= '90' y2='50'  /><line x1='50' y1='10' x2= '50' y2='90'/></g></svg>";
 let svg1 = "<svg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='2' dy='2' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='#04FB6B' filter='url(#f0)'/></g><g stroke-linecap='round' width='100' height='100' stroke='#FC36A9' stroke-width='10'><line x1='10' y1='50' x2= '90' y2='50'  /><line x1='50' y1='10' x2= '50' y2='90'/></g></svg>";
 let blob = new Blob([svg], {type: 'image/svg+xml'});
@@ -194,9 +205,9 @@ let url1 = URL.createObjectURL(blob1);
 // create an array with nodes
 var nodes = new vis.DataSet([
 {id: "1", label: 'Node Node Node 1', title:"\\(a \\ne 0\\)"},
-{id: "2", label: 'Node Node 2', image: {selected: url1, unselected: url}, shape: "image"},
-{id: "3", label: 'Node 3'},
-{id: "4", label: 'Node 4'},
+{id: "2", label: 'Node Node 2', color:"#00ff00", image: {selected: url1, unselected: url}, shape: "image", chosen: { label: false, node: changeChosenNodeShadowColor }},
+{id: "3", label: 'Node 3', shape: 'star', chosen: { label: false, node: changeChosenNodeShadowColor }},
+{id: "4", label: 'Node 4', color:"#ff0000"},
 {id: "5", label: 'Node 5'}
 ]);
 
@@ -250,9 +261,8 @@ var options = {
 		},
 	},
 	edges : {
-		//smooth : false,
 		color : {
-			color : '#000000',
+			inherit : 'from',
 		},
 		arrows : {
 			to : {
@@ -284,11 +294,15 @@ var options = {
 	manipulation: {
 		enabled : false,
 		addNode: function (data, callback) {
-			data.image = ICON_FOR_ADD_BLOCK;
+			//holdToFinishAProcess("Loading block information from server.");
+			data.image = app.createIconForNetwork();
 			data.shape = 'image';
+			data.chosen = { label: false, node: changeChosenNodeShadowColor };
+			data.shadow = {enabled: true, color: app.getColorsForTheCategory().fg, x:0, y:0};
+			data.color = app.getColorsForTheCategory().bg;
 			callback(data);
 			document.getElementById('mynetwork').style.cursor = "";
-			GSK_STATE = 'DESIGN';
+			app.$data.networkState = 'DESIGN';
 		}
 	}
 };
@@ -304,7 +318,7 @@ network.on('click', function (params) {
 	hideTools();
 	console.log(params);
 	tool_Order = 0;
-	if (GSK_STATE === 'DESIGN') {
+	if (app.$data.networkState === 'DESIGN') {
 		var tempPoint;
 		if ((params.nodes.length === 0) && (params.edges.length === 0)) {
 			placeATool("addBlock", params.pointer.canvas);
@@ -340,8 +354,6 @@ network.on("afterDrawing", function (params) {
 	} catch (e) {
 		console.log("App is not yet ready");
 	}
-	/*if (GSK_STATE === "DESIGN")
-        PlaceTools();*/
 });
 var tool_Order = 0;
 function placeATool(toolIndex, toolPoint=null) {
@@ -362,6 +374,7 @@ function hideTools() {
 </script>
 
 <script>
+	//GLOBAL VARS
 let ICON_FOR_ADD_BLOCK=null;
 </script>
 
@@ -370,6 +383,9 @@ let ICON_FOR_ADD_BLOCK=null;
 var app = new Vue({
 	"el": '#app',
 	"data": {
+		"networkState": "DESIGN",
+		"cid": null, //Category ID
+		"bid": null, // Block ID
 		"updatingCounter": 0,
 		"user": {"uid": "", "photoURL": ""},
 		"toolConsts":{"toolDiameter": 36, "canvas": {"x": 0, "y": 0},  "DOM": {"x": 0, "y": 0}},
@@ -377,10 +393,12 @@ var app = new Vue({
 		"blocksSummary": null,
 		"filterForFunctions": null,
 		"hoverredBlock": {"name": "", "description": ""},
+		"iconText":{"icon1":"<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='","icon2":"' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='","icon3":"' stroke-width='10' fill='none'>","icon4":"</g></svg>"},
+		"networkIcon":{"icon1":"<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='0' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='","icon2":"'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='","icon3":"' stroke-width='10' fill='none'>","icon4":"</g></svg>"},
 		"tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":false,"y":"0","x":"0","order":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":false,"y":"0","x":"40","order":"1"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":false,"y":"0","x":"80","order":"2"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":false,"y":"0","x":"120","order":"3"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":false,"y":"0","x":"160","order":"4"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":false,"y":"0","x":"200","order":"5"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":false,"y":"0","x":"240","order":"6"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":false,"y":"0","x":"280","order":"7"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":false,"y":"0","x":"320","order":"8"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":false,"y":"0","x":"360","order":"9"}}
 	},
 	"beforeUpdate": function () {
-		removeAlltheObjectURLsForSVGImages();
+		//removeAlltheObjectURLsForSVGImages();
 	},
 	"computed": {
 		"blocksSummaryArray": function () {
@@ -397,23 +415,33 @@ var app = new Vue({
 		}
 	},
 	"methods": {
-		"addABlock": function (categoryID, blockID, pic){
+		"getColorsForTheCategory": function() {
+			return this.blocksSummary[this.cid].colors;
+		},
+		"createIconForNetwork": function(){
+			return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(
+				this.networkIcon.icon1 + this.blocksSummary[this.cid].colors.bg + this.networkIcon.icon2 + this.blocksSummary[this.cid].colors.fg + this.networkIcon.icon3 + this.blocksSummary[this.cid].blocks[this.bid].icon  + this.networkIcon.icon4
+			);
+		},
+		"addABlock": function (categoryID, blockID){
+			this.cid = categoryID;
+			this.bid = blockID;
+			pic = this.iconText.icon1 + this.blocksSummary[categoryID].colors.bg + this.iconText.icon2 + this.blocksSummary[categoryID].colors.fg + this.iconText.icon3 + this.blocksSummary[categoryID].blocks[blockID].icon + this.iconText.icon4;
 			let url = this.svgTextToURL("<svg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'>"+pic+"</svg>");
 			console.log(url);
 			if (!! ICON_FOR_ADD_BLOCK) URL.revokeObjectURL(ICON_FOR_ADD_BLOCK);
 			document.getElementById("mynetwork").style.cursor = "url("+url+"), auto";
 			ICON_FOR_ADD_BLOCK = url;
 			closeLeftMenu();
-			GSK_STATE="ADD_NODE";
+			this.networkState ="ADD_NODE";
 			network.addNodeMode();
 		},
 		"toggleBlockDisplay": function (index) {
 			this.updatingCounter++;
 			this.blocksSummaryArray[index].display = !this.blocksSummaryArray[index].display;
 		},
-		"setHoverredBlock": function (name, desc) {
-			this.hoverredBlock.name = name;
-			this.hoverredBlock.description = desc;
+		"prepareSVGURL": function (svg) {
+			return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
 		},
 		"svgTextToURL": function (svg) {
 			svg = svg;
@@ -492,6 +520,13 @@ function loadTheGUI() {
 	});
 
 	holdToFinishAProcess(false);
+}
+
+function loadABlock(callback) {
+	//if (!!BLOCKS_LIB && !! BLOCKS_LIB[app.$data.bid]) 
+}
+function createIconForNetwork () {
+	return
 }
 </script>
 </body>
