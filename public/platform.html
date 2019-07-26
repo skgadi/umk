@@ -32,10 +32,17 @@ html, body, select {
 	border: 0px solid lightgray;
 	box-sizing: content-box;
 }
+.btnGreen, .btnGreen>div, .btnGreen>img, .btnGreen>i{
+	color: rgba(80,197,56,1);
+	border-color: rgba(80,197,56,1) !important;
+}
+.btnRed, .btnRed>div, .btnRed>img, .btnRed>i{
+	color: #ff0000;
+	border-color: #ff0000 !important;
+}
 
 .ToolBarButton>div, .ToolBarButton>img, .ToolBarButton>i {
 	border-width: 2px !important;
-	border-color: rgba(80,197,56,1) !important;
 	width: 30px;
 	height: 30px;
 }
@@ -43,7 +50,6 @@ html, body, select {
 .ToolBarButton {
 	padding: 2px;
 	font-size: 15px;
-    color: rgba(80,197,56,1);
 	-webkit-user-drag: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	width: 34px;
@@ -54,11 +60,18 @@ html, body, select {
 	position: fixed;
 }
 
-.ToolBarButton:hover {
+.btnGreen:hover {
 	box-shadow: 0 0 3px 3px rgba(56,207,21,.3);
 }
-.ToolBarButton:active {
+.btnGreen:active {
 	box-shadow: 0 0 1px 3px rgba(56,207,21,.95);
+}
+
+.btnRed:hover {
+	box-shadow: 0 0 3px 3px rgba(255,00,0,.3);
+}
+.btnRed:active {
+	box-shadow: 0 0 1px 3px rgba(255,00,0,.95);
 }
 </style>
 </head>
@@ -78,14 +91,13 @@ html, body, select {
 
 <div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer; position: fixed; left: 0px; top: 0px;" id="leftMenuOverlay"></div>
 <div class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu">
-	<div>
-			<div>
-			<span class="w3-large">Add a block to your network</span>
-			<span class="fa-stack w3-large w3-text-red w3-right" onclick="closeLeftMenu()" style="cursor: pointer; float:right;">
-					<i class="far fa-circle fa-stack-2x"></i>
-					<i class="fas fa-times fa-stack-1x"></i>
-			</span>
+	<span class="w3-right" onclick="" style="cursor: pointer; float: right; width: 35px; height: 35px;">
+		<div class="w3-display-container btnRed ToolBarButton" onclick="closeLeftMenu()">
+			<i class="w3-display-middle w3-circle w3-border fas fa-times" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
+	</span>
+	<div v-if="leftBarMode === 'ADD_BLOCK'">
+		<div class="w3-large">Add a block to your network</div>
 		<input class="w3-input w3-border w3-border-theme" type="text" v-model.trim="filterForFunctions" placeholder="Search for a block" :class="(!!filterForFunctions)?'w3-orange':''"/>
 		<div class="w3-border-theme w3-border">
 			<template v-for="(summaryItem, index) in blocksSummaryArray">
@@ -114,6 +126,9 @@ html, body, select {
 			</template>
 		</div>
 	</div>
+	<div v-if="leftBarMode === 'EDIT_BLOCK'">
+		<div class="w3-large">Edit parameters</div>
+	</div>
 </div>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
@@ -123,18 +138,21 @@ html, body, select {
   <a href="#" class="w3-bar-item w3-button">Link 3</a>
 </div>
 
-<div class="w3-display-container ToolBarButton"  style="top: 10px; right: 15px;" onclick="openLeftMenu()">
+<div class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; right: 15px;" onclick="openLeftMenu()">
 	<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
 </div>
-<div v-if="" class="w3-display-container ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
+<div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
 	<i class="w3-display-middle w3-circle w3-border far fa-plus-square" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div v-if="networkState === 'ADD_NODE'" class="w3-display-container btnRed ToolBarButton"  style="top: 10px; left: 15px;" onclick="disableEditMode()">
+	<i class="w3-display-middle w3-circle w3-border fas fa-times" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
 	
 <template v-for="(tool, index) in tools">
-	<div v-if="tool.display" class="w3-display-container ToolBarButton" v-bind:id="'GSK_Tool_'+index"
+	<div v-if="tool.display" class="w3-display-container btnGreen ToolBarButton" v-bind:id="'GSK_Tool_'+index"
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
 				+'px; left:'+ (toolConsts.DOM.x - 0.5*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
-	onclick="openLeftMenu()">
+	v-bind:onclick="tool.function">
 		<i class="w3-display-middle w3-circle w3-border" v-bind:class="tool.icon" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		<!--div class="w3-display-middle w3-circle w3-border">
 		<i class="w3-display-middle" v-bind:class="tool.icon"></i-->
@@ -149,12 +167,18 @@ html, body, select {
 function prepareSVGURL(svg){
 	return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
 }
-function openLeftMenu() {
+function openLeftMenu(content="ADD_BLOCK") {
+	if (app.$data.leftBarMode === "EDIT_BLOCK") {
+		let selectedNode = network.getSelectedNodes()[0];
+		app.$data.uyamakModel = Object.assign({}, network.body.nodes[network.getSelectedNodes()[0]].options.uyamakModel);
+	}
+	app.$data.leftBarMode = content;
 	document.getElementById("leftMenuOverlay").style.display = "block";
 	document.getElementById("leftMenu").style.display = "block";
 }
 
 function closeLeftMenu() {
+	app.$data.leftBarMode = null;
 	document.getElementById("leftMenu").style.display = "none";
 	document.getElementById("leftMenuOverlay").style.display = "none";
 }
@@ -169,22 +193,26 @@ function closeRightMenu() {
 
 $(document).keyup(function(e) {
 	if (e.key === "Escape") { // escape key maps to keycode `27`
-		if (app.$data.networkState === "ADD_NODE") app.$data.networkState = "DESIGN";
-		network.disableEditMode();
-		document.getElementById("mynetwork").style.cursor = "";
+		disableEditMode();
 		closeLeftMenu();
 		hideTools();
 	}
 });
+
+function disableEditMode() {
+	if (app.$data.networkState === "ADD_NODE") app.$data.networkState = "DESIGN";
+	network.disableEditMode();
+	document.getElementById("mynetwork").style.cursor = "";
+}
 </script>
 
 <script>
 /*Permananet Stuff Start*/
 /*Global vars*/
-let BLOCKS_LIB;
+const BLOCKS_LIB = {};
 //var GSK_STATE = "DESIGN" ; // DESIGN, ADD_NODE
-/*var GSK_CALLBACK;
-var GSK_DATA;*/
+var GSK_CALLBACK;
+var GSK_DATA;
 /*Permananet Stuff End*/
 
 var changeChosenNodeSize = function(values, id, selected, hovering) {
@@ -295,12 +323,12 @@ var options = {
 		enabled : false,
 		addNode: function (data, callback) {
 			//holdToFinishAProcess("Loading block information from server.");
-			data.image = app.createIconForNetwork();
-			data.shape = 'image';
 			data.chosen = { label: false, node: changeChosenNodeShadowColor };
 			data.shadow = {enabled: true, color: app.getColorsForTheCategory().fg, x:0, y:0};
 			data.color = app.getColorsForTheCategory().bg;
-			callback(data);
+			GSK_CALLBACK = callback;
+			GSK_DATA = data;
+			loadABlock();
 			document.getElementById('mynetwork').style.cursor = "";
 			app.$data.networkState = 'DESIGN';
 		}
@@ -378,12 +406,19 @@ function hideTools() {
 let ICON_FOR_ADD_BLOCK=null;
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
+<script src="/js/notyf.min.js"></script>
+<script>
+var notyf = new Notyf();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 var app = new Vue({
 	"el": '#app',
 	"data": {
 		"networkState": "DESIGN",
+		"leftBarMode": null,
+		"uyamakModel": {},
 		"cid": null, //Category ID
 		"bid": null, // Block ID
 		"updatingCounter": 0,
@@ -395,7 +430,7 @@ var app = new Vue({
 		"hoverredBlock": {"name": "", "description": ""},
 		"iconText":{"icon1":"<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='","icon2":"' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='","icon3":"' stroke-width='10' fill='none'>","icon4":"</g></svg>"},
 		"networkIcon":{"icon1":"<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='0' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='","icon2":"'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='","icon3":"' stroke-width='10' fill='none'>","icon4":"</g></svg>"},
-		"tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":false,"y":"0","x":"0","order":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":false,"y":"0","x":"40","order":"1"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":false,"y":"0","x":"80","order":"2"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu()","text":"Add block","display":false,"y":"0","x":"120","order":"3"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu()","text":"Edit block","display":false,"y":"0","x":"160","order":"4"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":false,"y":"0","x":"200","order":"5"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":false,"y":"0","x":"240","order":"6"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":false,"y":"0","x":"280","order":"7"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":false,"y":"0","x":"320","order":"8"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":false,"y":"0","x":"360","order":"9"}}
+		"tools":{"newFile":{"icon":"fas fa-file","function":"openLeftMenu()","text":"New file","display":false,"y":"0","x":"0","order":"0"},"saveFile":{"icon":"far fa-save","function":"openLeftMenu()","text":"Save file","display":false,"y":"0","x":"40","order":"1"},"deleteFile":{"icon":"far fa-trash-alt","function":"openLeftMenu()","text":"Delete file","display":false,"y":"0","x":"80","order":"2"},"addBlock":{"icon":"far fa-plus-square","function":"openLeftMenu('ADD_BLOCK')","text":"Add block","display":false,"y":"0","x":"120","order":"3"},"editBlock":{"icon":"far fa-edit","function":"openLeftMenu('EDIT_BLOCK')","text":"Edit block","display":false,"y":"0","x":"160","order":"4"},"addConnection":{"icon":"fas fa-project-diagram","function":"openLeftMenu()","text":"Add connection","display":false,"y":"0","x":"200","order":"5"},"editConnection":{"icon":"fas fa-pencil-alt","function":"openLeftMenu()","text":"Edit connection","display":false,"y":"0","x":"240","order":"6"},"delete":{"icon":"fas fa-eraser","function":"openLeftMenu()","text":"Delete","display":false,"y":"0","x":"280","order":"7"},"filesView":{"icon":"far fa-folder-open","function":"openLeftMenu()","text":"Files view","display":false,"y":"0","x":"320","order":"8"},"simView":{"icon":"fas fa-play","function":"openLeftMenu()","text":"Simulation view","display":false,"y":"0","x":"360","order":"9"}}
 	},
 	"beforeUpdate": function () {
 		//removeAlltheObjectURLsForSVGImages();
@@ -416,7 +451,11 @@ var app = new Vue({
 	},
 	"methods": {
 		"getColorsForTheCategory": function() {
-			return this.blocksSummary[this.cid].colors;
+			try {
+				return this.blocksSummary[this.cid].colors;
+			} catch(e) {
+				return {"fg": "#000000", "bg": "#ffffff"}
+			}
 		},
 		"createIconForNetwork": function(){
 			return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(
@@ -522,11 +561,104 @@ function loadTheGUI() {
 	holdToFinishAProcess(false);
 }
 
-function loadABlock(callback) {
-	//if (!!BLOCKS_LIB && !! BLOCKS_LIB[app.$data.bid]) 
+const blockTemplate=[{"name":"Category","type":"string","argument":""},{"name":"Name","type":"string","argument":""},{"name":"Description","type":"string","argument":""},{"name":"Parameters","type":"json","argument":""},{"name":"Label","type":"function","argument":""},{"name":"MaxInTerminals","type":"float","argument":""},{"name":"MaxOutTerminals","type":"float","argument":""},{"name":"Icon","type":"function","argument":""},{"name":"Init","type":"function","argument":""},{"name":"End","type":"function","argument":""},{"name":"Constructor","type":"function","argument":"Data"},{"name":"Destructor","type":"function","argument":"Data"},{"name":"RunTimeExec","type":"function","argument":""},{"name":"Evaluate","type":"function","argument":""},{"name":"Details","type":"function","argument":""},{"name":"ValidateParams","type":"function","argument":""}];
+function loadABlock () {
+	holdToFinishAProcess("Downloading the block from server");
+	try {
+	if (!BLOCKS_LIB || ! BLOCKS_LIB[app.$data.bid]) {
+			db.collection("blocks").doc(app.$data.bid).get()
+			.then(function (doc){
+				holdToFinishAProcess("Loading block's functionaliy");
+				if(doc.exists) {
+					convertDBDataToModel(doc.id, doc.data());
+					assignDataToNode();
+				}
+				else throw("Uyamak: Block Not found");
+			});
+	} else {
+		assignDataToNode();
+	}
+	} catch (e) {
+		console.log(e);
+		GSK_CALLBACK(null);
+		holdToFinishAProcess(false);
+		notyf.error('Error in adding this block.');
+	}
 }
-function createIconForNetwork () {
-	return
+function assignDataToNode() {
+	GSK_DATA.uyamakModel = Object.assign({}, BLOCKS_LIB[app.$data.bid]);
+	GSK_DATA.uyamakModel.Init();
+	GSK_DATA.image = app.createIconForNetwork();
+	GSK_DATA.shape = GSK_DATA.uyamakModel.Icon().shape;
+	GSK_DATA.label = GSK_DATA.uyamakModel.Label();
+	GSK_CALLBACK(GSK_DATA);
+	holdToFinishAProcess(false);
+}
+function addABlockToLibrary(bid){
+	db.collection("blocks").doc(bid).get()
+	.then(function (doc){
+		if(doc.exists){
+			try {
+				let dbBlockData = doc.data();
+				BLOCKS_LIB[doc.id]={};
+				blockTemplate.forEach(function (item){
+					let tempObj = {};
+					switch(item.type){
+						case "float":
+							if (! dbBlockData[item.name]) tempObj[item.name] = 0;
+							else tempObj[item.name] = parseFloat(dbBlockData[item.name]);
+							Object.assign(BLOCKS_LIB[doc.id], tempObj);
+							break;
+						case "string":
+							if (! dbBlockData[item.name]) tempObj[item.name] = "";
+							else tempObj[item.name] = dbBlockData[item.name].toString();
+							Object.assign(BLOCKS_LIB[doc.id], tempObj);
+							break
+						case "function":
+						if (! dbBlockData[item.name]) tempObj[item.name] = "";
+							else tempObj[item.name] = dbBlockData[item.name].toString();
+							tempObj[item.name] = eval("(function ("+ item.argument +"){" + tempObj[item.name] + "})");
+							Object.assign(BLOCKS_LIB[doc.id], tempObj);
+							break;
+					}
+				});
+				//BLOCKS_LIB[doc.id] = Object.assign({}, {"Parameters": JSON.parse(dbBlockData.Parameters), "Category": dbBlockData.Category, "MaxInTerminals": parseFloat(dbBlockData.MaxInTerminals), "MaxOutTerminals": parseFloat(dbBlockData.MaxOutTerminals) });
+				console.log(doc);
+			} catch (e) {
+				console.log("error in adding the block to the library");
+				console.log(e);
+			}
+		}
+	});
+}
+function convertDBDataToModel(bid, dbBlockData) {
+	BLOCKS_LIB[bid]={};
+	blockTemplate.forEach(function (item){
+		let tempObj = {};
+		switch(item.type){
+			case "float":
+				if (! dbBlockData[item.name]) tempObj[item.name] = 0;
+				else tempObj[item.name] = parseFloat(dbBlockData[item.name]);
+				Object.assign(BLOCKS_LIB[bid], tempObj);
+				break;
+			case "string":
+				if (! dbBlockData[item.name]) tempObj[item.name] = "";
+				else tempObj[item.name] = dbBlockData[item.name].toString();
+				Object.assign(BLOCKS_LIB[bid], tempObj);
+				break
+			case "function":
+				if (! dbBlockData[item.name]) tempObj[item.name] = "";
+				else tempObj[item.name] = dbBlockData[item.name].toString();
+				tempObj[item.name] = eval("(function ("+ item.argument +"){" + dbBlockData[item.name] + "})");
+				Object.assign(BLOCKS_LIB[bid], tempObj);
+				break;
+			case "json":
+				if (! dbBlockData[item.name]) tempObj[item.name] = [];
+				else tempObj[item.name] = JSON.parse(dbBlockData[item.name]);
+				Object.assign(BLOCKS_LIB[bid], tempObj);
+				break;
+		}
+	});
 }
 </script>
 </body>
