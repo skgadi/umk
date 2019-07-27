@@ -11,18 +11,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css">
+	<!--link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css"-->
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	
 	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+	<script src="/js/notyf.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <style>
 html, body, select {
 	/*font: 9pt sans;*/
 	width: 100%;
 	height: 100%;
 	margin: 0px;
+	line-height: initial;
 }
 
 #mynetwork {
@@ -73,6 +80,14 @@ html, body, select {
 .btnRed:active {
 	box-shadow: 0 0 1px 3px rgba(255,00,0,.95);
 }
+
+.rotateNote {
+	-webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
 </style>
 </head>
 <body>
@@ -91,43 +106,83 @@ html, body, select {
 
 <div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer; position: fixed; left: 0px; top: 0px;" id="leftMenuOverlay"></div>
 <div class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu">
-	<span class="w3-right" onclick="" style="cursor: pointer; float: right; width: 35px; height: 35px;">
+	<span class="w3-right" onclick="" style="cursor: pointer; float: right; width: 55px; height: 55px; padding: 10px;">
 		<div class="w3-display-container btnRed ToolBarButton" onclick="closeLeftMenu()">
 			<i class="w3-display-middle w3-circle w3-border fas fa-times" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
 	</span>
 	<div v-if="leftBarMode === 'ADD_BLOCK'">
-		<div class="w3-large">Add a block to your network</div>
+		<p class="w3-xlarge" style="margin:0px;"><b>Add block</b></p>
+		<p class="w3-small" style="margin:0px;"><i>Please selet one of the blocks shown below to place it on your network.</i></p>
 		<input class="w3-input w3-border w3-border-theme" type="text" v-model.trim="filterForFunctions" placeholder="Search for a block" :class="(!!filterForFunctions)?'w3-orange':''"/>
-		<div class="w3-border-theme w3-border">
-			<template v-for="(summaryItem, index) in blocksSummaryArray">
-				<div class="w3-theme-l3 w3-border w3-border-theme w3-padding" @click="toggleBlockDisplay(index)" style="cursor: pointer;">
-					<span v-if="blocksSummaryArray[index].display"><i class="fas fa-chevron-down"></i></span>
-					<span v-else><i class="fas fa-chevron-right"></i></span>
-					<span>{{summaryItem.name}}</span>
-				</div>
-				<div v-show="blocksSummaryArray[index].display" class="w3-row" :key="index+'_'+updatingCounter">
-					<ul class="w3-ul">
-					<template v-for="(block, index1) in getFilteredBlocks(blocksSummary[summaryItem.key].blocks)">
-						<li class="w3-row w3-hover w3-hover-theme" style="cursor: pointer; padding: 0px;" @click="addABlock(summaryItem.key, block.key)">
-							<div class="w3-col s2 w3-center">
-								<img v-bind:src="prepareSVGURL(iconText.icon1 + blocksSummary[summaryItem.key].colors.bg + iconText.icon2 + blocksSummary[summaryItem.key].colors.fg + iconText.icon3 + block.icon + iconText.icon4)" class="tempSVGImg" style="height:70px;">
+		<template v-for="(summaryItem, index) in blocksSummaryArray">
+			<div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleBlockDisplay(index)" style="cursor: pointer;" :key="index+'_'+updatingCounter">
+				<span v-if="blocksSummaryArray[index].display"><i class="fas fa-caret-down fa-fw"></i></span>
+				<span v-else><i class="fas fa-caret-right fa-fw"></i></span>
+				<span>{{summaryItem.name}}</span>
+			</div>
+			<div v-show="blocksSummaryArray[index].display">
+				<ul class="w3-ul">
+				<template v-for="(block, index1) in getFilteredBlocks(blocksSummary[summaryItem.key].blocks)">
+					<li class="w3-row w3-hover w3-hover-theme w3-border-theme" style="cursor: pointer; padding: 0px;" @click="addABlock(summaryItem.key, block.key)">
+						<div class="w3-col s2 w3-center">
+							<img v-bind:src="prepareSVGURL(iconText.icon1 + blocksSummary[summaryItem.key].colors.bg + iconText.icon2 + blocksSummary[summaryItem.key].colors.fg + iconText.icon3 + block.icon + iconText.icon4)" class="tempSVGImg" style="height:70px; max-width: 100%;">
+						</div>
+						<div class="w3-col s10">
+							<div class="">
+								<p class="" style="margin:0px;"><b>{{block.name}}</b></p>
+								<p class="w3-small" style="margin:0px;"><i>{{block.description}}</i></p>
 							</div>
-							<div class="w3-col s10">
-								<div class="">
-									<p class="w3-large" style="margin:0px;">{{block.name}}</p>
-									<p class="w3-small" style="margin:0px;"><i>{{block.description}}</i></p>
-								</div>
-							</div>
-						</li>
-					</template>
-					</ul>
-				</div>
-			</template>
-		</div>
+						</div>
+					</li>
+				</template>
+				</ul>
+			</div>
+		</template>
 	</div>
 	<div v-if="leftBarMode === 'EDIT_BLOCK'">
-		<div class="w3-large">Edit parameters</div>
+		<p class="w3-xlarge" style="margin:0px;"><b>Edit block parameters</b></p>
+		<p class="w3-small" style="margin:0px;"><i>Modify the parameters and click save to chagne them.</i></p>
+		<template v-for="(Parameter, index) in uyamakModel.Parameters">
+			<div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)" style="cursor: pointer;">
+				<span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span>
+				<span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span>
+				<span>{{Parameter.Name}}</span>
+			</div>
+			<div v-if="!!parametersDisplay[index]" >
+					<div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1">
+						<div @click="valueDimensionsModify(0, index)" style="width: 40px; height: 40px; padding:0px;" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div>
+						<div @click="valueDimensionsModify(1, index)" style="width: 40px; height: 40px; padding:0px;" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div>
+						<div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width: 40px; height: 40px; padding:0px;" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div>
+						<div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width: 40px; height: 40px; padding:0px;" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div>
+					</div>
+					<div class="w3-responsive">
+					<table class="w3-table-all">
+					<template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']">
+						<tr v-if="index1 === 0" style="padding: 0;">
+							<td v-if="(Parameter.Dimension === 'Matrix')" class="w3-light-gray w3-border w3-border-theme"></td>
+						<template  v-if="(Parameter.Dimension === 'Matrix')" v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
+							<td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">{{index2+1}}</td>
+						</template>
+						</tr>
+						<tr style="padding: 0;" class="w3-border-theme">
+							<td  v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0; vertical-align: middle;" class="w3-light-gray w3-border w3-border-theme">{{(index1+1)}}</td>
+						<template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
+							<td style="padding: 0;" class="w3-border w3-border-theme">
+							<input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text">
+							<input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 0px; min-height: 35px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type='color'>
+							</td>
+						</template>
+						</tr>
+					</template>
+					</table>
+				</div>
+			</div>
+		</template>
+		<p class="w3-xlarge" style="margin:0px;"><b>Functionality</b></p>
+		<p class="w3-small" style="margin:0px;"><i>The input and output to the blocks are given as $u(t)$ and $y(t)$ respectively. $t$ is the simulation time in seconds.</i></p>
+		<div v-html="getBlockDetails()">
+		</div>
 	</div>
 </div>
 
@@ -142,10 +197,10 @@ html, body, select {
 	<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
 </div>
 <div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
-	<i class="w3-display-middle w3-circle w3-border far fa-plus-square" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+	<i class="w3-display-middle w3-circle w3-border far fa-plus-square fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
 <div v-if="networkState === 'ADD_NODE'" class="w3-display-container btnRed ToolBarButton"  style="top: 10px; left: 15px;" onclick="disableEditMode()">
-	<i class="w3-display-middle w3-circle w3-border fas fa-times" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+	<i class="w3-display-middle w3-circle w3-border fas fa-times fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
 	
 <template v-for="(tool, index) in tools">
@@ -153,24 +208,21 @@ html, body, select {
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
 				+'px; left:'+ (toolConsts.DOM.x - 0.5*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
 	v-bind:onclick="tool.function">
-		<i class="w3-display-middle w3-circle w3-border" v-bind:class="tool.icon" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+		<i class="w3-display-middle w3-circle w3-border fa-fw" v-bind:class="tool.icon" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		<!--div class="w3-display-middle w3-circle w3-border">
 		<i class="w3-display-middle" v-bind:class="tool.icon"></i-->
 		</div>
 	</div>			
 </template>
 </div>
-<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>	
 <script>
 function prepareSVGURL(svg){
 	return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
 }
 function openLeftMenu(content="ADD_BLOCK") {
-	if (app.$data.leftBarMode === "EDIT_BLOCK") {
-		let selectedNode = network.getSelectedNodes()[0];
-		app.$data.uyamakModel = Object.assign({}, network.body.nodes[network.getSelectedNodes()[0]].options.uyamakModel);
+	if (content === "EDIT_BLOCK") {
+		app.$set(app.$data, "uyamakModel", Object.assign({}, network.body.nodes[network.getSelectedNodes()[0]].options.uyamakModel));
+		app.$set(app.$data, "parametersDisplay",new Array(app.$data.uyamakModel.Parameters.length).fill(false));
 	}
 	app.$data.leftBarMode = content;
 	document.getElementById("leftMenuOverlay").style.display = "block";
@@ -275,7 +327,7 @@ var options = {
 	},
 	interaction : {
 		navigationButtons : true,
-		keyboard : true,
+		//keyboard : true,
 		multiselect : true,
 	},
 	nodes : {
@@ -406,12 +458,38 @@ function hideTools() {
 let ICON_FOR_ADD_BLOCK=null;
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
-<script src="/js/notyf.min.js"></script>
+<script>
+//MathJax setup
+MathJax.Hub.Config({
+	messageStyle: "none",
+	menuSettings : {
+		inTabOrder : false
+	},
+	extensions : ["tex2jax.js"],
+	jax : ["input/TeX", "output/HTML-CSS"],
+	tex2jax : {
+		preview: "none",
+		inlineMath : [["$", "$"], ["\\(", "\\)"]]
+	}
+});
+/*MathJax.Hub.Config({
+	menuSettings : {
+		inTabOrder : false
+	},
+	extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { fonts: ["TeX"] }
+});
+MathJax.Hub.Configured();*/
+</script>
 <script>
 var notyf = new Notyf();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 var app = new Vue({
 	"el": '#app',
@@ -419,6 +497,8 @@ var app = new Vue({
 		"networkState": "DESIGN",
 		"leftBarMode": null,
 		"uyamakModel": {},
+		"parametersDisplay": null,
+		"validInputs":[[[]]],
 		"cid": null, //Category ID
 		"bid": null, // Block ID
 		"updatingCounter": 0,
@@ -435,6 +515,9 @@ var app = new Vue({
 	"beforeUpdate": function () {
 		//removeAlltheObjectURLsForSVGImages();
 	},
+	"updated": function () {
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	},
 	"computed": {
 		"blocksSummaryArray": function () {
 			try {
@@ -450,6 +533,71 @@ var app = new Vue({
 		}
 	},
 	"methods": {
+		"validateParamCellEntry": function(index, index1, index2) {
+			var tempValue = this.uyamakModel.Parameters[index].Value[index1][index2];
+			try {
+				switch (this.uyamakModel.Parameters[index].Type) {
+					case "Integer":
+						return ((typeof math.evaluate(tempValue) === 'number') && (math.evaluate(tempValue) % 1 === 0));
+						break;
+					case "Real":
+						return (typeof math.evaluate(tempValue) === 'number');
+						break;
+					case "Complex":
+						return ((math.evaluate(tempValue).type === 'Complex') || (typeof math.evaluate(tempValue) === 'number'));
+						break;
+					case "Text":
+					case "Color":
+					case "Option":
+						return (tempValue !== "" && tempValue !== null);
+						break;
+				}
+			} catch(e){
+				console.log(e);
+				return false;
+			}
+		},
+		"getBlockDetails": function () {
+			try {
+				return this.uyamakModel.Details();
+			} catch (e) {
+				console.log(e);
+				return "!!! ERROR"
+			}
+		},
+		"valueDimensionsModify": function (func, index) {
+			var tempItem;
+			switch (this.uyamakModel.Parameters[index].Type) {
+				case "Integer":
+				case "Real":
+				case "Complex":
+					tempItem = 0;
+					break;
+				case "Text":
+					tempItem = "";
+					break;
+				case "Color":
+					tempItem = "Black";
+					break;
+			}
+			switch (func) {
+				case 0:
+					this.uyamakModel.Parameters[index].Value.push(new Array(this.uyamakModel.Parameters[index].Value[0].length).fill(tempItem));
+					break;
+				case 1:
+					if (this.uyamakModel.Parameters[index].Value.length>1) this.uyamakModel.Parameters[index].Value.pop();
+					break;
+				case 2:
+					this.uyamakModel.Parameters[index].Value.map(function(val){return val.push(tempItem);})
+					break;
+				case 3:
+				if (this.uyamakModel.Parameters[index].Value[0].length>1) {
+					this.uyamakModel.Parameters[index].Value.map(function(val){return val.pop();})
+				}
+				break;
+			}
+			this.updatingCounter++;
+		},
 		"getColorsForTheCategory": function() {
 			try {
 				return this.blocksSummary[this.cid].colors;
@@ -474,6 +622,11 @@ var app = new Vue({
 			closeLeftMenu();
 			this.networkState ="ADD_NODE";
 			network.addNodeMode();
+		},
+		"toggleParamDisplay": function (index) {
+			console.log(this.parametersDisplay);
+			this.updatingCounter++;
+			this.parametersDisplay[index] = !this.parametersDisplay[index];
 		},
 		"toggleBlockDisplay": function (index) {
 			this.updatingCounter++;
