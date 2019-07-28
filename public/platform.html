@@ -21,6 +21,7 @@
 	<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+	<script src="/js/augmented-json-serialization-functions.js"></script>
 	<script src="/js/notyf.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <style>
@@ -159,9 +160,9 @@ html, body, select {
 					<div class="w3-responsive">
 					<table class="w3-table-all">
 					<template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']">
-						<tr v-if="index1 === 0" style="padding: 0;">
-							<td v-if="(Parameter.Dimension === 'Matrix')" class="w3-light-gray w3-border w3-border-theme"></td>
-						<template  v-if="(Parameter.Dimension === 'Matrix')" v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
+						<tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding: 0;">
+							<td class="w3-light-gray w3-border w3-border-theme"></td>
+						<template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
 							<td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">{{index2+1}}</td>
 						</template>
 						</tr>
@@ -169,8 +170,8 @@ html, body, select {
 							<td  v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0; vertical-align: middle;" class="w3-light-gray w3-border w3-border-theme">{{(index1+1)}}</td>
 						<template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
 							<td style="padding: 0;" class="w3-border w3-border-theme">
-							<input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text">
-							<input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 0px; min-height: 35px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type='color'>
+							<input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text">
+							<input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 0px; min-height: 35px;" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type='color'>
 							</td>
 						</template>
 						</tr>
@@ -179,9 +180,26 @@ html, body, select {
 				</div>
 			</div>
 		</template>
-		<p class="w3-xlarge" style="margin:0px;"><b>Functionality</b></p>
-		<p class="w3-small" style="margin:0px;"><i>The input and output to the blocks are given as $u(t)$ and $y(t)$ respectively. $t$ is the simulation time in seconds.</i></p>
-		<div v-html="getBlockDetails()">
+		<div>
+			<template v-if="invalidInputs.length>0">
+				<p class="w3-xlarge" style="margin:0px;"><b>Input error(s)</b></p>
+				<div v-html="inputErrors" class="w3-text-red"></div>
+			</template>
+			<template v-else-if="parametersValidationComments !== 'OK'">
+				<p class="w3-xlarge" style="margin:0px;"><b>Incompatable parameters</b></p>
+				<div v-html="parametersValidationComments"></div>
+			</template>
+			<template  v-else>
+				<!--p class="w3-text-green"><i class="far fa-check-circle"></i> Everything looks good.</p-->
+				<p class="w3-xlarge" style="margin:0px;"><b>Functionality</b></p>
+				<p class="w3-small" style="margin:0px;"><i>The input and output to the blocks are given as $u(t)$ and $y(t)$ respectively. $t$ is the simulation time in seconds.</i></p>
+				<div v-html="getBlockDetails()"></div>
+				<div class="w3-center w3-panel">
+					<div class="w3-btn w3-green" @click="saveParametersToNode()">Save and close</div>
+					<div class="w3-btn w3-yellow" @click="saveParametersToNode(false)">Save</div>
+					<div class="w3-btn w3-red" onclick="closeLeftMenu()">Cancel</div>
+				</div>
+			</template>
 		</div>
 	</div>
 </div>
@@ -206,7 +224,7 @@ html, body, select {
 <template v-for="(tool, index) in tools">
 	<div v-if="tool.display" class="w3-display-container btnGreen ToolBarButton" v-bind:id="'GSK_Tool_'+index"
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
-				+'px; left:'+ (toolConsts.DOM.x - 0.5*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
+				+'px; left:'+ (toolConsts.DOM.x - 0.0*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
 	v-bind:onclick="tool.function">
 		<i class="w3-display-middle w3-circle w3-border fa-fw" v-bind:class="tool.icon" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		<!--div class="w3-display-middle w3-circle w3-border">
@@ -221,7 +239,7 @@ function prepareSVGURL(svg){
 }
 function openLeftMenu(content="ADD_BLOCK") {
 	if (content === "EDIT_BLOCK") {
-		app.$set(app.$data, "uyamakModel", Object.assign({}, network.body.nodes[network.getSelectedNodes()[0]].options.uyamakModel));
+		app.$set(app.$data, "uyamakModel", createCopyOfModel(network.body.nodes[network.getSelectedNodes()[0]].options.uyamakModel));
 		app.$set(app.$data, "parametersDisplay",new Array(app.$data.uyamakModel.Parameters.length).fill(false));
 	}
 	app.$data.leftBarMode = content;
@@ -383,6 +401,11 @@ var options = {
 			loadABlock();
 			document.getElementById('mynetwork').style.cursor = "";
 			app.$data.networkState = 'DESIGN';
+		},
+		editNode: function (data, callback) {
+			GSK_CALLBACK = callback;
+			GSK_DATA = data;
+			assignDataToNode(app.$data.uyamakModel);
 		}
 	}
 };
@@ -395,15 +418,31 @@ network.on("showPopup", function (params) {
 	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 })
 network.on('click', function (params) {
+	placeTools (params);
+});
+network.on("dragEnd", function (params) {
+	placeTools (params);
+});
+network.on("afterDrawing", function (params) {
+	try {
+		newDOMXY = network.canvasToDOM({"x": app.$data.toolConsts.canvas.x, "y": app.$data.toolConsts.canvas.y})
+		app.$set(app.$data.toolConsts.DOM, "x", newDOMXY.x)
+		app.$set(app.$data.toolConsts.DOM, "y", newDOMXY.y)
+	} catch (e) {
+		console.log("App is not yet ready");
+	}
+});
+var tool_Order = 0;
+function placeTools(params) {
 	hideTools();
 	console.log(params);
 	tool_Order = 0;
 	if (app.$data.networkState === 'DESIGN') {
 		var tempPoint;
 		if ((params.nodes.length === 0) && (params.edges.length === 0)) {
-			placeATool("addBlock", params.pointer.canvas);
+			/*placeATool("addBlock", params.pointer.canvas);
 			if (network.body.data.nodes.length)
-			placeATool("addConnection");
+			placeATool("addConnection");*/
 		}
 		else if (params.nodes.length === 1) {
 			tempPoint = network.getPositions(params.nodes[0])[params.nodes[0]];
@@ -424,18 +463,7 @@ network.on('click', function (params) {
 			placeATool("delete");
 		}
 	}
-
-});
-network.on("afterDrawing", function (params) {
-	try {
-		newDOMXY = network.canvasToDOM({"x": app.$data.toolConsts.canvas.x, "y": app.$data.toolConsts.canvas.y})
-		app.$set(app.$data.toolConsts.DOM, "x", newDOMXY.x)
-		app.$set(app.$data.toolConsts.DOM, "y", newDOMXY.y)
-	} catch (e) {
-		console.log("App is not yet ready");
-	}
-});
-var tool_Order = 0;
+}
 function placeATool(toolIndex, toolPoint=null) {
 	//console.log(app.$data.tools[toolIndex]);
 	if (toolPoint) {
@@ -498,7 +526,7 @@ var app = new Vue({
 		"leftBarMode": null,
 		"uyamakModel": {},
 		"parametersDisplay": null,
-		"validInputs":[[[]]],
+		"invalidInputs":[],
 		"cid": null, //Category ID
 		"bid": null, // Block ID
 		"updatingCounter": 0,
@@ -519,6 +547,14 @@ var app = new Vue({
 		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 	},
 	"computed": {
+		"parametersValidationComments": function () {
+			return this.uyamakModel.ValidateParams();
+		},
+		"inputErrors": function () {
+			return "<table class='w3-table'>" + this.invalidInputs.map(function(currentValue, index, arr){
+				return "<tr><td>" + app.$data.uyamakModel.Parameters[parseInt(currentValue.split(",")[0])].Name + " at [" + (parseInt(currentValue.split(",")[1])+1) + ", " + (parseInt(currentValue.split(",")[2])+1) + "]"+"</td></tr>";
+			}).join('') + "</table>";
+		},
 		"blocksSummaryArray": function () {
 			try {
 				const tempSourceArray = Object.keys(this.blocksSummary).map( function (key) {
@@ -533,36 +569,49 @@ var app = new Vue({
 		}
 	},
 	"methods": {
+		"saveParametersToNode": function (close=true) {
+			network.editNode();
+			if (close) closeLeftMenu();
+		},
 		"validateParamCellEntry": function(index, index1, index2) {
+			var tempValidateItem = index+","+index1+","+index2;
+			var outValue;
 			var tempValue = this.uyamakModel.Parameters[index].Value[index1][index2];
 			try {
 				switch (this.uyamakModel.Parameters[index].Type) {
 					case "Integer":
-						return ((typeof math.evaluate(tempValue) === 'number') && (math.evaluate(tempValue) % 1 === 0));
+						outValue = ((typeof math.evaluate(tempValue) === 'number') && (math.evaluate(tempValue) % 1 === 0));
 						break;
 					case "Real":
-						return (typeof math.evaluate(tempValue) === 'number');
+						outValue = (typeof math.evaluate(tempValue) === 'number');
 						break;
 					case "Complex":
-						return ((math.evaluate(tempValue).type === 'Complex') || (typeof math.evaluate(tempValue) === 'number'));
+						outValue = ((math.evaluate(tempValue).type === 'Complex') || (typeof math.evaluate(tempValue) === 'number'));
 						break;
 					case "Text":
 					case "Color":
 					case "Option":
-						return (tempValue !== "" && tempValue !== null);
+						outValue = (tempValue !== "" && tempValue !== null);
 						break;
 				}
 			} catch(e){
 				console.log(e);
-				return false;
+				outValue = false;
 			}
+			var tempIndex = this.invalidInputs.indexOf(tempValidateItem)
+			if (outValue) {
+				if (tempIndex >= 0) this.invalidInputs.splice(tempIndex, 1);
+			} else {
+				if (tempIndex < 0) this.invalidInputs.push(tempValidateItem);
+			}
+			return outValue;
 		},
 		"getBlockDetails": function () {
 			try {
 				return this.uyamakModel.Details();
 			} catch (e) {
 				console.log(e);
-				return "!!! ERROR"
+				return "¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support.";
 			}
 		},
 		"valueDimensionsModify": function (func, index) {
@@ -724,12 +773,12 @@ function loadABlock () {
 				holdToFinishAProcess("Loading block's functionaliy");
 				if(doc.exists) {
 					convertDBDataToModel(doc.id, doc.data());
-					assignDataToNode();
+					assignDataToNode(BLOCKS_LIB[app.$data.bid]);
 				}
 				else throw("Uyamak: Block Not found");
 			});
 	} else {
-		assignDataToNode();
+		assignDataToNode(BLOCKS_LIB[app.$data.bid]);
 	}
 	} catch (e) {
 		console.log(e);
@@ -738,51 +787,30 @@ function loadABlock () {
 		notyf.error('Error in adding this block.');
 	}
 }
-function assignDataToNode() {
-	GSK_DATA.uyamakModel = Object.assign({}, BLOCKS_LIB[app.$data.bid]);
-	GSK_DATA.uyamakModel.Init();
-	GSK_DATA.image = app.createIconForNetwork();
-	GSK_DATA.shape = GSK_DATA.uyamakModel.Icon().shape;
-	GSK_DATA.label = GSK_DATA.uyamakModel.Label();
-	GSK_CALLBACK(GSK_DATA);
-	holdToFinishAProcess(false);
+function createIconForNetwork(cid, iconText) {
+	return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(
+		app.$data.networkIcon.icon1 + app.$data.blocksSummary[cid].colors.bg + app.$data.networkIcon.icon2 + app.$data.blocksSummary[cid].colors.fg + app.$data.networkIcon.icon3 + iconText + app.$data.networkIcon.icon4
+	);
 }
-function addABlockToLibrary(bid){
-	db.collection("blocks").doc(bid).get()
-	.then(function (doc){
-		if(doc.exists){
-			try {
-				let dbBlockData = doc.data();
-				BLOCKS_LIB[doc.id]={};
-				blockTemplate.forEach(function (item){
-					let tempObj = {};
-					switch(item.type){
-						case "float":
-							if (! dbBlockData[item.name]) tempObj[item.name] = 0;
-							else tempObj[item.name] = parseFloat(dbBlockData[item.name]);
-							Object.assign(BLOCKS_LIB[doc.id], tempObj);
-							break;
-						case "string":
-							if (! dbBlockData[item.name]) tempObj[item.name] = "";
-							else tempObj[item.name] = dbBlockData[item.name].toString();
-							Object.assign(BLOCKS_LIB[doc.id], tempObj);
-							break
-						case "function":
-						if (! dbBlockData[item.name]) tempObj[item.name] = "";
-							else tempObj[item.name] = dbBlockData[item.name].toString();
-							tempObj[item.name] = eval("(function ("+ item.argument +"){" + tempObj[item.name] + "})");
-							Object.assign(BLOCKS_LIB[doc.id], tempObj);
-							break;
-					}
-				});
-				//BLOCKS_LIB[doc.id] = Object.assign({}, {"Parameters": JSON.parse(dbBlockData.Parameters), "Category": dbBlockData.Category, "MaxInTerminals": parseFloat(dbBlockData.MaxInTerminals), "MaxOutTerminals": parseFloat(dbBlockData.MaxOutTerminals) });
-				console.log(doc);
-			} catch (e) {
-				console.log("error in adding the block to the library");
-				console.log(e);
-			}
+function createCopyOfModel(inModel) {
+	var outValue = JSON.parse2(JSON.stringify2(inModel));
+	blockTemplate.forEach(function (item) {
+		if (item.type === 'function') {
+			outValue[item.name] = inModel[item.name];
 		}
 	});
+	return outValue;
+}
+function assignDataToNode(inModel) {
+	GSK_DATA.uyamakModel = createCopyOfModel(inModel);
+	GSK_DATA.uyamakModel.Constructor(GSK_DATA);
+	var tempIconData = GSK_DATA.uyamakModel.Icon();
+	GSK_DATA.shape = tempIconData.shape;
+	if (GSK_DATA.shape === "image") GSK_DATA.image = createIconForNetwork(GSK_DATA.uyamakModel.Category, tempIconData.icon);
+	GSK_DATA.label = GSK_DATA.uyamakModel.Label();
+	GSK_DATA.title = GSK_DATA.uyamakModel.Details();
+	GSK_CALLBACK(GSK_DATA);
+	holdToFinishAProcess(false);
 }
 function convertDBDataToModel(bid, dbBlockData) {
 	BLOCKS_LIB[bid]={};
