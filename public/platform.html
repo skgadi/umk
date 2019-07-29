@@ -22,6 +22,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 	<script src="/js/augmented-json-serialization-functions.js"></script>
+	<link rel="stylesheet" href="/css/notyf.min.css">
 	<script src="/js/notyf.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <style>
@@ -217,10 +218,13 @@ html, body, select {
 <div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
 	<i class="w3-display-middle w3-circle w3-border far fa-plus-square fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
-<div v-if="networkState === 'ADD_NODE'" class="w3-display-container btnRed ToolBarButton"  style="top: 10px; left: 15px;" onclick="disableEditMode()">
+<div v-if="(['ADD_NODE', 'ADD_EDGE'].indexOf(networkState))>=0" class="w3-display-container btnRed ToolBarButton"  style="top: 10px; left: 15px;" onclick="exitEditMode()">
 	<i class="w3-display-middle w3-circle w3-border fas fa-times fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
-	
+<div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 55px;" @click="addAEdge">
+	<i class="w3-display-middle w3-circle w3-border fas fa-project-diagram fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+		
 <template v-for="(tool, index) in tools">
 	<div v-if="tool.display" class="w3-display-container btnGreen ToolBarButton" v-bind:id="'GSK_Tool_'+index"
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
@@ -263,14 +267,14 @@ function closeRightMenu() {
 
 $(document).keyup(function(e) {
 	if (e.key === "Escape") { // escape key maps to keycode `27`
-		disableEditMode();
+		exitEditMode();
 		closeLeftMenu();
 		hideTools();
 	}
 });
 
-function disableEditMode() {
-	if (app.$data.networkState === "ADD_NODE") app.$data.networkState = "DESIGN";
+function exitEditMode() {
+	app.$data.networkState = "DESIGN";
 	network.disableEditMode();
 	document.getElementById("mynetwork").style.cursor = "";
 }
@@ -301,22 +305,10 @@ let blob1 = new Blob([svg1], {type: 'image/svg+xml'});
 let url = URL.createObjectURL(blob);
 let url1 = URL.createObjectURL(blob1);
 // create an array with nodes
-var nodes = new vis.DataSet([
-{id: "1", label: 'Node Node Node 1', title:"\\(a \\ne 0\\)"},
-{id: "2", label: 'Node Node 2', color:"#00ff00", image: {selected: url1, unselected: url}, shape: "image", chosen: { label: false, node: changeChosenNodeShadowColor }},
-{id: "3", label: 'Node 3', shape: 'star', chosen: { label: false, node: changeChosenNodeShadowColor }},
-{id: "4", label: 'Node 4', color:"#ff0000"},
-{id: "5", label: 'Node 5'}
-]);
+var nodes = new vis.DataSet([]);
 
 // create an array with edges
-var edges = new vis.DataSet([
-{from: 1, to: 3},
-{from: 1, to: 2},
-{from: 2, to: 4},
-{from: 2, to: 5},
-{from: 3, to: 3}
-]);
+var edges = new vis.DataSet([]);
 
 // create a network
 var container = document.getElementById('mynetwork');
@@ -343,9 +335,15 @@ var options = {
 			editClusterError : 'Clusters cannot be edited.'
 		}
 	},
+	layout: {
+		improvedLayout: false,
+	},
 	interaction : {
 		navigationButtons : true,
-		//keyboard : true,
+		hover: true,
+		keyboard : {
+			bindToWindow: false
+		},
 		multiselect : true,
 	},
 	nodes : {
@@ -359,6 +357,9 @@ var options = {
 		},
 	},
 	edges : {
+		smooth: {
+			type: "cubicBezier",
+		},
 		color : {
 			inherit : 'from',
 		},
@@ -370,7 +371,8 @@ var options = {
 			}
 		},
 	},
-	physics : {
+	physics: false,
+	/*physics : {
 		enabled : true,
 		solver : 'barnesHut',
 		barnesHut : {
@@ -388,16 +390,17 @@ var options = {
 			centralGravity : 0.00,
 			gravitationalConstant : -1
 		},
-	},
+	},*/
 	manipulation: {
 		enabled : false,
 		addNode: function (data, callback) {
 			//holdToFinishAProcess("Loading block information from server.");
-			data.chosen = { label: false, node: changeChosenNodeShadowColor };
-			data.shadow = {enabled: true, color: app.getColorsForTheCategory().fg, x:0, y:0};
-			data.color = app.getColorsForTheCategory().bg;
 			GSK_CALLBACK = callback;
 			GSK_DATA = data;
+			var tempColors = app.getColorsForTheCategory();
+			GSK_DATA.chosen = { label: false, node: changeChosenNodeShadowColor };
+			GSK_DATA.shadow = {enabled: true, color: tempColors.fg, x:0, y:0};
+			GSK_DATA.color = tempColors.bg;
 			loadABlock();
 			document.getElementById('mynetwork').style.cursor = "";
 			app.$data.networkState = 'DESIGN';
@@ -406,6 +409,39 @@ var options = {
 			GSK_CALLBACK = callback;
 			GSK_DATA = data;
 			assignDataToNode(app.$data.uyamakModel);
+		},
+		addEdge: function (data, callback) {
+			var NoOfOutputs = 0;
+			var NoOfInputs = 0;
+			for (var element in network.body.edges) {
+				if (data.from == network.body.edges[element].fromId)
+					NoOfOutputs++;
+				if (data.to == network.body.edges[element].toId)
+					NoOfInputs++;
+			};
+			var TempIsValidNewEdge = true;
+			var TempErrorMessage = "<b>Error(s):</b>";
+			if (NoOfOutputs >= network.body.nodes[data.from].options.uyamakModel.MaxOutTerminals) {
+				TempIsValidNewEdge = false;
+				TempErrorMessage += "<br/>The origin block cannot generate more output.";
+			}
+			if (NoOfInputs >= network.body.nodes[data.to].options.uyamakModel.MaxInTerminals) {
+				TempIsValidNewEdge = false;
+				TempErrorMessage += "<br/>The destination block cannot take more inputs.";
+			}
+			if (data.from === data.to) {
+				TempIsValidNewEdge = false;
+				TempErrorMessage += "<br/>You cannot connect the same block to itself. Use an unit gain instead.";
+			}
+			if (TempIsValidNewEdge){
+				console.dir(data);
+				callback(data);
+				//ShowLabelsAttachedToANode(data.to);
+			} else {
+				notyf.error(TempErrorMessage);
+				callback(null);
+			}
+			exitEditMode();
 		}
 	}
 };
@@ -432,6 +468,19 @@ network.on("afterDrawing", function (params) {
 		console.log("App is not yet ready");
 	}
 });
+function ShowLabelsAttachedToANode(node) {
+	if (typeof EdgesReceivedAtANode[node] !== "undefined") {
+		for (var i = 0; i < EdgesReceivedAtANode[node].length; i++) {
+			network.manipulation.body.edges[EdgesReceivedAtANode[node][i]].setOptions({
+				id : network.manipulation.body.edges[EdgesReceivedAtANode[node][i]].id,
+				to : network.manipulation.body.edges[EdgesReceivedAtANode[node][i]].to.id,
+				from : network.manipulation.body.edges[EdgesReceivedAtANode[node][i]].from.id,
+				label : (i + 1).toString()
+			});
+		}
+	}
+	network.redraw()
+}
 var tool_Order = 0;
 function placeTools(params) {
 	hideTools();
@@ -483,7 +532,7 @@ function hideTools() {
 
 <script>
 	//GLOBAL VARS
-let ICON_FOR_ADD_BLOCK=null;
+let CUSTOM_ICON=null;
 </script>
 
 <script>
@@ -516,7 +565,7 @@ MathJax.Hub.Config({
 MathJax.Hub.Configured();*/
 </script>
 <script>
-var notyf = new Notyf();
+var notyf = new Notyf({duration: 10000});
 </script>
 <script>
 var app = new Vue({
@@ -659,15 +708,20 @@ var app = new Vue({
 				this.networkIcon.icon1 + this.blocksSummary[this.cid].colors.bg + this.networkIcon.icon2 + this.blocksSummary[this.cid].colors.fg + this.networkIcon.icon3 + this.blocksSummary[this.cid].blocks[this.bid].icon  + this.networkIcon.icon4
 			);
 		},
+		"addAEdge": function (){
+			document.getElementById("mynetwork").style.cursor = "url(/images/link-icon.png), auto";
+			this.networkState = "ADD_EDGE";
+			network.addEdgeMode();
+		},
 		"addABlock": function (categoryID, blockID){
 			this.cid = categoryID;
 			this.bid = blockID;
 			pic = this.iconText.icon1 + this.blocksSummary[categoryID].colors.bg + this.iconText.icon2 + this.blocksSummary[categoryID].colors.fg + this.iconText.icon3 + this.blocksSummary[categoryID].blocks[blockID].icon + this.iconText.icon4;
 			let url = this.svgTextToURL("<svg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'>"+pic+"</svg>");
-			console.log(url);
-			if (!! ICON_FOR_ADD_BLOCK) URL.revokeObjectURL(ICON_FOR_ADD_BLOCK);
+			//console.log(url);
+			if (!! CUSTOM_ICON) URL.revokeObjectURL(CUSTOM_ICON);
 			document.getElementById("mynetwork").style.cursor = "url("+url+"), auto";
-			ICON_FOR_ADD_BLOCK = url;
+			CUSTOM_ICON = url;
 			closeLeftMenu();
 			this.networkState ="ADD_NODE";
 			network.addNodeMode();
@@ -783,6 +837,7 @@ function loadABlock () {
 	} catch (e) {
 		console.log(e);
 		GSK_CALLBACK(null);
+		exitEditMode();
 		holdToFinishAProcess(false);
 		notyf.error('Error in adding this block.');
 	}
@@ -807,9 +862,14 @@ function assignDataToNode(inModel) {
 	var tempIconData = GSK_DATA.uyamakModel.Icon();
 	GSK_DATA.shape = tempIconData.shape;
 	if (GSK_DATA.shape === "image") GSK_DATA.image = createIconForNetwork(GSK_DATA.uyamakModel.Category, tempIconData.icon);
+	else {
+		var tempColors = app.getColorsForTheCategory();
+		GSK_DATA.font = {"color": tempColors.fg, "background": tempColors.bg, "face": "Courier New", "size": 30};
+	}
 	GSK_DATA.label = GSK_DATA.uyamakModel.Label();
 	GSK_DATA.title = GSK_DATA.uyamakModel.Details();
 	GSK_CALLBACK(GSK_DATA);
+	exitEditMode();
 	holdToFinishAProcess(false);
 }
 function convertDBDataToModel(bid, dbBlockData) {
