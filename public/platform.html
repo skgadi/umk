@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -25,6 +25,227 @@
 	<link rel="stylesheet" href="/css/notyf.min.css">
 	<script src="/js/notyf.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+
+<!-- Sets the basepath for the library if not in same directory -->
+<script type="text/javascript">
+	mxBasePath = '/javascript/src';
+</script>
+
+<!-- Loads and initializes the library -->
+<script type="text/javascript" src="/javascript/src/js/mxClient.js"></script>
+
+<!-- Example code -->
+<script type="text/javascript">
+var graph;
+// Program starts here. Creates a sample graph in the
+// DOM node with the specified ID. This function is invoked
+// from the onLoad event handler of the document (see below).
+function main(container, outline) {
+	// Checks if the browser is supported
+	if (!mxClient.isBrowserSupported()) {
+		// Displays an error message if the browser is not supported.
+		mxUtils.error('Browser is not supported!', 200, false);
+	} else {
+
+//Initializing global settings
+mxGraphHandler.prototype.guidesEnabled=true;mxGraphHandler.prototype.useGuidesForEvent=function(me){return!mxEvent.isAltDown(me.getEvent());};mxConstants.GUIDE_COLOR='#FF0000';mxConstants.GUIDE_STROKEWIDTH=1;mxConstants.WORD_WRAP='break-word';mxConstants.SHADOW_OFFSET_X=5;mxConstants.SHADOW_OFFSET_Y=5;mxConstants.SHADOW_OPACITY=0.2;mxEdgeHandler.prototype.snapToTerminals=true;mxConnectionHandler.prototype.movePreviewAway=false;mxClient.NO_FO=mxClient.NO_FO||mxClient.IS_SF||mxClient.IS_GC;
+graph=new mxGraph(container);graph.setTooltips(false);graph.htmlLabels=true;graph.setConnectable(true);graph.setAllowDanglingEdges(false);
+var vStyle=graph.getStylesheet().getDefaultVertexStyle();var eStyle=graph.getStylesheet().getDefaultEdgeStyle();vStyle["shadow"]=true;vStyle["whiteSpace"]='wrap';vStyle["arcSize"]=15;vStyle["absoluteArcSize"]=1;vStyle["rounded"]=1;eStyle['edgeStyle']='orthogonalEdgeStyle';new mxRubberband(graph);var keyHandler=new mxKeyHandler(graph);var parent=graph.getDefaultParent();
+var outln = new mxOutline(graph, outline);
+/*graph.autoSizeCellsOnAdd = true;
+graph.autoSizeCells = true;/**/
+//Copy Paste of blocks
+graph.cloneCells=function(cells,allowInvalidEdges,mapping,keepPosition){customValidationError=false;var out=mxGraph.prototype.cloneCells.apply(this,arguments);customValidationError=true;return out;}
+mxClipboard.cellsToString=function(cells)
+{var codec=new mxCodec();var model=new mxGraphModel();var parent=model.getChildAt(model.getRoot(),0);for(var i=0;i<cells.length;i++)
+{model.add(parent,cells[i]);}
+return mxUtils.getXml(codec.encode(model));};var textInput=document.createElement('textarea');mxUtils.setOpacity(textInput,0);textInput.style.width='1px';textInput.style.height='1px';var restoreFocus=false;var gs=graph.gridSize;var lastPaste=null;var dx=0;var dy=0;textInput.value=' ';mxEvent.addListener(document,'keydown',function(evt)
+{var source=mxEvent.getSource(evt);if(graph.isEnabled()&&!graph.isMouseDown&&!graph.isEditing()&&source.nodeName!='INPUT')
+{if(evt.keyCode==224||(!mxClient.IS_MAC&&evt.keyCode==17)||(mxClient.IS_MAC&&evt.keyCode==91))
+{if(!restoreFocus)
+{textInput.style.position='absolute';textInput.style.left=(graph.container.scrollLeft+10)+'px';textInput.style.top=(graph.container.scrollTop+10)+'px';graph.container.appendChild(textInput);restoreFocus=true;textInput.focus();textInput.select();}}}});mxEvent.addListener(document,'keyup',function(evt)
+{if(restoreFocus&&(evt.keyCode==224||evt.keyCode==17||evt.keyCode==91))
+{restoreFocus=false;if(!graph.isEditing())
+{graph.container.focus();}
+textInput.parentNode.removeChild(textInput);}});var copyCells=function(graph,cells)
+{if(cells.length>0)
+{var clones=graph.cloneCells(cells);for(var i=0;i<clones.length;i++)
+{var state=graph.view.getState(cells[i]);if(state!=null)
+{var geo=graph.getCellGeometry(clones[i]);if(geo!=null&&geo.relative)
+{geo.relative=false;geo.x=state.x/state.view.scale-state.view.translate.x;geo.y=state.y/state.view.scale-state.view.translate.y;}}}
+textInput.value=mxClipboard.cellsToString(clones);}
+textInput.select();lastPaste=textInput.value;};mxEvent.addListener(textInput,'copy',mxUtils.bind(this,function(evt)
+{if(graph.isEnabled()&&!graph.isSelectionEmpty())
+{copyCells(graph,mxUtils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells())));dx=0;dy=0;}}));mxEvent.addListener(textInput,'cut',mxUtils.bind(this,function(evt)
+{if(graph.isEnabled()&&!graph.isSelectionEmpty())
+{copyCells(graph,graph.removeCells());dx=-gs;dy=-gs;}}));var importXml=function(xml,dx,dy)
+{dx=(dx!=null)?dx:0;dy=(dy!=null)?dy:0;var cells=[]
+try
+{var doc=mxUtils.parseXml(xml);var node=doc.documentElement;if(node!=null)
+{var model=new mxGraphModel();var codec=new mxCodec(node.ownerDocument);codec.decode(node,model);var childCount=model.getChildCount(model.getRoot());var targetChildCount=graph.model.getChildCount(graph.model.getRoot());graph.model.beginUpdate();try
+{for(var i=0;i<childCount;i++)
+{var parent=model.getChildAt(model.getRoot(),i);if(targetChildCount>i)
+{var target=(childCount==1)?graph.getDefaultParent():graph.model.getChildAt(graph.model.getRoot(),i);if(!graph.isCellLocked(target))
+{var children=model.getChildren(parent);cells=cells.concat(graph.importCells(children,dx,dy,target));}}
+else
+{parent=graph.importCells([parent],0,0,graph.model.getRoot())[0];var children=graph.model.getChildren(parent);graph.moveCells(children,dx,dy);cells=cells.concat(children);}}}
+finally
+{graph.model.endUpdate();}}}
+catch(e)
+{alert(e);throw e;}
+return cells;};var pasteText=function(text)
+{var xml=mxUtils.trim(text);var x=graph.container.scrollLeft/graph.view.scale-graph.view.translate.x;var y=graph.container.scrollTop/graph.view.scale-graph.view.translate.y;if(xml.length>0)
+{if(lastPaste!=xml)
+{lastPaste=xml;dx=0;dy=0;}
+else
+{dx+=gs;dy+=gs;}
+if(xml.substring(0,14)=='<mxGraphModel>')
+{graph.setSelectionCells(importXml(xml,dx,dy));graph.scrollCellToVisible(graph.getSelectionCell());}}};var extractGraphModelFromEvent=function(evt)
+{var data=null;if(evt!=null)
+{var provider=(evt.dataTransfer!=null)?evt.dataTransfer:evt.clipboardData;if(provider!=null)
+{if(document.documentMode==10||document.documentMode==11)
+{data=provider.getData('Text');}
+else
+{data=(mxUtils.indexOf(provider.types,'text/html')>=0)?provider.getData('text/html'):null;if(mxUtils.indexOf(provider.types,'text/plain'&&(data==null||data.length==0)))
+{data=provider.getData('text/plain');}}}}
+return data;};mxEvent.addListener(textInput,'paste',function(evt)
+{textInput.value='';if(graph.isEnabled())
+{var xml=extractGraphModelFromEvent(evt);if(xml!=null&&xml.length>0)
+{pasteText(xml);}
+else
+{window.setTimeout(mxUtils.bind(this,function()
+{pasteText(textInput.value);}),0);}}
+textInput.select();});
+//delete blocks
+keyHandler.bindKey(46,function(evt){if(graph.isEnabled()){graph.removeCells();}});
+//Lines before connecting edges
+graph.view.updateFixedTerminalPoint=function(edge,terminal,source,constraint){mxGraphView.prototype.updateFixedTerminalPoint.apply(this,arguments);var pts=edge.absolutePoints;var pt=pts[(source)?0:pts.length-1];if(terminal!=null&&pt==null&&this.getPerimeterFunction(terminal)==null){edge.setAbsoluteTerminalPoint(new mxPoint(this.getRoutingCenterX(terminal),this.getRoutingCenterY(terminal)),source)}};graph.connectionHandler.createEdgeState=function(me){var edge=graph.createEdge(null,null,null,null,null);return new mxCellState(this.graph.view,edge,this.graph.getCellStyle(edge));};
+//Custom Grid
+(function(){try{var canvas=document.createElement('canvas');canvas.style.position='absolute';canvas.style.top='0px';canvas.style.left='0px';canvas.style.zIndex=-1;graph.container.appendChild(canvas);var ctx=canvas.getContext('2d');var mxGraphViewIsContainerEvent=mxGraphView.prototype.isContainerEvent;mxGraphView.prototype.isContainerEvent=function(evt){return mxGraphViewIsContainerEvent.apply(this,arguments)||mxEvent.getSource(evt)==canvas;};var s=0;var gs=0;var tr=new mxPoint();var w=0;var h=0;repaintGrid();function repaintGrid(){if(ctx!=null){var bounds=graph.getGraphBounds();var width=Math.max(bounds.x+bounds.width,graph.container.clientWidth);var height=Math.max(bounds.y+bounds.height,graph.container.clientHeight);var sizeChanged=width!=w||height!=h;if(graph.view.scale!=s||graph.view.translate.x!=tr.x||graph.view.translate.y!=tr.y||gs!=graph.gridSize||sizeChanged){tr=graph.view.translate.clone();s=graph.view.scale;gs=graph.gridSize;w=width;h=height;if(!sizeChanged){ctx.clearRect(0,0,w,h);}else{canvas.setAttribute('width',w);canvas.setAttribute('height',h);}
+var tx=tr.x*s;var ty=tr.y*s;var minStepping=graph.gridSize;var stepping=minStepping*s;if(stepping<minStepping){var count=Math.round(Math.ceil(minStepping/stepping)/2)*2;stepping=count*stepping;}
+var xs=Math.floor((0-tx)/stepping)*stepping+tx;var xe=Math.ceil(w/stepping)*stepping;var ys=Math.floor((0-ty)/stepping)*stepping+ty;var ye=Math.ceil(h/stepping)*stepping;xe+=Math.ceil(stepping);ye+=Math.ceil(stepping);var ixs=Math.round(xs);var ixe=Math.round(xe);var iys=Math.round(ys);var iye=Math.round(ye);ctx.strokeStyle='#f0f0f0';ctx.fillStyle="#fefefe";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.beginPath();ctx.lineWidth=0.5;for(var x=xs;x<=xe;x+=stepping){x=Math.round((x-tx)/stepping)*stepping+tx;var ix=Math.round(x);ctx.moveTo(ix+0.5,iys+0.5);ctx.lineTo(ix+0.5,iye+0.5);}
+for(var y=ys;y<=ye;y+=stepping){y=Math.round((y-ty)/stepping)*stepping+ty;var iy=Math.round(y);ctx.moveTo(ixs+0.5,iy+0.5);ctx.lineTo(ixe+0.5,iy+0.5);}
+ctx.closePath();ctx.stroke();ctx.beginPath();ctx.lineWidth=1;for(var x=xs;x<=xe;x+=5*stepping){x=Math.round((x-tx)/stepping)*stepping+tx;var ix=Math.round(x);ctx.moveTo(ix+0.5,iys+0.5);ctx.lineTo(ix+0.5,iye+0.5);}
+for(var y=ys;y<=ye;y+=5*stepping){y=Math.round((y-ty)/stepping)*stepping+ty;var iy=Math.round(y);ctx.moveTo(ixs+0.5,iy+0.5);ctx.lineTo(ixe+0.5,iy+0.5);}
+ctx.closePath();ctx.stroke();ctx.beginPath();ctx.lineWidth=1.5;for(var x=xs;x<=xe;x+=10*stepping){x=Math.round((x-tx)/stepping)*stepping+tx;var ix=Math.round(x);ctx.moveTo(ix+0.5,iys+0.5);ctx.lineTo(ix+0.5,iye+0.5);}
+for(var y=ys;y<=ye;y+=10*stepping){y=Math.round((y-ty)/stepping)*stepping+ty;var iy=Math.round(y);ctx.moveTo(ixs+0.5,iy+0.5);ctx.lineTo(ixe+0.5,iy+0.5);}
+ctx.closePath();ctx.stroke();}}};}catch(e){mxLog.show();mxLog.debug('Using background image');container.style.backgroundImage='url(\'/images/grid.gif\')';}
+var mxGraphViewValidateBackground=mxGraphView.prototype.validateBackground;mxGraphView.prototype.validateBackground=function(){mxGraphViewValidateBackground.apply(this,arguments);try{repaintGrid()}catch(e){}
+MathJax.Hub.Queue(["Typeset",MathJax.Hub]);};})();
+//Connection validation
+var customValidationError=true;var default_getEdgeValidationError=mxGraph.prototype.getEdgeValidationError;mxGraph.prototype.getEdgeValidationError=function(edge,source,target){console.log(source.edges);var defaultOut=default_getEdgeValidationError.apply(this,arguments);if(customValidationError){if(defaultOut!==null){return defaultOut;}else{var outError;if(source.parent===target.parent)outError="Cannot connect to the same block.";if(source.geometry.x==0)outError="Tapping input port is not allowed.";if(target.geometry.x==1)outError="You cannot feed signal to the output.";if(!!target.edges)outError="Only one input is allowed per port.";console.log(outError);return outError;}}else return defaultOut;}
+mxGraph.prototype.validationAlert=function(message){notyf.error(message);}
+
+
+
+
+
+
+
+
+
+
+
+
+		// Adds cells to the model in a single step
+		graph.getModel().beginUpdate();
+		try {
+			/*var v1 = graph.insertVertex(parent, null, 'H<b>e</b>llo,', 20, 20, 80, 30);
+			var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+			var e1 = graph.insertEdge(parent, null, '', v1, v2);*/
+			var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);
+			var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);
+			
+		}
+		finally {
+			// Updates the display
+			graph.getModel().endUpdate();
+		}
+
+
+	}
+}
+
+function addANewDraggableIcon (sidebar, data) {
+	var finishDragAct = function(graph, evt, cell, x, y) {
+		console.log(evt);
+		var parent = graph.getDefaultParent();
+		var model = graph.getModel();
+		
+		var v1 = null;
+		
+		model.beginUpdate();
+		try {
+
+			var v1 = graph.insertVertex(parent, null, data.name, x, y, 100, 100,"strokeColor=blue;fillColor="+data.colors.bg+";fontColor="+data.colors.fg+";fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0");
+			v1.setConnectable(false);
+			v1.geometry.alternateBounds = new mxRectangle(0, 0, 100, 20);
+			var p1 = graph.insertVertex(v1, null, '$u_{1}(t)$', 0, 0.5, 8, 8,"strokeColor=blue;fillColor="+data.colors.bg+";fontColor="+data.colors.fg+";strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",true);
+			var p2 = graph.insertVertex(v1, null, '$y_{1}(t)$', 1, 0.5, 8, 8,"strokeColor=blue;fillColor="+data.colors.bg+";fontColor="+data.colors.fg+";strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",true);
+			p1.geometry.offset = new mxPoint(-8, -4);
+			p2.geometry.offset = new mxPoint(-0, -4);
+			var Details= graph.insertVertex(v1, null, data.description,0.5,0,0,0,"fontColor="+data.colors.fg+";",true)
+			Details.geometry.offset = new mxPoint(0, 30);
+			Details.setConnectable(false);
+		}
+		finally {
+			model.endUpdate();
+		}
+		graph.setSelectionCell(v1);
+	}
+
+	var img = document.createElement('img');
+	/*blockDiv.innerHTML = "Name:"+data.name+"; Description:"+data.description;
+	blockDiv.setAttribute('id', 'block_'+data.order+'for_'+data.key);*/
+	var img = document.createElement('img');
+	img.setAttribute('src', svgTextToURL(getIconWith(data.colors,data.icon)));
+	img.style.width = '100px';
+	img.style.height = '100px';
+	img.title = 'Drag this to the diagram to create a new vertex';
+	sidebar.appendChild(img);
+
+
+	var dragElt = document.createElement('div');
+	dragElt.style.border = 'dashed black 1px';
+	dragElt.style.width = '100px';
+	dragElt.style.height = '100px';
+	var ds = mxUtils.makeDraggable(img, graph, finishDragAct, dragElt, 0, 0, true, true);
+	ds.setGuidesEnabled(true);
+} 
+var funct = function(graph, evt, cell, x, y) {
+	console.log(evt);
+	var parent = graph.getDefaultParent();
+	var model = graph.getModel();
+	
+	var v1 = null;
+	
+	model.beginUpdate();
+	try
+	{
+
+		var v1 = graph.insertVertex(parent, null, 'Hello', x, y, 100, 100,"strokeColor=blue;fillColor=red;fontColor=white;fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0");
+		v1.setConnectable(false);
+		var p1 = graph.insertVertex(v1, null, '$u_{1}(t)$', 0, 0.5, 8, 8,"strokeColor=blue;fillColor=red;fontColor=white;strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",true);
+		var p2 = graph.insertVertex(v1, null, '$y_{1}(t)$', 1, 0.5, 8, 8,'strokeColor=blue;fillColor=red;fontColor=white;strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0',true);
+		p1.geometry.offset = new mxPoint(-8, -4);
+		p2.geometry.offset = new mxPoint(-0, -4);
+		var Details= graph.insertVertex(v1, null, "asdfkaj fkajh klajhf kajdshf",0.5,0,0,0,'fontColor=white',true)
+		Details.geometry.offset = new mxPoint(0, 30);
+		Details.setConnectable(false);
+	}
+	finally
+	{
+		model.endUpdate();
+	}
+	
+	graph.setSelectionCell(v1);
+}
+
+</script>
+	
 <style>
 html, body, select {
 	/*font: 9pt sans;*/
@@ -94,6 +315,9 @@ html, body, select {
 </head>
 <body>
 <div id="mynetwork"></div>
+<div id="outlineContainer"  class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:200px;background:transparent;border-style:solid;border-color:black;"></div>
+<div id="blocksBar" class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%;" id="leftMenu"></div>
+
 <div id="app">
 <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
 	<div class="w3-display-middle w3-center w3-padding" style="background-color: rgba(255, 255, 255, 0.9);">
@@ -126,8 +350,8 @@ html, body, select {
 			<div v-show="blocksSummaryArray[index].display">
 				<ul class="w3-ul">
 				<template v-for="(block, index1) in getFilteredBlocks(blocksSummary[summaryItem.key].blocks)">
-					<li class="w3-row w3-hover w3-hover-theme w3-border-theme" style="cursor: pointer; padding: 0px;" @click="addABlock(summaryItem.key, block.key)">
-						<div class="w3-col s2 w3-center">
+					<li class="w3-row w3-hover w3-hover-theme w3-border-theme" style="cursor: pointer; padding: 0px;" sdfclick="addABlock(summaryItem.key, block.key)">
+						<div class="w3-col s2 w3-center dragThisBlock">
 							<img v-bind:src="prepareSVGURL(iconText.icon1 + blocksSummary[summaryItem.key].colors.bg + iconText.icon2 + blocksSummary[summaryItem.key].colors.fg + iconText.icon3 + block.icon + iconText.icon4)" class="tempSVGImg" style="height:70px; max-width: 100%;">
 						</div>
 						<div class="w3-col s10">
@@ -142,6 +366,7 @@ html, body, select {
 			</div>
 		</template>
 	</div>
+	<div v-if="!blocksSummary">Loading blocks ...<br/><br/>If this process takes longer than a minute, check your internet connection and refresh the page.</div>
 	<div v-if="leftBarMode === 'EDIT_BLOCK'">
 		<p class="w3-xlarge" style="margin:0px;"><b>Edit block parameters</b></p>
 		<p class="w3-small" style="margin:0px;"><i>Modify the parameters and click save to chagne them.</i></p>
@@ -224,7 +449,38 @@ html, body, select {
 <div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 55px;" @click="addAEdge">
 	<i class="w3-display-middle w3-circle w3-border fas fa-project-diagram fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
-		
+
+<div id="move-up" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 90px; left: 50px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-chevron-up fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="move-down" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 10px; left: 50px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-chevron-down fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="move-left" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 50px; left: 10px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-chevron-left fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="move-right" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 50px; left: 90px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-chevron-right fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div v-if="fitButton" onClick="graph.fit(); app.$data.fitButton = ! app.$data.fitButton;" id="show-all" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 50px; left: 50px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-compress fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div v-else id="zoom-actual" onClick="graph.zoomActual(); app.$data.fitButton = ! app.$data.fitButton;" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 50px; left: 50px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-expand fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="zoom-out" onClick="graph.zoomOut()" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 90px; left: 10px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-search-minus fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="zoom-in" onClick="graph.zoomIn()" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 90px; left: 90px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-search-plus fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="minimize-all" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 10px; left: 10px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-window-minimize fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+<div id="maximize-all" class="w3-display-container btnGreen ToolBarButton"  style="bottom: 10px; left: 90px;">
+	<i class="w3-display-middle w3-circle w3-border fas fa-window-maximize fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+</div>
+
 <template v-for="(tool, index) in tools">
 	<div v-if="tool.display" class="w3-display-container btnGreen ToolBarButton" v-bind:id="'GSK_Tool_'+index"
 	v-bind:style= "'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
@@ -247,7 +503,7 @@ function openLeftMenu(content="ADD_BLOCK") {
 		app.$set(app.$data, "parametersDisplay",new Array(app.$data.uyamakModel.Parameters.length).fill(false));
 	}
 	app.$data.leftBarMode = content;
-	document.getElementById("leftMenuOverlay").style.display = "block";
+	//document.getElementById("leftMenuOverlay").style.display = "block";
 	document.getElementById("leftMenu").style.display = "block";
 }
 
@@ -445,7 +701,7 @@ var options = {
 		}
 	}
 };
-var network = new vis.Network(container, data, options);
+//var network = new vis.Network(container, data, options);
 network.on("oncontext", function (params) {
 console.log(params);
 });  
@@ -546,7 +802,8 @@ MathJax.Hub.Config({
 	jax : ["input/TeX", "output/HTML-CSS"],
 	tex2jax : {
 		preview: "none",
-		inlineMath : [["$", "$"], ["\\(", "\\)"]]
+		inlineMath : [["$", "$"], ["\\(", "\\)"]],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
 	}
 });
 /*MathJax.Hub.Config({
@@ -571,6 +828,7 @@ var notyf = new Notyf({duration: 10000});
 var app = new Vue({
 	"el": '#app',
 	"data": {
+		"fitButton": true,
 		"networkState": "DESIGN",
 		"leftBarMode": null,
 		"uyamakModel": {},
@@ -593,6 +851,17 @@ var app = new Vue({
 		//removeAlltheObjectURLsForSVGImages();
 	},
 	"updated": function () {
+		var dragElt = document.createElement('div');
+		dragElt.style.border = 'dashed black 1px';
+		dragElt.style.width = '100px';
+		dragElt.style.height = '100px';
+		dragElt.innerHTML = "<h1>Hello</h1>"
+		var x = document.getElementsByClassName("dragThisBlock");
+		for (i=0;i<x.length; i++) {
+			var ds = mxUtils.makeDraggable(x[i], graph, funct, dragElt, 0, 0, true, true);
+			ds.setGuidesEnabled(true);
+			console.log(ds);
+			}
 		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 	},
 	"computed": {
@@ -618,6 +887,10 @@ var app = new Vue({
 		}
 	},
 	"methods": {
+		"makeDraggableIcons": function () {
+			var ds = mxUtils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
+			ds.setGuidesEnabled(true);
+		},
 		"saveParametersToNode": function (close=true) {
 			network.editNode();
 			if (close) closeLeftMenu();
@@ -805,17 +1078,68 @@ function loadTheGUI() {
 	app.$set(app.$data.user, 'photoURL', firebase.auth().currentUser.photoURL);
 	db.collection("blocks-summary").get().then(function(querySnapshot) {
 		querySnapshot.forEach(function(doc) {
-			db.collection("blocks-summary").doc(doc.id).onSnapshot(function(doc) {
-				console.log(doc.id, " => ", doc.data());
+			db.collection("blocks-summary").doc(doc.id).get().then(function(doc) {
+				var dbData = doc.data();
+				console.log(doc.id, " => ", dbData);
 				if (!app.$data.blocksSummary) app.$set(app.$data, "blocksSummary", {});
-				app.$set(app.$data.blocksSummary, doc.id, doc.data());
-			});
+				app.$set(app.$data.blocksSummary, doc.id, dbData);
+				var headDiv = document.createElement('div');
+				headDiv.classList.add("w3-theme");
+				headDiv.classList.add("w3-container");
+				headDiv.innerHTML = "<p>"+dbData.name+"</p>";
+				var bodyDiv = document.createElement('div');
+				for (var key in dbData.blocks) {
+					addANewDraggableIcon(bodyDiv, Object.assign({"key": key, "colors": dbData.colors}, dbData.blocks[key]))
+				}
+				sortTheDoms(bodyDiv);
+				var summDiv = document.createElement('div');
+				summDiv.setAttribute('id', 'blocks_'+dbData.order+'for_'+doc.id);
+				summDiv.appendChild(headDiv);
+				summDiv.appendChild(bodyDiv);
+				document.getElementById("blocksBar").appendChild(summDiv);
+				sortTheDoms(document.getElementById("blocksBar"));
+			}).catch(function(error) {
+		console.log("Error getting cached document:", error);
+	});
 
 		});
 	});
-
+	main(document.getElementById('mynetwork'), document.getElementById('outlineContainer'));
 	holdToFinishAProcess(false);
 }
+
+function sortTheDoms(list) {
+
+	var items = list.childNodes;
+	var itemsArr = [];
+	for (var i in items) {
+		if (items[i].nodeType == 1) { // get rid of the whitespace text nodes
+			itemsArr.push(items[i]);
+		}
+	}
+
+	itemsArr.sort(function(a, b) {
+		return a.id === b.id
+				? 0
+				: (a.id > b.id ? 1 : -1);
+		});
+
+	for (i = 0; i < itemsArr.length; ++i) {
+		list.appendChild(itemsArr[i]);
+	}
+}
+
+var iconText = {"icon1":"<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='","icon2":"' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='","icon3":"' stroke-width='10' fill='none'>","icon4":"</g></svg>"};
+function getIconWith(colors, path) {
+return iconText.icon1 + colors.bg + iconText.icon2 + colors.fg + iconText.icon3 + path + iconText.icon4;
+}
+function svgTextToURL(svg) {
+	svg = svg;
+	let tempBlob = new Blob([svg], {type: 'image/svg+xml'});
+	let url = URL.createObjectURL(tempBlob);
+	return url;
+}
+
 
 const blockTemplate=[{"name":"Category","type":"string","argument":""},{"name":"Name","type":"string","argument":""},{"name":"Description","type":"string","argument":""},{"name":"Parameters","type":"json","argument":""},{"name":"Label","type":"function","argument":""},{"name":"MaxInTerminals","type":"float","argument":""},{"name":"MaxOutTerminals","type":"float","argument":""},{"name":"Icon","type":"function","argument":""},{"name":"Init","type":"function","argument":""},{"name":"End","type":"function","argument":""},{"name":"Constructor","type":"function","argument":"Data"},{"name":"Destructor","type":"function","argument":"Data"},{"name":"RunTimeExec","type":"function","argument":""},{"name":"Evaluate","type":"function","argument":""},{"name":"Details","type":"function","argument":""},{"name":"ValidateParams","type":"function","argument":""}];
 function loadABlock () {
