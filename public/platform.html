@@ -155,9 +155,9 @@ mxGraph.prototype.validationAlert=function(message){notyf.error(message);}
 		try {
 			/*var v1 = graph.insertVertex(parent, null, 'H<b>e</b>llo,', 20, 20, 80, 30);
 			var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-			var e1 = graph.insertEdge(parent, null, '', v1, v2);*/
+			var e1 = graph.insertEdge(parent, null, '', v1, v2);
 			var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);
-			var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);
+			var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);*/
 			
 		}
 		finally {
@@ -204,7 +204,7 @@ function addANewDraggableIcon (sidebar, data) {
 	img.setAttribute('src', svgTextToURL(getIconWith(data.colors,data.icon)));
 	img.style.width = '100px';
 	img.style.height = '100px';
-	img.title = 'Drag this to the diagram to create a new vertex';
+	img.title = data.name+': '+data.description+'\n\nDrag this to the diagram to create a new vertex';
 	sidebar.appendChild(img);
 
 
@@ -315,8 +315,11 @@ html, body, select {
 </head>
 <body>
 <div id="mynetwork"></div>
-<div id="outlineContainer"  class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:200px;background:transparent;border-style:solid;border-color:black;"></div>
-<div id="blocksBar" class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%;" id="leftMenu"></div>
+<div id="outlineContainer"  class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;"></div>
+<div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left" style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 50%;display: none;" id="leftMenu">
+	<div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()">Close</div>
+	<div id="blocksBar"></div>
+</div>
 
 <div id="app">
 <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
@@ -440,8 +443,8 @@ html, body, select {
 <div class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; right: 15px;" onclick="openLeftMenu()">
 	<img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width: 30px; height: 30px;">
 </div>
-<div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 15px;" onclick="openLeftMenu()">
-	<i class="w3-display-middle w3-circle w3-border far fa-plus-square fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
+<div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton"  style="top: 10px; left: 15px;" onclick="togglemainSideBar()">
+	<i class="w3-display-middle w3-circle w3-border fas fa-th fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 </div>
 <div v-if="(['ADD_NODE', 'ADD_EDGE'].indexOf(networkState))>=0" class="w3-display-container btnRed ToolBarButton"  style="top: 10px; left: 15px;" onclick="exitEditMode()">
 	<i class="w3-display-middle w3-circle w3-border fas fa-times fa-fw" style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
@@ -496,6 +499,15 @@ html, body, select {
 <script>
 function prepareSVGURL(svg){
 	return "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
+}
+function togglemainSideBar(){
+	if (document.getElementById("mainSideBar").style.display === 'none') {
+		document.getElementById("mainSideBar").style.display = 'block';
+		document.getElementById("mynetwork").style.marginLeft = document.getElementById("mainSideBar").style.width;
+	} else {
+		document.getElementById("mainSideBar").style.display = 'none';
+		document.getElementById("mynetwork").style.marginLeft = "0px";
+	}
 }
 function openLeftMenu(content="ADD_BLOCK") {
 	if (content === "EDIT_BLOCK") {
