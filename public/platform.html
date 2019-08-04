@@ -66,11 +66,10 @@
 				mxConstants.SHADOW_OFFSET_X = 5;
 				mxConstants.SHADOW_OFFSET_Y = 5;
 				mxConstants.SHADOW_OPACITY = 0.2;
-				mxConstants.EDGE_SELECTION_COLOR = 'white';
+				mxConstants.EDGE_SELECTION_COLOR = '#ddd';
 				mxConstants.VERTEX_SELECTION_COLOR = '#000000';
 				mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
 				mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
-				mxConstants.OUTLINE_COLOR = 'none';
 				mxEdgeHandler.prototype.snapToTerminals = true;
 				mxConnectionHandler.prototype.movePreviewAway = false;
 				mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
@@ -435,8 +434,8 @@
 						} else {
 							var outError;
 							if (source.parent === target.parent) outError = "Cannot connect to the same block.";
-							if (source.geometry.x == 0) outError = "Tapping input port is not allowed.";
-							if (target.geometry.x == 1) outError = "You cannot feed signal to the output.";
+							if (source.geometry.x === 0) outError = "Tapping input port is not allowed.";
+							if (target.geometry.x === 1) outError = "You cannot feed signal to the output.";
 							if (target.getEdgeCount() > 0) outError = "Only one input is allowed per port.";
 							console.log(outError);
 							return outError;
@@ -523,32 +522,31 @@
 			var model = graph.getModel();
 			model.beginUpdate();
 			try {
-				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "strokeColor=" + umkModel.Colors.fg +
-					";fillColor=" +
+				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "fillColor=" +
 					umkModel.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-					";fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0");
+					";fontStyle=1;fontSize=15;verticalAlign=top;strokeColor="+umkModel.Colors.bg+";");
 				var tempDetails = umkModel.Details();
 
 				v1.setConnectable(false);
 				v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
-				for (var i=1; i<(umkModel.InTerminals+1); i++) {
-					var p1 = graph.insertVertex(v1, null, '$u_{'+i+'}(t)$', 0, i/(umkModel.InTerminals+1), 8, 8, "strokeColor=" + umkModel.Colors.fg +
-						";fillColor=" +
+				for (var i = 1; i < (umkModel.InTerminals + 1); i++) {
+					var p1 = graph.insertVertex(v1, null, '$u' + ((umkModel.InTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
+						0, i / (umkModel.InTerminals + 1), 16, 16, "fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-						";strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+						";strokeColor="+umkModel.Colors.bg+";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
 						true);
-					p1.geometry.offset = new mxPoint(-8, -4);
+					p1.geometry.offset = new mxPoint(-8, -8);
 
 				}
-				for (var i=1; i<(umkModel.OutTerminals+1); i++) {
-					var p2 = graph.insertVertex(v1, null, '$y_{'+i+'}(t)$', 1, i/(umkModel.OutTerminals+1), 8, 8, "strokeColor=" + umkModel.Colors.fg +
-						";fillColor=" +
+				for (var i = 1; i < (umkModel.OutTerminals + 1); i++) {
+					var p2 = graph.insertVertex(v1, null, '$y' + ((umkModel.OutTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
+						1, i / (umkModel.OutTerminals + 1), 16, 16, "fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-						";strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+						";strokeColor="+umkModel.Colors.bg+";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
 						true);
-					p2.geometry.offset = new mxPoint(-0, -4);
+					p2.geometry.offset = new mxPoint(-8, -8);
 				}
 				var Details = graph.insertVertex(v1, null, tempDetails, 0.5, 0, 0, 0, "fontColor=" + umkModel.Colors
 					.fg + ";", true)
@@ -615,38 +613,225 @@
 			var ds = mxUtils.makeDraggable(img, graph, finishDragAct, dragElt, 0, 0, true, true);
 			ds.setGuidesEnabled(true);
 		}
-		var funct = function (graph, evt, cell, x, y) {
-			console.log(evt);
-			var parent = graph.getDefaultParent();
-			var model = graph.getModel();
 
-			var v1 = null;
+		// Touch screen
+		(function () {
+			// Enables rotation handle
+			//mxVertexHandler.prototype.rotationEnabled = true;
 
-			model.beginUpdate();
-			try {
+			// Enables managing of sizers
+			mxVertexHandler.prototype.manageSizers = true;
 
-				var v1 = graph.insertVertex(parent, null, 'Hello', x, y, 100, 100,
-					"strokeColor=blue;fillColor=red;fontColor=white;fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0"
-				);
-				v1.setConnectable(false);
-				var p1 = graph.insertVertex(v1, null, '$u_{1}(t)$', 0, 0.5, 8, 8,
-					"strokeColor=blue;fillColor=red;fontColor=white;strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
-					true);
-				var p2 = graph.insertVertex(v1, null, '$y_{1}(t)$', 1, 0.5, 8, 8,
-					'strokeColor=blue;fillColor=red;fontColor=white;strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0',
-					true);
-				p1.geometry.offset = new mxPoint(-8, -4);
-				p2.geometry.offset = new mxPoint(-0, -4);
-				var Details = graph.insertVertex(v1, null, "asdfkaj fkajh klajhf kajdshf", 0.5, 0, 0, 0,
-					'fontColor=white', true)
-				Details.geometry.offset = new mxPoint(0, 30);
-				Details.setConnectable(false);
-			} finally {
-				model.endUpdate();
+			// Enables live preview
+			mxVertexHandler.prototype.livePreview = true;
+
+			// Sets constants for touch style
+			mxConstants.HANDLE_SIZE = 16;
+			mxConstants.LABEL_HANDLE_SIZE = 7;
+
+			// Larger tolerance and grid for real touch devices
+			if (
+				mxClient.IS_TOUCH ||
+				navigator.maxTouchPoints > 0 ||
+				navigator.msMaxTouchPoints > 0
+			) {
+				mxShape.prototype.svgStrokeTolerance = 18;
+				mxVertexHandler.prototype.tolerance = 12;
+				mxEdgeHandler.prototype.tolerance = 12;
+				mxGraph.prototype.tolerance = 12;
 			}
 
-			graph.setSelectionCell(v1);
-		}
+			// One finger pans (no rubberband selection) must start regardless of mouse button
+			mxPanningHandler.prototype.isPanningTrigger = function (me) {
+				var evt = me.getEvent();
+
+				return (
+					(me.getState() == null && !mxEvent.isMouseEvent(evt)) ||
+					(mxEvent.isPopupTrigger(evt) &&
+						(me.getState() == null ||
+							mxEvent.isControlDown(evt) ||
+							mxEvent.isShiftDown(evt)))
+				);
+			};
+
+			// Don't clear selection if multiple cells selected
+			var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
+			mxGraphHandler.prototype.mouseDown = function (sender, me) {
+				graphHandlerMouseDown.apply(this, arguments);
+
+				if (
+					this.graph.isCellSelected(me.getCell()) &&
+					this.graph.getSelectionCount() > 1
+				) {
+					this.delayedSelection = false;
+				}
+			};
+
+			// On connect the target is selected and we clone the cell of the preview edge for insert
+			mxConnectionHandler.prototype.selectCells = function (edge, target) {
+				if (target != null) {
+					this.graph.setSelectionCell(target);
+				} else {
+					this.graph.setSelectionCell(edge);
+				}
+			};
+
+			// Overrides double click handling to use the tolerance
+			var graphDblClick = mxGraph.prototype.dblClick;
+			mxGraph.prototype.dblClick = function (evt, cell) {
+				if (cell == null) {
+					var pt = mxUtils.convertPoint(
+						this.container,
+						mxEvent.getClientX(evt),
+						mxEvent.getClientY(evt)
+					);
+					cell = this.getCellAt(pt.x, pt.y);
+				}
+
+				graphDblClick.call(this, evt, cell);
+			};
+
+			// Rounded edge and vertex handles
+			var touchHandle = new mxImage("images/handle-main.png", 17, 17);
+			mxVertexHandler.prototype.handleImage = touchHandle;
+			mxEdgeHandler.prototype.handleImage = touchHandle;
+			mxOutline.prototype.sizerImage = touchHandle;
+
+			mxVertexHandler.prototype.rotationHandleVSpacing = -30;
+			// Pre-fetches touch handle
+			new Image().src = touchHandle.src;
+
+			// Adds connect icon to selected vertex
+			var connectorSrc = "images/handle-connect.png";
+
+			var vertexHandlerInit = mxVertexHandler.prototype.init;
+			mxVertexHandler.prototype.init = function () {
+				// TODO: Use 4 sizers, move outside of shape
+				//this.singleSizer = this.state.width < 30 && this.state.height < 30;
+				vertexHandlerInit.apply(this, arguments);
+
+				// Only show connector image on one cell and do not show on containers
+				if (
+					this.graph.connectionHandler.isEnabled() &&
+					this.graph.isCellConnectable(this.state.cell) &&
+					this.graph.getSelectionCount() == 1
+				) {
+					this.connectorImg = mxUtils.createImage(connectorSrc);
+					this.connectorImg.style.cursor = "pointer";
+					this.connectorImg.style.width = "29px";
+					this.connectorImg.style.height = "29px";
+					this.connectorImg.style.position = "absolute";
+
+					if (!mxClient.IS_TOUCH) {
+						this.connectorImg.setAttribute(
+							"title",
+							mxResources.get("connect")
+						);
+						mxEvent.redirectMouseEvents(
+							this.connectorImg,
+							this.graph,
+							this.state
+						);
+					}
+
+					// Starts connecting on touch/mouse down
+					mxEvent.addGestureListeners(
+						this.connectorImg,
+						mxUtils.bind(this, function (evt) {
+							this.graph.popupMenuHandler.hideMenu();
+							this.graph.stopEditing(false);
+
+							var pt = mxUtils.convertPoint(
+								this.graph.container,
+								mxEvent.getClientX(evt),
+								mxEvent.getClientY(evt)
+							);
+							this.graph.connectionHandler.start(this.state, pt.x, pt.y);
+							this.graph.isMouseDown = true;
+							this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+							mxEvent.consume(evt);
+						})
+					);
+
+					this.graph.container.appendChild(this.connectorImg);
+				}
+
+				this.redrawHandles();
+			};
+
+			var vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
+			mxVertexHandler.prototype.hideSizers = function () {
+				vertexHandlerHideSizers.apply(this, arguments);
+
+				if (this.connectorImg != null) {
+					this.connectorImg.style.visibility = "hidden";
+				}
+			};
+
+			var vertexHandlerReset = mxVertexHandler.prototype.reset;
+			mxVertexHandler.prototype.reset = function () {
+				vertexHandlerReset.apply(this, arguments);
+
+				if (this.connectorImg != null) {
+					this.connectorImg.style.visibility = "";
+				}
+			};
+
+			var vertexHandlerRedrawHandles =
+				mxVertexHandler.prototype.redrawHandles;
+			mxVertexHandler.prototype.redrawHandles = function () {
+				vertexHandlerRedrawHandles.apply(this);
+
+				if (this.state != null && this.connectorImg != null) {
+					var pt = new mxPoint();
+					var s = this.state;
+
+					// Top right for single-sizer
+					if (mxVertexHandler.prototype.singleSizer) {
+						pt.x = s.x + s.width - this.connectorImg.offsetWidth / 2;
+						pt.y = s.y - this.connectorImg.offsetHeight / 2;
+					} else {
+						pt.x =
+							s.x +
+							s.width +
+							mxConstants.HANDLE_SIZE / 2 +
+							4 +
+							this.connectorImg.offsetWidth / 2;
+						pt.y = s.y + s.height / 2;
+					}
+
+					var alpha = mxUtils.toRadians(
+						mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0)
+					);
+
+					if (alpha != 0) {
+						var cos = Math.cos(alpha);
+						var sin = Math.sin(alpha);
+
+						var ct = new mxPoint(s.getCenterX(), s.getCenterY());
+						pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
+					}
+
+					this.connectorImg.style.left =
+						pt.x - this.connectorImg.offsetWidth / 2 + "px";
+					this.connectorImg.style.top =
+						pt.y - this.connectorImg.offsetHeight / 2 + "px";
+				}
+			};
+
+			var vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
+			mxVertexHandler.prototype.destroy = function (sender, me) {
+				vertexHandlerDestroy.apply(this, arguments);
+
+				if (this.connectorImg != null) {
+					this.connectorImg.parentNode.removeChild(this.connectorImg);
+					this.connectorImg = null;
+				}
+			};
+
+			// Pre-fetches touch connector
+			new Image().src = connectorSrc;
+		})();
 	</script>
 
 	<style>
@@ -737,7 +922,7 @@
 		style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
 	</div>
 	<div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left"
-		style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 50%;display: none;" id="leftMenu">
+		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;" id="leftMenu">
 		<div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()"><i class="fas fa-times"></i> Close</div>
 		<div id="blocksBar"></div>
 	</div>
