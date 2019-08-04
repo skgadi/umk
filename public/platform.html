@@ -66,6 +66,11 @@
 				mxConstants.SHADOW_OFFSET_X = 5;
 				mxConstants.SHADOW_OFFSET_Y = 5;
 				mxConstants.SHADOW_OPACITY = 0.2;
+				mxConstants.EDGE_SELECTION_COLOR = 'white';
+				mxConstants.VERTEX_SELECTION_COLOR = '#000000';
+				mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
+				mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
+				mxConstants.OUTLINE_COLOR = 'none';
 				mxEdgeHandler.prototype.snapToTerminals = true;
 				mxConnectionHandler.prototype.movePreviewAway = false;
 				mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
@@ -76,12 +81,17 @@
 				graph.setAllowDanglingEdges(false);
 				var vStyle = graph.getStylesheet().getDefaultVertexStyle();
 				var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
-				vStyle["shadow"] = true;
+				vStyle["shadow"] = false;
 				vStyle["whiteSpace"] = 'wrap';
 				vStyle["arcSize"] = 15;
 				vStyle["absoluteArcSize"] = 1;
 				vStyle["rounded"] = 1;
 				eStyle['edgeStyle'] = 'orthogonalEdgeStyle';
+				eStyle['strokeWidth'] = 2;
+				eStyle['fontSize'] = 15;
+				eStyle['targetJettySize'] = 25;
+				eStyle["shadow"] = false;
+
 				new mxRubberband(graph);
 				var keyHandler = new mxKeyHandler(graph);
 				var parent = graph.getDefaultParent();
@@ -345,8 +355,8 @@
 									var ixe = Math.round(xe);
 									var iys = Math.round(ys);
 									var iye = Math.round(ye);
-									ctx.strokeStyle = '#b0b0b0';
-									ctx.fillStyle = "#dedede";
+									ctx.strokeStyle = '#f0f0f0';
+									ctx.fillStyle = "#ffffff";
 									ctx.fillRect(0, 0, canvas.width, canvas.height);
 									ctx.beginPath();
 									ctx.lineWidth = 0.5;
@@ -438,6 +448,25 @@
 				}
 
 
+				//Dynamic Edge coloring
+				var defaultModelStyle = graph.model.getStyle;
+				graph.model.getStyle = function (cell) {
+					var style = defaultModelStyle.apply(this, arguments);
+					if (cell != null) {
+						if (this.isEdge(cell)) {
+							var target = this.getTerminal(cell, true);
+							if (target != null) {
+								var state = graph.getView().getState(target);
+								var targetStyle = (state != null) ? state.style : graph.getCellStyle(target);
+								var fill = mxUtils.getValue(targetStyle, mxConstants.STYLE_FILLCOLOR);
+								if (fill != null) {
+									style += ';strokeColor=' + fill;
+								}
+							}
+						}
+					}
+					return style;
+				}
 
 				//How Label is handled for a model
 				graph.getLabel = function (cell) {
@@ -489,52 +518,61 @@
 			}
 		}
 
+		function insertVertex(v1, umkModel, x, y) {
+			var parent = graph.getDefaultParent();
+			var model = graph.getModel();
+			model.beginUpdate();
+			try {
+				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "strokeColor=" + umkModel.Colors.fg +
+					";fillColor=" +
+					umkModel.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
+					";fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0");
+				var tempDetails = umkModel.Details();
 
+				v1.setConnectable(false);
+				v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
+				for (var i=1; i<(umkModel.InTerminals+1); i++) {
+					var p1 = graph.insertVertex(v1, null, '$u_{'+i+'}(t)$', 0, i/(umkModel.InTerminals+1), 8, 8, "strokeColor=" + umkModel.Colors.fg +
+						";fillColor=" +
+						umkModel
+						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
+						";strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+						true);
+					p1.geometry.offset = new mxPoint(-8, -4);
+
+				}
+				for (var i=1; i<(umkModel.OutTerminals+1); i++) {
+					var p2 = graph.insertVertex(v1, null, '$y_{'+i+'}(t)$', 1, i/(umkModel.OutTerminals+1), 8, 8, "strokeColor=" + umkModel.Colors.fg +
+						";fillColor=" +
+						umkModel
+						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
+						";strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+						true);
+					p2.geometry.offset = new mxPoint(-0, -4);
+				}
+				var Details = graph.insertVertex(v1, null, tempDetails, 0.5, 0, 0, 0, "fontColor=" + umkModel.Colors
+					.fg + ";", true)
+				Details.geometry.offset = new mxPoint(0, 30);
+				Details.setConnectable(false);
+			} finally {
+				model.endUpdate();
+			}
+
+		}
 
 		function addANewDraggableIcon(sidebar, data) {
 			var addVertices = function (graph, evt, cell, x, y) {
-				var parent = graph.getDefaultParent();
-				var model = graph.getModel();
-				model.beginUpdate();
-				tempGlobal = v1;
+
 				try {
 					eval("var umkModel = new umk_" + data.key + "();");
-					console.log(umkModel);
 					umkModel.Constructor();
-					v1 = graph.insertVertex(parent, null, umkModel, x, y, 100, 100, "strokeColor=blue;fillColor=" +
-						data.colors.bg + ";fontColor=" + data.colors.fg +
-						";fontStyle=1;fontSize=15;verticalAlign=top;strokeWidth=0");
-					var tempDetails = umkModel.Details();
-
-					v1.setConnectable(false);
-					v1.geometry.alternateBounds = new mxRectangle(0, 0, 100, 20);
-					var p1 = graph.insertVertex(v1, null, '$u_{1}(t)$', 0, 0.5, 8, 8, "strokeColor=blue;fillColor=" +
-						data
-						.colors.bg + ";fontColor=" + data.colors.fg +
-						";strokeWidth=0;labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
-						true);
-					var p2 = graph.insertVertex(v1, null, '$y_{1}(t)$', 1, 0.5, 8, 8, "strokeColor=blue;fillColor=" +
-						data
-						.colors.bg + ";fontColor=" + data.colors.fg +
-						";strokeWidth=0;labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
-						true);
-					p1.geometry.offset = new mxPoint(-8, -4);
-					p2.geometry.offset = new mxPoint(-0, -4);
-					var Details = graph.insertVertex(v1, null, tempDetails, 0.5, 0, 0, 0, "fontColor=" + data.colors
-						.fg + ";", true)
-					Details.geometry.offset = new mxPoint(0, 30);
-					Details.setConnectable(false);
-					/*var umkModelStr = JSON.stringify2(umkModel);
-					var edit = new mxCellAttributeChange(v1, "umkModel", "sdf");
-					model.execute(edit);*/
+					insertVertex(v1, umkModel, x, y);
 				} catch (e) {
-					graph.removeCells([v1]);
 					console.log(e);
+					graph.removeCells([v1]);
 					notyf.error(
 						"Error in the mathematical model. If your internet connection is good, please contact the support."
 					);
-				} finally {
-					model.endUpdate();
 				}
 				graph.setSelectionCell(v1);
 
@@ -551,12 +589,10 @@
 							}
 						})
 						.catch(function (e) {
+							console.log(e);
 							notyf.error(
 								"Unable to load the block. If your internet connection is not a problem, please contact the support."
 							);
-							if (v1 && v1.isVertex()) {
-								graph.removeCells([v1]);
-							}
 						});
 				}
 			}
@@ -566,15 +602,15 @@
 			blockDiv.setAttribute('id', 'block_'+data.order+'for_'+data.key);*/
 			var img = document.createElement('img');
 			img.setAttribute('src', svgTextToURL(getIconWith(data.colors, data.icon)));
-			img.style.width = '100px';
-			img.style.height = '100px';
+			img.style.width = '50px';
+			img.style.height = '50px';
 			img.title = data.name + ': ' + data.description + '\n\nDrag this to the diagram to create a new vertex';
 			sidebar.appendChild(img);
 
 
 			var dragElt = document.createElement('div');
 			dragElt.style.border = 'dashed black 1px';
-			dragElt.style.width = '100px';
+			dragElt.style.width = '200px';
 			dragElt.style.height = '100px';
 			var ds = mxUtils.makeDraggable(img, graph, finishDragAct, dragElt, 0, 0, true, true);
 			ds.setGuidesEnabled(true);
@@ -1890,6 +1926,22 @@
 			"name": "ValidateParams",
 			"type": "function",
 			"argument": ""
+		}, {
+			"name": "bid",
+			"type": "string",
+			"argument": ""
+		}, {
+			"name": "Colors",
+			"type": "object",
+			"argument": ""
+		}, {
+			"name": "InTerminals",
+			"type": "float",
+			"argument": ""
+		}, {
+			"name": "OutTerminals",
+			"type": "float",
+			"argument": ""
 		}];
 
 		function loadABlock() {
@@ -1989,7 +2041,6 @@
 
 		function createAModel(bid, dbBlockData) {
 			var constructorStr = "window.umk_" + bid + " = function(){";
-			constructorStr += "this.bid=\"" + bid + "\";";
 			var prototypesStr = "";
 			BLOCKS_LIB[bid] = {};
 			blockTemplate.forEach(function (item) {
@@ -2009,6 +2060,11 @@
 					case "json":
 						if (!dbBlockData[item.name]) tempVal = [];
 						else tempVal = JSON.parse(dbBlockData[item.name]);
+						constructorStr += "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
+						break;
+					case "object":
+						if (!dbBlockData[item.name]) tempVal = {};
+						else tempVal = dbBlockData[item.name];
 						constructorStr += "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
 						break;
 					case "function":
