@@ -18,6 +18,7 @@
 
 	<!-- Example code -->
 	<script type="text/javascript">
+	var graph;
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
 		// from the onLoad event handler of the document (see below).
@@ -47,7 +48,7 @@
 				relation.setAttribute('since', '1985');
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				graph = new mxGraph(container);
 
 				// Optional disabling of sizing
 				graph.setCellsResizable(false);
