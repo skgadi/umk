@@ -109,6 +109,7 @@
 					var model = new mxGraphModel();
 					var parent = model.getChildAt(model.getRoot(), 0);
 					for (var i = 0; i < cells.length; i++) {
+						cells[i].setValue(JSON.stringify2(cells[i].getValue()));
 						model.add(parent, cells[i]);
 					}
 					return mxUtils.getXml(codec.encode(model));
@@ -214,12 +215,19 @@
 										cells = cells.concat(children);
 									}
 								}
+								
+								for (var i=0; i<cells.length; i++) {
+									try{
+										console.log(cells[i].getValue);
+										cells[i].setValue(JSON.parse2(cells[i].getValue()));
+									}catch(e){}
+								}
 							} finally {
 								graph.model.endUpdate();
 							}
 						}
 					} catch (e) {
-						alert(e);
+						//alert(e);
 						throw e;
 					}
 					return cells;
@@ -275,7 +283,7 @@
 					}
 					textInput.select();
 				});
-				delete blocks
+				//Delete blocks
 				keyHandler.bindKey(46, function (evt) {
 					if (graph.isEnabled()) {
 						graph.removeCells();
@@ -426,7 +434,7 @@
 				var customValidationError = true;
 				var default_getEdgeValidationError = mxGraph.prototype.getEdgeValidationError;
 				mxGraph.prototype.getEdgeValidationError = function (edge, source, target) {
-					console.log(source.edges);
+					//console.log(source.edges);
 					var defaultOut = default_getEdgeValidationError.apply(this, arguments);
 					if (customValidationError) {
 						if (defaultOut !== null) {
@@ -472,9 +480,20 @@
 					//console.log(cell);
 					if (!!cell.value) {
 						if ((typeof cell.value) === 'object') {
-							eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
-
-							return (tempModel.Name + "<p>"+tempModel.Details()+"<\p>") || ''
+							try {
+								eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
+								return (tempModel.Name + "<p class='block-margin'>"+tempModel.Details()+"</p>") || ''
+							} catch(e){
+								pullDBAndGenModel(cell.value.bid)
+								.then(function (){
+									eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
+									graph.cellLabelChanged(cell, tempModel.Name + "<p class='block-margin'>"+tempModel.Details()+"</p>");
+								})
+								.catch (function(){
+									notyf.error("Error in loading the block");
+								});
+								return "Loading...";
+							}
 						}
 						else return cell.value;
 					} else return null;
@@ -528,7 +547,7 @@
 			try {
 				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "fillColor=" +
 					umkModel.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-					";fontStyle=1;fontSize=15;verticalAlign=top;strokeColor=" + umkModel.Colors.bg + ";");
+					";fontSize=15;verticalAlign=top;strokeColor=" + umkModel.Colors.bg + ";");
 				var tempDetails = umkModel.Details();
 
 				v1.setConnectable(false);
@@ -582,7 +601,13 @@
 
 			}
 			var finishDragAct = function (graph, evt, cell, x, y) {
-				if (eval('typeof umk_' + data.key) === 'function') {
+				pullDBAndGenModel(data.key)
+				.then(function () {
+					addVertices(graph, evt, cell, x, y);
+				}).catch(function(){
+					notyf.error('Unknown error: please contact support if it continues.');
+				});
+				/*if (eval('typeof umk_' + data.key) === 'function') {
 					addVertices(graph, evt, cell, x, y);
 				} else {
 					db.collection("blocks").doc(data.key).get()
@@ -598,7 +623,7 @@
 								"Unable to load the block. If your internet connection is not a problem, please contact the support."
 							);
 						});
-				}
+				}*/
 			}
 			var v1;
 			var img = document.createElement('img');
@@ -857,6 +882,14 @@
 			height: 100%;
 			border: 0px solid lightgray;
 			box-sizing: content-box;
+		}
+
+		.MJXc-display {
+			margin: 0 !important
+		}
+
+		.block-margin {
+			margin: 0.5em 0 5em 0!important;
 		}
 
 		.btnGreen,
@@ -2230,10 +2263,32 @@
 			});
 		}
 
+		function pullDBAndGenModel (bid) {
+			return new Promise (function (resolve, reject) {
+				if (eval('typeof umk_' + bid) === 'function') {
+					resolve();
+				} else {
+					db.collection("blocks").doc(bid).get()
+						.then(function (doc) {
+							if (doc.exists) {
+								createAModel(doc.id, doc.data());
+								resolve();
+							}
+						})
+						.catch(function (e) {
+							console.log(e);
+							notyf.error(
+								"Unable to load the block. If your internet connection is not a problem, please contact the support."
+							);
+							reject();
+						});
+				}
+			});
+		}
+
 		function createAModel(bid, dbBlockData) {
 			var constructorStr = "window.umk_" + bid + " = function(obj){";
 			var prototypesStr = "";
-			BLOCKS_LIB[bid] = {};
 			blockTemplate.forEach(function (item) {
 				let tempObj = {};
 				var tempVal;
