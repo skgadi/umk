@@ -275,7 +275,7 @@
 					}
 					textInput.select();
 				});
-				//delete blocks
+				delete blocks
 				keyHandler.bindKey(46, function (evt) {
 					if (graph.isEnabled()) {
 						graph.removeCells();
@@ -469,9 +469,13 @@
 
 				//How Label is handled for a model
 				graph.getLabel = function (cell) {
-					console.log(cell);
+					//console.log(cell);
 					if (!!cell.value) {
-						if ((typeof cell.value) === 'object') return cell.value.Name || '';
+						if ((typeof cell.value) === 'object') {
+							eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
+
+							return (tempModel.Name + "<p>"+tempModel.Details()+"<\p>") || ''
+						}
 						else return cell.value;
 					} else return null;
 				}
@@ -524,7 +528,7 @@
 			try {
 				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "fillColor=" +
 					umkModel.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-					";fontStyle=1;fontSize=15;verticalAlign=top;strokeColor="+umkModel.Colors.bg+";");
+					";fontStyle=1;fontSize=15;verticalAlign=top;strokeColor=" + umkModel.Colors.bg + ";");
 				var tempDetails = umkModel.Details();
 
 				v1.setConnectable(false);
@@ -534,7 +538,8 @@
 						0, i / (umkModel.InTerminals + 1), 16, 16, "fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-						";strokeColor="+umkModel.Colors.bg+";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+						";strokeColor=" + umkModel.Colors.bg +
+						";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
 						true);
 					p1.geometry.offset = new mxPoint(-8, -8);
 
@@ -544,14 +549,15 @@
 						1, i / (umkModel.OutTerminals + 1), 16, 16, "fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
-						";strokeColor="+umkModel.Colors.bg+";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+						";strokeColor=" + umkModel.Colors.bg +
+						";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
 						true);
 					p2.geometry.offset = new mxPoint(-8, -8);
 				}
-				var Details = graph.insertVertex(v1, null, tempDetails, 0.5, 0, 0, 0, "fontColor=" + umkModel.Colors
+				/*var Details = graph.insertVertex(v1, null, "<div>sdf"+tempDetails+"sdfff<\div>", 0.5, 0, 0, 0, "verticalAlign=top;strokeColor=white;fontColor=" + umkModel.Colors
 					.fg + ";", true)
 				Details.geometry.offset = new mxPoint(0, 30);
-				Details.setConnectable(false);
+				Details.setConnectable(false);*/
 			} finally {
 				model.endUpdate();
 			}
@@ -922,7 +928,7 @@
 		style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
 	</div>
 	<div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left"
-		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;" id="leftMenu">
+		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;" >
 		<div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()"><i class="fas fa-times"></i> Close</div>
 		<div id="blocksBar"></div>
 	</div>
@@ -2225,7 +2231,7 @@
 		}
 
 		function createAModel(bid, dbBlockData) {
-			var constructorStr = "window.umk_" + bid + " = function(){";
+			var constructorStr = "window.umk_" + bid + " = function(obj){";
 			var prototypesStr = "";
 			BLOCKS_LIB[bid] = {};
 			blockTemplate.forEach(function (item) {
@@ -2260,9 +2266,11 @@
 						break;
 				}
 			});
+			constructorStr += "for(var prop in obj){this[prop] = obj[prop];}";
 			constructorStr += "}";
 			eval(constructorStr);
 			eval(prototypesStr);
+			console.log(constructorStr);
 		}
 	</script>
 </body>
