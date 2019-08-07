@@ -81,6 +81,8 @@
 				graph.setConnectable(true);
 				graph.setAllowDanglingEdges(false);
 				graph.centerZoom = false;
+				graph.recursiveResize = true;
+				graph.setMultigraph(false);
 				var vStyle = graph.getStylesheet().getDefaultVertexStyle();
 				var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
 				vStyle["shadow"] = false;
@@ -101,6 +103,30 @@
 				var outln = new mxOutline(graph, outline);
 				/*graph.autoSizeCellsOnAdd = true;
 				graph.autoSizeCells = true;/**/
+				//Adjust vertices when new group is formed
+				var graphCreateGroupCell = graph.createGroupCell;
+				graph.createGroupCell = function(cells) {
+					var group = graphCreateGroupCell.apply(this, arguments);
+					var style = new Object();
+					style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+					style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+					style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+					style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+					style[mxConstants.STYLE_FILLCOLOR] = '#FF9103';
+					style[mxConstants.STYLE_GRADIENTCOLOR] = '#F8C48B';
+					style[mxConstants.STYLE_STROKECOLOR] = '#E86A00';
+					style[mxConstants.STYLE_FONTCOLOR] = '#000000';
+					style[mxConstants.STYLE_ROUNDED] = true;
+					style[mxConstants.STYLE_OPACITY] = '80';
+					style[mxConstants.STYLE_STARTSIZE] = '30';
+					style[mxConstants.STYLE_FONTSIZE] = '16';
+					style[mxConstants.STYLE_FONTSTYLE] = 1;
+					graph.getStylesheet().putCellStyle('group', style);
+					group.setStyle('group');
+					group.setValue("Sub model");
+					return group;
+				};
+
 				//Undo/redo activities
 				undoManager = new mxUndoManager();
 				var listener = function (sender, evt) {
@@ -108,6 +134,27 @@
 				};
 				graph.getModel().addListener(mxEvent.UNDO, listener);
 				graph.getView().addListener(mxEvent.UNDO, listener);
+				// Helper method to mark parts with constituent=1 in the style
+				graph.isPart = function(cell)
+				{
+					//original code
+					/*var state = this.view.getState(cell);
+					var style = (state != null) ? state.style : this.getCellStyle(cell);*/
+					//new code
+					var style = graph.getCellStyle(cell);
+
+					return style['constituent'] == '1';
+				};
+				// Redirects selection to parent
+				graph.selectCellForEvent = function(cell)
+				{
+					if (this.isPart(cell))
+					{
+						cell = this.model.getParent(cell);
+					}
+					
+					mxGraph.prototype.selectCellForEvent.apply(this, arguments);
+				};
 				//Copy Paste of blocks
 				graph.cloneCells = function (cells, allowInvalidEdges, mapping, keepPosition) {
 					customValidationError = false;
@@ -701,7 +748,7 @@
 				v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
 				for (var i = 1; i < (umkModel.InTerminals + 1); i++) {
 					var p1 = graph.insertVertex(v1, null, '$u' + ((umkModel.InTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
-						0, i / (umkModel.InTerminals + 1), 16, 16, "selectable=0;fillColor=" +
+						0, i / (umkModel.InTerminals + 1), 16, 16, "constituent=1;fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
 						";strokeColor=" + umkModel.Colors.bg +
@@ -712,7 +759,7 @@
 				}
 				for (var i = 1; i < (umkModel.OutTerminals + 1); i++) {
 					var p2 = graph.insertVertex(v1, null, '$y' + ((umkModel.OutTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
-						1, i / (umkModel.OutTerminals + 1), 16, 16, "selectable=0;fillColor=" +
+						1, i / (umkModel.OutTerminals + 1), 16, 16, "constituent=1;fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
 						";strokeColor=" + umkModel.Colors.bg +
@@ -1010,6 +1057,47 @@
 			// Pre-fetches touch connector
 			new Image().src = connectorSrc;
 		})();
+
+		//Group blocks
+		function createSubModel() {
+			var cells = graph.getSelectionCells();
+			var validGrouping = true;
+			for (var i=0; i<cells.length; i++) {
+				if (cells[i].getStyle() === "group") {
+					console.log(cells[i]);
+					model.beginUpdate();
+					try{
+						graph.setSelectionCells(cells[i].children.concat(graph.getSelectionCells()));
+						graph.ungroupCells ([cells[i]]);
+					} catch(e) {console.log(e)}
+					finally{
+						model.endUpdate();
+					}
+					validGrouping = false;
+				}
+				try {
+					if (cells[i].parent.getStyle() === "group") {
+						validGrouping = false;
+					}
+				} catch(e){
+					console.log(e);
+				}
+			}
+			if (validGrouping){
+				parent = graph.getDefaultParent();
+				model = graph.getModel();
+				model.beginUpdate();
+				try {
+					var groupCell = graph.groupCells(null,25,graph.getSelectionCells());
+					//graph.getSelectionCell(groupCell); ?? Why not working?
+				} catch (e) {
+					console.log(e);
+					notyf.error ("Unable to group the selected items");
+				} finally{
+					model.endUpdate();
+				}
+			}
+		}
 	</script>
 
 	<style>
@@ -1308,7 +1396,7 @@
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
 
-		<div id="move-up" class="w3-display-container btnGreen ToolBarButton" style="bottom: 90px; left: 50px;">
+		<div id="move-up" onclick="createSubModel()" class="w3-display-container btnGreen ToolBarButton" style="bottom: 90px; left: 50px;">
 			<i class="w3-display-middle w3-circle w3-border fas fa-chevron-up fa-fw"
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
@@ -2475,7 +2563,7 @@
 			constructorStr += "}";
 			eval(constructorStr);
 			eval(prototypesStr);
-			console.log(constructorStr);
+			//console.log(constructorStr);
 		}
 	</script>
 </body>
