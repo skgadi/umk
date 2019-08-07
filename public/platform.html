@@ -44,6 +44,7 @@
 	<!-- Example code -->
 	<script type="text/javascript">
 		var graph;
+		var undoManager;
 		var tempGlobal;
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
@@ -74,10 +75,12 @@
 				mxConnectionHandler.prototype.movePreviewAway = false;
 				mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
 				graph = new mxGraph(container);
+				graph.setPanning(true);
 				graph.setTooltips(false);
 				graph.htmlLabels = true;
 				graph.setConnectable(true);
 				graph.setAllowDanglingEdges(false);
+				graph.centerZoom = false;
 				var vStyle = graph.getStylesheet().getDefaultVertexStyle();
 				var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
 				vStyle["shadow"] = false;
@@ -91,12 +94,20 @@
 				eStyle['targetJettySize'] = 25;
 				eStyle["shadow"] = false;
 
-				new mxRubberband(graph);
+				// Creates rubberband selection
+				var rubberband = new mxRubberband(graph);
 				var keyHandler = new mxKeyHandler(graph);
 				var parent = graph.getDefaultParent();
 				var outln = new mxOutline(graph, outline);
 				/*graph.autoSizeCellsOnAdd = true;
 				graph.autoSizeCells = true;/**/
+				//Undo/redo activities
+				undoManager = new mxUndoManager();
+				var listener = function (sender, evt) {
+					undoManager.undoableEditHappened(evt.getProperty('edit'));
+				};
+				graph.getModel().addListener(mxEvent.UNDO, listener);
+				graph.getView().addListener(mxEvent.UNDO, listener);
 				//Copy Paste of blocks
 				graph.cloneCells = function (cells, allowInvalidEdges, mapping, keepPosition) {
 					customValidationError = false;
@@ -215,12 +226,12 @@
 										cells = cells.concat(children);
 									}
 								}
-								
-								for (var i=0; i<cells.length; i++) {
-									try{
+
+								for (var i = 0; i < cells.length; i++) {
+									try {
 										console.log(cells[i].getValue);
 										cells[i].setValue(JSON.parse2(cells[i].getValue()));
-									}catch(e){}
+									} catch (e) {}
 								}
 							} finally {
 								graph.model.endUpdate();
@@ -289,6 +300,135 @@
 						graph.removeCells();
 					}
 				});
+
+
+
+
+				// To detect if touch events are actually supported, the following condition is recommended:
+				// mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
+
+				// Disables built-in text selection and context menu while not editing text
+				var textEditing = mxUtils.bind(this, function (evt) {
+					return graph.isEditing();
+				});
+
+				container.onselectstart = textEditing;
+				container.onmousedown = textEditing;
+
+				if (mxClient.IS_IE && (typeof (document.documentMode) === 'undefined' || document.documentMode < 9)) {
+					mxEvent.addListener(container, 'contextmenu', textEditing);
+				} else {
+					container.oncontextmenu = textEditing;
+				}
+
+				graph.popupMenuHandler.autoExpand = true;
+
+				graph.popupMenuHandler.isSelectOnPopup = function (me) {
+					return mxEvent.isMouseEvent(me.getEvent());
+				};
+
+				// Installs context menu
+				graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
+					menu.addItem('Item 1', null, function () {
+						alert('Item 1');
+					});
+
+					menu.addSeparator();
+
+					var submenu1 = menu.addItem('Submenu 1', null, null);
+
+					menu.addItem('Subitem 1', null, function () {
+						alert('Subitem 1');
+					}, submenu1);
+					menu.addItem('Subitem 1', null, function () {
+						alert('Subitem 2');
+					}, submenu1);
+				};
+
+				// Context menu trigger implementation depending on current selection state
+				// combined with support for normal popup trigger.
+				var cellSelected = false;
+				var selectionEmpty = false;
+				var menuShowing = false;
+
+				graph.fireMouseEvent = function (evtName, me, sender) {
+					if (evtName == mxEvent.MOUSE_DOWN) {
+						// For hit detection on edges
+						me = this.updateMouseEvent(me);
+
+						cellSelected = this.isCellSelected(me.getCell());
+						selectionEmpty = this.isSelectionEmpty();
+						menuShowing = graph.popupMenuHandler.isMenuShowing();
+					}
+
+					mxGraph.prototype.fireMouseEvent.apply(this, arguments);
+				};
+
+				// Shows popup menu if cell was selected or selection was empty and background was clicked
+				graph.popupMenuHandler.mouseUp = function (sender, me) {
+					this.popupTrigger = !graph.isEditing() && (this.popupTrigger || (!menuShowing &&
+						!graph.isEditing() && !mxEvent.isMouseEvent(me.getEvent()) &&
+						((selectionEmpty && me.getCell() == null && graph.isSelectionEmpty()) ||
+							(cellSelected && graph.isCellSelected(me.getCell())))));
+					mxPopupMenuHandler.prototype.mouseUp.apply(this, arguments);
+				};
+				// Adds mouse wheel handling for zoom
+				mxEvent.addMouseWheelListener(function (evt, up) {
+					if (up) {
+						graph.zoomIn();
+					} else {
+						graph.zoomOut();
+					}
+					mxEvent.consume(evt);
+				});
+
+
+				// Tap and hold on background starts rubberband for multiple selected
+				// cells the cell associated with the event is deselected
+				graph.addListener(mxEvent.TAP_AND_HOLD, function (sender, evt) {
+					if (!mxEvent.isMultiTouchEvent(evt)) {
+						var me = evt.getProperty('event');
+						var cell = evt.getProperty('cell');
+
+						if (cell == null) {
+							var pt = mxUtils.convertPoint(this.container,
+								mxEvent.getClientX(me), mxEvent.getClientY(me));
+							rubberband.start(pt.x, pt.y);
+						} else if (graph.getSelectionCount() > 1 && graph.isCellSelected(cell)) {
+							graph.removeSelectionCell(cell);
+						}
+
+						// Blocks further processing of the event
+						evt.consume();
+					}
+				});
+
+				// Adds custom hit detection if native hit detection found no cell
+				graph.updateMouseEvent = function (me) {
+					var me = mxGraph.prototype.updateMouseEvent.apply(this, arguments);
+					if (me.getState() == null) {
+						var cell = this.getCellAt(me.graphX, me.graphY);
+						if (cell != null && this.isSwimlane(cell) && this.hitsSwimlaneContent(cell, me.graphX, me
+								.graphY)) {
+							cell = null;
+						} else {
+							me.state = this.view.getState(cell);
+
+							if (me.state != null && me.state.shape != null) {
+								this.container.style.cursor = me.state.shape.node.style.cursor;
+							}
+						}
+					}
+
+					if (me.getState() == null) {
+						this.container.style.cursor = 'default';
+					}
+
+					return me;
+				};
+
+
+
 				//Lines before connecting edges
 				graph.view.updateFixedTerminalPoint = function (edge, terminal, source, constraint) {
 					mxGraphView.prototype.updateFixedTerminalPoint.apply(this, arguments);
@@ -481,21 +621,21 @@
 					if (!!cell.value) {
 						if ((typeof cell.value) === 'object') {
 							try {
-								eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
-								return (tempModel.Name + "<p class='block-margin'>"+tempModel.Details()+"</p>") || ''
-							} catch(e){
+								eval("var tempModel = new umk_" + cell.value.bid + " (cell.value);");
+								return (tempModel.Name + "<p class='block-margin'>" + tempModel.Details() + "</p>") || ''
+							} catch (e) {
 								pullDBAndGenModel(cell.value.bid)
-								.then(function (){
-									eval("var tempModel = new umk_"+cell.value.bid	+" (cell.value);");
-									graph.cellLabelChanged(cell, tempModel.Name + "<p class='block-margin'>"+tempModel.Details()+"</p>");
-								})
-								.catch (function(){
-									notyf.error("Error in loading the block");
-								});
+									.then(function () {
+										eval("var tempModel = new umk_" + cell.value.bid + " (cell.value);");
+										graph.cellLabelChanged(cell, tempModel.Name + "<p class='block-margin'>" +
+											tempModel.Details() + "</p>");
+									})
+									.catch(function () {
+										notyf.error("Error in loading the block");
+									});
 								return "Loading...";
 							}
-						}
-						else return cell.value;
+						} else return cell.value;
 					} else return null;
 				}
 				graph.getEditingValue = function (cell, evt) {
@@ -602,11 +742,11 @@
 			}
 			var finishDragAct = function (graph, evt, cell, x, y) {
 				pullDBAndGenModel(data.key)
-				.then(function () {
-					addVertices(graph, evt, cell, x, y);
-				}).catch(function(){
-					notyf.error('Unknown error: please contact support if it continues.');
-				});
+					.then(function () {
+						addVertices(graph, evt, cell, x, y);
+					}).catch(function () {
+						notyf.error('Unknown error: please contact support if it continues.');
+					});
 				/*if (eval('typeof umk_' + data.key) === 'function') {
 					addVertices(graph, evt, cell, x, y);
 				} else {
@@ -889,7 +1029,7 @@
 		}
 
 		.block-margin {
-			margin: 0.5em 0 5em 0!important;
+			margin: 0.5em 0 5em 0 !important;
 		}
 
 		.btnGreen,
@@ -961,7 +1101,7 @@
 		style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
 	</div>
 	<div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left"
-		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;" >
+		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;">
 		<div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()"><i class="fas fa-times"></i> Close</div>
 		<div id="blocksBar"></div>
 	</div>
@@ -1169,12 +1309,14 @@
 			<i class="w3-display-middle w3-circle w3-border fas fa-chevron-down fa-fw"
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
-		<div id="move-left" class="w3-display-container btnGreen ToolBarButton" style="bottom: 50px; left: 10px;">
-			<i class="w3-display-middle w3-circle w3-border fas fa-chevron-left fa-fw"
+		<div id="move-left" onclick="undoManager.undo()" class="w3-display-container btnGreen ToolBarButton"
+			style="bottom: 50px; left: 10px;">
+			<i class="w3-display-middle w3-circle w3-border fas fa-undo-alt fa-fw"
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
-		<div id="move-right" class="w3-display-container btnGreen ToolBarButton" style="bottom: 50px; left: 90px;">
-			<i class="w3-display-middle w3-circle w3-border fas fa-chevron-right fa-fw"
+		<div id="move-right" onclick="undoManager.redo()" class="w3-display-container btnGreen ToolBarButton"
+			style="bottom: 50px; left: 90px;">
+			<i class="w3-display-middle w3-circle w3-border fas fa-redo-alt fa-fw"
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
 		<div v-if="fitButton" onClick="graph.fit(); app.$data.fitButton = ! app.$data.fitButton;" id="show-all"
@@ -1554,6 +1696,7 @@
 	<script>
 		//MathJax setup
 		MathJax.Hub.Config({
+			showMathMenu: false,
 			messageStyle: "none",
 			menuSettings: {
 				inTabOrder: false
@@ -2263,8 +2406,8 @@
 			});
 		}
 
-		function pullDBAndGenModel (bid) {
-			return new Promise (function (resolve, reject) {
+		function pullDBAndGenModel(bid) {
+			return new Promise(function (resolve, reject) {
 				if (eval('typeof umk_' + bid) === 'function') {
 					resolve();
 				} else {
