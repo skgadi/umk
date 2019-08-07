@@ -229,7 +229,6 @@
 
 								for (var i = 0; i < cells.length; i++) {
 									try {
-										console.log(cells[i].getValue);
 										cells[i].setValue(JSON.parse2(cells[i].getValue()));
 									} catch (e) {}
 								}
@@ -372,7 +371,7 @@
 							(cellSelected && graph.isCellSelected(me.getCell())))));
 					mxPopupMenuHandler.prototype.mouseUp.apply(this, arguments);
 				};
-				// Adds mouse wheel handling for zoom
+				/*// Adds mouse wheel handling for zoom
 				mxEvent.addMouseWheelListener(function (evt, up) {
 					if (up) {
 						graph.zoomIn();
@@ -380,7 +379,7 @@
 						graph.zoomOut();
 					}
 					mxEvent.consume(evt);
-				});
+				});*/
 
 
 				// Tap and hold on background starts rubberband for multiple selected
@@ -615,6 +614,14 @@
 					return style;
 				}
 
+				//selection of a vertix
+				mxGraph.prototype.isCellSelectable = function (cell) {
+					var state = this.view.getState(cell);
+					var style = (state != null) ? state.style : this.getCellStyle(cell);
+
+					return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
+				};
+
 				//How Label is handled for a model
 				graph.getLabel = function (cell) {
 					//console.log(cell);
@@ -694,7 +701,7 @@
 				v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
 				for (var i = 1; i < (umkModel.InTerminals + 1); i++) {
 					var p1 = graph.insertVertex(v1, null, '$u' + ((umkModel.InTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
-						0, i / (umkModel.InTerminals + 1), 16, 16, "fillColor=" +
+						0, i / (umkModel.InTerminals + 1), 16, 16, "selectable=0;fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
 						";strokeColor=" + umkModel.Colors.bg +
@@ -705,7 +712,7 @@
 				}
 				for (var i = 1; i < (umkModel.OutTerminals + 1); i++) {
 					var p2 = graph.insertVertex(v1, null, '$y' + ((umkModel.OutTerminals > 1) ? "_{" + i + "}" : "") + '(t)$',
-						1, i / (umkModel.OutTerminals + 1), 16, 16, "fillColor=" +
+						1, i / (umkModel.OutTerminals + 1), 16, 16, "selectable=0;fillColor=" +
 						umkModel
 						.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
 						";strokeColor=" + umkModel.Colors.bg +
@@ -1101,7 +1108,7 @@
 		style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
 	</div>
 	<div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left"
-		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;">
+		style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;touch-action: none;">
 		<div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()"><i class="fas fa-times"></i> Close</div>
 		<div id="blocksBar"></div>
 	</div>
