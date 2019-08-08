@@ -81,8 +81,8 @@
 				graph.setConnectable(true);
 				graph.setAllowDanglingEdges(false);
 				graph.centerZoom = false;
-				graph.recursiveResize = true;
 				graph.setMultigraph(false);
+				graph.dropEnabled = true;
 				var vStyle = graph.getStylesheet().getDefaultVertexStyle();
 				var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
 				vStyle["shadow"] = false;
@@ -96,6 +96,25 @@
 				eStyle['targetJettySize'] = 25;
 				eStyle["shadow"] = false;
 
+				//set valid drop targets
+				var isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
+				mxGraph.prototype.isValidDropTarget = function (cell, cells, evt) {
+					var defaultRetValue = isValidDropTargetDefault.apply(this, arguments);
+					if (defaultRetValue) {
+						if (cell.getStyle() === "group") return true;
+						else if (graph.getCellStyle(cell)["shape"] === "swimlane") return true;
+						else return false;
+					} else return defaultRetValue;
+				}
+				// Matches DnD inside the graph
+				mxDragSource.prototype.getDropTarget = function (graph, x, y) {
+					var cell = graph.getCellAt(x, y);
+
+					if (!graph.isValidDropTarget(cell)) {
+						cell = null;
+					}
+					return cell;
+				};
 				// Creates rubberband selection
 				var rubberband = new mxRubberband(graph);
 				var keyHandler = new mxKeyHandler(graph);
@@ -105,7 +124,7 @@
 				graph.autoSizeCells = true;/**/
 				//Adjust vertices when new group is formed
 				var graphCreateGroupCell = graph.createGroupCell;
-				graph.createGroupCell = function(cells) {
+				graph.createGroupCell = function (cells) {
 					var group = graphCreateGroupCell.apply(this, arguments);
 					var style = new Object();
 					style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
@@ -135,8 +154,7 @@
 				graph.getModel().addListener(mxEvent.UNDO, listener);
 				graph.getView().addListener(mxEvent.UNDO, listener);
 				// Helper method to mark parts with constituent=1 in the style
-				graph.isPart = function(cell)
-				{
+				graph.isPart = function (cell) {
 					//original code
 					/*var state = this.view.getState(cell);
 					var style = (state != null) ? state.style : this.getCellStyle(cell);*/
@@ -146,13 +164,11 @@
 					return style['constituent'] == '1';
 				};
 				// Redirects selection to parent
-				graph.selectCellForEvent = function(cell)
-				{
-					if (this.isPart(cell))
-					{
+				graph.selectCellForEvent = function (cell) {
+					if (this.isPart(cell)) {
 						cell = this.model.getParent(cell);
 					}
-					
+
 					mxGraph.prototype.selectCellForEvent.apply(this, arguments);
 				};
 				//Copy Paste of blocks
@@ -734,12 +750,21 @@
 			}
 		}
 
-		function insertVertex(v1, umkModel, x, y) {
+		function insertVertex(v1, umkModel, x, y, evt, cell) {
 			var parent = graph.getDefaultParent();
 			var model = graph.getModel();
 			model.beginUpdate();
 			try {
-				v1 = graph.insertVertex(parent, null, umkModel, x, y, 200, 100, "fillColor=" +
+				var newPt = {
+					x: x,
+					y: y
+				};
+				if (cell) {
+					var pt = cell.getGeometry().getPoint();
+					newPt.x -= pt.x;
+					newPt.y -= pt.y;
+				}
+				v1 = graph.insertVertex(cell, null, umkModel, newPt.x, newPt.y, 200, 100, "fillColor=" +
 					umkModel.Colors.bg + ";fontColor=" + umkModel.Colors.fg +
 					";fontSize=15;verticalAlign=top;strokeColor=" + umkModel.Colors.bg + ";");
 				var tempDetails = umkModel.Details();
@@ -783,7 +808,7 @@
 				try {
 					eval("var umkModel = new umk_" + data.key + "();");
 					umkModel.Constructor();
-					insertVertex(v1, umkModel, x, y);
+					insertVertex(v1, umkModel, x, y, evt, cell);
 				} catch (e) {
 					console.log(e);
 					graph.removeCells([v1]);
@@ -801,23 +826,6 @@
 					}).catch(function () {
 						notyf.error('Unknown error: please contact support if it continues.');
 					});
-				/*if (eval('typeof umk_' + data.key) === 'function') {
-					addVertices(graph, evt, cell, x, y);
-				} else {
-					db.collection("blocks").doc(data.key).get()
-						.then(function (doc) {
-							if (doc.exists) {
-								createAModel(doc.id, doc.data());
-								addVertices(graph, evt, cell, x, y);
-							}
-						})
-						.catch(function (e) {
-							console.log(e);
-							notyf.error(
-								"Unable to load the block. If your internet connection is not a problem, please contact the support."
-							);
-						});
-				}*/
 			}
 			var v1;
 			var img = document.createElement('img');
@@ -1060,17 +1068,18 @@
 
 		//Group blocks
 		function createSubModel() {
-			var cells = graph.getSelectionCells();
+			/*var cells = graph.getSelectionCells();
 			var validGrouping = true;
-			for (var i=0; i<cells.length; i++) {
+			for (var i = 0; i < cells.length; i++) {
 				if (cells[i].getStyle() === "group") {
 					console.log(cells[i]);
 					model.beginUpdate();
-					try{
+					try {
 						graph.setSelectionCells(cells[i].children.concat(graph.getSelectionCells()));
-						graph.ungroupCells ([cells[i]]);
-					} catch(e) {console.log(e)}
-					finally{
+						graph.ungroupCells([cells[i]]);
+					} catch (e) {
+						console.log(e)
+					} finally {
 						model.endUpdate();
 					}
 					validGrouping = false;
@@ -1079,24 +1088,24 @@
 					if (cells[i].parent.getStyle() === "group") {
 						validGrouping = false;
 					}
-				} catch(e){
+				} catch (e) {
 					console.log(e);
 				}
 			}
-			if (validGrouping){
+			if (validGrouping) {*/
 				parent = graph.getDefaultParent();
 				model = graph.getModel();
 				model.beginUpdate();
 				try {
-					var groupCell = graph.groupCells(null,25,graph.getSelectionCells());
+					var groupCell = graph.groupCells(null, 25, graph.getSelectionCells());
 					//graph.getSelectionCell(groupCell); ?? Why not working?
 				} catch (e) {
 					console.log(e);
-					notyf.error ("Unable to group the selected items");
-				} finally{
+					notyf.error("Unable to group the selected items");
+				} finally {
 					model.endUpdate();
 				}
-			}
+			//}
 		}
 	</script>
 
@@ -1396,8 +1405,9 @@
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
 
-		<div id="move-up" onclick="createSubModel()" class="w3-display-container btnGreen ToolBarButton" style="bottom: 90px; left: 50px;">
-			<i class="w3-display-middle w3-circle w3-border fas fa-chevron-up fa-fw"
+		<div id="move-up" onclick="createSubModel()" class="w3-display-container btnGreen ToolBarButton"
+			style="bottom: 90px; left: 50px;">
+			<i class="w3-display-middle w3-circle w3-border far fa-object-group fa-fw"
 				style="font-size: 16px; padding-top: 5px; text-align: center;"></i>
 		</div>
 		<div id="move-down" class="w3-display-container btnGreen ToolBarButton" style="bottom: 10px; left: 50px;">
