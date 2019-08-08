@@ -59,11 +59,168 @@
       src="/javascript/src/js/mxClient.js"
     ></script>
 
-    <!-- Example code -->
+	<script type="text/javascript">
+	//Context Icons
+		// Defines a subclass for mxVertexHandler that adds a set of clickable
+		// icons to every selected vertex.
+		function mxVertexToolHandler(state)
+		{
+			mxVertexHandler.apply(this, arguments);
+		};
+
+		mxVertexToolHandler.prototype = new mxVertexHandler();
+		mxVertexToolHandler.prototype.constructor = mxVertexToolHandler;
+
+		mxVertexToolHandler.prototype.domNode = null;
+
+		mxVertexToolHandler.prototype.init = function()
+		{
+			mxVertexHandler.prototype.init.apply(this, arguments);
+
+			// In this example we force the use of DIVs for images in IE. This
+			// handles transparency in PNG images properly in IE and fixes the
+			// problem that IE routes all mouse events for a gesture via the
+			// initial IMG node, which means the target vertices 
+			this.domNode = document.createElement('div');
+			this.domNode.style.position = 'absolute';
+			this.domNode.style.whiteSpace = 'nowrap';
+			
+			// Workaround for event redirection via image tag in quirks and IE8
+			function createImage(src)
+			{
+				if (mxClient.IS_IE && !mxClient.IS_SVG)
+				{
+					var img = document.createElement('div');
+					img.style.backgroundImage = 'url(' + src + ')';
+					img.style.backgroundPosition = 'center';
+					img.style.backgroundRepeat = 'no-repeat';
+					img.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
+					
+					return img;
+				}
+				else
+				{
+					return mxUtils.createImage(src);
+				}
+			};
+/*
+			// Delete
+			var img = createImage('images/bin_recycle.png');
+			img.setAttribute('title', 'Delete');
+			img.style.cursor = 'pointer';
+			img.style.width = '32px';
+			img.style.height = '32px';
+			mxEvent.addGestureListeners(img,
+				mxUtils.bind(this, function(evt)
+				{
+					// Disables dragging the image
+					mxEvent.consume(evt);
+				})
+			);
+			mxEvent.addListener(img, 'click',
+				mxUtils.bind(this, function(evt)
+				{
+					this.graph.removeCells([this.state.cell]);
+					mxEvent.consume(evt);
+				})
+			);
+			this.domNode.appendChild(img);
+
+			// Size
+			var img = createImage('images/resize_picture.png');
+			img.setAttribute('title', 'Resize');
+			img.style.cursor = 'se-resize';
+			img.style.width = '32px';
+			img.style.height = '32px';
+			mxEvent.addGestureListeners(img,
+				mxUtils.bind(this, function(evt)
+				{
+					this.start(mxEvent.getClientX(evt), mxEvent.getClientY(evt), 7);
+					this.graph.isMouseDown = true;
+					this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+					mxEvent.consume(evt);
+				})
+			);
+			this.domNode.appendChild(img);
+
+			// Move
+			var img = createImage('images/transform_move.png');
+			img.setAttribute('title', 'Move');
+			img.style.cursor = 'move';
+			img.style.width = '32px';
+			img.style.height = '32px';
+			mxEvent.addGestureListeners(img,
+				mxUtils.bind(this, function(evt)
+				{
+					this.graph.graphHandler.start(this.state.cell,
+						mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+					this.graph.graphHandler.cellWasClicked = true;
+					this.graph.isMouseDown = true;
+					this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+					mxEvent.consume(evt);
+				})
+			);
+			this.domNode.appendChild(img);
+*/
+			// edit item
+			var img = createImage('images/application_edit.png');
+			img.setAttribute('title', 'Connect');
+			img.style.cursor = 'pointer';
+			img.style.width = '32px';
+			img.style.height = '32px';
+			mxEvent.addGestureListeners(img,
+				mxUtils.bind(this, function(evt)
+				{
+					// Disables dragging the image
+					mxEvent.consume(evt);
+				})
+			);
+			mxEvent.addListener(img, 'click',
+				mxUtils.bind(this, function(evt)
+				{
+					this.graph.removeCells([this.state.cell]);
+					mxEvent.consume(evt);
+				})
+			);
+			this.domNode.appendChild(img);
+			
+			this.graph.container.appendChild(this.domNode);
+			this.redrawTools();
+		};
+
+		mxVertexToolHandler.prototype.redraw = function()
+		{
+			mxVertexHandler.prototype.redraw.apply(this);
+			this.redrawTools();
+		};
+
+		mxVertexToolHandler.prototype.redrawTools = function()
+		{
+			if (this.state != null && this.domNode != null)
+			{
+				var dy = (mxClient.IS_VML && document.compatMode == 'CSS1Compat') ? 20 : 4;
+				this.domNode.style.left = (this.state.x ) + 'px';
+				this.domNode.style.top = (this.state.y - 32 + dy) + 'px';
+			}
+		};
+		
+		mxVertexToolHandler.prototype.destroy = function(sender, me)
+		{
+			mxVertexHandler.prototype.destroy.apply(this, arguments);
+
+			if (this.domNode != null)
+			{
+				this.domNode.parentNode.removeChild(this.domNode);
+				this.domNode = null;
+			}
+		};
+		
+	</script>
     <script type="text/javascript">
       var graph;
       var undoManager;
       var tempGlobal;
+	  var outln;
       // Program starts here. Creates a sample graph in the
       // DOM node with the specified ID. This function is invoked
       // from the onLoad event handler of the document (see below).
@@ -113,6 +270,17 @@
           eStyle["targetJettySize"] = 25;
           eStyle["shadow"] = false;
 
+		  //For context icons
+		  graph.connectionHandler.createTarget = true;
+			graph.createHandler = function(state){
+				if (state != null &&
+					this.model.isVertex(state.cell))
+				{
+					return new mxVertexToolHandler(state);
+				}
+
+				return mxGraph.prototype.createHandler.apply(this, arguments);
+			};
           //set valid drop targets
           var isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
           mxGraph.prototype.isValidDropTarget = function(cell, cells, evt) {
@@ -140,7 +308,7 @@
           var rubberband = new mxRubberband(graph);
           var keyHandler = new mxKeyHandler(graph);
           var parent = graph.getDefaultParent();
-          var outln = new mxOutline(graph, outline);
+          outln = new mxOutline(graph, outline);
           /*graph.autoSizeCellsOnAdd = true;
 				graph.autoSizeCells = true;/**/
           //Adjust vertices when new group is formed
@@ -149,18 +317,9 @@
             var group = graphCreateGroupCell.apply(this, arguments);
             var style = new Object();
             style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-            style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-            style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-            style[mxConstants.STYLE_FILLCOLOR] = "#FF9103";
-            style[mxConstants.STYLE_GRADIENTCOLOR] = "#F8C48B";
-            style[mxConstants.STYLE_STROKECOLOR] = "#E86A00";
-            style[mxConstants.STYLE_FONTCOLOR] = "#000000";
-            style[mxConstants.STYLE_ROUNDED] = true;
-            style[mxConstants.STYLE_OPACITY] = "80";
-            style[mxConstants.STYLE_STARTSIZE] = "30";
-            style[mxConstants.STYLE_FONTSIZE] = "16";
-            style[mxConstants.STYLE_FONTSTYLE] = 1;
+			style.startSize = 25;
+			style.strokeWidth = 2;
+			style.arcSize = 0;
             graph.getStylesheet().putCellStyle("group", style);
             group.setStyle("group");
             group.setValue("Sub model");
@@ -1287,7 +1446,7 @@
         model.beginUpdate();
         try {
           var groupCell = graph.groupCells(null, 25, graph.getSelectionCells());
-          //graph.getSelectionCell(groupCell); ?? Why not working?
+          graph.setSelectionCell(groupCell);// ?? Why not working?
         } catch (e) {
           console.log(e);
           notyf.error("Unable to group the selected items");
@@ -1387,8 +1546,36 @@
     </style>
   </head>
 
-  <body>
-    <div id="mynetwork" style="transition: margin 700ms;"></div>
+  <body style="overflow: hidden;">
+	<div id="mynetwork" style="transition: margin 700ms; margin-top:44px; margin-bottom:15px;"></div>
+	<div id="toolBar" class="w3-bar w3-indigo w3-card w3-xxlarge" style="transition: margin 700ms;position:fixed;top:0;">
+			<div class="w3-bar-item w3-btn" style="padding: 0px; margin-left: 8px;" onclick="togglemainSideBar()"><i class="fas fa-bars"></i></div>
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px; margin-left: 8px;" onclick="togglemainSideBar()"><i class="fas fa-th"></i></div>
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="graph.zoomOut()"><i class="fa-fw fas fa-search-minus"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="graph.zoomIn()"><i class="fa-fw fas fa-search-plus"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="graph.zoomActual()"><i class="fa-fw fas fa-compress"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="graph.fit()"><i class="fa-fw fas fa-expand"></i></div>
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="undoManager.undo()"><i class="fa-fw fas fa-undo"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="undoManager.redo()"><i class="fa-fw fas fa-redo"></i></div>
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;" onclick="createSubModel()"><i class="fa-fw far fa-object-group"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw far fa-object-ungroup"></i></div>
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-window-minimize"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-window-maximize"></i></div>			
+			<div class="w3-bar-item" style="padding: 0px; margin: 0 8px;"><i class="fas fa-ellipsis-v"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-arrow-up"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-arrow-down"></i></div>			
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-arrow-left"></i></div>
+			<div class="w3-bar-item w3-btn" style="padding: 0px;"><i class="fa-fw fas fa-arrow-right"></i></div>			
+	</div>
+	<div id="statusBar" class="w3-bar w3-dark-grey" style="transition: margin 700ms;position:fixed; bottom:0;">
+			<div class="w3-bar-item w3-right w3-small" style="padding: 0px;">Design mode</div>
+			<div class="w3-bar-item w3-right w3-small" style="padding: 0px; margin: 0 8px;"><i class="fas fa-braille"></i></div>
+	</div>
     <div
       id="outlineContainer"
       class="w3-hide-small w3-hide-medium"
@@ -1607,197 +1794,6 @@
           </div>
         </div>
       </div>
-
-      <div
-        class="w3-sidebar w3-bar-block w3-card w3-animate-right"
-        style="display:none;right:0;"
-        id="rightMenu"
-      >
-        <button
-          onclick="closeRightMenu()"
-          class="w3-bar-item w3-button w3-large"
-        >
-          Close &times;
-        </button>
-        <a href="#" class="w3-bar-item w3-button">Link 1</a>
-        <a href="#" class="w3-bar-item w3-button">Link 2</a>
-        <a href="#" class="w3-bar-item w3-button">Link 3</a>
-      </div>
-
-      <div
-        class="w3-display-container btnGreen ToolBarButton"
-        style="top: 10px; right: 15px;"
-        onclick="openLeftMenu()"
-      >
-        <img
-          v-bind:src="user.photoURL"
-          class="w3-display-middle w3-circle w3-border"
-          style="width: 30px; height: 30px;"
-        />
-      </div>
-      <div
-        v-if="networkState === 'DESIGN'"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="top: 10px; left: 15px;"
-        onclick="togglemainSideBar()"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-th fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        v-if="(['ADD_NODE', 'ADD_EDGE'].indexOf(networkState))>=0"
-        class="w3-display-container btnRed ToolBarButton"
-        style="top: 10px; left: 15px;"
-        onclick="exitEditMode()"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-times fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        v-if="networkState === 'DESIGN'"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="top: 10px; left: 55px;"
-        @click="addAEdge"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-project-diagram fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-
-      <div
-        id="move-up"
-        onclick="createSubModel()"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 90px; left: 50px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border far fa-object-group fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="move-down"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 10px; left: 50px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-chevron-down fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="move-left"
-        onclick="undoManager.undo()"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 50px; left: 10px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-undo-alt fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="move-right"
-        onclick="undoManager.redo()"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 50px; left: 90px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-redo-alt fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        v-if="fitButton"
-        onClick="graph.fit(); app.$data.fitButton = ! app.$data.fitButton;"
-        id="show-all"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 50px; left: 50px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-compress fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        v-else
-        id="zoom-actual"
-        onClick="graph.zoomActual(); app.$data.fitButton = ! app.$data.fitButton;"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 50px; left: 50px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-expand fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="zoom-out"
-        onClick="graph.zoomOut()"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 90px; left: 10px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-search-minus fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="zoom-in"
-        onClick="graph.zoomIn()"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 90px; left: 90px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-search-plus fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="minimize-all"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 10px; left: 10px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-window-minimize fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-      <div
-        id="maximize-all"
-        class="w3-display-container btnGreen ToolBarButton"
-        style="bottom: 10px; left: 90px;"
-      >
-        <i
-          class="w3-display-middle w3-circle w3-border fas fa-window-maximize fa-fw"
-          style="font-size: 16px; padding-top: 5px; text-align: center;"
-        ></i>
-      </div>
-
-      <template v-for="(tool, index) in tools">
-        <div
-          v-if="tool.display"
-          class="w3-display-container btnGreen ToolBarButton"
-          v-bind:id="'GSK_Tool_'+index"
-          v-bind:style="'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)
-				+'px; left:'+ (toolConsts.DOM.x - 0.0*toolConsts.toolDiameter + tool.order*40.0) +'px;'"
-          v-bind:onclick="tool.function"
-        >
-          <i
-            class="w3-display-middle w3-circle w3-border fa-fw"
-            v-bind:class="tool.icon"
-            style="font-size: 16px; padding-top: 5px; text-align: center;"
-          ></i>
-          <!--div class="w3-display-middle w3-circle w3-border">
-		<i class="w3-display-middle" v-bind:class="tool.icon"></i>
-		</div-->
-        </div>
-      </template>
     </div>
     <script>
       function prepareSVGURL(svg) {
@@ -1806,17 +1802,31 @@
 
       function togglemainSideBar() {
         if (document.getElementById("mainSideBar").style.display === "none") {
-          document.getElementById("mainSideBar").style.display = "block";
-          document.getElementById(
-            "mynetwork"
-          ).style.marginLeft = document.getElementById(
-            "mainSideBar"
-          ).style.width;
+			changeWidthAndMargin("mainSideBar", "mynetwork",true);
+			changeWidthAndMargin("mainSideBar", "toolBar",true);
+			changeWidthAndMargin("mainSideBar", "statusBar",true);
         } else {
-          document.getElementById("mainSideBar").style.display = "none";
-          document.getElementById("mynetwork").style.marginLeft = "0px";
+			changeWidthAndMargin("mainSideBar", "mynetwork",false);
+			changeWidthAndMargin("mainSideBar", "toolBar",false);
+			changeWidthAndMargin("mainSideBar", "statusBar",false);
         }
+		outln.refresh();
       }
+	  function changeWidthAndMargin(bar, element, showBar = false) {
+		  if (showBar) {
+			document.getElementById(element).style.marginLeft = document.getElementById(bar).style.width;
+			var newWidth = document.getElementById(element).clientWidth - document.getElementById(bar).clientWidth;
+			document.getElementById(element).style.width = newWidth+"px";
+			document.getElementById(bar).style.display = "block";
+		  } else {
+			document.getElementById(bar).style.display = "block";
+			document.getElementById(element).style.marginLeft = "0px";
+			var newWidth = document.getElementById(element).clientWidth + document.getElementById(bar).clientWidth;
+			document.getElementById(element).style.width = newWidth+"px";
+			document.getElementById(bar).style.display = "none";
+		  }
+
+	  }
 
       function openLeftMenu(content = "EDIT_BLOCK") {
         /*if (content === "EDIT_BLOCK") {
