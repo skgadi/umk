@@ -1,962 +1,2288 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UYAMAK platform</title><link rel="manifest" href="manifest.json"><script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script><script src="js/config.js"></script><script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script><script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script><script src="/js/augmented-json-serialization-functions.js"></script><link rel="stylesheet" href="/css/notyf.min.css"><script src="/js/notyf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script><script type="text/javascript">mxBasePath="/javascript/src"</script><script type="text/javascript" src="/javascript/src/js/mxClient.js"></script><script type="text/javascript">function main(container,outline){if(mxClient.isBrowserSupported()){mxGraphHandler.prototype.guidesEnabled=!0,mxGraphHandler.prototype.useGuidesForEvent=function(e){return!mxEvent.isAltDown(e.getEvent())},mxConstants.GUIDE_COLOR="#FF0000",mxConstants.GUIDE_STROKEWIDTH=1,mxConstants.WORD_WRAP="break-word",mxConstants.SHADOW_OFFSET_X=5,mxConstants.SHADOW_OFFSET_Y=5,mxConstants.SHADOW_OPACITY=.2,mxConstants.EDGE_SELECTION_COLOR="#ddd",mxConstants.VERTEX_SELECTION_COLOR="#000000",mxConstants.VERTEX_SELECTION_STROKEWIDTH=2,mxConstants.EDGE_SELECTION_STROKEWIDTH=2,mxEdgeHandler.prototype.snapToTerminals=!0,mxConnectionHandler.prototype.movePreviewAway=!1,mxClient.NO_FO=mxClient.NO_FO||mxClient.IS_SF||mxClient.IS_GC,graph=new mxGraph(container),graph.setPanning(!0),graph.setTooltips(!1),graph.htmlLabels=!0,graph.setConnectable(!0),graph.setAllowDanglingEdges(!1),graph.centerZoom=!1,graph.setMultigraph(!1),graph.dropEnabled=!0;var vStyle=graph.getStylesheet().getDefaultVertexStyle(),eStyle=graph.getStylesheet().getDefaultEdgeStyle();vStyle.shadow=!1,vStyle.whiteSpace="wrap",vStyle.arcSize=15,vStyle.absoluteArcSize=1,vStyle.rounded=1,eStyle.edgeStyle="orthogonalEdgeStyle",eStyle.strokeWidth=2,eStyle.fontSize=15,eStyle.targetJettySize=25,eStyle.shadow=!1;var isValidDropTargetDefault=mxGraph.prototype.isValidDropTarget;mxGraph.prototype.isValidDropTarget=function(e,t,n){var r=isValidDropTargetDefault.apply(this,arguments);return r?"group"===e.getStyle()||"swimlane"===graph.getCellStyle(e).shape:r},mxDragSource.prototype.getDropTarget=function(e,t,n){var r=e.getCellAt(t,n);return e.isValidDropTarget(r)||(r=null),r};var rubberband=new mxRubberband(graph),keyHandler=new mxKeyHandler(graph),parent=graph.getDefaultParent(),outln=new mxOutline(graph,outline),graphCreateGroupCell=graph.createGroupCell;graph.createGroupCell=function(e){var t=graphCreateGroupCell.apply(this,arguments),n=new Object;return n[mxConstants.STYLE_SHAPE]=mxConstants.SHAPE_SWIMLANE,n[mxConstants.STYLE_PERIMETER]=mxPerimeter.RectanglePerimeter,n[mxConstants.STYLE_ALIGN]=mxConstants.ALIGN_CENTER,n[mxConstants.STYLE_VERTICAL_ALIGN]=mxConstants.ALIGN_TOP,n[mxConstants.STYLE_FILLCOLOR]="#FF9103",n[mxConstants.STYLE_GRADIENTCOLOR]="#F8C48B",n[mxConstants.STYLE_STROKECOLOR]="#E86A00",n[mxConstants.STYLE_FONTCOLOR]="#000000",n[mxConstants.STYLE_ROUNDED]=!0,n[mxConstants.STYLE_OPACITY]="80",n[mxConstants.STYLE_STARTSIZE]="30",n[mxConstants.STYLE_FONTSIZE]="16",n[mxConstants.STYLE_FONTSTYLE]=1,graph.getStylesheet().putCellStyle("group",n),t.setStyle("group"),t.setValue("Sub model"),t},undoManager=new mxUndoManager;var listener=function(e,t){undoManager.undoableEditHappened(t.getProperty("edit"))};graph.getModel().addListener(mxEvent.UNDO,listener),graph.getView().addListener(mxEvent.UNDO,listener),graph.isPart=function(e){var t=graph.getCellStyle(e);return"1"==t.constituent},graph.selectCellForEvent=function(e){this.isPart(e)&&(e=this.model.getParent(e)),mxGraph.prototype.selectCellForEvent.apply(this,arguments)},graph.cloneCells=function(e,t,n,r){customValidationError=!1;var a=mxGraph.prototype.cloneCells.apply(this,arguments);return customValidationError=!0,a},mxClipboard.cellsToString=function(e){for(var t=new mxCodec,n=new mxGraphModel,r=n.getChildAt(n.getRoot(),0),a=0;a<e.length;a++)e[a].setValue(JSON.stringify2(e[a].getValue())),n.add(r,e[a]);return mxUtils.getXml(t.encode(n))};var textInput=document.createElement("textarea");mxUtils.setOpacity(textInput,0),textInput.style.width="1px",textInput.style.height="1px";var restoreFocus=!1,gs=graph.gridSize,lastPaste=null,dx=0,dy=0;textInput.value=" ",mxEvent.addListener(document,"keydown",function(e){var t=mxEvent.getSource(e);!graph.isEnabled()||graph.isMouseDown||graph.isEditing()||"INPUT"==t.nodeName||(224==e.keyCode||!mxClient.IS_MAC&&17==e.keyCode||mxClient.IS_MAC&&91==e.keyCode)&&(restoreFocus||(textInput.style.position="absolute",textInput.style.left=graph.container.scrollLeft+10+"px",textInput.style.top=graph.container.scrollTop+10+"px",graph.container.appendChild(textInput),restoreFocus=!0,textInput.focus(),textInput.select()))}),mxEvent.addListener(document,"keyup",function(e){!restoreFocus||224!=e.keyCode&&17!=e.keyCode&&91!=e.keyCode||(restoreFocus=!1,graph.isEditing()||graph.container.focus(),textInput.parentNode.removeChild(textInput))});var copyCells=function(e,t){if(0<t.length){for(var n=e.cloneCells(t),r=0;r<n.length;r++){var a=e.view.getState(t[r]);if(null!=a){var o=e.getCellGeometry(n[r]);null!=o&&o.relative&&(o.relative=!1,o.x=a.x/a.view.scale-a.view.translate.x,o.y=a.y/a.view.scale-a.view.translate.y)}}textInput.value=mxClipboard.cellsToString(n)}textInput.select(),lastPaste=textInput.value};mxEvent.addListener(textInput,"copy",mxUtils.bind(this,function(e){graph.isEnabled()&&!graph.isSelectionEmpty()&&(copyCells(graph,mxUtils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells()))),dx=0,dy=0)})),mxEvent.addListener(textInput,"cut",mxUtils.bind(this,function(e){graph.isEnabled()&&!graph.isSelectionEmpty()&&(copyCells(graph,graph.removeCells()),dx=-gs,dy=-gs)}));var importXml=function(e,t,n){t=null!=t?t:0,n=null!=n?n:0;var r=[];try{var a=mxUtils.parseXml(e),o=a.documentElement;if(null!=o){var l=new mxGraphModel,i=new mxCodec(o.ownerDocument);i.decode(o,l);var s=l.getChildCount(l.getRoot()),p=graph.model.getChildCount(graph.model.getRoot());graph.model.beginUpdate();try{for(var g=0;g<s;g++){var h=l.getChildAt(l.getRoot(),g);if(g<p){var d=1==s?graph.getDefaultParent():graph.model.getChildAt(graph.model.getRoot(),g);if(!graph.isCellLocked(d)){var u=l.getChildren(h);r=r.concat(graph.importCells(u,t,n,d))}}else{h=graph.importCells([h],0,0,graph.model.getRoot())[0];u=graph.model.getChildren(h);graph.moveCells(u,t,n),r=r.concat(u)}}for(g=0;g<r.length;g++)try{r[g].setValue(JSON.parse2(r[g].getValue()))}catch(e){}}finally{graph.model.endUpdate()}}}catch(e){throw e}return r},pasteText=function(e){var t=mxUtils.trim(e);graph.container.scrollLeft,graph.view.scale,graph.view.translate.x,graph.container.scrollTop,graph.view.scale,graph.view.translate.y;0<t.length&&(lastPaste!=t?(lastPaste=t,dx=0,dy=0):(dx+=gs,dy+=gs),"<mxGraphModel>"==t.substring(0,14)&&(graph.setSelectionCells(importXml(t,dx,dy)),graph.scrollCellToVisible(graph.getSelectionCell())))},extractGraphModelFromEvent=function(e){var t=null;if(null!=e){var n=null!=e.dataTransfer?e.dataTransfer:e.clipboardData;null!=n&&(10==document.documentMode||11==document.documentMode?t=n.getData("Text"):(t=0<=mxUtils.indexOf(n.types,"text/html")?n.getData("text/html"):null,mxUtils.indexOf(n.types,null==t||0==t.length)&&(t=n.getData("text/plain"))))}return t};mxEvent.addListener(textInput,"paste",function(e){if(textInput.value="",graph.isEnabled()){var t=extractGraphModelFromEvent(e);null!=t&&0<t.length?pasteText(t):window.setTimeout(mxUtils.bind(this,function(){pasteText(textInput.value)}),0)}textInput.select()}),keyHandler.bindKey(46,function(e){graph.isEnabled()&&graph.removeCells()});var textEditing=mxUtils.bind(this,function(e){return graph.isEditing()});container.onselectstart=textEditing,container.onmousedown=textEditing,mxClient.IS_IE&&(void 0===document.documentMode||document.documentMode<9)?mxEvent.addListener(container,"contextmenu",textEditing):container.oncontextmenu=textEditing,graph.popupMenuHandler.autoExpand=!0,graph.popupMenuHandler.isSelectOnPopup=function(e){return mxEvent.isMouseEvent(e.getEvent())},graph.popupMenuHandler.factoryMethod=function(e,t,n){e.addItem("Item 1",null,function(){alert("Item 1")}),e.addSeparator();var r=e.addItem("Submenu 1",null,null);e.addItem("Subitem 1",null,function(){alert("Subitem 1")},r),e.addItem("Subitem 1",null,function(){alert("Subitem 2")},r)};var cellSelected=!1,selectionEmpty=!1,menuShowing=!1;graph.fireMouseEvent=function(e,t,n){e==mxEvent.MOUSE_DOWN&&(t=this.updateMouseEvent(t),cellSelected=this.isCellSelected(t.getCell()),selectionEmpty=this.isSelectionEmpty(),menuShowing=graph.popupMenuHandler.isMenuShowing()),mxGraph.prototype.fireMouseEvent.apply(this,arguments)},graph.popupMenuHandler.mouseUp=function(e,t){this.popupTrigger=!graph.isEditing()&&(this.popupTrigger||!menuShowing&&!graph.isEditing()&&!mxEvent.isMouseEvent(t.getEvent())&&(selectionEmpty&&null==t.getCell()&&graph.isSelectionEmpty()||cellSelected&&graph.isCellSelected(t.getCell()))),mxPopupMenuHandler.prototype.mouseUp.apply(this,arguments)},graph.addListener(mxEvent.TAP_AND_HOLD,function(e,t){if(!mxEvent.isMultiTouchEvent(t)){var n=t.getProperty("event"),r=t.getProperty("cell");if(null==r){var a=mxUtils.convertPoint(this.container,mxEvent.getClientX(n),mxEvent.getClientY(n));rubberband.start(a.x,a.y)}else 1<graph.getSelectionCount()&&graph.isCellSelected(r)&&graph.removeSelectionCell(r);t.consume()}}),graph.updateMouseEvent=function(e){e=mxGraph.prototype.updateMouseEvent.apply(this,arguments);if(null==e.getState()){var t=this.getCellAt(e.graphX,e.graphY);null!=t&&this.isSwimlane(t)&&this.hitsSwimlaneContent(t,e.graphX,e.graphY)?t=null:(e.state=this.view.getState(t),null!=e.state&&null!=e.state.shape&&(this.container.style.cursor=e.state.shape.node.style.cursor))}return null==e.getState()&&(this.container.style.cursor="default"),e},graph.view.updateFixedTerminalPoint=function(e,t,n,r){mxGraphView.prototype.updateFixedTerminalPoint.apply(this,arguments);var a=e.absolutePoints,o=a[n?0:a.length-1];null!=t&&null==o&&null==this.getPerimeterFunction(t)&&e.setAbsoluteTerminalPoint(new mxPoint(this.getRoutingCenterX(t),this.getRoutingCenterY(t)),n)},graph.connectionHandler.createEdgeState=function(e){var t=graph.createEdge(null,null,null,null,null);return new mxCellState(this.graph.view,t,this.graph.getCellStyle(t))},function(){function e(){if(null!=S){var e=graph.getGraphBounds(),t=Math.max(e.x+e.width,graph.container.clientWidth),n=Math.max(e.y+e.height,graph.container.clientHeight),r=t!=w||n!=M;if(graph.view.scale!=T||graph.view.translate.x!=I.x||graph.view.translate.y!=I.y||b!=graph.gridSize||r){I=graph.view.translate.clone(),T=graph.view.scale,b=graph.gridSize,w=t,M=n,r?(E.setAttribute("width",w),E.setAttribute("height",M)):S.clearRect(0,0,w,M);var a=I.x*T,o=I.y*T,l=graph.gridSize,i=l*T;if(i<l){var s=2*Math.round(Math.ceil(l/i)/2);i*=s}var p=Math.floor((0-a)/i)*i+a,g=Math.ceil(w/i)*i,h=Math.floor((0-o)/i)*i+o,d=Math.ceil(M/i)*i;g+=Math.ceil(i),d+=Math.ceil(i);var u=Math.round(p),c=Math.round(g),m=Math.round(h),x=Math.round(d);S.strokeStyle="#f0f0f0",S.fillStyle="#ffffff",S.fillRect(0,0,E.width,E.height),S.beginPath(),S.lineWidth=.5;for(var y=p;y<=g;y+=i){y=Math.round((y-a)/i)*i+a;var v=Math.round(y);S.moveTo(v+.5,m+.5),S.lineTo(v+.5,x+.5)}for(var C=h;C<=d;C+=i){C=Math.round((C-o)/i)*i+o;var f=Math.round(C);S.moveTo(u+.5,f+.5),S.lineTo(c+.5,f+.5)}S.closePath(),S.stroke(),S.beginPath(),S.lineWidth=1;for(y=p;y<=g;y+=5*i){y=Math.round((y-a)/i)*i+a;v=Math.round(y);S.moveTo(v+.5,m+.5),S.lineTo(v+.5,x+.5)}for(C=h;C<=d;C+=5*i){C=Math.round((C-o)/i)*i+o;f=Math.round(C);S.moveTo(u+.5,f+.5),S.lineTo(c+.5,f+.5)}S.closePath(),S.stroke(),S.beginPath(),S.lineWidth=1.5;for(y=p;y<=g;y+=10*i){y=Math.round((y-a)/i)*i+a;v=Math.round(y);S.moveTo(v+.5,m+.5),S.lineTo(v+.5,x+.5)}for(C=h;C<=d;C+=10*i){C=Math.round((C-o)/i)*i+o;f=Math.round(C);S.moveTo(u+.5,f+.5),S.lineTo(c+.5,f+.5)}S.closePath(),S.stroke()}}}try{var E=document.createElement("canvas");E.style.position="absolute",E.style.top="0px",E.style.left="0px",E.style.zIndex=-1,graph.container.appendChild(E);var S=E.getContext("2d"),t=mxGraphView.prototype.isContainerEvent;mxGraphView.prototype.isContainerEvent=function(e){return t.apply(this,arguments)||mxEvent.getSource(e)==E};var T=0,b=0,I=new mxPoint,w=0,M=0;e()}catch(e){mxLog.show(),mxLog.debug("Using background image"),container.style.backgroundImage="url('/images/grid.gif')"}var n=mxGraphView.prototype.validateBackground;mxGraphView.prototype.validateBackground=function(){n.apply(this,arguments);try{e()}catch(e){}MathJax.Hub.Queue(["Typeset",MathJax.Hub])}}();var customValidationError=!0,default_getEdgeValidationError=mxGraph.prototype.getEdgeValidationError;mxGraph.prototype.getEdgeValidationError=function(e,t,n){var r,a=default_getEdgeValidationError.apply(this,arguments);return customValidationError?null!==a?a:(t.parent===n.parent&&(r="Cannot connect to the same block."),0===t.geometry.x&&(r="Tapping input port is not allowed."),1===n.geometry.x&&(r="You cannot feed signal to the output."),0<n.getEdgeCount()&&(r="Only one input is allowed per port."),console.log(r),r):a},mxGraph.prototype.validationAlert=function(e){notyf.error(e)};var defaultModelStyle=graph.model.getStyle;graph.model.getStyle=function(e){var t=defaultModelStyle.apply(this,arguments);if(null!=e&&this.isEdge(e)){var n=this.getTerminal(e,!0);if(null!=n){var r=graph.getView().getState(n),a=null!=r?r.style:graph.getCellStyle(n),o=mxUtils.getValue(a,mxConstants.STYLE_FILLCOLOR);null!=o&&(t+=";strokeColor="+o)}}return t},mxGraph.prototype.isCellSelectable=function(e){var t=this.view.getState(e),n=null!=t?t.style:this.getCellStyle(e);return this.isCellsSelectable()&&!this.isCellLocked(e)&&0!=n.selectable},graph.getLabel=function(cell){if(!cell.value)return null;if("object"!=typeof cell.value)return cell.value;try{return eval("var tempModel = new umk_"+cell.value.bid+" (cell.value);"),tempModel.Name+"<p class='block-margin'>"+tempModel.Details()+"</p>"||""}catch(e){return pullDBAndGenModel(cell.value.bid).then(function(){eval("var tempModel = new umk_"+cell.value.bid+" (cell.value);"),graph.cellLabelChanged(cell,tempModel.Name+"<p class='block-margin'>"+tempModel.Details()+"</p>")}).catch(function(){notyf.error("Error in loading the block")}),"Loading..."}},graph.getEditingValue=function(e,t){return e.value?"object"==typeof e.value?e.value.Name||"":e.value:null},graph.labelChanged=function(e,t,n){if(e.value&&"object"==typeof e.value){var r=mxUtils.clone(e.value);r.Name=t,t=r}mxGraph.prototype.labelChanged.apply(this,arguments)},graph.getModel().beginUpdate(),graph.getModel().endUpdate()}else mxUtils.error("Browser is not supported!",200,!1)}function insertVertex(e,t,n,r,a,o){graph.getDefaultParent();var l=graph.getModel();l.beginUpdate();try{var i={x:n,y:r};if(o){var s=o.getGeometry().getPoint();i.x-=s.x,i.y-=s.y}e=graph.insertVertex(o,null,t,i.x,i.y,200,100,"fillColor="+t.Colors.bg+";fontColor="+t.Colors.fg+";fontSize=15;verticalAlign=top;strokeColor="+t.Colors.bg+";");t.Details();e.setConnectable(!1),e.geometry.alternateBounds=new mxRectangle(0,0,200,20);for(var p=1;p<t.InTerminals+1;p++){var g=graph.insertVertex(e,null,"$u"+(1<t.InTerminals?"_{"+p+"}":"")+"(t)$",0,p/(t.InTerminals+1),16,16,"constituent=1;fillColor="+t.Colors.bg+";fontColor="+t.Colors.fg+";strokeColor="+t.Colors.bg+";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",!0);g.geometry.offset=new mxPoint(-8,-8)}for(p=1;p<t.OutTerminals+1;p++){var h=graph.insertVertex(e,null,"$y"+(1<t.OutTerminals?"_{"+p+"}":"")+"(t)$",1,p/(t.OutTerminals+1),16,16,"constituent=1;fillColor="+t.Colors.bg+";fontColor="+t.Colors.fg+";strokeColor="+t.Colors.bg+";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",!0);h.geometry.offset=new mxPoint(-8,-8)}}finally{l.endUpdate()}}function addANewDraggableIcon(sidebar,data){var addVertices=function(graph,evt,cell,x,y){try{eval("var umkModel = new umk_"+data.key+"();"),console.log(data),umkModel.Constructor({}),insertVertex(v1,umkModel,x,y,evt,cell)}catch(e){console.log(e),graph.removeCells([v1]),notyf.error("Error in the mathematical model. If your internet connection is good, please contact the support.")}graph.setSelectionCell(v1)},finishDragAct=function(e,t,n,r,a){pullDBAndGenModel(data.key).then(function(){addVertices(e,t,n,r,a)}).catch(function(){notyf.error("Unknown error: please contact support if it continues.")})},v1,img=document.createElement("img"),img=document.createElement("img");img.setAttribute("src",svgTextToURL(getIconWith(data.colors,data.icon))),img.style.width="50px",img.style.height="50px",img.title=data.name+": "+data.description+"\n\nDrag this to the diagram to create a new vertex",sidebar.appendChild(img);var dragElt=document.createElement("div");dragElt.style.border="dashed black 1px",dragElt.style.width="200px",dragElt.style.height="100px";var ds=mxUtils.makeDraggable(img,graph,finishDragAct,dragElt,0,0,!0,!0);ds.setGuidesEnabled(!0)}function createSubModel(){parent=graph.getDefaultParent(),model=graph.getModel(),model.beginUpdate();try{graph.groupCells(null,25,graph.getSelectionCells())}catch(e){console.log(e),notyf.error("Unable to group the selected items")}finally{model.endUpdate()}}var graph,undoManager,tempGlobal;(function(){mxVertexHandler.prototype.manageSizers=!0,mxVertexHandler.prototype.livePreview=!0,mxConstants.HANDLE_SIZE=16,mxConstants.LABEL_HANDLE_SIZE=7,(mxClient.IS_TOUCH||0<navigator.maxTouchPoints||0<navigator.msMaxTouchPoints)&&(mxShape.prototype.svgStrokeTolerance=18,mxVertexHandler.prototype.tolerance=12,mxEdgeHandler.prototype.tolerance=12,mxGraph.prototype.tolerance=12),mxPanningHandler.prototype.isPanningTrigger=function(e){var t=e.getEvent();return null==e.getState()&&!mxEvent.isMouseEvent(t)||mxEvent.isPopupTrigger(t)&&(null==e.getState()||mxEvent.isControlDown(t)||mxEvent.isShiftDown(t))};var n=mxGraphHandler.prototype.mouseDown;mxGraphHandler.prototype.mouseDown=function(e,t){n.apply(this,arguments),this.graph.isCellSelected(t.getCell())&&1<this.graph.getSelectionCount()&&(this.delayedSelection=!1)},mxConnectionHandler.prototype.selectCells=function(e,t){null!=t?this.graph.setSelectionCell(t):this.graph.setSelectionCell(e)};var r=mxGraph.prototype.dblClick;mxGraph.prototype.dblClick=function(e,t){if(null==t){var n=mxUtils.convertPoint(this.container,mxEvent.getClientX(e),mxEvent.getClientY(e));t=this.getCellAt(n.x,n.y)}r.call(this,e,t)};var e=new mxImage("images/handle-main.png",17,17);mxVertexHandler.prototype.handleImage=e,mxEdgeHandler.prototype.handleImage=e,mxOutline.prototype.sizerImage=e,mxVertexHandler.prototype.rotationHandleVSpacing=-30,(new Image).src=e.src;var t="images/handle-connect.png",a=mxVertexHandler.prototype.init;mxVertexHandler.prototype.init=function(){a.apply(this,arguments),this.graph.connectionHandler.isEnabled()&&this.graph.isCellConnectable(this.state.cell)&&1==this.graph.getSelectionCount()&&(this.connectorImg=mxUtils.createImage(t),this.connectorImg.style.cursor="pointer",this.connectorImg.style.width="29px",this.connectorImg.style.height="29px",this.connectorImg.style.position="absolute",mxClient.IS_TOUCH||(this.connectorImg.setAttribute("title",mxResources.get("connect")),mxEvent.redirectMouseEvents(this.connectorImg,this.graph,this.state)),mxEvent.addGestureListeners(this.connectorImg,mxUtils.bind(this,function(e){this.graph.popupMenuHandler.hideMenu(),this.graph.stopEditing(!1);var t=mxUtils.convertPoint(this.graph.container,mxEvent.getClientX(e),mxEvent.getClientY(e));this.graph.connectionHandler.start(this.state,t.x,t.y),this.graph.isMouseDown=!0,this.graph.isMouseTrigger=mxEvent.isMouseEvent(e),mxEvent.consume(e)})),this.graph.container.appendChild(this.connectorImg)),this.redrawHandles()};var o=mxVertexHandler.prototype.hideSizers;mxVertexHandler.prototype.hideSizers=function(){o.apply(this,arguments),null!=this.connectorImg&&(this.connectorImg.style.visibility="hidden")};var l=mxVertexHandler.prototype.reset;mxVertexHandler.prototype.reset=function(){l.apply(this,arguments),null!=this.connectorImg&&(this.connectorImg.style.visibility="")};var i=mxVertexHandler.prototype.redrawHandles;mxVertexHandler.prototype.redrawHandles=function(){if(i.apply(this),null!=this.state&&null!=this.connectorImg){var e=new mxPoint,t=this.state;mxVertexHandler.prototype.singleSizer?(e.x=t.x+t.width-this.connectorImg.offsetWidth/2,e.y=t.y-this.connectorImg.offsetHeight/2):(e.x=t.x+t.width+mxConstants.HANDLE_SIZE/2+4+this.connectorImg.offsetWidth/2,e.y=t.y+t.height/2);var n=mxUtils.toRadians(mxUtils.getValue(t.style,mxConstants.STYLE_ROTATION,0));if(0!=n){var r=Math.cos(n),a=Math.sin(n),o=new mxPoint(t.getCenterX(),t.getCenterY());e=mxUtils.getRotatedPoint(e,r,a,o)}this.connectorImg.style.left=e.x-this.connectorImg.offsetWidth/2+"px",this.connectorImg.style.top=e.y-this.connectorImg.offsetHeight/2+"px"}};var s=mxVertexHandler.prototype.destroy;mxVertexHandler.prototype.destroy=function(e,t){s.apply(this,arguments),null!=this.connectorImg&&(this.connectorImg.parentNode.removeChild(this.connectorImg),this.connectorImg=null)},(new Image).src=t})()</script><style>body,html,select{width:100%;height:100%;margin:0;line-height:initial}#mynetwork{position:relative;width:100%;height:100%;border:0 solid #d3d3d3;box-sizing:content-box}.MJXc-display{margin:0!important}.block-margin{margin:.5em 0 5em 0!important}.btnGreen,.btnGreen>div,.btnGreen>i,.btnGreen>img{color:rgba(80,197,56,1);border-color:rgba(80,197,56,1)!important}.btnRed,.btnRed>div,.btnRed>i,.btnRed>img{color:red;border-color:red!important}.ToolBarButton>div,.ToolBarButton>i,.ToolBarButton>img{border-width:2px!important;width:30px;height:30px}.ToolBarButton{padding:2px;font-size:15px;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;width:34px;height:34px;border-radius:17px;display:inline-block;cursor:pointer;position:fixed}.btnGreen:hover{box-shadow:0 0 3px 3px rgba(56,207,21,.3)}.btnGreen:active{box-shadow:0 0 1px 3px rgba(56,207,21,.95)}.btnRed:hover{box-shadow:0 0 3px 3px rgba(255,00,0,.3)}.btnRed:active{box-shadow:0 0 1px 3px rgba(255,00,0,.95)}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}</style></head><body><div id="mynetwork" style="transition:margin .7s"></div><div id="outlineContainer" class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:0 0;border-style:solid;border-color:#000"></div><div id="mainSideBar" class="w3-sidebar w3-card w3-animate-left" style="z-index:2;left:0;top:0;width:25%;display:none;touch-action:none"><div class="w3-block w3-yellow w3-btn" onclick="togglemainSideBar()"><i class="fas fa-times"></i> Close</div><div id="blocksBar"></div></div><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:rgba(255,255,255,.9)"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div><div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer;position:fixed;left:0;top:0" id="leftMenuOverlay"></div><div class="w3-sidebar w3-card w3-animate-left" style="z-index:2;left:0;top:0;width:500px;max-width:100%;display:none" id="leftMenu"><div v-if="leftBarMode === 'EDIT_BLOCK'"><p class="w3-xlarge" style="margin:0"><b>Edit block parameters</b></p><p class="w3-small" style="margin:0"><i>Modify the parameters and click save to chagne them.</i></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span>{{ Parameter.Name }}</span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"></td></template></tr></template></table></div></div></template><div><template v-if="invalidInputs.length>0"><p class="w3-xlarge" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-xlarge" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-xlarge" style="margin:0"><b>Functionality</b></p><p class="w3-small" style="margin:0"><i>The input and output to the blocks are given as $u(t)$ and $y(t)$ respectively. $t$ is the simulation time in seconds.</i></p><div v-html="getBlockDetails()"></div><div class="w3-center w3-panel"><div class="w3-btn w3-green" @click="saveParametersToNode()">Save and close</div><div class="w3-btn w3-yellow" @click="saveParametersToNode(false)">Save</div><div class="w3-btn w3-red" onclick="closeLeftMenu()">Cancel</div></div></template></div></div></div><div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0" id="rightMenu"><button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button> <a href="#" class="w3-bar-item w3-button">Link 1</a> <a href="#" class="w3-bar-item w3-button">Link 2</a> <a href="#" class="w3-bar-item w3-button">Link 3</a></div><div class="w3-display-container btnGreen ToolBarButton" style="top:10px;right:15px" onclick="openLeftMenu()"><img v-bind:src="user.photoURL" class="w3-display-middle w3-circle w3-border" style="width:30px;height:30px"></div><div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton" style="top:10px;left:15px" onclick="togglemainSideBar()"><i class="w3-display-middle w3-circle w3-border fas fa-th fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div v-if="(['ADD_NODE', 'ADD_EDGE'].indexOf(networkState))>=0" class="w3-display-container btnRed ToolBarButton" style="top:10px;left:15px" onclick="exitEditMode()"><i class="w3-display-middle w3-circle w3-border fas fa-times fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div v-if="networkState === 'DESIGN'" class="w3-display-container btnGreen ToolBarButton" style="top:10px;left:55px" @click="addAEdge"><i class="w3-display-middle w3-circle w3-border fas fa-project-diagram fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="move-up" onclick="createSubModel()" class="w3-display-container btnGreen ToolBarButton" style="bottom:90px;left:50px"><i class="w3-display-middle w3-circle w3-border far fa-object-group fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="move-down" class="w3-display-container btnGreen ToolBarButton" style="bottom:10px;left:50px"><i class="w3-display-middle w3-circle w3-border fas fa-chevron-down fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="move-left" onclick="undoManager.undo()" class="w3-display-container btnGreen ToolBarButton" style="bottom:50px;left:10px"><i class="w3-display-middle w3-circle w3-border fas fa-undo-alt fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="move-right" onclick="undoManager.redo()" class="w3-display-container btnGreen ToolBarButton" style="bottom:50px;left:90px"><i class="w3-display-middle w3-circle w3-border fas fa-redo-alt fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div v-if="fitButton" onclick="graph.fit(),app.$data.fitButton=!app.$data.fitButton" id="show-all" class="w3-display-container btnGreen ToolBarButton" style="bottom:50px;left:50px"><i class="w3-display-middle w3-circle w3-border fas fa-compress fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div v-else id="zoom-actual" onclick="graph.zoomActual(),app.$data.fitButton=!app.$data.fitButton" class="w3-display-container btnGreen ToolBarButton" style="bottom:50px;left:50px"><i class="w3-display-middle w3-circle w3-border fas fa-expand fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="zoom-out" onclick="graph.zoomOut()" class="w3-display-container btnGreen ToolBarButton" style="bottom:90px;left:10px"><i class="w3-display-middle w3-circle w3-border fas fa-search-minus fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="zoom-in" onclick="graph.zoomIn()" class="w3-display-container btnGreen ToolBarButton" style="bottom:90px;left:90px"><i class="w3-display-middle w3-circle w3-border fas fa-search-plus fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="minimize-all" class="w3-display-container btnGreen ToolBarButton" style="bottom:10px;left:10px"><i class="w3-display-middle w3-circle w3-border fas fa-window-minimize fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><div id="maximize-all" class="w3-display-container btnGreen ToolBarButton" style="bottom:10px;left:90px"><i class="w3-display-middle w3-circle w3-border fas fa-window-maximize fa-fw" style="font-size:16px;padding-top:5px;text-align:center"></i></div><template v-for="(tool, index) in tools"><div v-if="tool.display" class="w3-display-container btnGreen ToolBarButton" v-bind:id="'GSK_Tool_'+index" v-bind:style="'top:'+ (toolConsts.DOM.y - 1.5*toolConsts.toolDiameter)+'px; left:'+ (toolConsts.DOM.x - 0.0*toolConsts.toolDiameter + tool.order*40.0) +'px;'" v-bind:onclick="tool.function"><i class="w3-display-middle w3-circle w3-border fa-fw" v-bind:class="tool.icon" style="font-size:16px;padding-top:5px;text-align:center"></i></div></template></div><script>function prepareSVGURL(svg) {
-        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-      }
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UYAMAK platform</title><link rel="manifest" href="manifest.json"><script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script><script src="js/config.js"></script><script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script><script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script><script src="/js/augmented-json-serialization-functions.js"></script><link rel="stylesheet" href="/css/notyf.min.css"><script src="/js/notyf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script><script type="text/javascript">mxBasePath="/javascript/src"</script><script type="text/javascript" src="/javascript/src/js/mxClient.js"></script><script type="text/javascript">function mxVertexToolHandler(e){mxVertexHandler.apply(this,arguments)}mxVertexToolHandler.prototype=new mxVertexHandler,mxVertexToolHandler.prototype.constructor=mxVertexToolHandler,mxVertexToolHandler.prototype.domNode=null,mxVertexToolHandler.prototype.init=function(){function e(e){if(!mxClient.IS_IE||mxClient.IS_SVG)return mxUtils.createImage(e);var t=document.createElement("div");return t.style.backgroundImage="url("+e+")",t.style.backgroundPosition="center",t.style.backgroundRepeat="no-repeat",t.style.display=mxClient.IS_QUIRKS?"inline":"inline-block",t}mxVertexHandler.prototype.init.apply(this,arguments),this.domNode=document.createElement("div"),this.domNode.style.position="absolute",this.domNode.style.whiteSpace="nowrap";var t=e("images/application_edit.png");t.setAttribute("title","Connect"),t.style.cursor="pointer",t.style.width="32px",t.style.height="32px",mxEvent.addGestureListeners(t,mxUtils.bind(this,function(e){mxEvent.consume(e)})),mxEvent.addListener(t,"click",mxUtils.bind(this,function(e){this.graph.removeCells([this.state.cell]),mxEvent.consume(e)})),this.domNode.appendChild(t),this.graph.container.appendChild(this.domNode),this.redrawTools()},mxVertexToolHandler.prototype.redraw=function(){mxVertexHandler.prototype.redraw.apply(this),this.redrawTools()},mxVertexToolHandler.prototype.redrawTools=function(){if(null!=this.state&&null!=this.domNode){var e=mxClient.IS_VML&&"CSS1Compat"==document.compatMode?20:4;this.domNode.style.left=this.state.x+"px",this.domNode.style.top=this.state.y-40+e+"px"}},mxVertexToolHandler.prototype.destroy=function(e,t){mxVertexHandler.prototype.destroy.apply(this,arguments),null!=this.domNode&&(this.domNode.parentNode.removeChild(this.domNode),this.domNode=null)}</script><script type="text/javascript">var graph;
+    var undoManager;
+    var tempGlobal;
+    var outln;
+    // Program starts here. Creates a sample graph in the
+    // DOM node with the specified ID. This function is invoked
+    // from the onLoad event handler of the document (see below).
+    function main(container, outline) {
+      // Checks if the browser is supported
+      if (!mxClient.isBrowserSupported()) {
+        // Displays an error message if the browser is not supported.
+        mxUtils.error("Browser is not supported!", 200, false);
+      } else {
+        //Initializing global settings
+        mxGraphHandler.prototype.guidesEnabled = true;
+        mxGraphHandler.prototype.useGuidesForEvent = function (me) {
+          return !mxEvent.isAltDown(me.getEvent());
+        };
+        mxConstants.GUIDE_COLOR = "#FF0000";
+        mxConstants.GUIDE_STROKEWIDTH = 1;
+        mxConstants.WORD_WRAP = "break-word";
+        mxConstants.SHADOW_OFFSET_X = 5;
+        mxConstants.SHADOW_OFFSET_Y = 5;
+        mxConstants.SHADOW_OPACITY = 0.2;
+        mxConstants.EDGE_SELECTION_COLOR = "#ddd";
+        mxConstants.VERTEX_SELECTION_COLOR = "#000000";
+        mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
+        mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
+        mxEdgeHandler.prototype.snapToTerminals = true;
+        mxConnectionHandler.prototype.movePreviewAway = false;
+        mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
+        graph = new mxGraph(container);
+        graph.setPanning(true);
+        graph.setTooltips(false);
+        graph.htmlLabels = true;
+        graph.setConnectable(true);
+        graph.setAllowDanglingEdges(false);
+        graph.centerZoom = false;
+        graph.setMultigraph(false);
+        graph.dropEnabled = true;
+        var vStyle = graph.getStylesheet().getDefaultVertexStyle();
+        var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
+        vStyle["shadow"] = false;
+        vStyle["whiteSpace"] = "wrap";
+        vStyle["arcSize"] = 15;
+        vStyle["absoluteArcSize"] = 1;
+        vStyle["rounded"] = 1;
+        eStyle["edgeStyle"] = "orthogonalEdgeStyle";
+        eStyle["strokeWidth"] = 2;
+        eStyle["fontSize"] = 15;
+        eStyle["targetJettySize"] = 25;
+        eStyle["shadow"] = false;
 
-      function togglemainSideBar() {
-        if (document.getElementById("mainSideBar").style.display === "none") {
-          document.getElementById("mainSideBar").style.display = "block";
-          document.getElementById(
-            "mynetwork"
-          ).style.marginLeft = document.getElementById(
-            "mainSideBar"
-          ).style.width;
-        } else {
-          document.getElementById("mainSideBar").style.display = "none";
-          document.getElementById("mynetwork").style.marginLeft = "0px";
-        }
-      }
+        //For context icons
+        //graph.connectionHandler.createTarget = true;
+        graph.createHandler = function (state) {
+          if (state != null && this.model.isVertex(state.cell)) {
+            return new mxVertexToolHandler(state);
+          }
 
-      function openLeftMenu(content = "EDIT_BLOCK") {
-        /*if (content === "EDIT_BLOCK") {
-          app.$set(
-            app.$data,
-            "uyamakModel",
-            createCopyOfModel(
-              network.body.nodes[network.getSelectedNodes()[0]].options
-                .uyamakModel
-            )
+          return mxGraph.prototype.createHandler.apply(this, arguments);
+        };
+        //set valid drop targets
+        var isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
+        mxGraph.prototype.isValidDropTarget = function (cell, cells, evt) {
+          var defaultRetValue = isValidDropTargetDefault.apply(
+            this,
+            arguments
           );
-          app.$set(
-            app.$data,
-            "parametersDisplay",
-            new Array(app.$data.uyamakModel.Parameters.length).fill(false)
-          );
-        }*/
-        app.$data.leftBarMode = content;
-        document.getElementById("leftMenuOverlay").style.display = "block";
-        document.getElementById("leftMenu").style.display = "block";
-      }
+          if (defaultRetValue) {
+            if (cell.getStyle() === "group") return true;
+            else if (graph.getCellStyle(cell)["shape"] === "swimlane")
+              return true;
+            else return false;
+          } else return defaultRetValue;
+        };
+        // Matches DnD inside the graph
+        mxDragSource.prototype.getDropTarget = function (graph, x, y) {
+          var cell = graph.getCellAt(x, y);
 
-      function closeLeftMenu() {
-        app.$data.leftBarMode = null;
-        document.getElementById("leftMenu").style.display = "none";
-        document.getElementById("leftMenuOverlay").style.display = "none";
-      }
+          if (!graph.isValidDropTarget(cell)) {
+            cell = null;
+          }
+          return cell;
+        };
+        // Creates rubberband selection
+        var rubberband = new mxRubberband(graph);
+        var keyHandler = new mxKeyHandler(graph);
+        var parent = graph.getDefaultParent();
+        outln = new mxOutline(graph, outline);
+        /*graph.autoSizeCellsOnAdd = true;
+				graph.autoSizeCells = true;/**/
+        //Adjust vertices when new group is formed
+        var graphCreateGroupCell = graph.createGroupCell;
+        graph.createGroupCell = function (cells) {
+          var group = graphCreateGroupCell.apply(this, arguments);
+          var style = new Object();
+          style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+          style.startSize = 25;
+          style.strokeWidth = 2;
+          style.arcSize = 0;
+          graph.getStylesheet().putCellStyle("group", style);
+          group.setStyle("group");
+          group.setValue("Sub model");
+          return group;
+        };
 
-      function openRightMenu() {
-        document.getElementById("rightMenu").style.display = "block";
-      }
+        //Undo/redo activities
+        undoManager = new mxUndoManager();
+        var listener = function (sender, evt) {
+          undoManager.undoableEditHappened(evt.getProperty("edit"));
+        };
+        graph.getModel().addListener(mxEvent.UNDO, listener);
+        graph.getView().addListener(mxEvent.UNDO, listener);
+        // Helper method to mark parts with constituent=1 in the style
+        graph.isPart = function (cell) {
+          //original code
+          /*var state = this.view.getState(cell);
+					var style = (state != null) ? state.style : this.getCellStyle(cell);*/
+          //new code
+          var style = graph.getCellStyle(cell);
 
-      function closeRightMenu() {
-        document.getElementById("rightMenu").style.display = "none";
-      }
+          return style["constituent"] == "1";
+        };
+        // Redirects selection to parent
+        graph.selectCellForEvent = function (cell) {
+          if (this.isPart(cell)) {
+            cell = this.model.getParent(cell);
+          }
 
-      $(document).keyup(function(e) {
-        if (e.key === "Escape") {
-          // escape key maps to keycode `27`
-          exitEditMode();
-          closeLeftMenu();
-          hideTools();
-        }
-      });
-
-      function exitEditMode() {
-        app.$data.networkState = "DESIGN";
-        network.disableEditMode();
-        document.getElementById("mynetwork").style.cursor = "";
-      }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><script>var app = new Vue({
-        el: "#app",
-        data: {
-          fitButton: true,
-          networkState: "DESIGN",
-          leftBarMode: null,
-          uyamakModel: {},
-          parametersDisplay: null,
-          invalidInputs: [],
-          cid: null, //Category ID
-          bid: null, // Block ID
-          updatingCounter: 0,
-          user: {
-            uid: "",
-            photoURL: ""
-          },
-          toolConsts: {
-            toolDiameter: 36,
-            canvas: {
-              x: 0,
-              y: 0
-            },
-            DOM: {
-              x: 0,
-              y: 0
-            }
-          },
-          networkConst: {
-            scale: 0,
-            xView: 0,
-            yView: 1,
-            halfWidth: 0,
-            halfHeight: 0
-          },
-          blocksSummary: null,
-          filterForFunctions: null,
-          hoverredBlock: {
-            name: "",
-            description: ""
-          },
-          iconText: {
-            icon1:
-              "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
-            icon2:
-              "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
-            icon3: "' stroke-width='10' fill='none'>",
-            icon4: "</g></svg>"
-          },
-          networkIcon: {
-            icon1:
-              "<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='0' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
-            icon2:
-              "'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
-            icon3: "' stroke-width='10' fill='none'>",
-            icon4: "</g></svg>"
-          },
-          tools: {
-            newFile: {
-              icon: "fas fa-file",
-              function: "openLeftMenu()",
-              text: "New file",
-              display: false,
-              y: "0",
-              x: "0",
-              order: "0"
-            },
-            saveFile: {
-              icon: "far fa-save",
-              function: "openLeftMenu()",
-              text: "Save file",
-              display: false,
-              y: "0",
-              x: "40",
-              order: "1"
-            },
-            deleteFile: {
-              icon: "far fa-trash-alt",
-              function: "openLeftMenu()",
-              text: "Delete file",
-              display: false,
-              y: "0",
-              x: "80",
-              order: "2"
-            },
-            addBlock: {
-              icon: "far fa-plus-square",
-              function: "openLeftMenu('ADD_BLOCK')",
-              text: "Add block",
-              display: false,
-              y: "0",
-              x: "120",
-              order: "3"
-            },
-            editBlock: {
-              icon: "far fa-edit",
-              function: "openLeftMenu('EDIT_BLOCK')",
-              text: "Edit block",
-              display: false,
-              y: "0",
-              x: "160",
-              order: "4"
-            },
-            addConnection: {
-              icon: "fas fa-project-diagram",
-              function: "openLeftMenu()",
-              text: "Add connection",
-              display: false,
-              y: "0",
-              x: "200",
-              order: "5"
-            },
-            editConnection: {
-              icon: "fas fa-pencil-alt",
-              function: "openLeftMenu()",
-              text: "Edit connection",
-              display: false,
-              y: "0",
-              x: "240",
-              order: "6"
-            },
-            delete: {
-              icon: "fas fa-eraser",
-              function: "openLeftMenu()",
-              text: "Delete",
-              display: false,
-              y: "0",
-              x: "280",
-              order: "7"
-            },
-            filesView: {
-              icon: "far fa-folder-open",
-              function: "openLeftMenu()",
-              text: "Files view",
-              display: false,
-              y: "0",
-              x: "320",
-              order: "8"
-            },
-            simView: {
-              icon: "fas fa-play",
-              function: "openLeftMenu()",
-              text: "Simulation view",
-              display: false,
-              y: "0",
-              x: "360",
-              order: "9"
+          mxGraph.prototype.selectCellForEvent.apply(this, arguments);
+        };
+        //Copy Paste of blocks
+        graph.cloneCells = function (
+          cells,
+          allowInvalidEdges,
+          mapping,
+          keepPosition
+        ) {
+          customValidationError = false;
+          var out = mxGraph.prototype.cloneCells.apply(this, arguments);
+          customValidationError = true;
+          return out;
+        };
+        mxClipboard.cellsToString = function (cells) {
+          var codec = new mxCodec();
+          var model = new mxGraphModel();
+          var parent = model.getChildAt(model.getRoot(), 0);
+          for (var i = 0; i < cells.length; i++) {
+            cells[i].setValue(JSON.stringify2(cells[i].getValue()));
+            model.add(parent, cells[i]);
+          }
+          return mxUtils.getXml(codec.encode(model));
+        };
+        var textInput = document.createElement("textarea");
+        mxUtils.setOpacity(textInput, 0);
+        textInput.style.width = "1px";
+        textInput.style.height = "1px";
+        var restoreFocus = false;
+        var gs = graph.gridSize;
+        var lastPaste = null;
+        var dx = 0;
+        var dy = 0;
+        textInput.value = " ";
+        mxEvent.addListener(document, "keydown", function (evt) {
+          var source = mxEvent.getSource(evt);
+          if (
+            graph.isEnabled() &&
+            !graph.isMouseDown &&
+            !graph.isEditing() &&
+            source.nodeName != "INPUT"
+          ) {
+            if (
+              evt.keyCode == 224 ||
+              (!mxClient.IS_MAC && evt.keyCode == 17) ||
+              (mxClient.IS_MAC && evt.keyCode == 91)
+            ) {
+              if (!restoreFocus) {
+                textInput.style.position = "absolute";
+                textInput.style.left = graph.container.scrollLeft + 10 + "px";
+                textInput.style.top = graph.container.scrollTop + 10 + "px";
+                graph.container.appendChild(textInput);
+                restoreFocus = true;
+                textInput.focus();
+                textInput.select();
+              }
             }
           }
-        },
-        beforeUpdate: function() {
-          //removeAlltheObjectURLsForSVGImages();
-        },
-        updated: function() {
-          var dragElt = document.createElement("div");
-          dragElt.style.border = "dashed black 1px";
-          dragElt.style.width = "100px";
-          dragElt.style.height = "100px";
-          dragElt.innerHTML = "<h1>Hello</h1>";
-          var x = document.getElementsByClassName("dragThisBlock");
-          for (i = 0; i < x.length; i++) {
-            var ds = mxUtils.makeDraggable(
-              x[i],
-              graph,
-              funct,
-              dragElt,
-              0,
-              0,
-              true,
-              true
-            );
-            ds.setGuidesEnabled(true);
-            console.log(ds);
+        });
+        mxEvent.addListener(document, "keyup", function (evt) {
+          if (
+            restoreFocus &&
+            (evt.keyCode == 224 || evt.keyCode == 17 || evt.keyCode == 91)
+          ) {
+            restoreFocus = false;
+            if (!graph.isEditing()) {
+              graph.container.focus();
+            }
+            textInput.parentNode.removeChild(textInput);
           }
-          MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        },
-        computed: {
-          parametersValidationComments: function() {
-            return this.uyamakModel.ValidateParams();
-          },
-          inputErrors: function() {
-            return (
-              "<table class='w3-table'>" +
-              this.invalidInputs
-                .map(function(currentValue, index, arr) {
-                  return (
-                    "<tr><td>" +
-                    app.$data.uyamakModel.Parameters[
-                      parseInt(currentValue.split(",")[0])
-                    ].Name +
-                    " at [" +
-                    (parseInt(currentValue.split(",")[1]) + 1) +
-                    ", " +
-                    (parseInt(currentValue.split(",")[2]) + 1) +
-                    "]" +
-                    "</td></tr>"
-                  );
-                })
-                .join("") +
-              "</table>"
-            );
-          },
-          blocksSummaryArray: function() {
-            try {
-              const tempSourceArray = Object.keys(this.blocksSummary).map(
-                function(key) {
-                  return {
-                    key: key,
-                    name: app.$data.blocksSummary[key].name,
-                    order: app.$data.blocksSummary[key].order,
-                    display: true
-                  };
+        });
+        var copyCells = function (graph, cells) {
+          if (cells.length > 0) {
+            var clones = graph.cloneCells(cells);
+            for (var i = 0; i < clones.length; i++) {
+              var state = graph.view.getState(cells[i]);
+              if (state != null) {
+                var geo = graph.getCellGeometry(clones[i]);
+                if (geo != null && geo.relative) {
+                  geo.relative = false;
+                  geo.x = state.x / state.view.scale - state.view.translate.x;
+                  geo.y = state.y / state.view.scale - state.view.translate.y;
                 }
+              }
+            }
+            textInput.value = mxClipboard.cellsToString(clones);
+          }
+          textInput.select();
+          lastPaste = textInput.value;
+        };
+        mxEvent.addListener(
+          textInput,
+          "copy",
+          mxUtils.bind(this, function (evt) {
+            if (graph.isEnabled() && !graph.isSelectionEmpty()) {
+              copyCells(
+                graph,
+                mxUtils.sortCells(
+                  graph.model.getTopmostCells(graph.getSelectionCells())
+                )
               );
-              console.log(tempSourceArray);
-              return tempSourceArray.sort((a, b) => a.order - b.order);
-            } catch (e) {
-              console.log(e);
-              console.log("Data is not ready for displaying categories");
+              dx = 0;
+              dy = 0;
             }
-          }
-        },
-        methods: {
-          makeDraggableIcons: function() {
-            var ds = mxUtils.makeDraggable(
-              img,
-              graph,
-              funct,
-              dragElt,
-              0,
-              0,
-              true,
-              true
-            );
-            ds.setGuidesEnabled(true);
-          },
-          saveParametersToNode: function(close = true) {
-            network.editNode();
-            if (close) closeLeftMenu();
-          },
-          validateParamCellEntry: function(index, index1, index2) {
-            var tempValidateItem = index + "," + index1 + "," + index2;
-            var outValue;
-            var tempValue = this.uyamakModel.Parameters[index].Value[index1][
-              index2
-            ];
-            try {
-              switch (this.uyamakModel.Parameters[index].Type) {
-                case "Integer":
-                  outValue =
-                    typeof math.evaluate(tempValue) === "number" &&
-                    math.evaluate(tempValue) % 1 === 0;
-                  break;
-                case "Real":
-                  outValue = typeof math.evaluate(tempValue) === "number";
-                  break;
-                case "Complex":
-                  outValue =
-                    math.evaluate(tempValue).type === "Complex" ||
-                    typeof math.evaluate(tempValue) === "number";
-                  break;
-                case "Text":
-                case "Color":
-                case "Option":
-                  outValue = tempValue !== "" && tempValue !== null;
-                  break;
-              }
-            } catch (e) {
-              console.log(e);
-              outValue = false;
-            }
-            var tempIndex = this.invalidInputs.indexOf(tempValidateItem);
-            if (outValue) {
-              if (tempIndex >= 0) this.invalidInputs.splice(tempIndex, 1);
-            } else {
-              if (tempIndex < 0) this.invalidInputs.push(tempValidateItem);
-            }
-            return outValue;
-          },
-          getBlockDetails: function() {
-            try {
-              return this.uyamakModel.Details();
-            } catch (e) {
-              console.log(e);
-              return "¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support.";
-            }
-          },
-          valueDimensionsModify: function(func, index) {
-            var tempItem;
-            switch (this.uyamakModel.Parameters[index].Type) {
-              case "Integer":
-              case "Real":
-              case "Complex":
-                tempItem = 0;
-                break;
-              case "Text":
-                tempItem = "";
-                break;
-              case "Color":
-                tempItem = "Black";
-                break;
-            }
-            switch (func) {
-              case 0:
-                this.uyamakModel.Parameters[index].Value.push(
-                  new Array(
-                    this.uyamakModel.Parameters[index].Value[0].length
-                  ).fill(tempItem)
-                );
-                break;
-              case 1:
-                if (this.uyamakModel.Parameters[index].Value.length > 1)
-                  this.uyamakModel.Parameters[index].Value.pop();
-                break;
-              case 2:
-                this.uyamakModel.Parameters[index].Value.map(function(val) {
-                  return val.push(tempItem);
-                });
-                break;
-              case 3:
-                if (this.uyamakModel.Parameters[index].Value[0].length > 1) {
-                  this.uyamakModel.Parameters[index].Value.map(function(val) {
-                    return val.pop();
-                  });
-                }
-                break;
-            }
-            this.updatingCounter++;
-          },
-          getColorsForTheCategory: function() {
-            try {
-              return this.blocksSummary[this.cid].colors;
-            } catch (e) {
-              return {
-                fg: "#000000",
-                bg: "#ffffff"
-              };
-            }
-          },
-          createIconForNetwork: function() {
-            return (
-              "data:image/svg+xml;charset=utf-8," +
-              encodeURIComponent(
-                this.networkIcon.icon1 +
-                  this.blocksSummary[this.cid].colors.bg +
-                  this.networkIcon.icon2 +
-                  this.blocksSummary[this.cid].colors.fg +
-                  this.networkIcon.icon3 +
-                  this.blocksSummary[this.cid].blocks[this.bid].icon +
-                  this.networkIcon.icon4
-              )
-            );
-          },
-          addAEdge: function() {
-            document.getElementById("mynetwork").style.cursor =
-              "url(/images/link-icon.png), auto";
-            this.networkState = "ADD_EDGE";
-            network.addEdgeMode();
-          },
-          addABlock: function(categoryID, blockID) {
-            this.cid = categoryID;
-            this.bid = blockID;
-            pic =
-              this.iconText.icon1 +
-              this.blocksSummary[categoryID].colors.bg +
-              this.iconText.icon2 +
-              this.blocksSummary[categoryID].colors.fg +
-              this.iconText.icon3 +
-              this.blocksSummary[categoryID].blocks[blockID].icon +
-              this.iconText.icon4;
-            let url = this.svgTextToURL(
-              "<svg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'>" +
-                pic +
-                "</svg>"
-            );
-            //console.log(url);
-            if (!!CUSTOM_ICON) URL.revokeObjectURL(CUSTOM_ICON);
-            document.getElementById("mynetwork").style.cursor =
-              "url(" + url + "), auto";
-            CUSTOM_ICON = url;
-            closeLeftMenu();
-            this.networkState = "ADD_NODE";
-            network.addNodeMode();
-          },
-          toggleParamDisplay: function(index) {
-            console.log(this.parametersDisplay);
-            this.updatingCounter++;
-            this.parametersDisplay[index] = !this.parametersDisplay[index];
-          },
-          toggleBlockDisplay: function(index) {
-            this.updatingCounter++;
-            this.blocksSummaryArray[index].display = !this.blocksSummaryArray[
-              index
-            ].display;
-          },
-          prepareSVGURL: function(svg) {
-            return (
-              "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg)
-            );
-          },
-          svgTextToURL: function(svg) {
-            svg = svg;
-            let tempBlob = new Blob([svg], {
-              type: "image/svg+xml"
-            });
-            let url = URL.createObjectURL(tempBlob);
-            return url;
-          },
-          getFilteredBlocks: function(inBlocks) {
-            try {
-              const tempBlocksArray = [];
-              for (let [key, value] of Object.entries(inBlocks)) {
-                tempBlocksArray.push(
-                  Object.assign(
-                    {
-                      key: key
-                    },
-                    value
-                  )
-                );
-              }
-              return tempBlocksArray
-                .filter(tempBlocksArrayItem => {
-                  return (
-                    !app.$data.filterForFunctions ||
-                    tempBlocksArrayItem.name
-                      .toLowerCase()
-                      .search(app.$data.filterForFunctions.toLowerCase()) >=
-                      0 ||
-                    tempBlocksArrayItem.description
-                      .toLowerCase()
-                      .search(app.$data.filterForFunctions.toLowerCase()) >= 0
-                  );
-                })
-                .sort((a, b) => {
-                  return a.order - b.order;
-                });
-            } catch (e) {
-              console.log(e);
-              console.log("Data is not ready for applying filter");
-            }
-          }
-        }
-      });</script><script>function holdToFinishAProcess(title = null, description = null) {
-        if (title)
-          document.getElementById("waitForProcessToFinish").style.display =
-            "block";
-        else
-          document.getElementById("waitForProcessToFinish").style.display =
-            "none";
-        if (title) document.getElementById("DOMWaitingHead").innerText = title;
-        if (description)
-          document.getElementById("DOMWaitingDesc").innerText = description;
-      }
-      holdToFinishAProcess(
-        "Connecting to the server.",
-        "Please wait while loading the app. If this process takes longer than a minute, check your internet connection and refresh the page."
-      );</script><script>var TempRecAttempt;
-      var functions = firebase.functions();
-      var db = firebase.firestore();
-      const settings = {
-        timestampsInSnapshots: true
-      };
-      db.settings(settings);
-      var validateUserSession = firebase
-        .functions()
-        .httpsCallable("validateUserSession");
-      firebase.auth().onAuthStateChanged(function(user) {
-        holdToFinishAProcess("Loading the app.");
-        TempRecAttempt = setInterval(function() {
-          console.log("attempt");
-          if (app) {
-            holdToFinishAProcess("Verifying the license.");
-            clearInterval(TempRecAttempt);
-            user ? handleSignedInUser(user) : handleSignedOutUser();
-          }
-        }, 500);
-      });
-
-      function handleSignedInUser(user) {
-        validateUserSession().then(function(result) {
-          console.log(result.data.isSuccess);
-          if (result.data.isSuccess) loadTheGUI();
-          else
-            window.location.replace(
-              "/platform/admin?redirect=" + location.pathname
-            );
-        });
-      }
-
-      function handleSignedOutUser() {
-        window.location.replace("/sign-in?redirect=" + location.pathname);
-      }
-
-      function loadTheGUI() {
-        app.$set(app.$data.user, "uid", firebase.auth().currentUser.uid);
-        app.$set(
-          app.$data.user,
-          "photoURL",
-          firebase.auth().currentUser.photoURL
+          })
         );
-        db.collection("blocks-summary")
-          .get()
-          .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-              db.collection("blocks-summary")
-                .doc(doc.id)
-                .get()
-                .then(function(doc) {
-                  var dbData = doc.data();
-                  console.log(doc.id, " => ", dbData);
-                  if (!app.$data.blocksSummary)
-                    app.$set(app.$data, "blocksSummary", {});
-                  app.$set(app.$data.blocksSummary, doc.id, dbData);
-                  var headDiv = document.createElement("div");
-                  headDiv.classList.add("w3-theme");
-                  headDiv.classList.add("w3-container");
-                  headDiv.innerHTML = "<p>" + dbData.name + "</p>";
-                  var bodyDiv = document.createElement("div");
-                  for (var key in dbData.blocks) {
-                    addANewDraggableIcon(
-                      bodyDiv,
-                      Object.assign(
-                        {
-                          key: key,
-                          colors: dbData.colors
-                        },
-                        dbData.blocks[key]
-                      )
-                    );
+        mxEvent.addListener(
+          textInput,
+          "cut",
+          mxUtils.bind(this, function (evt) {
+            if (graph.isEnabled() && !graph.isSelectionEmpty()) {
+              copyCells(graph, graph.removeCells());
+              dx = -gs;
+              dy = -gs;
+            }
+          })
+        );
+        var importXml = function (xml, dx, dy) {
+          dx = dx != null ? dx : 0;
+          dy = dy != null ? dy : 0;
+          var cells = [];
+          try {
+            var doc = mxUtils.parseXml(xml);
+            var node = doc.documentElement;
+            if (node != null) {
+              var model = new mxGraphModel();
+              var codec = new mxCodec(node.ownerDocument);
+              codec.decode(node, model);
+              var childCount = model.getChildCount(model.getRoot());
+              var targetChildCount = graph.model.getChildCount(
+                graph.model.getRoot()
+              );
+              graph.model.beginUpdate();
+              try {
+                for (var i = 0; i < childCount; i++) {
+                  var parent = model.getChildAt(model.getRoot(), i);
+                  if (targetChildCount > i) {
+                    var target =
+                      childCount == 1 ?
+                      graph.getDefaultParent() :
+                      graph.model.getChildAt(graph.model.getRoot(), i);
+                    if (!graph.isCellLocked(target)) {
+                      var children = model.getChildren(parent);
+                      cells = cells.concat(
+                        graph.importCells(children, dx, dy, target)
+                      );
+                    }
+                  } else {
+                    parent = graph.importCells(
+                      [parent],
+                      0,
+                      0,
+                      graph.model.getRoot()
+                    )[0];
+                    var children = graph.model.getChildren(parent);
+                    graph.moveCells(children, dx, dy);
+                    cells = cells.concat(children);
                   }
-                  sortTheDoms(bodyDiv);
-                  var summDiv = document.createElement("div");
-                  summDiv.setAttribute(
-                    "id",
-                    "blocks_" + dbData.order + "for_" + doc.id
-                  );
-                  summDiv.appendChild(headDiv);
-                  summDiv.appendChild(bodyDiv);
-                  document.getElementById("blocksBar").appendChild(summDiv);
-                  sortTheDoms(document.getElementById("blocksBar"));
-                })
-                .catch(function(error) {
-                  console.log("Error getting cached document:", error);
-                });
-            });
+                }
+
+                for (var i = 0; i < cells.length; i++) {
+                  try {
+                    cells[i].setValue(JSON.parse2(cells[i].getValue()));
+                  } catch (e) {}
+                }
+              } finally {
+                graph.model.endUpdate();
+              }
+            }
+          } catch (e) {
+            //alert(e);
+            throw e;
+          }
+          return cells;
+        };
+        var pasteText = function (text) {
+          var xml = mxUtils.trim(text);
+          var x =
+            graph.container.scrollLeft / graph.view.scale -
+            graph.view.translate.x;
+          var y =
+            graph.container.scrollTop / graph.view.scale -
+            graph.view.translate.y;
+          if (xml.length > 0) {
+            if (lastPaste != xml) {
+              lastPaste = xml;
+              dx = 0;
+              dy = 0;
+            } else {
+              dx += gs;
+              dy += gs;
+            }
+            if (xml.substring(0, 14) == "<mxGraphModel>") {
+              graph.setSelectionCells(importXml(xml, dx, dy));
+              graph.scrollCellToVisible(graph.getSelectionCell());
+            }
+          }
+        };
+        var extractGraphModelFromEvent = function (evt) {
+          var data = null;
+          if (evt != null) {
+            var provider =
+              evt.dataTransfer != null ? evt.dataTransfer : evt.clipboardData;
+            if (provider != null) {
+              if (
+                document.documentMode == 10 ||
+                document.documentMode == 11
+              ) {
+                data = provider.getData("Text");
+              } else {
+                data =
+                  mxUtils.indexOf(provider.types, "text/html") >= 0 ?
+                  provider.getData("text/html") :
+                  null;
+                if (
+                  mxUtils.indexOf(
+                    provider.types,
+                    "text/plain" && (data == null || data.length == 0)
+                  )
+                ) {
+                  data = provider.getData("text/plain");
+                }
+              }
+            }
+          }
+          return data;
+        };
+        mxEvent.addListener(textInput, "paste", function (evt) {
+          textInput.value = "";
+          if (graph.isEnabled()) {
+            var xml = extractGraphModelFromEvent(evt);
+            if (xml != null && xml.length > 0) {
+              pasteText(xml);
+            } else {
+              window.setTimeout(
+                mxUtils.bind(this, function () {
+                  pasteText(textInput.value);
+                }),
+                0
+              );
+            }
+          }
+          textInput.select();
+        });
+        //Delete blocks
+        keyHandler.bindKey(46, function (evt) {
+          if (graph.isEnabled()) {
+            graph.removeCells();
+          }
+        });
+        //undo and redo
+        keyHandler.bindControlKey(90, function (evt) {
+          if (graph.isEnabled()) {
+            undoManager.undo();
+          }
+        });
+        keyHandler.bindControlShiftKey(90, function (evt) {
+          if (graph.isEnabled()) {
+            undoManager.redo();
+          }
+        });
+
+        // To detect if touch events are actually supported, the following condition is recommended:
+        // mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
+
+        // Disables built-in text selection and context menu while not editing text
+        var textEditing = mxUtils.bind(this, function (evt) {
+          return graph.isEditing();
+        });
+
+        container.onselectstart = textEditing;
+        container.onmousedown = textEditing;
+
+        if (
+          mxClient.IS_IE &&
+          (typeof document.documentMode === "undefined" ||
+            document.documentMode < 9)
+        ) {
+          mxEvent.addListener(container, "contextmenu", textEditing);
+        } else {
+          container.oncontextmenu = textEditing;
+        }
+
+        graph.popupMenuHandler.autoExpand = true;
+
+        graph.popupMenuHandler.isSelectOnPopup = function (me) {
+          return mxEvent.isMouseEvent(me.getEvent());
+        };
+
+        // Installs context menu
+        graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
+          menu.addItem("Item 1", null, function () {
+            alert("Item 1");
           });
-        main(
-          document.getElementById("mynetwork"),
-          document.getElementById("outlineContainer")
-        );
-        holdToFinishAProcess(false);
-      }
 
-      function sortTheDoms(list) {
-        var items = list.childNodes;
-        var itemsArr = [];
-        for (var i in items) {
-          if (items[i].nodeType == 1) {
-            // get rid of the whitespace text nodes
-            itemsArr.push(items[i]);
+          menu.addSeparator();
+
+          var submenu1 = menu.addItem("Submenu 1", null, null);
+
+          menu.addItem(
+            "Subitem 1",
+            null,
+            function () {
+              alert("Subitem 1");
+            },
+            submenu1
+          );
+          menu.addItem(
+            "Subitem 1",
+            null,
+            function () {
+              alert("Subitem 2");
+            },
+            submenu1
+          );
+        };
+
+        // Context menu trigger implementation depending on current selection state
+        // combined with support for normal popup trigger.
+        var cellSelected = false;
+        var selectionEmpty = false;
+        var menuShowing = false;
+
+        graph.fireMouseEvent = function (evtName, me, sender) {
+          if (evtName == mxEvent.MOUSE_DOWN) {
+            // For hit detection on edges
+            me = this.updateMouseEvent(me);
+
+            cellSelected = this.isCellSelected(me.getCell());
+            selectionEmpty = this.isSelectionEmpty();
+            menuShowing = graph.popupMenuHandler.isMenuShowing();
           }
-        }
 
-        itemsArr.sort(function(a, b) {
-          return a.id === b.id ? 0 : a.id > b.id ? 1 : -1;
+          mxGraph.prototype.fireMouseEvent.apply(this, arguments);
+        };
+
+        // Shows popup menu if cell was selected or selection was empty and background was clicked
+        graph.popupMenuHandler.mouseUp = function (sender, me) {
+          this.popupTrigger = !graph.isEditing() &&
+            (this.popupTrigger ||
+              (!menuShowing &&
+                !graph.isEditing() &&
+                !mxEvent.isMouseEvent(me.getEvent()) &&
+                ((selectionEmpty &&
+                    me.getCell() == null &&
+                    graph.isSelectionEmpty()) ||
+                  (cellSelected && graph.isCellSelected(me.getCell())))));
+          mxPopupMenuHandler.prototype.mouseUp.apply(this, arguments);
+        };
+        /*// Adds mouse wheel handling for zoom
+				mxEvent.addMouseWheelListener(function (evt, up) {
+					if (up) {
+						graph.zoomIn();
+					} else {
+						graph.zoomOut();
+					}
+					mxEvent.consume(evt);
+				});*/
+
+        // Tap and hold on background starts rubberband for multiple selected
+        // cells the cell associated with the event is deselected
+        graph.addListener(mxEvent.TAP_AND_HOLD, function (sender, evt) {
+          if (!mxEvent.isMultiTouchEvent(evt)) {
+            var me = evt.getProperty("event");
+            var cell = evt.getProperty("cell");
+
+            if (cell == null) {
+              var pt = mxUtils.convertPoint(
+                this.container,
+                mxEvent.getClientX(me),
+                mxEvent.getClientY(me)
+              );
+              rubberband.start(pt.x, pt.y);
+            } else if (
+              graph.getSelectionCount() > 1 &&
+              graph.isCellSelected(cell)
+            ) {
+              graph.removeSelectionCell(cell);
+            }
+
+            // Blocks further processing of the event
+            evt.consume();
+          }
         });
 
-        for (i = 0; i < itemsArr.length; ++i) {
-          list.appendChild(itemsArr[i]);
-        }
-      }
+        // Adds custom hit detection if native hit detection found no cell
+        graph.updateMouseEvent = function (me) {
+          var me = mxGraph.prototype.updateMouseEvent.apply(this, arguments);
+          if (me.getState() == null) {
+            var cell = this.getCellAt(me.graphX, me.graphY);
+            if (
+              cell != null &&
+              this.isSwimlane(cell) &&
+              this.hitsSwimlaneContent(cell, me.graphX, me.graphY)
+            ) {
+              cell = null;
+            } else {
+              me.state = this.view.getState(cell);
 
-      var iconText = {
-        icon1:
-          "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
-        icon2:
-          "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
-        icon3: "' stroke-width='10' fill='none'>",
-        icon4: "</g></svg>"
-      };
+              if (me.state != null && me.state.shape != null) {
+                this.container.style.cursor =
+                  me.state.shape.node.style.cursor;
+              }
+            }
+          }
 
-      function getIconWith(colors, path) {
-        return (
-          iconText.icon1 +
-          colors.bg +
-          iconText.icon2 +
-          colors.fg +
-          iconText.icon3 +
-          path +
-          iconText.icon4
-        );
-      }
+          if (me.getState() == null) {
+            this.container.style.cursor = "default";
+          }
 
-      function svgTextToURL(svg) {
-        svg = svg;
-        let tempBlob = new Blob([svg], {
-          type: "image/svg+xml"
+          return me;
+        };
+
+        //Lines before connecting edges
+        graph.view.updateFixedTerminalPoint = function (
+          edge,
+          terminal,
+          source,
+          constraint
+        ) {
+          mxGraphView.prototype.updateFixedTerminalPoint.apply(
+            this,
+            arguments
+          );
+          var pts = edge.absolutePoints;
+          var pt = pts[source ? 0 : pts.length - 1];
+          if (
+            terminal != null &&
+            pt == null &&
+            this.getPerimeterFunction(terminal) == null
+          ) {
+            edge.setAbsoluteTerminalPoint(
+              new mxPoint(
+                this.getRoutingCenterX(terminal),
+                this.getRoutingCenterY(terminal)
+              ),
+              source
+            );
+          }
+        };
+        graph.connectionHandler.createEdgeState = function (me) {
+          var edge = graph.createEdge(null, null, null, null, null);
+          return new mxCellState(
+            this.graph.view,
+            edge,
+            this.graph.getCellStyle(edge)
+          );
+        };
+        //Custom Grid
+        (function () {
+          try {
+            var canvas = document.createElement("canvas");
+            canvas.style.position = "absolute";
+            canvas.style.top = "0px";
+            canvas.style.left = "0px";
+            canvas.style.zIndex = -1;
+            graph.container.appendChild(canvas);
+            var ctx = canvas.getContext("2d");
+            var mxGraphViewIsContainerEvent =
+              mxGraphView.prototype.isContainerEvent;
+            mxGraphView.prototype.isContainerEvent = function (evt) {
+              return (
+                mxGraphViewIsContainerEvent.apply(this, arguments) ||
+                mxEvent.getSource(evt) == canvas
+              );
+            };
+            var s = 0;
+            var gs = 0;
+            var tr = new mxPoint();
+            var w = 0;
+            var h = 0;
+            repaintGrid();
+
+            function repaintGrid() {
+              if (ctx != null) {
+                var bounds = graph.getGraphBounds();
+                var width = Math.max(
+                  bounds.x + bounds.width,
+                  graph.container.clientWidth
+                );
+                var height = Math.max(
+                  bounds.y + bounds.height,
+                  graph.container.clientHeight
+                );
+                var sizeChanged = width != w || height != h;
+                if (
+                  graph.view.scale != s ||
+                  graph.view.translate.x != tr.x ||
+                  graph.view.translate.y != tr.y ||
+                  gs != graph.gridSize ||
+                  sizeChanged
+                ) {
+                  tr = graph.view.translate.clone();
+                  s = graph.view.scale;
+                  gs = graph.gridSize;
+                  w = width;
+                  h = height;
+                  if (!sizeChanged) {
+                    ctx.clearRect(0, 0, w, h);
+                  } else {
+                    canvas.setAttribute("width", w);
+                    canvas.setAttribute("height", h);
+                  }
+                  var tx = tr.x * s;
+                  var ty = tr.y * s;
+                  var minStepping = graph.gridSize;
+                  var stepping = minStepping * s;
+                  if (stepping < minStepping) {
+                    var count =
+                      Math.round(Math.ceil(minStepping / stepping) / 2) * 2;
+                    stepping = count * stepping;
+                  }
+                  var xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  var xe = Math.ceil(w / stepping) * stepping;
+                  var ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  var ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  var ixs = Math.round(xs);
+                  var ixe = Math.round(xe);
+                  var iys = Math.round(ys);
+                  var iye = Math.round(ye);
+                  ctx.strokeStyle = "#f0f0f0";
+                  ctx.fillStyle = "#ffffff";
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  ctx.beginPath();
+                  ctx.lineWidth = 0.5;
+                  for (var x = xs; x <= xe; x += stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                  ctx.beginPath();
+                  ctx.lineWidth = 1;
+                  for (var x = xs; x <= xe; x += 5 * stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += 5 * stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                  ctx.beginPath();
+                  ctx.lineWidth = 1.5;
+                  for (var x = xs; x <= xe; x += 10 * stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += 10 * stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                }
+              }
+            }
+          } catch (e) {
+            mxLog.show();
+            mxLog.debug("Using background image");
+            container.style.backgroundImage = "url('/images/grid.gif')";
+          }
+          var mxGraphViewValidateBackground =
+            mxGraphView.prototype.validateBackground;
+          mxGraphView.prototype.validateBackground = function () {
+            mxGraphViewValidateBackground.apply(this, arguments);
+            try {
+              repaintGrid();
+            } catch (e) {}
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+          };
+        })();
+        //Connection switching source traget, when required
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (
+          sender,
+          evt
+        ) {
+          var edge = evt.getProperty("cell");
+          var source = graph.getModel().getTerminal(edge, true);
+          var target = graph.getModel().getTerminal(edge, false);
+          if (source.geometry.x === 0 && target.geometry.x === 1) {
+            graph.getModel().setTerminal(edge, source, false);
+            graph.getModel().setTerminal(edge, target, true);
+          }
         });
-        let url = URL.createObjectURL(tempBlob);
-        return url;
-      }
+        //Connection validation
+        var customValidationError = true;
+        var default_getEdgeValidationError =
+          mxGraph.prototype.getEdgeValidationError;
+        mxGraph.prototype.getEdgeValidationError = function (
+          edge,
+          source,
+          target
+        ) {
+          //console.log(source.edges);
+          var defaultOut = default_getEdgeValidationError.apply(
+            this,
+            arguments
+          );
+          if (customValidationError) {
+            var outError;
+            if (source.parent === target.parent)
+              outError = "Cannot connect to the same block.";
+            if (source.geometry.x === 0 && target.geometry.x === 0)
+              outError = "Cannot connect both the inputs.";
+            if (source.geometry.x === 1 && target.geometry.x === 1)
+              outError = "Cannot connect both the outputs.";
+            if (
+              (target.geometry.x == 0 && target.getEdgeCount() > 0) ||
+              (source.geometry.x == 0 && source.getEdgeCount() > 0)
+            )
+              outError = "Only one input is allowed per port.";
+            console.log(
+              "targer x:" +
+              target.geometry.x +
+              "; count:" +
+              target.getEdgeCount()
+            );
+            return outError || defaultOut;
+          } else return defaultOut;
+        };
+        mxGraph.prototype.validationAlert = function (message) {
+          notyf.error(message);
+        };
 
-      const blockTemplate = [
-        {
-          name: "Category",
-          type: "string",
-          argument: ""
-        },
-        {
-          name: "Name",
-          type: "string",
-          argument: ""
-        },
-        {
-          name: "Description",
-          type: "string",
-          argument: ""
-        },
-        {
-          name: "Parameters",
-          type: "json",
-          argument: ""
-        },
-        {
-          name: "Label",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "MaxInTerminals",
-          type: "float",
-          argument: ""
-        },
-        {
-          name: "MaxOutTerminals",
-          type: "float",
-          argument: ""
-        },
-        {
-          name: "Icon",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "Init",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "End",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "Constructor",
-          type: "function",
-          argument: "Data"
-        },
-        {
-          name: "Destructor",
-          type: "function",
-          argument: "Data"
-        },
-        {
-          name: "RunTimeExec",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "Evaluate",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "Details",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "ValidateParams",
-          type: "function",
-          argument: ""
-        },
-        {
-          name: "bid",
-          type: "string",
-          argument: ""
-        },
-        {
-          name: "Colors",
-          type: "object",
-          argument: ""
-        },
-        {
-          name: "InTerminals",
-          type: "float",
-          argument: ""
-        },
-        {
-          name: "OutTerminals",
-          type: "float",
-          argument: ""
-        }
-      ];
+        //Dynamic Edge coloring
+        var defaultModelStyle = graph.model.getStyle;
+        graph.model.getStyle = function (cell) {
+          var style = defaultModelStyle.apply(this, arguments);
+          if (cell != null) {
+            if (this.isEdge(cell)) {
+              var target = this.getTerminal(cell, true);
+              if (target != null) {
+                var state = graph.getView().getState(target);
+                var targetStyle =
+                  state != null ? state.style : graph.getCellStyle(target);
+                var fill = mxUtils.getValue(
+                  targetStyle,
+                  mxConstants.STYLE_FILLCOLOR
+                );
+                if (fill != null) {
+                  style += ";strokeColor=" + fill;
+                }
+              }
+            }
+          }
+          return style;
+        };
 
-      function loadABlock() {
-        holdToFinishAProcess("Downloading the block from server");
+        //selection of a vertix
+        mxGraph.prototype.isCellSelectable = function (cell) {
+          var state = this.view.getState(cell);
+          var style = state != null ? state.style : this.getCellStyle(cell);
+
+          return (
+            this.isCellsSelectable() &&
+            !this.isCellLocked(cell) &&
+            style["selectable"] != 0
+          );
+        };
+
+        //How Label is handled for a model
+        graph.getLabel = function (cell) {
+          //console.log(cell);
+          if (!!cell.value) {
+            if (typeof cell.value === "object") {
+              try {
+                eval(
+                  "var tempModel = new umk_" +
+                  cell.value.bid +
+                  " (cell.value);"
+                );
+                return (
+                  tempModel.Name +
+                  "<p class='block-margin'>" +
+                  tempModel.Details() +
+                  "</p>" || ""
+                );
+              } catch (e) {
+                pullDBAndGenModel(cell.value.bid)
+                  .then(function () {
+                    eval(
+                      "var tempModel = new umk_" +
+                      cell.value.bid +
+                      " (cell.value);"
+                    );
+                    graph.cellLabelChanged(
+                      cell,
+                      tempModel.Name +
+                      "<p class='block-margin'>" +
+                      tempModel.Details() +
+                      "</p>"
+                    );
+                  })
+                  .catch(function () {
+                    notyf.error("Error in loading the block");
+                  });
+                return "Loading...";
+              }
+            } else return cell.value;
+          } else return null;
+        };
+        graph.getEditingValue = function (cell, evt) {
+          if (!!cell.value) {
+            if (typeof cell.value === "object") return cell.value.Name || "";
+            else return cell.value;
+          } else return null;
+        };
+        graph.labelChanged = function (cell, newValue, trigger) {
+          if (!!cell.value) {
+            if (typeof cell.value === "object") {
+              var value = mxUtils.clone(cell.value);
+              value.Name = newValue;
+              newValue = value;
+            }
+          }
+          mxGraph.prototype.labelChanged.apply(this, arguments);
+        };
+
+        // Adds cells to the model in a single step
+        graph.getModel().beginUpdate();
         try {
-          if (!BLOCKS_LIB || !BLOCKS_LIB[app.$data.bid]) {
-            db.collection("blocks")
-              .doc(app.$data.bid)
-              .get()
-              .then(function(doc) {
-                holdToFinishAProcess("Loading block's functionaliy");
-                if (doc.exists) {
-                  convertDBDataToModel(doc.id, doc.data());
-                  assignDataToNode(BLOCKS_LIB[app.$data.bid]);
-                } else throw "Uyamak: Block Not found";
-              });
-          } else {
-            assignDataToNode(BLOCKS_LIB[app.$data.bid]);
-          }
+          /*var v1 = graph.insertVertex(parent, null, 'H<b>e</b>llo,', 20, 20, 80, 30);
+					var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+					var e1 = graph.insertEdge(parent, null, '', v1, v2);
+					var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);
+					var v1 = graph.insertVertex(parent, null, 'A', 20, 20, 100, 40);*/
+        } finally {
+          // Updates the display
+          graph.getModel().endUpdate();
+        }
+      }
+    }
+
+    function insertVertex(v1, umkModel, x, y, evt, cell) {
+      var parent = graph.getDefaultParent();
+      var model = graph.getModel();
+      model.beginUpdate();
+      try {
+        var newPt = {
+          x: x,
+          y: y
+        };
+        if (cell) {
+          var pt = cell.getGeometry().getPoint();
+          newPt.x -= pt.x;
+          newPt.y -= pt.y;
+        }
+        v1 = graph.insertVertex(
+          cell,
+          null,
+          umkModel,
+          newPt.x,
+          newPt.y,
+          200,
+          100,
+          "fillColor=" +
+          umkModel.Colors.bg +
+          ";fontColor=" +
+          umkModel.Colors.fg +
+          ";fontSize=15;verticalAlign=top;strokeColor=" +
+          umkModel.Colors.bg +
+          ";"
+        );
+        var tempDetails = umkModel.Details();
+
+        v1.setConnectable(false);
+        v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
+        for (var i = 1; i < umkModel.InTerminals + 1; i++) {
+          var p1 = graph.insertVertex(
+            v1,
+            null,
+            "$u" + (umkModel.InTerminals > 1 ? "_{" + i + "}" : "") + "(t)$",
+            0,
+            i / (umkModel.InTerminals + 1),
+            16,
+            16,
+            "constituent=1;fillColor=" +
+            umkModel.Colors.bg +
+            ";fontColor=" +
+            umkModel.Colors.fg +
+            ";strokeColor=" +
+            umkModel.Colors.bg +
+            ";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+            true
+          );
+          p1.geometry.offset = new mxPoint(-8, -8);
+        }
+        for (var i = 1; i < umkModel.OutTerminals + 1; i++) {
+          var p2 = graph.insertVertex(
+            v1,
+            null,
+            "$y" + (umkModel.OutTerminals > 1 ? "_{" + i + "}" : "") + "(t)$",
+            1,
+            i / (umkModel.OutTerminals + 1),
+            16,
+            16,
+            "constituent=1;fillColor=" +
+            umkModel.Colors.bg +
+            ";fontColor=" +
+            umkModel.Colors.fg +
+            ";strokeColor=" +
+            umkModel.Colors.bg +
+            ";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+            true
+          );
+          p2.geometry.offset = new mxPoint(-8, -8);
+        }
+        /*var Details = graph.insertVertex(v1, null, "<div>sdf"+tempDetails+"sdfff<\div>", 0.5, 0, 0, 0, "verticalAlign=top;strokeColor=white;fontColor=" + umkModel.Colors
+					.fg + ";", true)
+				Details.geometry.offset = new mxPoint(0, 30);
+				Details.setConnectable(false);*/
+      } finally {
+        model.endUpdate();
+      }
+    }
+
+    function addANewDraggableIcon(sidebar, data) {
+      var addVertices = function (graph, evt, cell, x, y) {
+        try {
+          eval("var umkModel = new umk_" + data.key + "();");
+          console.log(data);
+          umkModel.Constructor({});
+          insertVertex(v1, umkModel, x, y, evt, cell);
         } catch (e) {
           console.log(e);
-          GSK_CALLBACK(null);
-          exitEditMode();
-          holdToFinishAProcess(false);
-          notyf.error("Error in adding this block.");
+          graph.removeCells([v1]);
+          notyf.error(
+            "Error in the mathematical model. If your internet connection is good, please contact the support."
+          );
         }
+        graph.setSelectionCell(v1);
+      };
+      var finishDragAct = function (graph, evt, cell, x, y) {
+        pullDBAndGenModel(data.key)
+          .then(function () {
+            addVertices(graph, evt, cell, x, y);
+          })
+          .catch(function () {
+            notyf.error(
+              "Unknown error: please contact support if it continues."
+            );
+          });
+      };
+      var v1;
+      var img = document.createElement("img");
+      /*blockDiv.innerHTML = "Name:"+data.name+"; Description:"+data.description;
+			blockDiv.setAttribute('id', 'block_'+data.order+'for_'+data.key);*/
+      var img = document.createElement("img");
+      img.setAttribute(
+        "src",
+        svgTextToURL(getIconWith(data.colors, data.icon))
+      );
+      img.style.width = "50px";
+      img.style.height = "50px";
+      img.title =
+        data.name +
+        ": " +
+        data.description +
+        "\n\nDrag this to the diagram to create a new vertex";
+      sidebar.appendChild(img);
+
+      var dragElt = document.createElement("div");
+      dragElt.style.border = "dashed black 1px";
+      dragElt.style.width = "200px";
+      dragElt.style.height = "100px";
+      var ds = mxUtils.makeDraggable(
+        img,
+        graph,
+        finishDragAct,
+        dragElt,
+        0,
+        0,
+        true,
+        true
+      );
+      ds.setGuidesEnabled(true);
+    }
+
+    // Touch screen
+    (function () {
+      // Enables rotation handle
+      //mxVertexHandler.prototype.rotationEnabled = true;
+
+      // Enables managing of sizers
+      mxVertexHandler.prototype.manageSizers = true;
+
+      // Enables live preview
+      mxVertexHandler.prototype.livePreview = true;
+
+      // Sets constants for touch style
+      mxConstants.HANDLE_SIZE = 16;
+      mxConstants.LABEL_HANDLE_SIZE = 7;
+
+      // Larger tolerance and grid for real touch devices
+      if (
+        mxClient.IS_TOUCH ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
+      ) {
+        mxShape.prototype.svgStrokeTolerance = 18;
+        mxVertexHandler.prototype.tolerance = 12;
+        mxEdgeHandler.prototype.tolerance = 12;
+        mxGraph.prototype.tolerance = 12;
       }
 
-      function createIconForNetwork(cid, iconText) {
+      // One finger pans (no rubberband selection) must start regardless of mouse button
+      mxPanningHandler.prototype.isPanningTrigger = function (me) {
+        var evt = me.getEvent();
+
         return (
-          "data:image/svg+xml;charset=utf-8," +
-          encodeURIComponent(
-            app.$data.networkIcon.icon1 +
-              app.$data.blocksSummary[cid].colors.bg +
-              app.$data.networkIcon.icon2 +
-              app.$data.blocksSummary[cid].colors.fg +
-              app.$data.networkIcon.icon3 +
-              iconText +
-              app.$data.networkIcon.icon4
+          (me.getState() == null && !mxEvent.isMouseEvent(evt)) ||
+          (mxEvent.isPopupTrigger(evt) &&
+            (me.getState() == null ||
+              mxEvent.isControlDown(evt) ||
+              mxEvent.isShiftDown(evt)))
+        );
+      };
+
+      // Don't clear selection if multiple cells selected
+      var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
+      mxGraphHandler.prototype.mouseDown = function (sender, me) {
+        graphHandlerMouseDown.apply(this, arguments);
+
+        if (
+          this.graph.isCellSelected(me.getCell()) &&
+          this.graph.getSelectionCount() > 1
+        ) {
+          this.delayedSelection = false;
+        }
+      };
+
+      // On connect the target is selected and we clone the cell of the preview edge for insert
+      mxConnectionHandler.prototype.selectCells = function (edge, target) {
+        if (target != null) {
+          this.graph.setSelectionCell(target);
+        } else {
+          this.graph.setSelectionCell(edge);
+        }
+      };
+
+      // Overrides double click handling to use the tolerance
+      var graphDblClick = mxGraph.prototype.dblClick;
+      mxGraph.prototype.dblClick = function (evt, cell) {
+        if (cell == null) {
+          var pt = mxUtils.convertPoint(
+            this.container,
+            mxEvent.getClientX(evt),
+            mxEvent.getClientY(evt)
+          );
+          cell = this.getCellAt(pt.x, pt.y);
+        }
+
+        graphDblClick.call(this, evt, cell);
+      };
+
+      // Rounded edge and vertex handles
+      var touchHandle = new mxImage("images/handle-main.png", 17, 17);
+      mxVertexHandler.prototype.handleImage = touchHandle;
+      mxEdgeHandler.prototype.handleImage = touchHandle;
+      mxOutline.prototype.sizerImage = touchHandle;
+
+      mxVertexHandler.prototype.rotationHandleVSpacing = -30;
+      // Pre-fetches touch handle
+      new Image().src = touchHandle.src;
+
+      // Adds connect icon to selected vertex
+      var connectorSrc = "images/handle-connect.png";
+
+      var vertexHandlerInit = mxVertexHandler.prototype.init;
+      mxVertexHandler.prototype.init = function () {
+        // TODO: Use 4 sizers, move outside of shape
+        //this.singleSizer = this.state.width < 30 && this.state.height < 30;
+        vertexHandlerInit.apply(this, arguments);
+
+        // Only show connector image on one cell and do not show on containers
+        if (
+          this.graph.connectionHandler.isEnabled() &&
+          this.graph.isCellConnectable(this.state.cell) &&
+          this.graph.getSelectionCount() == 1
+        ) {
+          this.connectorImg = mxUtils.createImage(connectorSrc);
+          this.connectorImg.style.cursor = "pointer";
+          this.connectorImg.style.width = "29px";
+          this.connectorImg.style.height = "29px";
+          this.connectorImg.style.position = "absolute";
+
+          if (!mxClient.IS_TOUCH) {
+            this.connectorImg.setAttribute(
+              "title",
+              mxResources.get("connect")
+            );
+            mxEvent.redirectMouseEvents(
+              this.connectorImg,
+              this.graph,
+              this.state
+            );
+          }
+
+          // Starts connecting on touch/mouse down
+          mxEvent.addGestureListeners(
+            this.connectorImg,
+            mxUtils.bind(this, function (evt) {
+              this.graph.popupMenuHandler.hideMenu();
+              this.graph.stopEditing(false);
+
+              var pt = mxUtils.convertPoint(
+                this.graph.container,
+                mxEvent.getClientX(evt),
+                mxEvent.getClientY(evt)
+              );
+              this.graph.connectionHandler.start(this.state, pt.x, pt.y);
+              this.graph.isMouseDown = true;
+              this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+              mxEvent.consume(evt);
+            })
+          );
+
+          this.graph.container.appendChild(this.connectorImg);
+        }
+
+        this.redrawHandles();
+      };
+
+      var vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
+      mxVertexHandler.prototype.hideSizers = function () {
+        vertexHandlerHideSizers.apply(this, arguments);
+
+        if (this.connectorImg != null) {
+          this.connectorImg.style.visibility = "hidden";
+        }
+      };
+
+      var vertexHandlerReset = mxVertexHandler.prototype.reset;
+      mxVertexHandler.prototype.reset = function () {
+        vertexHandlerReset.apply(this, arguments);
+
+        if (this.connectorImg != null) {
+          this.connectorImg.style.visibility = "";
+        }
+      };
+
+      var vertexHandlerRedrawHandles =
+        mxVertexHandler.prototype.redrawHandles;
+      mxVertexHandler.prototype.redrawHandles = function () {
+        vertexHandlerRedrawHandles.apply(this);
+
+        if (this.state != null && this.connectorImg != null) {
+          var pt = new mxPoint();
+          var s = this.state;
+
+          // Top right for single-sizer
+          if (mxVertexHandler.prototype.singleSizer) {
+            pt.x = s.x + s.width - this.connectorImg.offsetWidth / 2;
+            pt.y = s.y - this.connectorImg.offsetHeight / 2;
+          } else {
+            pt.x =
+              s.x +
+              s.width +
+              mxConstants.HANDLE_SIZE / 2 +
+              4 +
+              this.connectorImg.offsetWidth / 2;
+            pt.y = s.y + s.height / 2;
+          }
+
+          var alpha = mxUtils.toRadians(
+            mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0)
+          );
+
+          if (alpha != 0) {
+            var cos = Math.cos(alpha);
+            var sin = Math.sin(alpha);
+
+            var ct = new mxPoint(s.getCenterX(), s.getCenterY());
+            pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
+          }
+
+          this.connectorImg.style.left =
+            pt.x - this.connectorImg.offsetWidth / 2 + "px";
+          this.connectorImg.style.top =
+            pt.y - this.connectorImg.offsetHeight / 2 + "px";
+        }
+      };
+
+      var vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
+      mxVertexHandler.prototype.destroy = function (sender, me) {
+        vertexHandlerDestroy.apply(this, arguments);
+
+        if (this.connectorImg != null) {
+          this.connectorImg.parentNode.removeChild(this.connectorImg);
+          this.connectorImg = null;
+        }
+      };
+
+      // Pre-fetches touch connector
+      new Image().src = connectorSrc;
+    })();
+
+    //Group blocks
+    function createSubModel() {
+      var model = graph.getModel();
+      model.beginUpdate();
+      try {
+        graph.setSelectionCell(
+          graph.groupCells(null, 10, graph.getSelectionCells())
+        );
+      } catch (e) {
+        console.log(e);
+        notyf.error("Unable to group the selected items");
+      } finally {
+        model.endUpdate();
+      }
+    }
+
+    function ungroupSubModel() {
+      var model = graph.getModel();
+      model.beginUpdate();
+      try {
+        var cells = graph.getSelectionCells();
+        for (var i = 0; i < cells.length; i++) {
+          if (cells[i].getStyle() === "group") {
+            var sCells = graph.getSelectionCells();
+            sCells = sCells.concat(cells[i].children);
+            console.log(sCells);
+            graph.ungroupCells([cells[i]]);
+            graph.setSelectionCells(sCells);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+        notyf.error("Unable to un-group the selected items");
+      } finally {
+        model.endUpdate();
+      }
+    }
+    // fold and unfold
+    function foldItems(fold = true) {
+      if (graph.getSelectionCells().length > 0) {
+        graph.foldCells(fold, false, graph.getSelectionCells());
+      } else graph.foldCells(fold, false, graph.getDefaultParent().children);
+    }
+    /*//pan the graph
+    function panTheGraph(direction) {
+      switch (direction) {
+        case 0:
+        graph.panGraph(graph.panDx, graph.panDy+10);
+          break;
+          case 1:
+        graph.panGraph(graph.panDx, graph.panDy-10);
+          break;
+          case 2:
+        graph.panGraph(graph.panDx-10, graph.panDy);
+          break;
+          case 3:
+        graph.panGraph(graph.panDx+10, graph.panDy+10);
+          break;
+      }
+      graph.refresh();
+    }*/</script><style>body,html,select{width:100%;height:100%;margin:0;overflow:hidden}#mynetwork{position:relative;width:100%;height:100%;border:0 solid #d3d3d3;box-sizing:content-box}.MJXc-display{margin:0!important}.block-margin{margin:.5em 0 5em 0!important}.btnGreen,.btnGreen>div,.btnGreen>i,.btnGreen>img{color:rgba(80,197,56,1);border-color:rgba(80,197,56,1)!important}.btnRed,.btnRed>div,.btnRed>i,.btnRed>img{color:red;border-color:red!important}.ToolBarButton>div,.ToolBarButton>i,.ToolBarButton>img{border-width:2px!important;width:30px;height:30px}.ToolBarButton{padding:2px;font-size:15px;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;width:34px;height:34px;border-radius:17px;display:inline-block;cursor:pointer;position:fixed}.btnGreen:hover{box-shadow:0 0 3px 3px rgba(56,207,21,.3)}.btnGreen:active{box-shadow:0 0 1px 3px rgba(56,207,21,.95)}.btnRed:hover{box-shadow:0 0 3px 3px rgba(255,00,0,.3)}.btnRed:active{box-shadow:0 0 1px 3px rgba(255,00,0,.95)}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}</style></head><body><div id="mynetwork" style="transition:margin .7s;margin-top:44px;margin-bottom:15px"></div><div id="toolBar" class="w3-bar w3-indigo w3-card w3-xlarge" style="transition:margin .7s;position:fixed;top:0;left:0"><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0;margin-left:8px" onclick=""><i class="fas fa-bars"></i></div><div class="w3-bar-item" style="padding:0;margin:0 8px"><i class="fas fa-ellipsis-v"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="togglelibraryOfBlocks()"><i class="fas fa-th-large"></i></div><div class="w3-bar-item" style="padding:0;margin:0 8px"><i class="fas fa-ellipsis-v"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="graph.zoomOut()"><i class="fa-fw fas fa-search-minus"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="graph.zoomIn()"><i class="fa-fw fas fa-search-plus"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="graph.zoomActual()"><i class="fa-fw fas fa-compress"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="graph.fit()"><i class="fa-fw fas fa-expand"></i></div><div class="w3-bar-item" style="padding:0;margin:0 8px"><i class="fas fa-ellipsis-v"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="undoManager.undo()"><i class="fa-fw fas fa-undo"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="undoManager.redo()"><i class="fa-fw fas fa-redo"></i></div><div class="w3-bar-item" style="padding:0;margin:0 8px"><i class="fas fa-ellipsis-v"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="createSubModel()"><i class="fa-fw far fa-object-group"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="ungroupSubModel()"><i class="fa-fw far fa-object-ungroup"></i></div><div class="w3-bar-item" style="padding:0;margin:0 8px"><i class="fas fa-ellipsis-v"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="foldItems()"><i class="fa-fw fas fa-window-minimize"></i></div><div class="w3-bar-item w3-button w3-hover-indigo" style="padding:0" onclick="foldItems(!1)"><i class="fa-fw fas fa-window-maximize"></i></div></div><div id="statusBar" class="w3-bar w3-dark-grey" style="transition:margin .7s;position:fixed;bottom:0;right:0"><div class="w3-bar-item w3-right w3-small" style="padding:0">Design mode</div><div class="w3-bar-item w3-right w3-small" style="padding:0;margin:0 8px"><i class="fas fa-braille"></i></div></div><div id="outlineContainer" class="w3-hide-small w3-hide-medium" style="position:fixed;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:0 0;border-style:solid;border-color:#000"></div><div id="libraryOfBlocks" class="w3-sidebar w3-card w3-animate-left" style="z-index:2;left:0;top:0;width:25%;display:none;touch-action:none"><div class="w3-block w3-yellow w3-btn" onclick="togglelibraryOfBlocks()"><i class="fas fa-times"></i> Close</div><div id="blocksBar"></div></div><div id="editorForBlockParameters" class="w3-sidebar w3-card w3-animate-left" style="z-index:2;left:0;top:0;width:25%;display:none;touch-action:none"></div><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:rgba(255,255,255,.9)"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div><div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()" style="cursor:pointer;position:fixed;left:0;top:0" id="leftMenuOverlay"></div><div class="w3-sidebar w3-card w3-animate-left" style="z-index:2;left:0;top:0;width:500px;max-width:100%;display:none" id="leftMenu"><div v-if="leftBarMode === 'EDIT_BLOCK'"><p class="w3-xlarge" style="margin:0"><b>Edit block parameters</b></p><p class="w3-small" style="margin:0"><i>Modify the parameters and click save to chagne them.</i></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span>{{ Parameter.Name }}</span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"></td></template></tr></template></table></div></div></template><div><template v-if="invalidInputs.length>0"><p class="w3-xlarge" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-xlarge" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-xlarge" style="margin:0"><b>Functionality</b></p><p class="w3-small" style="margin:0"><i>The input and output to the blocks are given as $u(t)$ and $y(t)$ respectively. $t$ is the simulation time in seconds.</i></p><div v-html="getBlockDetails()"></div><div class="w3-center w3-panel"><div class="w3-btn w3-green" @click="saveParametersToNode()">Save and close</div><div class="w3-btn w3-yellow" @click="saveParametersToNode(false)">Save</div><div class="w3-btn w3-red" onclick="closeLeftMenu()">Cancel</div></div></template></div></div></div></div><script>function prepareSVGURL(svg) {
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
+    function togglelibraryOfBlocks() {
+      if (document.getElementById("libraryOfBlocks").style.display === "none") {
+        changeWidthAndMargin("libraryOfBlocks", "mynetwork", true);
+        changeWidthAndMargin("libraryOfBlocks", "toolBar", true);
+        changeWidthAndMargin("libraryOfBlocks", "statusBar", true);
+      } else {
+        changeWidthAndMargin("libraryOfBlocks", "mynetwork", false);
+        changeWidthAndMargin("libraryOfBlocks", "toolBar", false);
+        changeWidthAndMargin("libraryOfBlocks", "statusBar", false);
+      }
+      outln.refresh();
+    }
+
+    function changeWidthAndMargin(bar, element, showBar = false) {
+      if (showBar) {
+        document.getElementById(bar).style.display = "block";
+        document.getElementById(
+          element
+        ).style.marginLeft = document.getElementById(bar).style.width;
+        var newWidth =
+          document.getElementById(element).clientWidth -
+          document.getElementById(bar).clientWidth;
+        document.getElementById(element).style.width = newWidth + "px";
+      } else {
+        document.getElementById(element).style.marginLeft = "0px";
+        document.getElementById(element).style.width = "100%";
+        document.getElementById(bar).style.display = "none";
+      }
+    }
+
+    function openLeftMenu(content = "EDIT_BLOCK") {
+      /*if (content === "EDIT_BLOCK") {
+        app.$set(
+          app.$data,
+          "uyamakModel",
+          createCopyOfModel(
+            network.body.nodes[network.getSelectedNodes()[0]].options
+              .uyamakModel
           )
         );
-      }
+        app.$set(
+          app.$data,
+          "parametersDisplay",
+          new Array(app.$data.uyamakModel.Parameters.length).fill(false)
+        );
+      }*/
+      app.$data.leftBarMode = content;
+      document.getElementById("leftMenuOverlay").style.display = "block";
+      document.getElementById("leftMenu").style.display = "block";
+    }
 
-      function createCopyOfModel(inModel) {
-        var outValue = JSON.parse2(JSON.stringify2(inModel));
-        blockTemplate.forEach(function(item) {
-          if (item.type === "function") {
-            outValue[item.name] = inModel[item.name];
+    function closeLeftMenu() {
+      app.$data.leftBarMode = null;
+      document.getElementById("leftMenu").style.display = "none";
+      document.getElementById("leftMenuOverlay").style.display = "none";
+    }
+
+    function openRightMenu() {
+      document.getElementById("rightMenu").style.display = "block";
+    }
+
+    function closeRightMenu() {
+      document.getElementById("rightMenu").style.display = "none";
+    }
+
+    $(document).keyup(function (e) {
+      if (e.key === "Escape") {
+        // escape key maps to keycode `27`
+        exitEditMode();
+        closeLeftMenu();
+        hideTools();
+      }
+    });
+
+    function exitEditMode() {
+      app.$data.networkState = "DESIGN";
+      network.disableEditMode();
+      document.getElementById("mynetwork").style.cursor = "";
+    }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><scritp>var editBlocksApp = new Vue({ el="editorForBlockParameters", data: { } });</scritp><script>var app = new Vue({
+      el: "#app",
+      data: {
+        fitButton: true,
+        networkState: "DESIGN",
+        leftBarMode: null,
+        uyamakModel: {},
+        parametersDisplay: null,
+        invalidInputs: [],
+        cid: null, //Category ID
+        bid: null, // Block ID
+        updatingCounter: 0,
+        user: {
+          uid: "",
+          photoURL: ""
+        },
+        toolConsts: {
+          toolDiameter: 36,
+          canvas: {
+            x: 0,
+            y: 0
+          },
+          DOM: {
+            x: 0,
+            y: 0
           }
+        },
+        networkConst: {
+          scale: 0,
+          xView: 0,
+          yView: 1,
+          halfWidth: 0,
+          halfHeight: 0
+        },
+        blocksSummary: null,
+        filterForFunctions: null,
+        hoverredBlock: {
+          name: "",
+          description: ""
+        },
+        iconText: {
+          icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
+          icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
+          icon3: "' stroke-width='10' fill='none'>",
+          icon4: "</g></svg>"
+        },
+        networkIcon: {
+          icon1: "<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='0' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
+          icon2: "'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
+          icon3: "' stroke-width='10' fill='none'>",
+          icon4: "</g></svg>"
+        },
+        tools: {
+          newFile: {
+            icon: "fas fa-file",
+            function: "openLeftMenu()",
+            text: "New file",
+            display: false,
+            y: "0",
+            x: "0",
+            order: "0"
+          },
+          saveFile: {
+            icon: "far fa-save",
+            function: "openLeftMenu()",
+            text: "Save file",
+            display: false,
+            y: "0",
+            x: "40",
+            order: "1"
+          },
+          deleteFile: {
+            icon: "far fa-trash-alt",
+            function: "openLeftMenu()",
+            text: "Delete file",
+            display: false,
+            y: "0",
+            x: "80",
+            order: "2"
+          },
+          addBlock: {
+            icon: "far fa-plus-square",
+            function: "openLeftMenu('ADD_BLOCK')",
+            text: "Add block",
+            display: false,
+            y: "0",
+            x: "120",
+            order: "3"
+          },
+          editBlock: {
+            icon: "far fa-edit",
+            function: "openLeftMenu('EDIT_BLOCK')",
+            text: "Edit block",
+            display: false,
+            y: "0",
+            x: "160",
+            order: "4"
+          },
+          addConnection: {
+            icon: "fas fa-project-diagram",
+            function: "openLeftMenu()",
+            text: "Add connection",
+            display: false,
+            y: "0",
+            x: "200",
+            order: "5"
+          },
+          editConnection: {
+            icon: "fas fa-pencil-alt",
+            function: "openLeftMenu()",
+            text: "Edit connection",
+            display: false,
+            y: "0",
+            x: "240",
+            order: "6"
+          },
+          delete: {
+            icon: "fas fa-eraser",
+            function: "openLeftMenu()",
+            text: "Delete",
+            display: false,
+            y: "0",
+            x: "280",
+            order: "7"
+          },
+          filesView: {
+            icon: "far fa-folder-open",
+            function: "openLeftMenu()",
+            text: "Files view",
+            display: false,
+            y: "0",
+            x: "320",
+            order: "8"
+          },
+          simView: {
+            icon: "fas fa-play",
+            function: "openLeftMenu()",
+            text: "Simulation view",
+            display: false,
+            y: "0",
+            x: "360",
+            order: "9"
+          }
+        }
+      },
+      beforeUpdate: function () {
+        //removeAlltheObjectURLsForSVGImages();
+      },
+      updated: function () {
+        var dragElt = document.createElement("div");
+        dragElt.style.border = "dashed black 1px";
+        dragElt.style.width = "100px";
+        dragElt.style.height = "100px";
+        dragElt.innerHTML = "<h1>Hello</h1>";
+        var x = document.getElementsByClassName("dragThisBlock");
+        for (i = 0; i < x.length; i++) {
+          var ds = mxUtils.makeDraggable(
+            x[i],
+            graph,
+            funct,
+            dragElt,
+            0,
+            0,
+            true,
+            true
+          );
+          ds.setGuidesEnabled(true);
+          console.log(ds);
+        }
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      },
+      computed: {
+        parametersValidationComments: function () {
+          return this.uyamakModel.ValidateParams();
+        },
+        inputErrors: function () {
+          return (
+            "<table class='w3-table'>" +
+            this.invalidInputs
+            .map(function (currentValue, index, arr) {
+              return (
+                "<tr><td>" +
+                app.$data.uyamakModel.Parameters[
+                  parseInt(currentValue.split(",")[0])
+                ].Name +
+                " at [" +
+                (parseInt(currentValue.split(",")[1]) + 1) +
+                ", " +
+                (parseInt(currentValue.split(",")[2]) + 1) +
+                "]" +
+                "</td></tr>"
+              );
+            })
+            .join("") +
+            "</table>"
+          );
+        },
+        blocksSummaryArray: function () {
+          try {
+            const tempSourceArray = Object.keys(this.blocksSummary).map(
+              function (key) {
+                return {
+                  key: key,
+                  name: app.$data.blocksSummary[key].name,
+                  order: app.$data.blocksSummary[key].order,
+                  display: true
+                };
+              }
+            );
+            console.log(tempSourceArray);
+            return tempSourceArray.sort((a, b) => a.order - b.order);
+          } catch (e) {
+            console.log(e);
+            console.log("Data is not ready for displaying categories");
+          }
+        }
+      },
+      methods: {
+        makeDraggableIcons: function () {
+          var ds = mxUtils.makeDraggable(
+            img,
+            graph,
+            funct,
+            dragElt,
+            0,
+            0,
+            true,
+            true
+          );
+          ds.setGuidesEnabled(true);
+        },
+        saveParametersToNode: function (close = true) {
+          network.editNode();
+          if (close) closeLeftMenu();
+        },
+        validateParamCellEntry: function (index, index1, index2) {
+          var tempValidateItem = index + "," + index1 + "," + index2;
+          var outValue;
+          var tempValue = this.uyamakModel.Parameters[index].Value[index1][
+            index2
+          ];
+          try {
+            switch (this.uyamakModel.Parameters[index].Type) {
+              case "Integer":
+                outValue =
+                  typeof math.evaluate(tempValue) === "number" &&
+                  math.evaluate(tempValue) % 1 === 0;
+                break;
+              case "Real":
+                outValue = typeof math.evaluate(tempValue) === "number";
+                break;
+              case "Complex":
+                outValue =
+                  math.evaluate(tempValue).type === "Complex" ||
+                  typeof math.evaluate(tempValue) === "number";
+                break;
+              case "Text":
+              case "Color":
+              case "Option":
+                outValue = tempValue !== "" && tempValue !== null;
+                break;
+            }
+          } catch (e) {
+            console.log(e);
+            outValue = false;
+          }
+          var tempIndex = this.invalidInputs.indexOf(tempValidateItem);
+          if (outValue) {
+            if (tempIndex >= 0) this.invalidInputs.splice(tempIndex, 1);
+          } else {
+            if (tempIndex < 0) this.invalidInputs.push(tempValidateItem);
+          }
+          return outValue;
+        },
+        getBlockDetails: function () {
+          try {
+            return this.uyamakModel.Details();
+          } catch (e) {
+            console.log(e);
+            return "¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support.";
+          }
+        },
+        valueDimensionsModify: function (func, index) {
+          var tempItem;
+          switch (this.uyamakModel.Parameters[index].Type) {
+            case "Integer":
+            case "Real":
+            case "Complex":
+              tempItem = 0;
+              break;
+            case "Text":
+              tempItem = "";
+              break;
+            case "Color":
+              tempItem = "Black";
+              break;
+          }
+          switch (func) {
+            case 0:
+              this.uyamakModel.Parameters[index].Value.push(
+                new Array(
+                  this.uyamakModel.Parameters[index].Value[0].length
+                ).fill(tempItem)
+              );
+              break;
+            case 1:
+              if (this.uyamakModel.Parameters[index].Value.length > 1)
+                this.uyamakModel.Parameters[index].Value.pop();
+              break;
+            case 2:
+              this.uyamakModel.Parameters[index].Value.map(function (val) {
+                return val.push(tempItem);
+              });
+              break;
+            case 3:
+              if (this.uyamakModel.Parameters[index].Value[0].length > 1) {
+                this.uyamakModel.Parameters[index].Value.map(function (val) {
+                  return val.pop();
+                });
+              }
+              break;
+          }
+          this.updatingCounter++;
+        },
+        getColorsForTheCategory: function () {
+          try {
+            return this.blocksSummary[this.cid].colors;
+          } catch (e) {
+            return {
+              fg: "#000000",
+              bg: "#ffffff"
+            };
+          }
+        },
+        createIconForNetwork: function () {
+          return (
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(
+              this.networkIcon.icon1 +
+              this.blocksSummary[this.cid].colors.bg +
+              this.networkIcon.icon2 +
+              this.blocksSummary[this.cid].colors.fg +
+              this.networkIcon.icon3 +
+              this.blocksSummary[this.cid].blocks[this.bid].icon +
+              this.networkIcon.icon4
+            )
+          );
+        },
+        addAEdge: function () {
+          document.getElementById("mynetwork").style.cursor =
+            "url(/images/link-icon.png), auto";
+          this.networkState = "ADD_EDGE";
+          network.addEdgeMode();
+        },
+        addABlock: function (categoryID, blockID) {
+          this.cid = categoryID;
+          this.bid = blockID;
+          pic =
+            this.iconText.icon1 +
+            this.blocksSummary[categoryID].colors.bg +
+            this.iconText.icon2 +
+            this.blocksSummary[categoryID].colors.fg +
+            this.iconText.icon3 +
+            this.blocksSummary[categoryID].blocks[blockID].icon +
+            this.iconText.icon4;
+          let url = this.svgTextToURL(
+            "<svg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'>" +
+            pic +
+            "</svg>"
+          );
+          //console.log(url);
+          if (!!CUSTOM_ICON) URL.revokeObjectURL(CUSTOM_ICON);
+          document.getElementById("mynetwork").style.cursor =
+            "url(" + url + "), auto";
+          CUSTOM_ICON = url;
+          closeLeftMenu();
+          this.networkState = "ADD_NODE";
+          network.addNodeMode();
+        },
+        toggleParamDisplay: function (index) {
+          console.log(this.parametersDisplay);
+          this.updatingCounter++;
+          this.parametersDisplay[index] = !this.parametersDisplay[index];
+        },
+        toggleBlockDisplay: function (index) {
+          this.updatingCounter++;
+          this.blocksSummaryArray[index].display = !this.blocksSummaryArray[
+            index
+          ].display;
+        },
+        prepareSVGURL: function (svg) {
+          return (
+            "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg)
+          );
+        },
+        svgTextToURL: function (svg) {
+          svg = svg;
+          let tempBlob = new Blob([svg], {
+            type: "image/svg+xml"
+          });
+          let url = URL.createObjectURL(tempBlob);
+          return url;
+        },
+        getFilteredBlocks: function (inBlocks) {
+          try {
+            const tempBlocksArray = [];
+            for (let [key, value] of Object.entries(inBlocks)) {
+              tempBlocksArray.push(
+                Object.assign({
+                    key: key
+                  },
+                  value
+                )
+              );
+            }
+            return tempBlocksArray
+              .filter(tempBlocksArrayItem => {
+                return (
+                  !app.$data.filterForFunctions ||
+                  tempBlocksArrayItem.name
+                  .toLowerCase()
+                  .search(app.$data.filterForFunctions.toLowerCase()) >=
+                  0 ||
+                  tempBlocksArrayItem.description
+                  .toLowerCase()
+                  .search(app.$data.filterForFunctions.toLowerCase()) >= 0
+                );
+              })
+              .sort((a, b) => {
+                return a.order - b.order;
+              });
+          } catch (e) {
+            console.log(e);
+            console.log("Data is not ready for applying filter");
+          }
+        }
+      }
+    });</script><script>function holdToFinishAProcess(title = null, description = null) {
+      if (title)
+        document.getElementById("waitForProcessToFinish").style.display =
+        "block";
+      else
+        document.getElementById("waitForProcessToFinish").style.display =
+        "none";
+      if (title) document.getElementById("DOMWaitingHead").innerText = title;
+      if (description)
+        document.getElementById("DOMWaitingDesc").innerText = description;
+    }
+    holdToFinishAProcess(
+      "Connecting to the server.",
+      "Please wait while loading the app. If this process takes longer than a minute, check your internet connection and refresh the page."
+    );</script><script>var TempRecAttempt;
+    var functions = firebase.functions();
+    var db = firebase.firestore();
+    const settings = {
+      timestampsInSnapshots: true
+    };
+    db.settings(settings);
+    var validateUserSession = firebase
+      .functions()
+      .httpsCallable("validateUserSession");
+    firebase.auth().onAuthStateChanged(function (user) {
+      holdToFinishAProcess("Loading the app.");
+      TempRecAttempt = setInterval(function () {
+        console.log("attempt");
+        if (app) {
+          holdToFinishAProcess("Verifying the license.");
+          clearInterval(TempRecAttempt);
+          user ? handleSignedInUser(user) : handleSignedOutUser();
+        }
+      }, 500);
+    });
+
+    function handleSignedInUser(user) {
+      validateUserSession().then(function (result) {
+        console.log(result.data.isSuccess);
+        if (result.data.isSuccess) loadTheGUI();
+        else
+          window.location.replace(
+            "/platform/admin?redirect=" + location.pathname
+          );
+      });
+    }
+
+    function handleSignedOutUser() {
+      window.location.replace("/sign-in?redirect=" + location.pathname);
+    }
+
+    function loadTheGUI() {
+      app.$set(app.$data.user, "uid", firebase.auth().currentUser.uid);
+      app.$set(
+        app.$data.user,
+        "photoURL",
+        firebase.auth().currentUser.photoURL
+      );
+      db.collection("blocks-summary")
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection("blocks-summary")
+              .doc(doc.id)
+              .get()
+              .then(function (doc) {
+                var dbData = doc.data();
+                console.log(doc.id, " => ", dbData);
+                if (!app.$data.blocksSummary)
+                  app.$set(app.$data, "blocksSummary", {});
+                app.$set(app.$data.blocksSummary, doc.id, dbData);
+                var headDiv = document.createElement("div");
+                headDiv.classList.add("w3-theme-d2");
+                headDiv.classList.add("w3-hover-blue");
+                headDiv.style.cursor = "pointer";
+                headDiv.innerHTML = "<span><i class='fas fa-caret-down fa-fw'></i></span><span>" + dbData.name +
+                  "</span>";
+                var bodyDiv = document.createElement("div");
+                bodyDiv.style.display = "block";
+                for (var key in dbData.blocks) {
+                  addANewDraggableIcon(
+                    bodyDiv,
+                    Object.assign({
+                        key: key,
+                        colors: dbData.colors
+                      },
+                      dbData.blocks[key]
+                    )
+                  );
+                }
+                sortTheDoms(bodyDiv);
+                var summDiv = document.createElement("div");
+                summDiv.setAttribute(
+                  "id",
+                  "blocks_" + dbData.order + "for_" + doc.id
+                );
+                headDiv.addEventListener("click", function () {
+                  if (bodyDiv.style.display === "block") {
+                    bodyDiv.style.display = "none";
+                    headDiv.firstElementChild.innerHTML = "<i class='fas fa-caret-right fa-fw'></i>";
+                  } else {
+                    bodyDiv.style.display = "block";
+                    headDiv.firstElementChild.innerHTML = "<i class='fas fa-caret-down fa-fw'></i>";
+                  }
+                });
+                summDiv.appendChild(headDiv);
+                summDiv.appendChild(bodyDiv);
+                document.getElementById("blocksBar").appendChild(summDiv);
+                sortTheDoms(document.getElementById("blocksBar"));
+              })
+              .catch(function (error) {
+                console.log("Error getting cached document:", error);
+              });
+          });
         });
-        return outValue;
+      main(
+        document.getElementById("mynetwork"),
+        document.getElementById("outlineContainer")
+      );
+      holdToFinishAProcess(false);
+    }
+
+    function sortTheDoms(list) {
+      var items = list.childNodes;
+      var itemsArr = [];
+      for (var i in items) {
+        if (items[i].nodeType == 1) {
+          // get rid of the whitespace text nodes
+          itemsArr.push(items[i]);
+        }
       }
 
-      function assignDataToNode(inModel) {
-        GSK_DATA.uyamakModel = createCopyOfModel(inModel);
-        GSK_DATA.uyamakModel.Constructor(GSK_DATA);
-        var tempIconData = GSK_DATA.uyamakModel.Icon();
-        GSK_DATA.shape = tempIconData.shape;
-        if (GSK_DATA.shape === "image")
-          GSK_DATA.image = createIconForNetwork(
-            GSK_DATA.uyamakModel.Category,
-            tempIconData.icon
-          );
-        else {
-          var tempColors = app.getColorsForTheCategory();
-          GSK_DATA.font = {
-            color: tempColors.fg,
-            background: tempColors.bg,
-            face: "Courier New",
-            size: 30
-          };
+      itemsArr.sort(function (a, b) {
+        return a.id === b.id ? 0 : a.id > b.id ? 1 : -1;
+      });
+
+      for (i = 0; i < itemsArr.length; ++i) {
+        list.appendChild(itemsArr[i]);
+      }
+    }
+
+    var iconText = {
+      icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
+      icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
+      icon3: "' stroke-width='10' fill='none'>",
+      icon4: "</g></svg>"
+    };
+
+    function getIconWith(colors, path) {
+      return (
+        iconText.icon1 +
+        colors.bg +
+        iconText.icon2 +
+        colors.fg +
+        iconText.icon3 +
+        path +
+        iconText.icon4
+      );
+    }
+
+    function svgTextToURL(svg) {
+      svg = svg;
+      let tempBlob = new Blob([svg], {
+        type: "image/svg+xml"
+      });
+      let url = URL.createObjectURL(tempBlob);
+      return url;
+    }
+
+    const blockTemplate = [{
+        name: "Category",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Name",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Description",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Parameters",
+        type: "json",
+        argument: ""
+      },
+      {
+        name: "Label",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "MaxInTerminals",
+        type: "float",
+        argument: ""
+      },
+      {
+        name: "MaxOutTerminals",
+        type: "float",
+        argument: ""
+      },
+      {
+        name: "Icon",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Init",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "End",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Constructor",
+        type: "function",
+        argument: "Data"
+      },
+      {
+        name: "Destructor",
+        type: "function",
+        argument: "Data"
+      },
+      {
+        name: "RunTimeExec",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Evaluate",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Details",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "ValidateParams",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "bid",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Colors",
+        type: "object",
+        argument: ""
+      },
+      {
+        name: "InTerminals",
+        type: "float",
+        argument: ""
+      },
+      {
+        name: "OutTerminals",
+        type: "float",
+        argument: ""
+      }
+    ];
+
+    function loadABlock() {
+      holdToFinishAProcess("Downloading the block from server");
+      try {
+        if (!BLOCKS_LIB || !BLOCKS_LIB[app.$data.bid]) {
+          db.collection("blocks")
+            .doc(app.$data.bid)
+            .get()
+            .then(function (doc) {
+              holdToFinishAProcess("Loading block's functionaliy");
+              if (doc.exists) {
+                convertDBDataToModel(doc.id, doc.data());
+                assignDataToNode(BLOCKS_LIB[app.$data.bid]);
+              } else throw "Uyamak: Block Not found";
+            });
+        } else {
+          assignDataToNode(BLOCKS_LIB[app.$data.bid]);
         }
-        GSK_DATA.label = GSK_DATA.uyamakModel.Label();
-        GSK_DATA.title = GSK_DATA.uyamakModel.Details();
-        GSK_CALLBACK(GSK_DATA);
+      } catch (e) {
+        console.log(e);
+        GSK_CALLBACK(null);
         exitEditMode();
         holdToFinishAProcess(false);
+        notyf.error("Error in adding this block.");
       }
+    }
 
-      function convertDBDataToModel(bid, dbBlockData) {
-        BLOCKS_LIB[bid] = {};
-        blockTemplate.forEach(function(item) {
-          let tempObj = {};
-          switch (item.type) {
-            case "float":
-              if (!dbBlockData[item.name]) tempObj[item.name] = 0;
-              else tempObj[item.name] = parseFloat(dbBlockData[item.name]);
-              Object.assign(BLOCKS_LIB[bid], tempObj);
-              break;
-            case "string":
-              if (!dbBlockData[item.name]) tempObj[item.name] = "";
-              else tempObj[item.name] = dbBlockData[item.name].toString();
-              Object.assign(BLOCKS_LIB[bid], tempObj);
-              break;
-            case "function":
-              if (!dbBlockData[item.name]) tempObj[item.name] = "";
-              else tempObj[item.name] = dbBlockData[item.name].toString();
-              tempObj[item.name] = eval(
-                "(function (" +
-                  item.argument +
-                  "){" +
-                  dbBlockData[item.name] +
-                  "})"
+    function createIconForNetwork(cid, iconText) {
+      return (
+        "data:image/svg+xml;charset=utf-8," +
+        encodeURIComponent(
+          app.$data.networkIcon.icon1 +
+          app.$data.blocksSummary[cid].colors.bg +
+          app.$data.networkIcon.icon2 +
+          app.$data.blocksSummary[cid].colors.fg +
+          app.$data.networkIcon.icon3 +
+          iconText +
+          app.$data.networkIcon.icon4
+        )
+      );
+    }
+
+    function createCopyOfModel(inModel) {
+      var outValue = JSON.parse2(JSON.stringify2(inModel));
+      blockTemplate.forEach(function (item) {
+        if (item.type === "function") {
+          outValue[item.name] = inModel[item.name];
+        }
+      });
+      return outValue;
+    }
+
+    function assignDataToNode(inModel) {
+      GSK_DATA.uyamakModel = createCopyOfModel(inModel);
+      GSK_DATA.uyamakModel.Constructor(GSK_DATA);
+      var tempIconData = GSK_DATA.uyamakModel.Icon();
+      GSK_DATA.shape = tempIconData.shape;
+      if (GSK_DATA.shape === "image")
+        GSK_DATA.image = createIconForNetwork(
+          GSK_DATA.uyamakModel.Category,
+          tempIconData.icon
+        );
+      else {
+        var tempColors = app.getColorsForTheCategory();
+        GSK_DATA.font = {
+          color: tempColors.fg,
+          background: tempColors.bg,
+          face: "Courier New",
+          size: 30
+        };
+      }
+      GSK_DATA.label = GSK_DATA.uyamakModel.Label();
+      GSK_DATA.title = GSK_DATA.uyamakModel.Details();
+      GSK_CALLBACK(GSK_DATA);
+      exitEditMode();
+      holdToFinishAProcess(false);
+    }
+
+    function convertDBDataToModel(bid, dbBlockData) {
+      BLOCKS_LIB[bid] = {};
+      blockTemplate.forEach(function (item) {
+        let tempObj = {};
+        switch (item.type) {
+          case "float":
+            if (!dbBlockData[item.name]) tempObj[item.name] = 0;
+            else tempObj[item.name] = parseFloat(dbBlockData[item.name]);
+            Object.assign(BLOCKS_LIB[bid], tempObj);
+            break;
+          case "string":
+            if (!dbBlockData[item.name]) tempObj[item.name] = "";
+            else tempObj[item.name] = dbBlockData[item.name].toString();
+            Object.assign(BLOCKS_LIB[bid], tempObj);
+            break;
+          case "function":
+            if (!dbBlockData[item.name]) tempObj[item.name] = "";
+            else tempObj[item.name] = dbBlockData[item.name].toString();
+            tempObj[item.name] = eval(
+              "(function (" +
+              item.argument +
+              "){" +
+              dbBlockData[item.name] +
+              "})"
+            );
+            Object.assign(BLOCKS_LIB[bid], tempObj);
+            break;
+          case "json":
+            if (!dbBlockData[item.name]) tempObj[item.name] = [];
+            else tempObj[item.name] = JSON.parse(dbBlockData[item.name]);
+            Object.assign(BLOCKS_LIB[bid], tempObj);
+            break;
+        }
+      });
+    }
+
+    function pullDBAndGenModel(bid) {
+      return new Promise(function (resolve, reject) {
+        if (eval("typeof umk_" + bid) === "function") {
+          resolve();
+        } else {
+          db.collection("blocks")
+            .doc(bid)
+            .get()
+            .then(function (doc) {
+              if (doc.exists) {
+                createAModel(doc.id, doc.data());
+                resolve();
+              }
+            })
+            .catch(function (e) {
+              console.log(e);
+              notyf.error(
+                "Unable to load the block. If your internet connection is not a problem, please contact the support."
               );
-              Object.assign(BLOCKS_LIB[bid], tempObj);
-              break;
-            case "json":
-              if (!dbBlockData[item.name]) tempObj[item.name] = [];
-              else tempObj[item.name] = JSON.parse(dbBlockData[item.name]);
-              Object.assign(BLOCKS_LIB[bid], tempObj);
-              break;
-          }
-        });
-      }
+              reject();
+            });
+        }
+      });
+    }
 
-      function pullDBAndGenModel(bid) {
-        return new Promise(function(resolve, reject) {
-          if (eval("typeof umk_" + bid) === "function") {
-            resolve();
-          } else {
-            db.collection("blocks")
-              .doc(bid)
-              .get()
-              .then(function(doc) {
-                if (doc.exists) {
-                  createAModel(doc.id, doc.data());
-                  resolve();
-                }
-              })
-              .catch(function(e) {
-                console.log(e);
-                notyf.error(
-                  "Unable to load the block. If your internet connection is not a problem, please contact the support."
-                );
-                reject();
-              });
-          }
-        });
-      }
-
-      function createAModel(bid, dbBlockData) {
-        var constructorStr = "window.umk_" + bid + " = function(obj){";
-        var prototypesStr = "";
-        blockTemplate.forEach(function(item) {
-          let tempObj = {};
-          var tempVal;
-          switch (item.type) {
-            case "float":
-              if (!dbBlockData[item.name]) tempVal = 0;
-              else tempVal = parseFloat(dbBlockData[item.name]);
-              constructorStr +=
-                "this." + item.name + "=" + tempVal.toString() + ";";
-              break;
-            case "string":
-              if (!dbBlockData[item.name]) tempVal = "";
-              else tempVal = dbBlockData[item.name].toString();
-              constructorStr +=
-                "this." + item.name + '="' + tempVal.toString() + '";';
-              break;
-            case "json":
-              if (!dbBlockData[item.name]) tempVal = [];
-              else tempVal = JSON.parse(dbBlockData[item.name]);
-              constructorStr +=
-                "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
-              break;
-            case "object":
-              if (!dbBlockData[item.name]) tempVal = {};
-              else tempVal = dbBlockData[item.name];
-              constructorStr +=
-                "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
-              break;
-            case "function":
-              if (!dbBlockData[item.name]) tempVal = "";
-              else tempVal = dbBlockData[item.name].toString();
-              prototypesStr +=
-                "\nwindow.umk_" +
-                bid +
-                ".prototype." +
-                item.name +
-                "=function(" +
-                item.argument +
-                "){" +
-                tempVal +
-                "}";
-              break;
-          }
-        });
-        constructorStr += "for(var prop in obj){this[prop] = obj[prop];}";
-        constructorStr += "}";
-        eval(constructorStr);
-        eval(prototypesStr);
-        //console.log(constructorStr);
-      }</script></body></html>
+    function createAModel(bid, dbBlockData) {
+      var constructorStr = "window.umk_" + bid + " = function(obj){";
+      var prototypesStr = "";
+      blockTemplate.forEach(function (item) {
+        let tempObj = {};
+        var tempVal;
+        switch (item.type) {
+          case "float":
+            if (!dbBlockData[item.name]) tempVal = 0;
+            else tempVal = parseFloat(dbBlockData[item.name]);
+            constructorStr +=
+              "this." + item.name + "=" + tempVal.toString() + ";";
+            break;
+          case "string":
+            if (!dbBlockData[item.name]) tempVal = "";
+            else tempVal = dbBlockData[item.name].toString();
+            constructorStr +=
+              "this." + item.name + '="' + tempVal.toString() + '";';
+            break;
+          case "json":
+            if (!dbBlockData[item.name]) tempVal = [];
+            else tempVal = JSON.parse(dbBlockData[item.name]);
+            constructorStr +=
+              "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
+            break;
+          case "object":
+            if (!dbBlockData[item.name]) tempVal = {};
+            else tempVal = dbBlockData[item.name];
+            constructorStr +=
+              "this." + item.name + "=" + JSON.stringify(tempVal) + ";";
+            break;
+          case "function":
+            if (!dbBlockData[item.name]) tempVal = "";
+            else tempVal = dbBlockData[item.name].toString();
+            prototypesStr +=
+              "\nwindow.umk_" +
+              bid +
+              ".prototype." +
+              item.name +
+              "=function(" +
+              item.argument +
+              "){" +
+              tempVal +
+              "}";
+            break;
+        }
+      });
+      constructorStr += "for(var prop in obj){this[prop] = obj[prop];}";
+      constructorStr += "}";
+      eval(constructorStr);
+      eval(prototypesStr);
+      //console.log(constructorStr);
+    }</script></body></html>
