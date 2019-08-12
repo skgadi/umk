@@ -96,9 +96,11 @@
         //eStyle["startArrow"]="oval";
 
         //Block properties editor
-        graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
-          selectionChanged();
-        });
+        graph
+          .getSelectionModel()
+          .addListener(mxEvent.CHANGE, function (sender, evt) {
+            selectionChanged();
+          });
         //Change floding and unfolding icons
         graph.collapsedImage = new mxImage("images/plus.svg", 10, 10);
         graph.expandedImage = new mxImage("images/minus.svg", 10, 10);
@@ -431,15 +433,15 @@
         });
         //Toggle Blocks drawer
         keyHandler.bindControlKey(66, function (evt) {
-          toggleSideBar('libraryOfBlocks');
+          toggleSideBar("libraryOfBlocks");
         });
         //Toggle Editor drawer
         keyHandler.bindControlKey(69, function (evt) {
-          toggleSideBar('editorForParameters');
+          toggleSideBar("editorForParameters");
         });
         //Toggle Printer drawer
         keyHandler.bindControlKey(80, function (evt) {
-          toggleSideBar('printingTheModel');
+          toggleSideBar("printingTheModel");
         });
         //Toggle Zoom
         keyHandler.bindControlKey(107, function (evt) {
@@ -1017,7 +1019,9 @@
           var p1 = graph.insertVertex(
             v1,
             null,
-            "$u" + (umkModel.TerminalsIn.value > 1 ? "_{" + i + "}" : "") + "(t)$",
+            "$u" +
+            (umkModel.TerminalsIn.value > 1 ? "_{" + i + "}" : "") +
+            "(t)$",
             0,
             i / (umkModel.TerminalsIn.value + 1),
             16,
@@ -1037,7 +1041,9 @@
           var p2 = graph.insertVertex(
             v1,
             null,
-            "$y" + (umkModel.TerminalsOut.max > 1 ? "_{" + i + "}" : "") + "(t)$",
+            "$y" +
+            (umkModel.TerminalsOut.max > 1 ? "_{" + i + "}" : "") +
+            "(t)$",
             1,
             i / (umkModel.TerminalsOut.value + 1),
             16,
@@ -1054,10 +1060,25 @@
           p2.geometry.offset = new mxPoint(-8, -8);
         }
         graph.setSelectionCell(v1);
-        /*var Details = graph.insertVertex(v1, null, "<div>sdf"+tempDetails+"sdfff<\div>", 0.5, 0, 0, 0, "verticalAlign=top;strokeColor=white;fontColor=" + umkModel.Colors
-					.fg + ";", true)
-				Details.geometry.offset = new mxPoint(0, 30);
-				Details.setConnectable(false);*/
+        var EO = graph.insertVertex(
+          v1,
+          null,
+          "",
+          0.5,
+          1,
+          0,
+          0,
+          "constituent=1;align=center;verticalAlign=bottom;fillColor=" +
+          umkModel.Colors.bg +
+          ";fontColor=" +
+          umkModel.Colors.fg +
+          ";strokeColor=" +
+          umkModel.Colors.bg +
+          ";",
+          true
+        );
+        EO.geometry.offset = new mxPoint(0, 00);
+        EO.setConnectable(false);
       } finally {
         model.endUpdate();
       }
@@ -1517,13 +1538,31 @@
       <i class="fa-fw far fa-edit"></i>
     </div>
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('printingTheModel')"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fas fa-print"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
       onclick="if (graph.isEnabled()) graph.removeCells();" title="Delete (Del)&#10;Delete the selected blocks.">
       <i class="fa-fw fas fa-trash-alt"></i>
+    </div>
+    <div class="w3-bar-item" style="padding: 0px;">
+      <i class="fa-fw fas fa-ellipsis-v"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
+      onclick="toggleSideBar('printingTheModel')"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-print"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
+      onclick="toggleSideBar('printingTheModel')"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-cogs"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
+      onclick="toggleSideBar('printingTheModel')"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-sort-numeric-up"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
+      onclick="toggleSideBar('printingTheModel')"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-play"></i>
     </div>
     <div class="w3-bar-item" style="padding: 0px;">
       <i class="fa-fw fas fa-ellipsis-v"></i>
@@ -1612,16 +1651,39 @@
         Close
       </div>
     </div>
-    <div v-if="!!uyamakModel">
+    <div v-if="!!cellModel.model">
+      <div>
+        <p class="w3-large" style="margin:0px;"><b>Connection name</b></p>
+        <input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" />
+        <div v-html="cellModel.value"></div>
+      </div>
+      <div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue">
+        <div class="w3-right">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="w3-left">
+          Appy
+        </div>
+      </div>
+    </div>
+    <div v-else-if="!!uyamakModel">
+      <div>
+        <p class="w3-large" style="margin:0px;"><b>Block name</b></p>
+        <input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text" />
+      </div>
       <div v-if="uyamakModel.TerminalsIn.editable">
-        <p class="w3-large" style="margin:0px;"><b>Input terminals count</b></p>
+        <p class="w3-large" style="margin:0px;">
+          <b>Input terminals count</b>
+        </p>
         <input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsIn.value" type="number"
-          v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max">
+          v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max" />
       </div>
       <div v-if="uyamakModel.TerminalsOut.editable">
-        <p class="w3-large" style="margin:0px;"><b>Output terminals count</b></p>
+        <p class="w3-large" style="margin:0px;">
+          <b>Output terminals count</b>
+        </p>
         <input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value" type="number"
-          v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max">
+          v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max" />
       </div>
       <div v-if="uyamakModel.Parameters.length>0">
         <p class="w3-large" style="margin:0px;"><b>Parameters</b></p>
@@ -1740,16 +1802,18 @@
       </div>
     </div>
     <select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value">
-      <option v-for="(value, index) in pageSize.options" v-bind:value="index">{{value}}</option>
+      <option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option>
     </select>
     <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value">
-      <option v-for="(value, index) in orientation.options" v-bind:value="index">{{value}}</option>
+      <option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option>
     </select>
     <label>Page title</label>
     <input class="w3-input w3-border w3-border-theme" v-model="title" type="text" />
-    <input id="forcePages" class="w3-check" type="checkbox" checked="checked" v-model="fit.force">
-    <label for="forcePages">Scale the graph to fit in <input class="w3-input w3-border-theme w3-border-0" type="number"
-        min="1" step="1" v-model="fit.numberOfPages" style="display:inline-flex; width:50px;"> page(s).</label>
+    <input id="forcePages" class="w3-check" type="checkbox" checked="checked" v-model="fit.force" />
+    <label for="forcePages">Scale the graph to fit in
+      <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model="fit.numberOfPages"
+        style="display:inline-flex; width:50px;" />
+      page(s).</label>
     <div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()">
       <div class="w3-right">
         <i class="fas fa-file-import"></i>
@@ -1776,12 +1840,13 @@
     <div class="w3-sidebar w3-card w3-animate-left"
       style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu"></div>
   </div>
+  <div id="tempSideForAlwaysHidden" style="width:0px;"></div>
   <script>
     function prepareSVGURL(svg) {
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     }
 
-    function toggleSideBar(sidebar) {
+    function toggleSideBar(sidebar="tempSideForAlwaysHidden") {
       var thisSidebar = document.getElementById(sidebar);
       var allTheSidebars = document.getElementsByClassName("w3-sidebar");
       var currentStat = thisSidebar.style.display;
@@ -1829,46 +1894,61 @@
   </script>
   <script>
     var printingTheModel = new Vue({
-      "el": "#printingTheModel",
-      "data": {
-        "addStartPages": [],
-        "addEndPages": [],
-        "title": "Uyamak model",
-        "orientation": {
-          "value": "portrait",
-          "options": {
-            "portrait": "Portrait",
-            "landscape": "Landscape"
+      el: "#printingTheModel",
+      data: {
+        addStartPages: [],
+        addEndPages: [],
+        title: "Uyamak model",
+        orientation: {
+          value: "portrait",
+          options: {
+            portrait: "Portrait",
+            landscape: "Landscape"
           }
         },
-        "pageSize": {
-          "value": "letter",
-          "options": {
-            "letter": "Letter",
-            "a4": "A4"
+        pageSize: {
+          value: "letter",
+          options: {
+            letter: "Letter",
+            a4: "A4"
           }
         },
-        "fit": {
-          "force": false,
-          "numberOfPages": 1
+        fit: {
+          force: false,
+          numberOfPages: 1
         }
-
       },
-      "methods": {
-        "prepareMPDoc": function () {
+      methods: {
+        prepareMPDoc: function () {
           graph.setSelectionCell();
           var scale = 1;
-          if (this.fit.force) scale = mxUtils.getScaleForPageCount(this.fit.numberOfPages, graph)
+          if (this.fit.force)
+            scale = mxUtils.getScaleForPageCount(
+              this.fit.numberOfPages,
+              graph
+            );
           var preview = new mxPrintPreview(graph, scale);
           preview.title = this.title;
-          if ((this.orientation.value === "portrait") && (this.pageSize.value === "letter")) preview.pageFormat =
-            mxConstants.PAGE_FORMAT_LETTER_PORTRAIT;
-          if ((this.orientation.value === "portrait") && (this.pageSize.value === "a4")) preview.pageFormat =
-            mxConstants.PAGE_FORMAT_A4_PORTRAIT;
-          if ((this.orientation.value === "landscape") && (this.pageSize.value === "letter")) preview.pageFormat =
-            mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE;
-          if ((this.orientation.value === "landscape") && (this.pageSize.value === "a4")) preview.pageFormat =
-            mxConstants.PAGE_FORMAT_A4_LANDSCAPE;
+          if (
+            this.orientation.value === "portrait" &&
+            this.pageSize.value === "letter"
+          )
+            preview.pageFormat = mxConstants.PAGE_FORMAT_LETTER_PORTRAIT;
+          if (
+            this.orientation.value === "portrait" &&
+            this.pageSize.value === "a4"
+          )
+            preview.pageFormat = mxConstants.PAGE_FORMAT_A4_PORTRAIT;
+          if (
+            this.orientation.value === "landscape" &&
+            this.pageSize.value === "letter"
+          )
+            preview.pageFormat = mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE;
+          if (
+            this.orientation.value === "landscape" &&
+            this.pageSize.value === "a4"
+          )
+            preview.pageFormat = mxConstants.PAGE_FORMAT_A4_LANDSCAPE;
           console.log(preview.pageFormat);
 
           var defaultWriteHead = mxPrintPreview.prototype.writeHead;
@@ -1877,11 +1957,11 @@
             doc.writeln(
               '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"><\/script>'
             );
-            doc.writeln('<script>');
+            doc.writeln("<script>");
             doc.writeln(
               'MathJax.Hub.Config({showMathMenu:false,messageStyle:"none",menuSettings:{inTabOrder:false},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\\\(","\\\\)"]],displayMath:[["\$\$","\$\$"],["\\\\[","\\\\]"]]}});'
             );
-            doc.writeln('<\/script>');
+            doc.writeln("<\/script>");
             //return doc;
           };
           preview.open();
@@ -1897,9 +1977,13 @@
       el: "#editorForParameters",
       data: {
         uyamakModel: null,
+        cellModel: {
+          model: false,
+          value: null
+        },
         invalidInputs: [],
         parametersDisplay: null,
-        updatingCounter: 0,
+        updatingCounter: 0
       },
       computed: {
         parametersValidationComments: function () {
@@ -1926,20 +2010,41 @@
             .join("") +
             "</table>"
           );
-        },
+        }
       },
       methods: {
+        applyCellValue: function () {
+          if (graph.getSelectionCell().isEdge()) {
+            graph.getSelectionCell().value = this.cellModel.value;
+            graph.refresh(graph.getSelectionCell());
+          }
+        },
         saveModel: function () {
           var editCell = graph.getSelectionCell();
           //Adjusting the number of input terminals
-          this.uyamakModel.TerminalsIn.value = Math.floor(this.uyamakModel.TerminalsIn.value);
-          if (!((this.uyamakModel.TerminalsIn.value >= this.uyamakModel.TerminalsIn.min) && (this.uyamakModel
-              .TerminalsIn.value <= this.uyamakModel.TerminalsIn.max))) {
-            if (this.uyamakModel.TerminalsIn.value > this.uyamakModel.TerminalsIn.max) this.uyamakModel
-              .TerminalsIn.value = this.uyamakModel.TerminalsIn.max;
-            else this.uyamakModel.TerminalsIn.value = this.uyamakModel.TerminalsIn.min;
+          this.uyamakModel.TerminalsIn.value = Math.floor(
+            this.uyamakModel.TerminalsIn.value
+          );
+          if (
+            !(
+              this.uyamakModel.TerminalsIn.value >=
+              this.uyamakModel.TerminalsIn.min &&
+              this.uyamakModel.TerminalsIn.value <=
+              this.uyamakModel.TerminalsIn.max
+            )
+          ) {
+            if (
+              this.uyamakModel.TerminalsIn.value >
+              this.uyamakModel.TerminalsIn.max
+            )
+              this.uyamakModel.TerminalsIn.value = this.uyamakModel.TerminalsIn.max;
+            else
+              this.uyamakModel.TerminalsIn.value = this.uyamakModel.TerminalsIn.min;
           }
-          if (this.uyamakModel.TerminalsIn.value !== editCell.value.TerminalsIn.value) {
+          if (
+            this.uyamakModel.TerminalsIn.value !==
+            editCell.value.TerminalsIn.value
+          ) {
             console.log(editCell);
             var dy = 1.0 / (this.uyamakModel.TerminalsIn.value + 1);
             var remainingTerminals = this.uyamakModel.TerminalsIn.value;
@@ -1948,8 +2053,9 @@
               if (editCell.children[i].geometry.x === 0) {
                 if (remainingTerminals > 0) {
                   remainingTerminals--;
-                  editCell.children[i].geometry.y = dy * (this.uyamakModel.TerminalsIn.value -
-                    remainingTerminals);
+                  editCell.children[i].geometry.y =
+                    dy *
+                    (this.uyamakModel.TerminalsIn.value - remainingTerminals);
                 } else cellsToRemove.push(editCell.children[i]);
               }
             }
@@ -1958,9 +2064,18 @@
               var p1 = graph.insertVertex(
                 editCell,
                 null,
-                "$u_{" + (this.uyamakModel.TerminalsIn.value + i - remainingTerminals + 1) + "}(t)$",
+                "$u_{" +
+                (this.uyamakModel.TerminalsIn.value +
+                  i -
+                  remainingTerminals +
+                  1) +
+                "}(t)$",
                 0,
-                dy * (this.uyamakModel.TerminalsIn.value + i - remainingTerminals + 1),
+                dy *
+                (this.uyamakModel.TerminalsIn.value +
+                  i -
+                  remainingTerminals +
+                  1),
                 16,
                 16,
                 "constituent=1;fillColor=" +
@@ -1976,14 +2091,29 @@
             }
           }
           //Adjusting the number of input terminals
-          this.uyamakModel.TerminalsOut.value = Math.floor(this.uyamakModel.TerminalsOut.value);
-          if (!((this.uyamakModel.TerminalsOut.value >= this.uyamakModel.TerminalsOut.min) && (this.uyamakModel
-              .TerminalsOut.value <= this.uyamakModel.TerminalsOut.max))) {
-            if (this.uyamakModel.TerminalsOut.value > this.uyamakModel.TerminalsOut.max) this.uyamakModel
-              .TerminalsOut.value = this.uyamakModel.TerminalsOut.max;
-            else this.uyamakModel.TerminalsOut.value = this.uyamakModel.TerminalsOut.min;
+          this.uyamakModel.TerminalsOut.value = Math.floor(
+            this.uyamakModel.TerminalsOut.value
+          );
+          if (
+            !(
+              this.uyamakModel.TerminalsOut.value >=
+              this.uyamakModel.TerminalsOut.min &&
+              this.uyamakModel.TerminalsOut.value <=
+              this.uyamakModel.TerminalsOut.max
+            )
+          ) {
+            if (
+              this.uyamakModel.TerminalsOut.value >
+              this.uyamakModel.TerminalsOut.max
+            )
+              this.uyamakModel.TerminalsOut.value = this.uyamakModel.TerminalsOut.max;
+            else
+              this.uyamakModel.TerminalsOut.value = this.uyamakModel.TerminalsOut.min;
           }
-          if (this.uyamakModel.TerminalsOut.value !== editCell.value.TerminalsOut.value) {
+          if (
+            this.uyamakModel.TerminalsOut.value !==
+            editCell.value.TerminalsOut.value
+          ) {
             console.log(editCell);
             var dy = 1.0 / (this.uyamakModel.TerminalsOut.value + 1);
             var remainingTerminals = this.uyamakModel.TerminalsOut.value;
@@ -1992,8 +2122,10 @@
               if (editCell.children[i].geometry.x === 1) {
                 if (remainingTerminals > 0) {
                   remainingTerminals--;
-                  editCell.children[i].geometry.y = dy * (this.uyamakModel.TerminalsOut.value -
-                    remainingTerminals);
+                  editCell.children[i].geometry.y =
+                    dy *
+                    (this.uyamakModel.TerminalsOut.value -
+                      remainingTerminals);
                 } else cellsToRemove.push(editCell.children[i]);
               }
             }
@@ -2002,9 +2134,18 @@
               var p1 = graph.insertVertex(
                 editCell,
                 null,
-                "$y_{" + (this.uyamakModel.TerminalsOut.value + i - remainingTerminals + 1) + "}(t)$",
+                "$y_{" +
+                (this.uyamakModel.TerminalsOut.value +
+                  i -
+                  remainingTerminals +
+                  1) +
+                "}(t)$",
                 1,
-                dy * (this.uyamakModel.TerminalsOut.value + i - remainingTerminals + 1),
+                dy *
+                (this.uyamakModel.TerminalsOut.value +
+                  i -
+                  remainingTerminals +
+                  1),
                 16,
                 16,
                 "constituent=1;fillColor=" +
@@ -2021,7 +2162,11 @@
           }
 
           //Adding model to the Block
-          eval("var tempModel = new umk_" + this.uyamakModel.bid + "(this.uyamakModel);")
+          eval(
+            "var tempModel = new umk_" +
+            this.uyamakModel.bid +
+            "(this.uyamakModel);"
+          );
           graph.getSelectionCell().setValue(tempModel);
           graph.refresh(graph.getSelectionCell());
         },
@@ -2118,26 +2263,47 @@
               break;
           }
           this.updatingCounter++;
-        },
-
+        }
       }
     });
   </script>
   <script>
     function selectionChanged() {
-      if ((graph.getSelectionCell()) && (graph.getSelectionCell().isVertex()) && (typeof graph.getSelectionCell()
-          .value === "object")) {
+      if (
+        graph.getSelectionCell() &&
+        graph.getSelectionCell().isVertex() &&
+        typeof graph.getSelectionCell().value === "object"
+      ) {
         changeEditModelWithSelectedBlock();
       } else {
         editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", null);
+        if (graph.getSelectionCell() && graph.getSelectionCell().isEdge()) {
+          console.log("hello");
+          editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
+            model: true,
+            value: graph.getSelectionCell().value || ""
+          });
+        } else {
+          editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
+            model: false,
+            value: null
+          });
+        }
       }
     }
 
     function changeEditModelWithSelectedBlock() {
-      eval("var editModel = new umk_" + graph.getSelectionCell().value.bid + "(graph.getSelectionCell().value);");
+      eval(
+        "var editModel = new umk_" +
+        graph.getSelectionCell().value.bid +
+        "(graph.getSelectionCell().value);"
+      );
       editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", editModel);
-      editBlocksApp.$set(editBlocksApp.$data, "parametersDisplay", new Array(editModel.Parameters.length).fill(false));
-
+      editBlocksApp.$set(
+        editBlocksApp.$data,
+        "parametersDisplay",
+        new Array(editModel.Parameters.length).fill(false)
+      );
     }
   </script>
 
@@ -2319,78 +2485,96 @@
     }
 
     const blockTemplate = [{
-      "name": "Category",
-      "type": "string",
-      "argument": ""
-    }, {
-      "name": "Name",
-      "type": "string",
-      "argument": ""
-    }, {
-      "name": "Description",
-      "type": "string",
-      "argument": ""
-    }, {
-      "name": "Parameters",
-      "type": "json",
-      "argument": ""
-    }, {
-      "name": "Label",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "Icon",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "Init",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "End",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "Constructor",
-      "type": "function",
-      "argument": "Data"
-    }, {
-      "name": "Destructor",
-      "type": "function",
-      "argument": "Data"
-    }, {
-      "name": "RunTimeExec",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "Evaluate",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "Details",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "ValidateParams",
-      "type": "function",
-      "argument": ""
-    }, {
-      "name": "bid",
-      "type": "string",
-      "argument": ""
-    }, {
-      "name": "Colors",
-      "type": "object",
-      "argument": ""
-    }, {
-      "name": "TerminalsIn",
-      "type": "object",
-      "argument": ""
-    }, {
-      "name": "TerminalsOut",
-      "type": "object",
-      "argument": ""
-    }];
+        name: "Category",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Name",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Description",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Parameters",
+        type: "json",
+        argument: ""
+      },
+      {
+        name: "Label",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Icon",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Init",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "End",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Constructor",
+        type: "function",
+        argument: "Data"
+      },
+      {
+        name: "Destructor",
+        type: "function",
+        argument: "Data"
+      },
+      {
+        name: "RunTimeExec",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Evaluate",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "Details",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "ValidateParams",
+        type: "function",
+        argument: ""
+      },
+      {
+        name: "bid",
+        type: "string",
+        argument: ""
+      },
+      {
+        name: "Colors",
+        type: "object",
+        argument: ""
+      },
+      {
+        name: "TerminalsIn",
+        type: "object",
+        argument: ""
+      },
+      {
+        name: "TerminalsOut",
+        type: "object",
+        argument: ""
+      }
+    ];
 
     function loadABlock() {
       holdToFinishAProcess("Downloading the block from server");
