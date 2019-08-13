@@ -27,7 +27,7 @@
   <script src="/js/augmented-json-serialization-functions.js"></script>
   <link rel="stylesheet" href="/css/notyf.min.css" />
   <script src="/js/notyf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/js/vue.min.js"></script>
 
   <!-- Sets the basepath for the library if not in same directory -->
   <script type="text/javascript">
@@ -85,11 +85,11 @@
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
         vStyle["whiteSpace"] = "wrap";
-        vStyle["arcSize"] = 15;
+        vStyle["arcSize"] = 0;
         vStyle["absoluteArcSize"] = 1;
         vStyle["rounded"] = 1;
         eStyle["edgeStyle"] = "orthogonalEdgeStyle";
-        eStyle["strokeWidth"] = 2;
+        eStyle["strokeWidth"] = 4;
         eStyle["fontSize"] = 15;
         eStyle["targetJettySize"] = 25;
         eStyle["shadow"] = false;
@@ -857,12 +857,6 @@
               (source.geometry.x == 0 && source.getEdgeCount() > 0)
             )
               outError = "Only one input is allowed per port.";
-            console.log(
-              "targer x:" +
-              target.geometry.x +
-              "; count:" +
-              target.getEdgeCount()
-            );
             return outError || defaultOut;
           } else return defaultOut;
         };
@@ -1007,7 +1001,7 @@
           umkModel.Colors.bg +
           ";fontColor=" +
           umkModel.Colors.fg +
-          ";fontSize=15;verticalAlign=top;strokeColor=" +
+          ";verticalAlign=top;strokeColor=" +
           umkModel.Colors.bg +
           ";"
         );
@@ -1024,18 +1018,18 @@
             "(t)$",
             0,
             i / (umkModel.TerminalsIn.value + 1),
-            16,
-            16,
+            8,
+            8,
             "constituent=1;fillColor=" +
             umkModel.Colors.bg +
             ";fontColor=" +
             umkModel.Colors.fg +
             ";strokeColor=" +
             umkModel.Colors.bg +
-            ";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+            ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
             true
           );
-          p1.geometry.offset = new mxPoint(-8, -8);
+          p1.geometry.offset = new mxPoint(-8, -4);
         }
         for (var i = 1; i < umkModel.TerminalsOut.value + 1; i++) {
           var p2 = graph.insertVertex(
@@ -1046,7 +1040,7 @@
             "(t)$",
             1,
             i / (umkModel.TerminalsOut.value + 1),
-            16,
+            8,
             16,
             "constituent=1;fillColor=" +
             umkModel.Colors.bg +
@@ -1054,10 +1048,10 @@
             umkModel.Colors.fg +
             ";strokeColor=" +
             umkModel.Colors.bg +
-            ";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+            ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
             true
           );
-          p2.geometry.offset = new mxPoint(-8, -8);
+          p2.geometry.offset = new mxPoint(0, -8);
         }
         graph.setSelectionCell(v1);
         var EO = graph.insertVertex(
@@ -1088,7 +1082,7 @@
       var addVertices = function (graph, evt, cell, x, y) {
         try {
           eval("var umkModel = new umk_" + data.key + "();");
-          console.log(data);
+          //console.log(data);
           umkModel.Constructor({});
           insertVertex(v1, umkModel, x, y, evt, cell);
         } catch (e) {
@@ -1390,7 +1384,7 @@
           if (cells[i].getStyle() === "group") {
             var sCells = graph.getSelectionCells();
             sCells = sCells.concat(cells[i].children);
-            console.log(sCells);
+            //console.log(sCells);
             graph.ungroupCells([cells[i]]);
             graph.setSelectionCells(sCells);
           }
@@ -1670,6 +1664,7 @@
       <div>
         <p class="w3-large" style="margin:0px;"><b>Block name</b></p>
         <input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text" />
+        <div v-html="uyamakModel.Name"></div>
       </div>
       <div v-if="uyamakModel.TerminalsIn.editable">
         <p class="w3-large" style="margin:0px;">
@@ -1811,8 +1806,8 @@
     <input class="w3-input w3-border w3-border-theme" v-model="title" type="text" />
     <input id="forcePages" class="w3-check" type="checkbox" checked="checked" v-model="fit.force" />
     <label for="forcePages">Scale the graph to fit in
-      <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model="fit.numberOfPages"
-        style="display:inline-flex; width:50px;" />
+      <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1"
+        v-model.number="fit.numberOfPages" style="display:inline-flex; width:50px;" />
       page(s).</label>
     <div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()">
       <div class="w3-right">
@@ -1846,12 +1841,12 @@
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     }
 
-    function toggleSideBar(sidebar="tempSideForAlwaysHidden") {
+    function toggleSideBar(sidebar = "tempSideForAlwaysHidden") {
       var thisSidebar = document.getElementById(sidebar);
       var allTheSidebars = document.getElementsByClassName("w3-sidebar");
       var currentStat = thisSidebar.style.display;
       var allTheMains = document.getElementsByClassName("umk_main");
-      console.log(allTheSidebars[0]);
+      //console.log(allTheSidebars[0]);
       for (var i = 0; i < allTheSidebars.length; i++)
         allTheSidebars[i].style.display = "none";
       if (currentStat === "none") thisSidebar.style.display = "block";
@@ -1922,6 +1917,8 @@
         prepareMPDoc: function () {
           graph.setSelectionCell();
           var scale = 1;
+          this.fit.numberOfPages = Math.round(this.fit.numberOfPages);
+          if (this.fit.numberOfPages < 1) this.fit.numberOfPages = 1;
           if (this.fit.force)
             scale = mxUtils.getScaleForPageCount(
               this.fit.numberOfPages,
@@ -1949,7 +1946,7 @@
             this.pageSize.value === "a4"
           )
             preview.pageFormat = mxConstants.PAGE_FORMAT_A4_LANDSCAPE;
-          console.log(preview.pageFormat);
+          //console.log(preview.pageFormat);
 
           var defaultWriteHead = mxPrintPreview.prototype.writeHead;
           preview.writePostfix = function (doc) {
@@ -2014,7 +2011,7 @@
       },
       methods: {
         applyCellValue: function () {
-          if (graph.getSelectionCell().isEdge()) {
+          if (graph.getSelectionCell().isEdge() || graph.getSelectionCell().style === "group") {
             graph.getSelectionCell().value = this.cellModel.value;
             graph.refresh(graph.getSelectionCell());
           }
@@ -2045,7 +2042,7 @@
             this.uyamakModel.TerminalsIn.value !==
             editCell.value.TerminalsIn.value
           ) {
-            console.log(editCell);
+            //console.log(editCell);
             var dy = 1.0 / (this.uyamakModel.TerminalsIn.value + 1);
             var remainingTerminals = this.uyamakModel.TerminalsIn.value;
             var cellsToRemove = [];
@@ -2076,18 +2073,18 @@
                   i -
                   remainingTerminals +
                   1),
-                16,
-                16,
+                8,
+                8,
                 "constituent=1;fillColor=" +
                 this.uyamakModel.Colors.bg +
                 ";fontColor=" +
                 this.uyamakModel.Colors.fg +
                 ";strokeColor=" +
                 this.uyamakModel.Colors.bg +
-                ";labelPosition=right;labelWidth=80;align=left;shape=ellipse;portConstraint=west;shadow=0",
+                ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
                 true
               );
-              p1.geometry.offset = new mxPoint(-8, -8);
+              p1.geometry.offset = new mxPoint(-8, -4);
             }
           }
           //Adjusting the number of input terminals
@@ -2114,7 +2111,7 @@
             this.uyamakModel.TerminalsOut.value !==
             editCell.value.TerminalsOut.value
           ) {
-            console.log(editCell);
+            //console.log(editCell);
             var dy = 1.0 / (this.uyamakModel.TerminalsOut.value + 1);
             var remainingTerminals = this.uyamakModel.TerminalsOut.value;
             var cellsToRemove = [];
@@ -2146,7 +2143,7 @@
                   i -
                   remainingTerminals +
                   1),
-                16,
+                8,
                 16,
                 "constituent=1;fillColor=" +
                 this.uyamakModel.Colors.bg +
@@ -2154,10 +2151,10 @@
                 this.uyamakModel.Colors.fg +
                 ";strokeColor=" +
                 this.uyamakModel.Colors.bg +
-                ";labelPosition=left;labelWidth=80;align=right;shape=ellipse;portConstraint=east;shadow=0",
+                ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
                 true
               );
-              p1.geometry.offset = new mxPoint(-8, -8);
+              p1.geometry.offset = new mxPoint(-0, -8);
             }
           }
 
@@ -2179,7 +2176,7 @@
           }
         },
         toggleParamDisplay: function (index) {
-          console.log(this.parametersDisplay);
+          //console.log(this.parametersDisplay);
           this.updatingCounter++;
           this.parametersDisplay[index] = !this.parametersDisplay[index];
         },
@@ -2277,8 +2274,8 @@
         changeEditModelWithSelectedBlock();
       } else {
         editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", null);
-        if (graph.getSelectionCell() && graph.getSelectionCell().isEdge()) {
-          console.log("hello");
+        if (graph.getSelectionCell() && (graph.getSelectionCell().isEdge() || graph.getSelectionCell().style ===
+            "group")) {
           editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
             model: true,
             value: graph.getSelectionCell().value || ""
@@ -2338,7 +2335,7 @@
     firebase.auth().onAuthStateChanged(function (user) {
       holdToFinishAProcess("Loading the app.");
       TempRecAttempt = setInterval(function () {
-        console.log("attempt");
+        //console.log("attempt");
         if (app) {
           holdToFinishAProcess("Verifying the license.");
           clearInterval(TempRecAttempt);
@@ -2349,7 +2346,7 @@
 
     function handleSignedInUser(user) {
       validateUserSession().then(function (result) {
-        console.log(result.data.isSuccess);
+        //console.log(result.data.isSuccess);
         if (result.data.isSuccess) loadTheGUI();
         else
           window.location.replace(
@@ -2378,7 +2375,7 @@
               .get()
               .then(function (doc) {
                 var dbData = doc.data();
-                console.log(doc.id, " => ", dbData);
+                //console.log(doc.id, " => ", dbData);
                 /*if (!app.$data.blocksSummary)
                   app.$set(app.$data, "blocksSummary", {});
                 app.$set(app.$data.blocksSummary, doc.id, dbData);*/
@@ -2734,7 +2731,7 @@
               "this." + item.name + '="' + tempVal.toString() + '";';
             break;
           case "json":
-            console.log(dbBlockData[item.name]);
+            //console.log(dbBlockData[item.name]);
             if (!dbBlockData[item.name]) tempVal = [];
             else tempVal = JSON.parse(dbBlockData[item.name]);
             constructorStr +=
@@ -2768,6 +2765,58 @@
       eval(constructorStr);
       eval(prototypesStr);
       //console.log(constructorStr);
+    }
+  </script>
+  <script>
+    function GetOrderOfExecution() {
+
+    }
+
+    function getAllTheModels() {
+      var parent = graph.getDefaultParent();
+      var allTheBlocks = [];
+      if (graph.getDefaultParent().children) {
+        allTheBlocks = allTheBlocks.concat(graph.getDefaultParent().children);
+      }
+      for (var i = 0; i < allTheBlocks.length; i++) {
+        if (allTheBlocks[i].children) {
+          allTheBlocks = allTheBlocks.concat(allTheBlocks[i].children);
+        }
+      }
+      var allTheModels =[];
+      for (var i=0;i<allTheBlocks.length; i++) {
+        if (allTheBlocks[i].isVertex() && (typeof allTheBlocks[i].value =="object"))
+        allTheModels.push(allTheBlocks[i]);
+      }
+      return allTheModels;
+    }
+    function getAllConnectedModels() {
+      var parent = graph.getDefaultParent();
+      var allTheBlocks = [];
+      if (graph.getDefaultParent().children) {
+        allTheBlocks = allTheBlocks.concat(graph.getDefaultParent().children);
+      }
+      for (var i = 0; i < allTheBlocks.length; i++) {
+        if (allTheBlocks[i].children) {
+          allTheBlocks = allTheBlocks.concat(allTheBlocks[i].children);
+        }
+      }
+      var allTheValidEdges = [];
+      for (var i=0;i<allTheBlocks.length; i++) {
+        if (allTheBlocks[i].isEdge() && (typeof allTheBlocks[i].source.parent.value =="object") && (typeof allTheBlocks[i].target.parent.value =="object"))
+        allTheValidEdges.push(allTheBlocks[i]);
+      }
+      var allConnectedBlocks = [];
+      for (var i=0; i<allTheValidEdges.length; i++) {
+        if (allConnectedBlocks.indexOf(allTheValidEdges[i].source.parent) < 0) {
+          allConnectedBlocks.push(allTheValidEdges[i].source.parent);
+        }
+        if (allConnectedBlocks.indexOf(allTheValidEdges[i].target.parent) < 0) {
+          allConnectedBlocks.push(allTheValidEdges[i].target.parent);
+        }
+      }
+      return allConnectedBlocks;
+
     }
   </script>
 </body>
