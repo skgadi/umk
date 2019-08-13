@@ -14,8 +14,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <!--link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css"-->
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
@@ -89,7 +88,7 @@
         vStyle["absoluteArcSize"] = 1;
         vStyle["rounded"] = 1;
         eStyle["edgeStyle"] = "orthogonalEdgeStyle";
-        eStyle["strokeWidth"] = 4;
+        eStyle["strokeWidth"] = 2;
         eStyle["fontSize"] = 15;
         eStyle["targetJettySize"] = 25;
         eStyle["shadow"] = false;
@@ -1543,15 +1542,15 @@
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
       <i class="fa-fw fas fa-print"></i>
     </div>
-    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('printingTheModel')"
+    <div class="w3-bar-item w3-button w3-indigo w3-hover-indigo" style="padding: 0px 4px;"
+      onclick="displayExecutionOrder()"
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-cogs"></i>
+      <i class="fa-fw fas fa-sort-numeric-up-alt"></i>
     </div>
     <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
       onclick="toggleSideBar('printingTheModel')"
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-sort-numeric-up"></i>
+      <i class="fa-fw fas fa-cogs"></i>
     </div>
     <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
       onclick="toggleSideBar('printingTheModel')"
@@ -1648,8 +1647,8 @@
     <div v-if="!!cellModel.model">
       <div>
         <p class="w3-large" style="margin:0px;"><b>Connection name</b></p>
-        <input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" />
-        <div v-html="cellModel.value"></div>
+        <input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"/>
+        <div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div>
       </div>
       <div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue">
         <div class="w3-right">
@@ -1664,7 +1663,7 @@
       <div>
         <p class="w3-large" style="margin:0px;"><b>Block name</b></p>
         <input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text" />
-        <div v-html="uyamakModel.Name"></div>
+        <div class="w3-container w3-pale-yellow" v-html="uyamakModel.Name"></div>
       </div>
       <div v-if="uyamakModel.TerminalsIn.editable">
         <p class="w3-large" style="margin:0px;">
@@ -2165,7 +2164,7 @@
             "(this.uyamakModel);"
           );
           graph.getSelectionCell().setValue(tempModel);
-          graph.refresh(graph.getSelectionCell());
+          graph.refresh();
         },
         getBlockDetails: function () {
           try {
@@ -2301,6 +2300,10 @@
         "parametersDisplay",
         new Array(editModel.Parameters.length).fill(false)
       );
+      editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
+            model: false,
+            value: null
+          });
     }
   </script>
 
@@ -2768,8 +2771,124 @@
     }
   </script>
   <script>
-    function GetOrderOfExecution() {
+    function displayExecutionOrder() {
+      var allTheModels =  getAllTheModels();
+      for (var i=0; i<allTheModels.length; i++) {
+        for (var j=0; j<allTheModels[i].children.length; j++) {
+          if ((allTheModels[i].children[j].geometry.x === 0.5) && (allTheModels[i].children[j].geometry.y === 1)){
+            allTheModels[i].children[j].value="Not connected";
+          }
+        }
+        graph.setCellWarning(allTheModels[i]);
+      }
+      var executionOrderAndErros = getExecutionOrder();
+      var executionOrder = executionOrderAndErros.eo;
+      for (var i=0; i<executionOrder.length; i++) {
+        var children = executionOrder[i].children;
+        for (var j=0; j<children.length; j++) {
+          if ((executionOrder[i].children[j].geometry.x === 0.5) && (executionOrder[i].children[j].geometry.y === 1)) {
+            executionOrder[i].children[j].value = "EO is "+(i+1);
+          }
+        }
+      }
+      var possibleAL = executionOrderAndErros.al;
+      for (var i=0; i<possibleAL.length; i++) {
+        for (var j=0; j<possibleAL[i].children.length; j++) {
+          if ((possibleAL[i].children[j].geometry.x === 0.5) && (possibleAL[i].children[j].geometry.y === 1)){
+            possibleAL[i].children[j].value="Possible AL";
+          }
+        }
+        graph.setCellWarning(possibleAL[i], "Possible AL");
+      }
+      var otherErrors = executionOrderAndErros.ne;
+      for (var i=0; i<otherErrors.length; i++) {
+        for (var j=0; j<otherErrors[i].children.length; j++) {
+          if ((otherErrors[i].children[j].geometry.x === 0.5) && (otherErrors[i].children[j].geometry.y === 1)){
+            otherErrors[i].children[j].value="Cannot execute";
+          }
+        }
+        graph.setCellWarning(otherErrors[i], "Cannot execute");
+      }
+      graph.refresh();
+    }
+    function getExecutionOrder() {
+      var firstModels = [];
+      var allConnectedModels = getAllConnectedModels();
+      var aLoopModels = [];
 
+
+      //Obtaining first executing models
+      for (var i=0; i<allConnectedModels.length; i++) {
+        if ((allConnectedModels[i].value.TerminalsIn.max === 0) || (!!allConnectedModels[i].value.FirstInExecutionOrder)) {
+          firstModels.push(allConnectedModels[i]);
+        }
+      }
+      //removing first executing models from allConnectedModels
+      for (var i=0; i<firstModels.length; i++) {
+        allConnectedModels = arrayRemove(allConnectedModels, firstModels[i]);
+      }
+      var ExecutionOrder = firstModels.slice();
+      var i=0;
+      try {
+      while (allConnectedModels.length>0) {
+        var mSources = getSourcesOfAModel(allConnectedModels[i]);
+        var addThisToOrder = true;
+        for (var j=0; j<mSources.length; j++) {
+          if (ExecutionOrder.indexOf(mSources[j])<0) {
+            addThisToOrder = false;
+          }
+        }
+        if (addThisToOrder) {
+          ExecutionOrder.push(allConnectedModels[i]);
+          allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[i]);
+          i=0;
+        } else {
+          i++;
+        }
+        if ((allConnectedModels.length >0) && (i>=allConnectedModels.length)) {
+          for (var j=0; j<ExecutionOrder.length; j++) {
+            var targets = getTargetsOfAModel(ExecutionOrder[j]);
+            for (var k=0; k<targets.length; k++) {
+              if (allConnectedModels.indexOf(targets[k])>=0) {
+                aLoopModels.push(targets[k]);
+                allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[k]);
+              }
+            }
+          }
+          throw {code:"UMKEOAL",message:"arthematic loop(s) found"};
+        }
+      }} catch (e) {
+        if (e.code === "UMKEOAL") {
+          notyf.error(e.message);
+        } else {
+          notyf.error("Unknown error in obtaining the execution order");
+        }
+      }
+      return {eo: ExecutionOrder, ne: allConnectedModels, al: aLoopModels};
+    }
+    function getSourcesOfAModel(inModel) {
+      var modelSources = [];
+      for (var i=0;i<inModel.children.length;i++) {
+        if (inModel.children[i].geometry.x === 0) {
+          try {
+            if (modelSources.indexOf(inModel.children[i].edges[0].source.parent) < 0)
+              modelSources.push(inModel.children[i].edges[0].source.parent)
+          } catch (e) {}
+        }
+      }
+      return modelSources;
+    }
+    function getTargetsOfAModel(inModel) {
+      var modelTargets = [];
+      for (var i=0;i<inModel.children.length;i++) {
+        if (inModel.children[i].geometry.x === 1) {
+          try {
+            if (modelTargets.indexOf(inModel.children[i].edges[0].target.parent) < 0)
+            modelTargets.push(inModel.children[i].edges[0].target.parent)
+          } catch (e) {}
+        }
+      }
+      return modelTargets;
     }
 
     function getAllTheModels() {
@@ -2817,6 +2936,11 @@
       }
       return allConnectedBlocks;
 
+    }
+    function arrayRemove(arr, value) {
+      return arr.filter(function(ele){
+          return ele != value;
+      });
     }
   </script>
 </body>
