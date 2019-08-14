@@ -113,8 +113,8 @@
           );
           if (defaultRetValue) {
             if (cell.getStyle() === "group") return true;
-            else if (graph.getCellStyle(cell)["shape"] === "swimlane")
-              return true;
+            /*else if (graph.getCellStyle(cell)["shape"] === "swimlane")
+              return true;*/
             else return false;
           } else return defaultRetValue;
         };
@@ -748,11 +748,11 @@
                   var ixe = Math.round(xe);
                   var iys = Math.round(ys);
                   var iye = Math.round(ye);
-                  ctx.strokeStyle = "#f0f0f0";
-                  ctx.fillStyle = "#ffffff";
+                  ctx.strokeStyle = "#e6e6e6";
+                  ctx.fillStyle = "#f1f1f1";
                   ctx.fillRect(0, 0, canvas.width, canvas.height);
                   ctx.beginPath();
-                  ctx.lineWidth = 0.5;
+                  ctx.lineWidth = 1;
                   for (var x = xs; x <= xe; x += stepping) {
                     x = Math.round((x - tx) / stepping) * stepping + tx;
                     var ix = Math.round(x);
@@ -768,7 +768,7 @@
                   ctx.closePath();
                   ctx.stroke();
                   ctx.beginPath();
-                  ctx.lineWidth = 1;
+                  ctx.lineWidth = 2;
                   for (var x = xs; x <= xe; x += 5 * stepping) {
                     x = Math.round((x - tx) / stepping) * stepping + tx;
                     var ix = Math.round(x);
@@ -784,7 +784,7 @@
                   ctx.closePath();
                   ctx.stroke();
                   ctx.beginPath();
-                  ctx.lineWidth = 1.5;
+                  ctx.lineWidth = 3;
                   for (var x = xs; x <= xe; x += 10 * stepping) {
                     x = Math.round((x - tx) / stepping) * stepping + tx;
                     var ix = Math.round(x);
@@ -911,6 +911,7 @@
                   cell.value.bid +
                   " (cell.value);"
                 );
+                return tempModel.Name;
                 return (
                   tempModel.Name +
                   "<p class='block-margin'>" +
@@ -928,11 +929,7 @@
                     console.log(tempModel);
                     graph.cellLabelChanged(
                       cell,
-                      tempModel.Name +
-                      "<p class='block-margin'>" +
-                      tempModel.Details() +
-                      "</p>"
-                    );
+                      tempModel.Name);
                   })
                   .catch(function (e) {
                     console.log(e);
@@ -997,14 +994,13 @@
           newPt.y,
           200,
           100,
-          "fillColor=" +
-          umkModel.Colors.bg +
-          ";fontColor=" +
+          "foldable=0;verticalLabelPosition=bottom;verticalAlign=top;fillColor=" +
           umkModel.Colors.fg +
-          ";verticalAlign=top;strokeColor=" +
+          ";fontColor=#000000;verticalAlign=top;strokeColor=" +
           umkModel.Colors.bg +
           ";"
         );
+        //shape=swimlane;startSize=20;foldable=0;swimlaneFillColor="+umkModel.Colors.bg+";
         var tempDetails = umkModel.Details();
 
         v1.setConnectable(false);
@@ -1022,9 +1018,7 @@
             8,
             "constituent=1;fillColor=" +
             umkModel.Colors.bg +
-            ";fontColor=" +
-            umkModel.Colors.fg +
-            ";strokeColor=" +
+            ";fontColor=#ffffff;strokeColor=" +
             umkModel.Colors.bg +
             ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
             true
@@ -1044,16 +1038,13 @@
             16,
             "constituent=1;fillColor=" +
             umkModel.Colors.bg +
-            ";fontColor=" +
-            umkModel.Colors.fg +
-            ";strokeColor=" +
+            ";fontColor=#ffffff;strokeColor=" +
             umkModel.Colors.bg +
             ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
             true
           );
           p2.geometry.offset = new mxPoint(0, -8);
         }
-        graph.setSelectionCell(v1);
         var EO = graph.insertVertex(
           v1,
           null,
@@ -1064,15 +1055,30 @@
           0,
           "constituent=1;align=center;verticalAlign=bottom;fillColor=" +
           umkModel.Colors.bg +
-          ";fontColor=" +
-          umkModel.Colors.fg +
-          ";strokeColor=" +
+          ";fontColor=#ffffff;strokeColor=" +
           umkModel.Colors.bg +
           ";",
           true
         );
-        EO.geometry.offset = new mxPoint(0, 00);
         EO.setConnectable(false);
+        var Details = graph.insertVertex(
+          v1,
+          null,
+          "<p>"+umkModel.Details()+"</p>",
+          0.5,
+          0,
+          0,
+          0,
+          "constituent=1;align=center;verticalAlign=top;fillColor=" +
+          umkModel.Colors.bg +
+          ";fontColor=#ffffff;strokeColor=" +
+          umkModel.Colors.bg +
+          ";",
+          true
+        );
+        Details.geometry.offset = new mxPoint(0, 0);
+        Details.setConnectable(false);
+        graph.setSelectionCell(v1);
       } finally {
         model.endUpdate();
       }
@@ -1448,58 +1454,6 @@
       margin: 0.5em 0 5em 0 !important;
     }
 
-    .btnGreen,
-    .btnGreen>div,
-    .btnGreen>img,
-    .btnGreen>i {
-      color: rgba(80, 197, 56, 1);
-      border-color: rgba(80, 197, 56, 1) !important;
-    }
-
-    .btnRed,
-    .btnRed>div,
-    .btnRed>img,
-    .btnRed>i {
-      color: #ff0000;
-      border-color: #ff0000 !important;
-    }
-
-    .ToolBarButton>div,
-    .ToolBarButton>img,
-    .ToolBarButton>i {
-      border-width: 2px !important;
-      width: 30px;
-      height: 30px;
-    }
-
-    .ToolBarButton {
-      padding: 2px;
-      font-size: 15px;
-      -webkit-user-drag: none;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      width: 34px;
-      height: 34px;
-      border-radius: 17px;
-      display: inline-block;
-      cursor: pointer;
-      position: fixed;
-    }
-
-    .btnGreen:hover {
-      box-shadow: 0 0 3px 3px rgba(56, 207, 21, 0.3);
-    }
-
-    .btnGreen:active {
-      box-shadow: 0 0 1px 3px rgba(56, 207, 21, 0.95);
-    }
-
-    .btnRed:hover {
-      box-shadow: 0 0 3px 3px rgba(255, 00, 0, 0.3);
-    }
-
-    .btnRed:active {
-      box-shadow: 0 0 1px 3px rgba(255, 00, 0, 0.95);
-    }
 
     .rotateNote {
       -webkit-transform: rotate(90deg);
@@ -2054,6 +2008,15 @@
         },
         saveModel: function () {
           var editCell = graph.getSelectionCell();
+          for (var i = 0; i < editCell.getChildCount(); i++) {
+            console.log(this.uyamakModel.Details());
+            if ((editCell.children[i].geometry.x === 0.5) && (editCell.children[i].geometry.y === 0)) {
+              console.log(this.uyamakModel.Details());
+              editCell.children[i].setValue(this.uyamakModel.Details());
+            }
+          }
+          //End of change the details child
+
           //Adjusting the number of input terminals
           this.uyamakModel.TerminalsIn.value = Math.floor(
             this.uyamakModel.TerminalsIn.value
@@ -2113,9 +2076,7 @@
                 8,
                 "constituent=1;fillColor=" +
                 this.uyamakModel.Colors.bg +
-                ";fontColor=" +
-                this.uyamakModel.Colors.fg +
-                ";strokeColor=" +
+                ";fontColor=#ffffff;strokeColor=" +
                 this.uyamakModel.Colors.bg +
                 ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
                 true
@@ -2183,9 +2144,7 @@
                 16,
                 "constituent=1;fillColor=" +
                 this.uyamakModel.Colors.bg +
-                ";fontColor=" +
-                this.uyamakModel.Colors.fg +
-                ";strokeColor=" +
+                ";fontColor=#ffffff;strokeColor=" +
                 this.uyamakModel.Colors.bg +
                 ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
                 true
@@ -2505,7 +2464,7 @@
         iconText.icon1 +
         colors.bg +
         iconText.icon2 +
-        colors.fg +
+        "#ffffff" +
         iconText.icon3 +
         path +
         iconText.icon4
@@ -2646,7 +2605,7 @@
           app.$data.networkIcon.icon1 +
           app.$data.blocksSummary[cid].colors.bg +
           app.$data.networkIcon.icon2 +
-          app.$data.blocksSummary[cid].colors.fg +
+          "#ffffff" +
           app.$data.networkIcon.icon3 +
           iconText +
           app.$data.networkIcon.icon4
@@ -2677,7 +2636,7 @@
       else {
         var tempColors = app.getColorsForTheCategory();
         GSK_DATA.font = {
-          color: tempColors.fg,
+          color: "#ffffff",
           background: tempColors.bg,
           face: "Courier New",
           size: 30
@@ -2813,7 +2772,7 @@
       for (var i = 0; i < allTheModels.length; i++) {
         for (var j = 0; j < allTheModels[i].children.length; j++) {
           if ((allTheModels[i].children[j].geometry.x === 0.5) && (allTheModels[i].children[j].geometry.y === 1)) {
-            allTheModels[i].children[j].value = "Not connected";
+            allTheModels[i].children[j].value = "Ignored: NC";
           }
         }
         graph.setCellWarning(allTheModels[i]);
@@ -2832,7 +2791,7 @@
       for (var i = 0; i < possibleAL.length; i++) {
         for (var j = 0; j < possibleAL[i].children.length; j++) {
           if ((possibleAL[i].children[j].geometry.x === 0.5) && (possibleAL[i].children[j].geometry.y === 1)) {
-            possibleAL[i].children[j].value = "Possible AL";
+            possibleAL[i].children[j].value = "Ignored: Possible AL";
           }
         }
         graph.setCellWarning(possibleAL[i], "Possible AL");
@@ -2841,36 +2800,45 @@
       for (var i = 0; i < otherErrors.length; i++) {
         for (var j = 0; j < otherErrors[i].children.length; j++) {
           if ((otherErrors[i].children[j].geometry.x === 0.5) && (otherErrors[i].children[j].geometry.y === 1)) {
-            otherErrors[i].children[j].value = "Cannot execute";
+            otherErrors[i].children[j].value = "Ignored: Error";
           }
         }
-        graph.setCellWarning(otherErrors[i], "Cannot execute");
+        //graph.setCellWarning(otherErrors[i], "Cannot execute");
+      }
+      var partialConnected = executionOrderAndErros.pc;
+      for (var i = 0; i < partialConnected.length; i++) {
+        for (var j = 0; j < partialConnected[i].children.length; j++) {
+          if ((partialConnected[i].children[j].geometry.x === 0.5) && (partialConnected[i].children[j].geometry.y === 1)) {
+            partialConnected[i].children[j].value = "Ignored: PC";
+          }
+        }
       }
       graph.refresh();
     }
 
     function getExecutionOrder() {
       var firstModels = [];
-      var allConnectedModels = getAllConnectedModels();
+      var allConnectedModels = getAllConnectedModels()
+      var fullyConnectedModels = allConnectedModels.fc;
       var aLoopModels = [];
 
 
       //Obtaining first executing models
-      for (var i = 0; i < allConnectedModels.length; i++) {
-        if ((allConnectedModels[i].value.TerminalsIn.max === 0) || (!!allConnectedModels[i].value
+      for (var i = 0; i < fullyConnectedModels.length; i++) {
+        if ((fullyConnectedModels[i].value.TerminalsIn.max === 0) || (!!fullyConnectedModels[i].value
             .FirstInExecutionOrder)) {
-          firstModels.push(allConnectedModels[i]);
+          firstModels.push(fullyConnectedModels[i]);
         }
       }
-      //removing first executing models from allConnectedModels
+      //removing first executing models from fullyConnectedModels
       for (var i = 0; i < firstModels.length; i++) {
-        allConnectedModels = arrayRemove(allConnectedModels, firstModels[i]);
+        fullyConnectedModels = arrayRemove(fullyConnectedModels, firstModels[i]);
       }
       var ExecutionOrder = firstModels.slice();
       var i = 0;
       try {
-        while (allConnectedModels.length > 0) {
-          var mSources = getSourcesOfAModel(allConnectedModels[i]);
+        while (fullyConnectedModels.length > 0) {
+          var mSources = getSourcesOfAModel(fullyConnectedModels[i]);
           var addThisToOrder = true;
           for (var j = 0; j < mSources.length; j++) {
             if (ExecutionOrder.indexOf(mSources[j]) < 0) {
@@ -2878,26 +2846,31 @@
             }
           }
           if (addThisToOrder) {
-            ExecutionOrder.push(allConnectedModels[i]);
-            allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[i]);
+            ExecutionOrder.push(fullyConnectedModels[i]);
+            fullyConnectedModels = arrayRemove(fullyConnectedModels, fullyConnectedModels[i]);
             i = 0;
           } else {
             i++;
           }
-          if ((allConnectedModels.length > 0) && (i >= allConnectedModels.length)) {
+          if ((fullyConnectedModels.length > 0) && (i >= fullyConnectedModels.length)) {
             for (var j = 0; j < ExecutionOrder.length; j++) {
               var targets = getTargetsOfAModel(ExecutionOrder[j]);
               for (var k = 0; k < targets.length; k++) {
-                if (allConnectedModels.indexOf(targets[k]) >= 0) {
+                if (fullyConnectedModels.indexOf(targets[k]) >= 0) {
                   aLoopModels.push(targets[k]);
-                  allConnectedModels = arrayRemove(allConnectedModels, targets[k]);
+                  fullyConnectedModels = arrayRemove(fullyConnectedModels, targets[k]);
                 }
               }
             }
+            if (aLoopModels.length>0)
             throw {
               code: "UMKEOAL",
               message: "arthematic loop(s) found"
             };
+            else throw {
+              code: "UMKEOIC",
+              message: "Incomplete/improper connections detected"
+            }
           }
         }
       } catch (e) {
@@ -2909,8 +2882,9 @@
       }
       return {
         eo: ExecutionOrder,
-        ne: allConnectedModels,
-        al: aLoopModels
+        ne: fullyConnectedModels,
+        al: aLoopModels,
+        pc: allConnectedModels.pc
       };
     }
 
@@ -2987,7 +2961,25 @@
           allConnectedBlocks.push(allTheValidEdges[i].target.parent);
         }
       }
-      return allConnectedBlocks;
+      var allFullyConnectedBlocks = [];
+      var allPartiallyConnectedBlocks = [];
+      for (var i=0; i<allConnectedBlocks.length; i++){
+        var isFullyConnected = true;
+        for (var j=0; j<allConnectedBlocks[i].children.length; j++) {
+          if ((
+                    (allConnectedBlocks[i].children[j].geometry.x === 0)
+                ||  (allConnectedBlocks[i].children[j].geometry.x === 1)
+              ) && (
+                    (!allConnectedBlocks[i].children[j].edges)
+                ||  (allConnectedBlocks[i].children[j].edges.length < 1)))
+          isFullyConnected = false;
+        }
+        if (isFullyConnected) allFullyConnectedBlocks.push(allConnectedBlocks[i]);
+        else allPartiallyConnectedBlocks.push(allConnectedBlocks[i]);
+      }
+
+
+      return {ac: allConnectedBlocks, fc: allFullyConnectedBlocks, pc: allPartiallyConnectedBlocks};
 
     }
 
