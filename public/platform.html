@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <!--link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css"-->
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+    integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
@@ -1142,7 +1143,7 @@
     // Touch screen
     (function () {
       // Enables rotation handle
-      mxVertexHandler.prototype.rotationEnabled = true;
+      //mxVertexHandler.prototype.rotationEnabled = true;
 
       // Enables managing of sizers
       mxVertexHandler.prototype.manageSizers = true;
@@ -1543,8 +1544,7 @@
       <i class="fa-fw fas fa-print"></i>
     </div>
     <div class="w3-bar-item w3-button w3-indigo w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="displayExecutionOrder()"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      onclick="displayExecutionOrder()" title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
       <i class="fa-fw fas fa-sort-numeric-up-alt"></i>
     </div>
     <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
@@ -1647,7 +1647,8 @@
     <div v-if="!!cellModel.model">
       <div>
         <p class="w3-large" style="margin:0px;"><b>Connection name</b></p>
-        <input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"/>
+        <input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text"
+          placeholder="Enter a name" />
         <div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div>
       </div>
       <div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue">
@@ -1781,6 +1782,28 @@
             <div class="w3-right"><i class="fas fa-undo-alt"></i></div>
           </div>
         </template>
+        <div class="w3-row">
+          <div class="w3-col s12 m6 l3">
+              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)">
+                  <i class="far fa-smile"></i>
+            </div>
+          </div>
+          <div class="w3-col s12 m6 l3">
+              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)">
+                  <i class="far fa-smile fa-rotate-90"></i>
+            </div>
+          </div>
+          <div class="w3-col s12 m6 l3">
+              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)">
+                  <i class="far fa-smile fa-rotate-180"></i>
+            </div>
+          </div>
+          <div class="w3-col s12 m6 l3">
+              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)">
+                  <i class="far fa-smile fa-rotate-270"></i>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
     <div v-else>Select a block to edit its parameters.</div>
@@ -2009,6 +2032,20 @@
         }
       },
       methods: {
+        rotate: function (ang) {
+          var pConstarins = [];
+          pConstarins[0] = {in: "west", out: "east"};
+          pConstarins[90] = {in: "north", out: "south"};
+          pConstarins[180] = {in: "east", out: "west"};
+          pConstarins[270] = {in: "south", out: "north"};
+          graph.setCellStyles("rotation", ang, [graph.getSelectionCell()].concat(graph.getSelectionCell().children));
+          for (var i=0; i<graph.getSelectionCell().children.length; i++) {
+            if (graph.getSelectionCell().children[i].geometry.x === 0)
+            graph.setCellStyles("portConstraint", pConstarins[ang].in, [graph.getSelectionCell().children[i]]);
+            if (graph.getSelectionCell().children[i].geometry.x === 1)
+            graph.setCellStyles("portConstraint", pConstarins[ang].out, [graph.getSelectionCell().children[i]]);
+          }
+        },
         applyCellValue: function () {
           if (graph.getSelectionCell().isEdge() || graph.getSelectionCell().style === "group") {
             graph.getSelectionCell().value = this.cellModel.value;
@@ -2301,9 +2338,9 @@
         new Array(editModel.Parameters.length).fill(false)
       );
       editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
-            model: false,
-            value: null
-          });
+        model: false,
+        value: null
+      });
     }
   </script>
 
@@ -2772,45 +2809,46 @@
   </script>
   <script>
     function displayExecutionOrder() {
-      var allTheModels =  getAllTheModels();
-      for (var i=0; i<allTheModels.length; i++) {
-        for (var j=0; j<allTheModels[i].children.length; j++) {
-          if ((allTheModels[i].children[j].geometry.x === 0.5) && (allTheModels[i].children[j].geometry.y === 1)){
-            allTheModels[i].children[j].value="Not connected";
+      var allTheModels = getAllTheModels();
+      for (var i = 0; i < allTheModels.length; i++) {
+        for (var j = 0; j < allTheModels[i].children.length; j++) {
+          if ((allTheModels[i].children[j].geometry.x === 0.5) && (allTheModels[i].children[j].geometry.y === 1)) {
+            allTheModels[i].children[j].value = "Not connected";
           }
         }
         graph.setCellWarning(allTheModels[i]);
       }
       var executionOrderAndErros = getExecutionOrder();
       var executionOrder = executionOrderAndErros.eo;
-      for (var i=0; i<executionOrder.length; i++) {
+      for (var i = 0; i < executionOrder.length; i++) {
         var children = executionOrder[i].children;
-        for (var j=0; j<children.length; j++) {
+        for (var j = 0; j < children.length; j++) {
           if ((executionOrder[i].children[j].geometry.x === 0.5) && (executionOrder[i].children[j].geometry.y === 1)) {
-            executionOrder[i].children[j].value = "EO is "+(i+1);
+            executionOrder[i].children[j].value = "EO is " + (i + 1);
           }
         }
       }
       var possibleAL = executionOrderAndErros.al;
-      for (var i=0; i<possibleAL.length; i++) {
-        for (var j=0; j<possibleAL[i].children.length; j++) {
-          if ((possibleAL[i].children[j].geometry.x === 0.5) && (possibleAL[i].children[j].geometry.y === 1)){
-            possibleAL[i].children[j].value="Possible AL";
+      for (var i = 0; i < possibleAL.length; i++) {
+        for (var j = 0; j < possibleAL[i].children.length; j++) {
+          if ((possibleAL[i].children[j].geometry.x === 0.5) && (possibleAL[i].children[j].geometry.y === 1)) {
+            possibleAL[i].children[j].value = "Possible AL";
           }
         }
         graph.setCellWarning(possibleAL[i], "Possible AL");
       }
       var otherErrors = executionOrderAndErros.ne;
-      for (var i=0; i<otherErrors.length; i++) {
-        for (var j=0; j<otherErrors[i].children.length; j++) {
-          if ((otherErrors[i].children[j].geometry.x === 0.5) && (otherErrors[i].children[j].geometry.y === 1)){
-            otherErrors[i].children[j].value="Cannot execute";
+      for (var i = 0; i < otherErrors.length; i++) {
+        for (var j = 0; j < otherErrors[i].children.length; j++) {
+          if ((otherErrors[i].children[j].geometry.x === 0.5) && (otherErrors[i].children[j].geometry.y === 1)) {
+            otherErrors[i].children[j].value = "Cannot execute";
           }
         }
         graph.setCellWarning(otherErrors[i], "Cannot execute");
       }
       graph.refresh();
     }
+
     function getExecutionOrder() {
       var firstModels = [];
       var allConnectedModels = getAllConnectedModels();
@@ -2818,57 +2856,67 @@
 
 
       //Obtaining first executing models
-      for (var i=0; i<allConnectedModels.length; i++) {
-        if ((allConnectedModels[i].value.TerminalsIn.max === 0) || (!!allConnectedModels[i].value.FirstInExecutionOrder)) {
+      for (var i = 0; i < allConnectedModels.length; i++) {
+        if ((allConnectedModels[i].value.TerminalsIn.max === 0) || (!!allConnectedModels[i].value
+            .FirstInExecutionOrder)) {
           firstModels.push(allConnectedModels[i]);
         }
       }
       //removing first executing models from allConnectedModels
-      for (var i=0; i<firstModels.length; i++) {
+      for (var i = 0; i < firstModels.length; i++) {
         allConnectedModels = arrayRemove(allConnectedModels, firstModels[i]);
       }
       var ExecutionOrder = firstModels.slice();
-      var i=0;
+      var i = 0;
       try {
-      while (allConnectedModels.length>0) {
-        var mSources = getSourcesOfAModel(allConnectedModels[i]);
-        var addThisToOrder = true;
-        for (var j=0; j<mSources.length; j++) {
-          if (ExecutionOrder.indexOf(mSources[j])<0) {
-            addThisToOrder = false;
-          }
-        }
-        if (addThisToOrder) {
-          ExecutionOrder.push(allConnectedModels[i]);
-          allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[i]);
-          i=0;
-        } else {
-          i++;
-        }
-        if ((allConnectedModels.length >0) && (i>=allConnectedModels.length)) {
-          for (var j=0; j<ExecutionOrder.length; j++) {
-            var targets = getTargetsOfAModel(ExecutionOrder[j]);
-            for (var k=0; k<targets.length; k++) {
-              if (allConnectedModels.indexOf(targets[k])>=0) {
-                aLoopModels.push(targets[k]);
-                allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[k]);
-              }
+        while (allConnectedModels.length > 0) {
+          var mSources = getSourcesOfAModel(allConnectedModels[i]);
+          var addThisToOrder = true;
+          for (var j = 0; j < mSources.length; j++) {
+            if (ExecutionOrder.indexOf(mSources[j]) < 0) {
+              addThisToOrder = false;
             }
           }
-          throw {code:"UMKEOAL",message:"arthematic loop(s) found"};
+          if (addThisToOrder) {
+            ExecutionOrder.push(allConnectedModels[i]);
+            allConnectedModels = arrayRemove(allConnectedModels, allConnectedModels[i]);
+            i = 0;
+          } else {
+            i++;
+          }
+          if ((allConnectedModels.length > 0) && (i >= allConnectedModels.length)) {
+            for (var j = 0; j < ExecutionOrder.length; j++) {
+              var targets = getTargetsOfAModel(ExecutionOrder[j]);
+              for (var k = 0; k < targets.length; k++) {
+                if (allConnectedModels.indexOf(targets[k]) >= 0) {
+                  aLoopModels.push(targets[k]);
+                  allConnectedModels = arrayRemove(allConnectedModels, targets[k]);
+                }
+              }
+            }
+            throw {
+              code: "UMKEOAL",
+              message: "arthematic loop(s) found"
+            };
+          }
         }
-      }} catch (e) {
+      } catch (e) {
         if (e.code === "UMKEOAL") {
           notyf.error(e.message);
         } else {
           notyf.error("Unknown error in obtaining the execution order");
         }
       }
-      return {eo: ExecutionOrder, ne: allConnectedModels, al: aLoopModels};
+      return {
+        eo: ExecutionOrder,
+        ne: allConnectedModels,
+        al: aLoopModels
+      };
     }
+
     function getSourcesOfAModel(inModel) {
       var modelSources = [];
-      for (var i=0;i<inModel.children.length;i++) {
+      for (var i = 0; i < inModel.children.length; i++) {
         if (inModel.children[i].geometry.x === 0) {
           try {
             if (modelSources.indexOf(inModel.children[i].edges[0].source.parent) < 0)
@@ -2878,14 +2926,17 @@
       }
       return modelSources;
     }
+
     function getTargetsOfAModel(inModel) {
       var modelTargets = [];
-      for (var i=0;i<inModel.children.length;i++) {
+      for (var i = 0; i < inModel.children.length; i++) {
         if (inModel.children[i].geometry.x === 1) {
-          try {
-            if (modelTargets.indexOf(inModel.children[i].edges[0].target.parent) < 0)
-            modelTargets.push(inModel.children[i].edges[0].target.parent)
-          } catch (e) {}
+          for (var j = 0; j < inModel.children[i].edges.length; j++) {
+            try {
+              if (modelTargets.indexOf(inModel.children[i].edges[j].target.parent) < 0)
+                modelTargets.push(inModel.children[i].edges[j].target.parent)
+            } catch (e) {}
+          }
         }
       }
       return modelTargets;
@@ -2902,13 +2953,14 @@
           allTheBlocks = allTheBlocks.concat(allTheBlocks[i].children);
         }
       }
-      var allTheModels =[];
-      for (var i=0;i<allTheBlocks.length; i++) {
-        if (allTheBlocks[i].isVertex() && (typeof allTheBlocks[i].value =="object"))
-        allTheModels.push(allTheBlocks[i]);
+      var allTheModels = [];
+      for (var i = 0; i < allTheBlocks.length; i++) {
+        if (allTheBlocks[i].isVertex() && (typeof allTheBlocks[i].value == "object"))
+          allTheModels.push(allTheBlocks[i]);
       }
       return allTheModels;
     }
+
     function getAllConnectedModels() {
       var parent = graph.getDefaultParent();
       var allTheBlocks = [];
@@ -2921,12 +2973,13 @@
         }
       }
       var allTheValidEdges = [];
-      for (var i=0;i<allTheBlocks.length; i++) {
-        if (allTheBlocks[i].isEdge() && (typeof allTheBlocks[i].source.parent.value =="object") && (typeof allTheBlocks[i].target.parent.value =="object"))
-        allTheValidEdges.push(allTheBlocks[i]);
+      for (var i = 0; i < allTheBlocks.length; i++) {
+        if (allTheBlocks[i].isEdge() && (typeof allTheBlocks[i].source.parent.value == "object") && (
+            typeof allTheBlocks[i].target.parent.value == "object"))
+          allTheValidEdges.push(allTheBlocks[i]);
       }
       var allConnectedBlocks = [];
-      for (var i=0; i<allTheValidEdges.length; i++) {
+      for (var i = 0; i < allTheValidEdges.length; i++) {
         if (allConnectedBlocks.indexOf(allTheValidEdges[i].source.parent) < 0) {
           allConnectedBlocks.push(allTheValidEdges[i].source.parent);
         }
@@ -2937,9 +2990,10 @@
       return allConnectedBlocks;
 
     }
+
     function arrayRemove(arr, value) {
-      return arr.filter(function(ele){
-          return ele != value;
+      return arr.filter(function (ele) {
+        return ele != value;
       });
     }
   </script>
