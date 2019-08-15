@@ -61,12 +61,11 @@
         mxConstants.WORD_WRAP = "break-word";
         mxConstants.SHADOW_OFFSET_X = 5;
         mxConstants.SHADOW_OFFSET_Y = 5;
-        mxConstants.SHADOW_OPACITY = 0.2;
         mxConstants.EDGE_SELECTION_COLOR = "#ddd";
-        mxConstants.VERTEX_SELECTION_COLOR = "#000000";
+        mxConstants.VERTEX_SELECTION_COLOR = "#f00";
         mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
         mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
-        mxConstants.HANDLE_SIZE = 10;
+        //mxConstants.HANDLE_SIZE = 10;
         mxEdgeHandler.prototype.snapToTerminals = true;
         mxConnectionHandler.prototype.movePreviewAway = false;
         //mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
@@ -82,6 +81,7 @@
         graph.constrainChildren =
         false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
+        graph.setRecursiveResize(true);
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
@@ -90,12 +90,12 @@
         vStyle["absoluteArcSize"] = 1;
         vStyle["rounded"] = 1;
         eStyle["edgeStyle"] = "orthogonalEdgeStyle";
-        eStyle["strokeWidth"] = 2;
+        eStyle["strokeWidth"] = 1;
         eStyle["fontSize"] = 15;
         eStyle["targetJettySize"] = 25;
         eStyle["shadow"] = false;
+        eStyle["endArrow"]="none";
         //eStyle["startArrow"]="oval";
-
         //Block properties editor
         graph
           .getSelectionModel()
@@ -105,6 +105,8 @@
         //Change floding and unfolding icons
         graph.collapsedImage = new mxImage("images/plus.svg", 10, 10);
         graph.expandedImage = new mxImage("images/minus.svg", 10, 10);
+        //Generate stylesheets
+        generateStylesheets();
         //set valid drop targets
         var isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
         mxGraph.prototype.isValidDropTarget = function (cell, cells, evt) {
@@ -113,7 +115,7 @@
             arguments
           );
           if (defaultRetValue) {
-            if (cell.getStyle() === "group") return true;
+            if (cell.getStyle() && cell.getStyle().search("umk_group") >= 0) return true;
             /*else if (graph.getCellStyle(cell)["shape"] === "swimlane")
             return true;*/
             else
@@ -140,13 +142,7 @@
         var graphCreateGroupCell = graph.createGroupCell;
         graph.createGroupCell = function (cells) {
           var group = graphCreateGroupCell.apply(this, arguments);
-          var style = new Object();
-          style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-          style.startSize = 25;
-          style.strokeWidth = 2;
-          style.arcSize = 0;
-          graph.getStylesheet().putCellStyle("group", style);
-          group.setStyle("group");
+          group.setStyle("umk_group;");
           group.setValue("Sub model");
           return group;
         };
@@ -913,7 +909,8 @@
                   cell.value.bid +
                   " (cell.value);"
                 );
-                return tempModel.Name;
+                setCaption(cell, tempModel.Name);
+                return "<p>"+tempModel.Icon().html+"</p>";
               } catch (e) {
                 pullDBAndGenModel(cell.value.bid)
                   .then(function () {
@@ -992,9 +989,9 @@
           .width,
           LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
           .height,
-          "foldable=0;verticalLabelPosition=bottom;verticalAlign=top;fillColor=" +
+          "foldable=0;overflow=hidden;verticalAlign=middle;fillColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-          ";fontColor=#000000;verticalAlign=top;strokeColor=" +
+          ";fontColor=#fff;verticalAlign=top;strokeColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";"
         );
@@ -1002,42 +999,8 @@
 
         v1.setConnectable(false);
         v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
-        for (var i = 1; i < umkModel.TerminalsIn.value + 1; i++) {
-          var p1 = graph.insertVertex(
-            v1,
-            null,
-            (inLabels[i]||""),
-            0,
-            i / (umkModel.TerminalsIn.value + 1),
-            8,
-            8,
-            "constituent=1;fillColor=" +
-            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-            ";fontColor=#ffffff;strokeColor=" +
-            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-            ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
-            true
-          );
-          p1.geometry.offset = new mxPoint(-8, -4);
-        }
-        for (var i = 1; i < umkModel.TerminalsOut.value + 1; i++) {
-          var p2 = graph.insertVertex(
-            v1,
-            null,
-            (outLabels[i]||""),
-            1,
-            i / (umkModel.TerminalsOut.value + 1),
-            8,
-            16,
-            "constituent=1;fillColor=" +
-            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-            ";fontColor=#ffffff;strokeColor=" +
-            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-            ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
-            true
-          );
-          p2.geometry.offset = new mxPoint(0, -8);
-        }
+        setTermianls(v1,"umk_input");
+        setTermianls(v1,"umk_output");
         var EO = graph.insertVertex(
           v1,
           null,
@@ -1046,23 +1009,19 @@
           0,
           0,
           0,
-          "constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;",
+          "umk_EO",
           true
         );
         EO.setConnectable(false);
         var Details = graph.insertVertex(
           v1,
           null,
-          "<p>" + IconDetails.html + "</p>",
+          umkModel.Name,
           0.5,
-          0.5,
+          1,
           0,
           0,
-          "constituent=1;labelPosition=left; verticalLabelPosition=bottom; overflow=hidden;align=left;verticalAlign=top;fillColor=" +
-          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-          ";fontColor=#ffffff;strokeColor=" +
-          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-          ";",
+          "umk_caption",
           true
         );
         Details.geometry.offset = new mxPoint(0, 0);
@@ -1134,13 +1093,61 @@
       );
       ds.setGuidesEnabled(true);
     }
+    function generateStylesheets() {
+      var style = new Object();
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+      style.startSize = 25;
+      style.strokeWidth = 2;
+      style.arcSize = 0;
+      graph.getStylesheet().putCellStyle("umk_group", style);
+      style = new Object();
+      style.constituent = 1;
+      style.verticalLabelPosition = "bottom";
+      style.verticalAlign = "top"
+      style.fontColor = "#000";
+      //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+      graph.getStylesheet().putCellStyle("umk_caption", style);
+      style = new Object();
+      style.constituent = 1;
+      style.align = "center";
+      style.verticalAlign = "bottom";
+      style.fontColor = "#000";
+      //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+      graph.getStylesheet().putCellStyle("umk_EO", style);
+      style = new Object();
+      style.constituent = 1;
+      style.verticalAlign = "middle"
+      style.fontColor = "#fff";
+      style.labelPosition = "right";
+      style.labelWidth = 80;
+      style.align = "left";
+      style.shape = "triangle";
+      style.portConstraint = "west";
+      //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
+      graph.getStylesheet().putCellStyle("umk_input", style);
+      style = new Object();
+      style.constituent = 1;
+      style.verticalAlign = "middle"
+      style.fontColor = "#fff";
+      style.labelPosition = "left";
+      style.labelWidth = 80;
+      style.align = "right";
+      style.shape = "triangle";
+      style.portConstraint = "east";
+      //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
+      graph.getStylesheet().putCellStyle("umk_output", style);
 
+
+
+
+      
+    }
     //Group blocks
     function createSubModel() {
       var model = graph.getModel();
       model.beginUpdate();
       try {
-        var subModel = graph.groupCells(null, 10, graph.getSelectionCells());
+        var subModel = graph.groupCells(null, 50, graph.getSelectionCells());
         subModel.geometry.alternateBounds = new mxRectangle(0, 0, 200, 25);
         graph.setSelectionCell(subModel);
       } catch (e) {
@@ -1157,7 +1164,7 @@
       try {
         var cells = graph.getSelectionCells();
         for (var i = 0; i < cells.length; i++) {
-          if (cells[i].getStyle() === "group") {
+          if (cells[i].getStyle().search("umk_group") >= 0) {
             var sCells = graph.getSelectionCells();
             sCells = sCells.concat(cells[i].children);
             //console.log(sCells);
@@ -1177,6 +1184,69 @@
       if (graph.getSelectionCells().length > 0) {
         graph.foldCells(fold, false, graph.getSelectionCells());
       } else graph.foldCells(fold, false, graph.getDefaultParent().children);
+    }
+    //Change caption
+    function setCaption(Cell, value) {
+      var children = Cell.children;
+      for (var i=0; i<children.length; i++) {
+        if (children[i].style.search("umk_caption") >= 0) {
+          children[i].setValue(value);
+          graph.refresh(children[i]);
+        }
+      }
+    }
+    //Prepare input and output terminals
+    function setTermianls(Cell, type="umk_input") {
+      if (!!Cell && typeof Cell === "object") {
+        var IconDetails = Cell.value.Icon();
+        var Labels;
+        var RequiredCount;
+        var position;
+        if (type === "umk_input") {
+          Labels = IconDetails.inLabels||[];
+          RequiredCount = Cell.value.TerminalsIn.value;
+          position = {x:0, size:{width:4, height:8}, offset: {x:-4, y:-4}};
+        } else {
+          Labels = IconDetails.outLabels||[];
+          RequiredCount = Cell.value.TerminalsOut.value;
+          position = {x:1, size:{width:4, height:8}, offset: {x:0, y:-4}};
+        }
+        //Adjust input terminals
+        //Check count of available input terminals
+        var availableCount = 0;
+        var cellsToRemove = [];
+        for (var i=0; i<(!!Cell.children?Cell.children.length:0); i++) {
+          if (Cell.children[i].style.search(type) >= 0) {
+            if (availableCount<RequiredCount) {
+              Cell.children[i].geometry.y = (availableCount+1)/(RequiredCount + 1);
+              Cell.children[i].setValue(Labels[availableCount]||"");
+            } else {
+              cellsToRemove.push(Cell.children[i]);
+            }
+            availableCount++;
+          }
+        }
+        graph.removeCells(cellsToRemove);
+        //Add more cells if required
+        for (var i=0; i< (RequiredCount-availableCount); i++) {
+          var port = graph.insertVertex(
+            Cell,
+            null,
+            (Labels[i+availableCount]||""),
+            position.x,
+            (availableCount + i + 1) / (RequiredCount + 1),
+            position.size.width,
+            position.size.height,
+            type+";fillColor=" +
+            LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
+            ";strokeColor=" +
+            LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
+            ";",
+            true
+          );
+          port.geometry.offset = new mxPoint(position.offset.x, position.offset.y);
+        }
+      }
     }
 
     /*//pan the graph
@@ -1223,9 +1293,9 @@
       cursor: default;
     }
 
-    .MJXc-display {
+    /*.MJXc-display {
       margin: 0 !important;
-    }
+    }*/
 
     .block-margin {
       margin: 0.5em 0 5em 0 !important;
@@ -1805,162 +1875,13 @@
         applyCellValue: function () {
           if (
             graph.getSelectionCell().isEdge() ||
-            graph.getSelectionCell().style === "group"
+            graph.getSelectionCell().style.search("umk_group") >= 0
           ) {
             graph.getSelectionCell().value = this.cellModel.value;
             graph.refresh(graph.getSelectionCell());
           }
         },
         saveModel: function () {
-          var editCell = graph.getSelectionCell();
-          //Changing Details
-          for (var i = 0; i < editCell.getChildCount(); i++) {
-            console.log(this.uyamakModel.Details());
-            if (
-              editCell.children[i].geometry.x === 0.5 &&
-              editCell.children[i].geometry.y === 0.5
-            ) {
-              console.log(this.uyamakModel.Details());
-              editCell.children[i].setValue(this.uyamakModel.Details());
-            }
-          }
-
-          //Adjusting the number of input terminals
-          this.uyamakModel.TerminalsIn.value = Math.floor(
-            this.uyamakModel.TerminalsIn.value
-          );
-          if (
-            !(
-              this.uyamakModel.TerminalsIn.value >=
-              this.uyamakModel.TerminalsIn.min &&
-              this.uyamakModel.TerminalsIn.value <=
-              this.uyamakModel.TerminalsIn.max
-            )
-          ) {
-            if (
-              this.uyamakModel.TerminalsIn.value >
-              this.uyamakModel.TerminalsIn.max
-            )
-              this.uyamakModel.TerminalsIn.value = this.uyamakModel.TerminalsIn.max;
-            else
-              this.uyamakModel.TerminalsIn.value = this.uyamakModel.TerminalsIn.min;
-          }
-          if (
-            this.uyamakModel.TerminalsIn.value !==
-            editCell.value.TerminalsIn.value
-          ) {
-            //console.log(editCell);
-            var dy = 1.0 / (this.uyamakModel.TerminalsIn.value + 1);
-            var remainingTerminals = this.uyamakModel.TerminalsIn.value;
-            var cellsToRemove = [];
-            for (var i = 0; i < editCell.getChildCount(); i++) {
-              if (editCell.children[i].geometry.x === 0) {
-                if (remainingTerminals > 0) {
-                  remainingTerminals--;
-                  editCell.children[i].geometry.y =
-                    dy *
-                    (this.uyamakModel.TerminalsIn.value - remainingTerminals);
-                } else cellsToRemove.push(editCell.children[i]);
-              }
-            }
-            graph.removeCells(cellsToRemove);
-            for (var i = 0; i < remainingTerminals; i++) {
-              var p1 = graph.insertVertex(
-                editCell,
-                null,
-                "$u_{" +
-                (this.uyamakModel.TerminalsIn.value +
-                  i -
-                  remainingTerminals +
-                  1) +
-                "}(t)$",
-                0,
-                dy *
-                (this.uyamakModel.TerminalsIn.value +
-                  i -
-                  remainingTerminals +
-                  1),
-                8,
-                8,
-                "constituent=1;fillColor=" +
-                this.uyamakModel.Colors.bg +
-                ";fontColor=#ffffff;strokeColor=" +
-                this.uyamakModel.Colors.bg +
-                ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
-                true
-              );
-              p1.geometry.offset = new mxPoint(-8, -4);
-            }
-          }
-          //Adjusting the number of input terminals
-          this.uyamakModel.TerminalsOut.value = Math.floor(
-            this.uyamakModel.TerminalsOut.value
-          );
-          if (
-            !(
-              this.uyamakModel.TerminalsOut.value >=
-              this.uyamakModel.TerminalsOut.min &&
-              this.uyamakModel.TerminalsOut.value <=
-              this.uyamakModel.TerminalsOut.max
-            )
-          ) {
-            if (
-              this.uyamakModel.TerminalsOut.value >
-              this.uyamakModel.TerminalsOut.max
-            )
-              this.uyamakModel.TerminalsOut.value = this.uyamakModel.TerminalsOut.max;
-            else
-              this.uyamakModel.TerminalsOut.value = this.uyamakModel.TerminalsOut.min;
-          }
-          if (
-            this.uyamakModel.TerminalsOut.value !==
-            editCell.value.TerminalsOut.value
-          ) {
-            //console.log(editCell);
-            var dy = 1.0 / (this.uyamakModel.TerminalsOut.value + 1);
-            var remainingTerminals = this.uyamakModel.TerminalsOut.value;
-            var cellsToRemove = [];
-            for (var i = 0; i < editCell.getChildCount(); i++) {
-              if (editCell.children[i].geometry.x === 1) {
-                if (remainingTerminals > 0) {
-                  remainingTerminals--;
-                  editCell.children[i].geometry.y =
-                    dy *
-                    (this.uyamakModel.TerminalsOut.value -
-                      remainingTerminals);
-                } else cellsToRemove.push(editCell.children[i]);
-              }
-            }
-            graph.removeCells(cellsToRemove);
-            for (var i = 0; i < remainingTerminals; i++) {
-              var p1 = graph.insertVertex(
-                editCell,
-                null,
-                "$y_{" +
-                (this.uyamakModel.TerminalsOut.value +
-                  i -
-                  remainingTerminals +
-                  1) +
-                "}(t)$",
-                1,
-                dy *
-                (this.uyamakModel.TerminalsOut.value +
-                  i -
-                  remainingTerminals +
-                  1),
-                8,
-                16,
-                "constituent=1;fillColor=" +
-                this.uyamakModel.Colors.bg +
-                ";fontColor=#ffffff;strokeColor=" +
-                this.uyamakModel.Colors.bg +
-                ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
-                true
-              );
-              p1.geometry.offset = new mxPoint(-0, -8);
-            }
-          }
-
           //Adding model to the Block
           eval(
             "var tempModel = new umk_" +
@@ -1968,6 +1889,8 @@
             "(this.uyamakModel);"
           );
           graph.getSelectionCell().setValue(tempModel);
+          setTermianls(graph.getSelectionCell(),"umk_input");
+          setTermianls(graph.getSelectionCell(),"umk_output");
           graph.refresh();
         },
         getBlockDetails: function () {
@@ -2080,7 +2003,7 @@
         if (
           graph.getSelectionCell() &&
           (graph.getSelectionCell().isEdge() ||
-            graph.getSelectionCell().style === "group")
+            graph.getSelectionCell().style.search("umk_group") >= 0)
         ) {
           editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
             model: true,
