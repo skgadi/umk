@@ -66,9 +66,10 @@
         mxConstants.VERTEX_SELECTION_COLOR = "#000000";
         mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
         mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
+        mxConstants.HANDLE_SIZE = 10;
         mxEdgeHandler.prototype.snapToTerminals = true;
         mxConnectionHandler.prototype.movePreviewAway = false;
-        mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
+        //mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
         graph = new mxGraph(container);
         graph.setPanning(true);
         graph.setTooltips(false);
@@ -79,7 +80,7 @@
         graph.setMultigraph(false);
         graph.dropEnabled = true;
         graph.constrainChildren =
-          false; // this won't let the the blocks inside the groups to not change size when groups are resized
+        false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
@@ -114,8 +115,9 @@
           if (defaultRetValue) {
             if (cell.getStyle() === "group") return true;
             /*else if (graph.getCellStyle(cell)["shape"] === "swimlane")
-              return true;*/
-            else return false;
+            return true;*/
+            else
+              return false;
           } else return defaultRetValue;
         };
         // Matches DnD inside the graph
@@ -912,12 +914,6 @@
                   " (cell.value);"
                 );
                 return tempModel.Name;
-                return (
-                  tempModel.Name +
-                  "<p class='block-margin'>" +
-                  tempModel.Details() +
-                  "</p>" || ""
-                );
               } catch (e) {
                 pullDBAndGenModel(cell.value.bid)
                   .then(function () {
@@ -926,10 +922,7 @@
                       cell.value.bid +
                       " (cell.value);"
                     );
-                    console.log(tempModel);
-                    graph.cellLabelChanged(
-                      cell,
-                      tempModel.Name);
+                    graph.cellLabelChanged(cell, tempModel.Name);
                   })
                   .catch(function (e) {
                     console.log(e);
@@ -977,6 +970,9 @@
       var model = graph.getModel();
       model.beginUpdate();
       try {
+        var IconDetails = umkModel.Icon();
+        var inLabels = IconDetails.inLabels||[];
+        var outLabels = IconDetails.outLabels||[];
         var newPt = {
           x: x,
           y: y
@@ -992,16 +988,17 @@
           umkModel,
           newPt.x,
           newPt.y,
-          200,
-          100,
+          LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
+          .width,
+          LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
+          .height,
           "foldable=0;verticalLabelPosition=bottom;verticalAlign=top;fillColor=" +
-          umkModel.Colors.fg +
+          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";fontColor=#000000;verticalAlign=top;strokeColor=" +
-          umkModel.Colors.bg +
+          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";"
         );
         //shape=swimlane;startSize=20;foldable=0;swimlaneFillColor="+umkModel.Colors.bg+";
-        var tempDetails = umkModel.Details();
 
         v1.setConnectable(false);
         v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
@@ -1009,17 +1006,15 @@
           var p1 = graph.insertVertex(
             v1,
             null,
-            "$u" +
-            (umkModel.TerminalsIn.value > 1 ? "_{" + i + "}" : "") +
-            "(t)$",
+            (inLabels[i]||""),
             0,
             i / (umkModel.TerminalsIn.value + 1),
             8,
             8,
             "constituent=1;fillColor=" +
-            umkModel.Colors.bg +
+            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
             ";fontColor=#ffffff;strokeColor=" +
-            umkModel.Colors.bg +
+            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
             ";labelPosition=right;labelWidth=80;align=left;shape=rectangle;portConstraint=west;shadow=0",
             true
           );
@@ -1029,17 +1024,15 @@
           var p2 = graph.insertVertex(
             v1,
             null,
-            "$y" +
-            (umkModel.TerminalsOut.max > 1 ? "_{" + i + "}" : "") +
-            "(t)$",
+            (outLabels[i]||""),
             1,
             i / (umkModel.TerminalsOut.value + 1),
             8,
             16,
             "constituent=1;fillColor=" +
-            umkModel.Colors.bg +
+            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
             ";fontColor=#ffffff;strokeColor=" +
-            umkModel.Colors.bg +
+            LIBRARY_SUMMARY[umkModel.Category].colors.bg +
             ";labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;shadow=0",
             true
           );
@@ -1050,29 +1043,25 @@
           null,
           "",
           0.5,
-          1,
           0,
           0,
-          "constituent=1;align=center;verticalAlign=bottom;fillColor=" +
-          umkModel.Colors.bg +
-          ";fontColor=#ffffff;strokeColor=" +
-          umkModel.Colors.bg +
-          ";",
+          0,
+          "constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;",
           true
         );
         EO.setConnectable(false);
         var Details = graph.insertVertex(
           v1,
           null,
-          "<p>"+umkModel.Details()+"</p>",
+          "<p>" + IconDetails.html + "</p>",
+          0.5,
           0.5,
           0,
           0,
-          0,
-          "constituent=1;align=center;verticalAlign=top;fillColor=" +
-          umkModel.Colors.bg +
+          "constituent=1;labelPosition=left; verticalLabelPosition=bottom; overflow=hidden;align=left;verticalAlign=top;fillColor=" +
+          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";fontColor=#ffffff;strokeColor=" +
-          umkModel.Colors.bg +
+          LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";",
           true
         );
@@ -1095,7 +1084,7 @@
           console.log(e);
           graph.removeCells([v1]);
           notyf.error(
-            "Error in the mathematical model. If your internet connection is good, please contact the support."
+            "Error in the mathematical model. Your internet connection must be failing. If your internet connection is good, please contact the support."
           );
         }
         graph.setSelectionCell(v1);
@@ -1131,8 +1120,8 @@
 
       var dragElt = document.createElement("div");
       dragElt.style.border = "dashed black 1px";
-      dragElt.style.width = "200px";
-      dragElt.style.height = "100px";
+      dragElt.style.width = data.size.width + "px";
+      dragElt.style.height = data.size.height + "px";
       var ds = mxUtils.makeDraggable(
         img,
         graph,
@@ -1145,225 +1134,6 @@
       );
       ds.setGuidesEnabled(true);
     }
-
-    // Touch screen
-    (function () {
-      // Enables rotation handle
-      //mxVertexHandler.prototype.rotationEnabled = true;
-
-      // Enables managing of sizers
-      mxVertexHandler.prototype.manageSizers = true;
-
-      // Enables live preview
-      mxVertexHandler.prototype.livePreview = true;
-
-      // Sets constants for touch style
-      mxConstants.HANDLE_SIZE = 16;
-      mxConstants.LABEL_HANDLE_SIZE = 7;
-
-      // Larger tolerance and grid for real touch devices
-      if (
-        mxClient.IS_TOUCH ||
-        navigator.maxTouchPoints > 0 ||
-        navigator.msMaxTouchPoints > 0
-      ) {
-        mxShape.prototype.svgStrokeTolerance = 18;
-        mxVertexHandler.prototype.tolerance = 12;
-        mxEdgeHandler.prototype.tolerance = 12;
-        mxGraph.prototype.tolerance = 12;
-      }
-
-      // One finger pans (no rubberband selection) must start regardless of mouse button
-      mxPanningHandler.prototype.isPanningTrigger = function (me) {
-        var evt = me.getEvent();
-
-        return (
-          (me.getState() == null && !mxEvent.isMouseEvent(evt)) ||
-          (mxEvent.isPopupTrigger(evt) &&
-            (me.getState() == null ||
-              mxEvent.isControlDown(evt) ||
-              mxEvent.isShiftDown(evt)))
-        );
-      };
-
-      // Don't clear selection if multiple cells selected
-      var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
-      mxGraphHandler.prototype.mouseDown = function (sender, me) {
-        graphHandlerMouseDown.apply(this, arguments);
-
-        if (
-          this.graph.isCellSelected(me.getCell()) &&
-          this.graph.getSelectionCount() > 1
-        ) {
-          this.delayedSelection = false;
-        }
-      };
-
-      // On connect the target is selected and we clone the cell of the preview edge for insert
-      mxConnectionHandler.prototype.selectCells = function (edge, target) {
-        if (target != null) {
-          this.graph.setSelectionCell(target);
-        } else {
-          this.graph.setSelectionCell(edge);
-        }
-      };
-
-      // Overrides double click handling to use the tolerance
-      var graphDblClick = mxGraph.prototype.dblClick;
-      mxGraph.prototype.dblClick = function (evt, cell) {
-        if (cell == null) {
-          var pt = mxUtils.convertPoint(
-            this.container,
-            mxEvent.getClientX(evt),
-            mxEvent.getClientY(evt)
-          );
-          cell = this.getCellAt(pt.x, pt.y);
-        }
-
-        graphDblClick.call(this, evt, cell);
-      };
-
-      // Rounded edge and vertex handles
-      var touchHandle = new mxImage("images/handle-main.png", 17, 17);
-      mxVertexHandler.prototype.handleImage = touchHandle;
-      mxEdgeHandler.prototype.handleImage = touchHandle;
-      mxOutline.prototype.sizerImage = touchHandle;
-
-      mxVertexHandler.prototype.rotationHandleVSpacing = -30;
-      // Pre-fetches touch handle
-      new Image().src = touchHandle.src;
-
-      // Adds connect icon to selected vertex
-      var connectorSrc = "images/handle-connect.png";
-
-      var vertexHandlerInit = mxVertexHandler.prototype.init;
-      mxVertexHandler.prototype.init = function () {
-        // TODO: Use 4 sizers, move outside of shape
-        //this.singleSizer = this.state.width < 30 && this.state.height < 30;
-        vertexHandlerInit.apply(this, arguments);
-
-        // Only show connector image on one cell and do not show on containers
-        if (
-          this.graph.connectionHandler.isEnabled() &&
-          this.graph.isCellConnectable(this.state.cell) &&
-          this.graph.getSelectionCount() == 1
-        ) {
-          this.connectorImg = mxUtils.createImage(connectorSrc);
-          this.connectorImg.style.cursor = "pointer";
-          this.connectorImg.style.width = "29px";
-          this.connectorImg.style.height = "29px";
-          this.connectorImg.style.position = "absolute";
-
-          if (!mxClient.IS_TOUCH) {
-            this.connectorImg.setAttribute(
-              "title",
-              mxResources.get("connect")
-            );
-            mxEvent.redirectMouseEvents(
-              this.connectorImg,
-              this.graph,
-              this.state
-            );
-          }
-
-          // Starts connecting on touch/mouse down
-          mxEvent.addGestureListeners(
-            this.connectorImg,
-            mxUtils.bind(this, function (evt) {
-              this.graph.popupMenuHandler.hideMenu();
-              this.graph.stopEditing(false);
-
-              var pt = mxUtils.convertPoint(
-                this.graph.container,
-                mxEvent.getClientX(evt),
-                mxEvent.getClientY(evt)
-              );
-              this.graph.connectionHandler.start(this.state, pt.x, pt.y);
-              this.graph.isMouseDown = true;
-              this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
-              mxEvent.consume(evt);
-            })
-          );
-
-          this.graph.container.appendChild(this.connectorImg);
-        }
-
-        this.redrawHandles();
-      };
-
-      var vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
-      mxVertexHandler.prototype.hideSizers = function () {
-        vertexHandlerHideSizers.apply(this, arguments);
-
-        if (this.connectorImg != null) {
-          this.connectorImg.style.visibility = "hidden";
-        }
-      };
-
-      var vertexHandlerReset = mxVertexHandler.prototype.reset;
-      mxVertexHandler.prototype.reset = function () {
-        vertexHandlerReset.apply(this, arguments);
-
-        if (this.connectorImg != null) {
-          this.connectorImg.style.visibility = "";
-        }
-      };
-
-      var vertexHandlerRedrawHandles =
-        mxVertexHandler.prototype.redrawHandles;
-      mxVertexHandler.prototype.redrawHandles = function () {
-        vertexHandlerRedrawHandles.apply(this);
-
-        if (this.state != null && this.connectorImg != null) {
-          var pt = new mxPoint();
-          var s = this.state;
-
-          // Top right for single-sizer
-          if (mxVertexHandler.prototype.singleSizer) {
-            pt.x = s.x + s.width - this.connectorImg.offsetWidth / 2;
-            pt.y = s.y - this.connectorImg.offsetHeight / 2;
-          } else {
-            pt.x =
-              s.x +
-              s.width +
-              mxConstants.HANDLE_SIZE / 2 +
-              4 +
-              this.connectorImg.offsetWidth / 2;
-            pt.y = s.y + s.height / 2;
-          }
-
-          var alpha = mxUtils.toRadians(
-            mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0)
-          );
-
-          if (alpha != 0) {
-            var cos = Math.cos(alpha);
-            var sin = Math.sin(alpha);
-
-            var ct = new mxPoint(s.getCenterX(), s.getCenterY());
-            pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-          }
-
-          this.connectorImg.style.left =
-            pt.x - this.connectorImg.offsetWidth / 2 + "px";
-          this.connectorImg.style.top =
-            pt.y - this.connectorImg.offsetHeight / 2 + "px";
-        }
-      };
-
-      var vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
-      mxVertexHandler.prototype.destroy = function (sender, me) {
-        vertexHandlerDestroy.apply(this, arguments);
-
-        if (this.connectorImg != null) {
-          this.connectorImg.parentNode.removeChild(this.connectorImg);
-          this.connectorImg = null;
-        }
-      };
-
-      // Pre-fetches touch connector
-      new Image().src = connectorSrc;
-    })();
 
     //Group blocks
     function createSubModel() {
@@ -1436,6 +1206,13 @@
       height: 100%;
     }
 
+    .w3-sidebar,
+    .w3-input,
+    .w3-select,
+    html {
+      background-color: #f1f1f1 !important;
+    }
+
     #modelContainer {
       position: absolute;
       overflow: hidden;
@@ -1453,7 +1230,6 @@
     .block-margin {
       margin: 0.5em 0 5em 0 !important;
     }
-
 
     .rotateNote {
       -webkit-transform: rotate(90deg);
@@ -1738,24 +1514,24 @@
         </template>
         <div class="w3-row">
           <div class="w3-col s12 m6 l3">
-              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)">
-                  <i class="far fa-smile"></i>
+            <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)">
+              <i class="far fa-smile"></i>
             </div>
           </div>
           <div class="w3-col s12 m6 l3">
-              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)">
-                  <i class="far fa-smile fa-rotate-90"></i>
+            <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)">
+              <i class="far fa-smile fa-rotate-90"></i>
             </div>
           </div>
           <div class="w3-col s12 m6 l3">
-              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)">
-                  <i class="far fa-smile fa-rotate-180"></i>
+            <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)">
+              <i class="far fa-smile fa-rotate-180"></i>
             </div>
           </div>
           <div class="w3-col s12 m6 l3">
-              <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)">
-                  <i class="far fa-smile fa-rotate-270"></i>
-              </div>
+            <div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)">
+              <i class="far fa-smile fa-rotate-270"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -1862,6 +1638,10 @@
     var notyf = new Notyf({
       duration: 10000
     });
+  </script>
+  <script>
+    var LIBRARY_SUMMARY = {};
+    var fullyLoadedTimeCheck;
   </script>
   <script>
     var printingTheModel = new Vue({
@@ -1988,34 +1768,62 @@
       methods: {
         rotate: function (ang) {
           var pConstarins = [];
-          pConstarins[0] = {in: "west", out: "east"};
-          pConstarins[90] = {in: "north", out: "south"};
-          pConstarins[180] = {in: "east", out: "west"};
-          pConstarins[270] = {in: "south", out: "north"};
-          graph.setCellStyles("rotation", ang, [graph.getSelectionCell()].concat(graph.getSelectionCell().children));
-          for (var i=0; i<graph.getSelectionCell().children.length; i++) {
+          pConstarins[0] = {
+            in: "west",
+            out: "east"
+          };
+          pConstarins[90] = {
+            in: "north",
+            out: "south"
+          };
+          pConstarins[180] = {
+            in: "east",
+            out: "west"
+          };
+          pConstarins[270] = {
+            in: "south",
+            out: "north"
+          };
+          graph.setCellStyles(
+            "rotation",
+            ang,
+            [graph.getSelectionCell()].concat(
+              graph.getSelectionCell().children
+            )
+          );
+          for (var i = 0; i < graph.getSelectionCell().children.length; i++) {
             if (graph.getSelectionCell().children[i].geometry.x === 0)
-            graph.setCellStyles("portConstraint", pConstarins[ang].in, [graph.getSelectionCell().children[i]]);
+              graph.setCellStyles("portConstraint", pConstarins[ang].in, [
+                graph.getSelectionCell().children[i]
+              ]);
             if (graph.getSelectionCell().children[i].geometry.x === 1)
-            graph.setCellStyles("portConstraint", pConstarins[ang].out, [graph.getSelectionCell().children[i]]);
+              graph.setCellStyles("portConstraint", pConstarins[ang].out, [
+                graph.getSelectionCell().children[i]
+              ]);
           }
         },
         applyCellValue: function () {
-          if (graph.getSelectionCell().isEdge() || graph.getSelectionCell().style === "group") {
+          if (
+            graph.getSelectionCell().isEdge() ||
+            graph.getSelectionCell().style === "group"
+          ) {
             graph.getSelectionCell().value = this.cellModel.value;
             graph.refresh(graph.getSelectionCell());
           }
         },
         saveModel: function () {
           var editCell = graph.getSelectionCell();
+          //Changing Details
           for (var i = 0; i < editCell.getChildCount(); i++) {
             console.log(this.uyamakModel.Details());
-            if ((editCell.children[i].geometry.x === 0.5) && (editCell.children[i].geometry.y === 0)) {
+            if (
+              editCell.children[i].geometry.x === 0.5 &&
+              editCell.children[i].geometry.y === 0.5
+            ) {
               console.log(this.uyamakModel.Details());
               editCell.children[i].setValue(this.uyamakModel.Details());
             }
           }
-          //End of change the details child
 
           //Adjusting the number of input terminals
           this.uyamakModel.TerminalsIn.value = Math.floor(
@@ -2269,8 +2077,11 @@
         changeEditModelWithSelectedBlock();
       } else {
         editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", null);
-        if (graph.getSelectionCell() && (graph.getSelectionCell().isEdge() || graph.getSelectionCell().style ===
-            "group")) {
+        if (
+          graph.getSelectionCell() &&
+          (graph.getSelectionCell().isEdge() ||
+            graph.getSelectionCell().style === "group")
+        ) {
           editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
             model: true,
             value: graph.getSelectionCell().value || ""
@@ -2374,6 +2185,7 @@
               .get()
               .then(function (doc) {
                 var dbData = doc.data();
+                LIBRARY_SUMMARY[doc.id] = dbData;
                 //console.log(doc.id, " => ", dbData);
                 /*if (!app.$data.blocksSummary)
                   app.$set(app.$data, "blocksSummary", {});
@@ -2430,7 +2242,12 @@
         document.getElementById("modelContainer"),
         document.getElementById("outlineContainer")
       );
-      holdToFinishAProcess(false);
+      fullyLoadedTimeCheck = setInterval(function () {
+        if (Object.keys(LIBRARY_SUMMARY).length === 7) {
+          holdToFinishAProcess(false);
+          clearInterval(fullyLoadedTimeCheck);
+        }
+      }, 1000);
     }
 
     function sortTheDoms(list) {
@@ -2769,70 +2586,43 @@
   <script>
     function displayExecutionOrder() {
       var allTheModels = getAllTheModels();
-      for (var i = 0; i < allTheModels.length; i++) {
-        for (var j = 0; j < allTheModels[i].children.length; j++) {
-          if ((allTheModels[i].children[j].geometry.x === 0.5) && (allTheModels[i].children[j].geometry.y === 1)) {
-            allTheModels[i].children[j].value = "Ignored: NC";
-          }
-        }
-        graph.setCellWarning(allTheModels[i]);
-      }
+      showExecutionOrderMessage(allTheModels, "Ignored: NC");
       var executionOrderAndErros = getExecutionOrder();
       var executionOrder = executionOrderAndErros.eo;
       for (var i = 0; i < executionOrder.length; i++) {
-        var children = executionOrder[i].children;
-        for (var j = 0; j < children.length; j++) {
-          if ((executionOrder[i].children[j].geometry.x === 0.5) && (executionOrder[i].children[j].geometry.y === 1)) {
-            executionOrder[i].children[j].value = "EO is " + (i + 1);
-          }
-        }
+        showExecutionOrderMessage([executionOrder[i]], "EO: " + (i + 1));
       }
-      var possibleAL = executionOrderAndErros.al;
-      for (var i = 0; i < possibleAL.length; i++) {
-        for (var j = 0; j < possibleAL[i].children.length; j++) {
-          if ((possibleAL[i].children[j].geometry.x === 0.5) && (possibleAL[i].children[j].geometry.y === 1)) {
-            possibleAL[i].children[j].value = "Ignored: Possible AL";
-          }
-        }
-        graph.setCellWarning(possibleAL[i], "Possible AL");
-      }
-      var otherErrors = executionOrderAndErros.ne;
-      for (var i = 0; i < otherErrors.length; i++) {
-        for (var j = 0; j < otherErrors[i].children.length; j++) {
-          if ((otherErrors[i].children[j].geometry.x === 0.5) && (otherErrors[i].children[j].geometry.y === 1)) {
-            otherErrors[i].children[j].value = "Ignored: Error";
-          }
-        }
-        //graph.setCellWarning(otherErrors[i], "Cannot execute");
-      }
-      var partialConnected = executionOrderAndErros.pc;
-      for (var i = 0; i < partialConnected.length; i++) {
-        for (var j = 0; j < partialConnected[i].children.length; j++) {
-          if ((partialConnected[i].children[j].geometry.x === 0.5) && (partialConnected[i].children[j].geometry.y === 1)) {
-            partialConnected[i].children[j].value = "Ignored: PC";
-          }
-        }
-      }
+      showExecutionOrderMessage(
+        executionOrderAndErros.al,
+        "Ignored: Possible AL",
+        "Ignored: Possible AL"
+      );
+      showExecutionOrderMessage(executionOrderAndErros.ne, "Ignored: Error");
+      showExecutionOrderMessage(executionOrderAndErros.pc, "Ignored: PC");
       graph.refresh();
     }
 
     function getExecutionOrder() {
       var firstModels = [];
-      var allConnectedModels = getAllConnectedModels()
+      var allConnectedModels = getAllConnectedModels();
       var fullyConnectedModels = allConnectedModels.fc;
       var aLoopModels = [];
 
-
       //Obtaining first executing models
       for (var i = 0; i < fullyConnectedModels.length; i++) {
-        if ((fullyConnectedModels[i].value.TerminalsIn.max === 0) || (!!fullyConnectedModels[i].value
-            .FirstInExecutionOrder)) {
+        if (
+          fullyConnectedModels[i].value.TerminalsIn.max === 0 ||
+          !!fullyConnectedModels[i].value.FirstInExecutionOrder
+        ) {
           firstModels.push(fullyConnectedModels[i]);
         }
       }
       //removing first executing models from fullyConnectedModels
       for (var i = 0; i < firstModels.length; i++) {
-        fullyConnectedModels = arrayRemove(fullyConnectedModels, firstModels[i]);
+        fullyConnectedModels = arrayRemove(
+          fullyConnectedModels,
+          firstModels[i]
+        );
       }
       var ExecutionOrder = firstModels.slice();
       var i = 0;
@@ -2847,30 +2637,40 @@
           }
           if (addThisToOrder) {
             ExecutionOrder.push(fullyConnectedModels[i]);
-            fullyConnectedModels = arrayRemove(fullyConnectedModels, fullyConnectedModels[i]);
+            fullyConnectedModels = arrayRemove(
+              fullyConnectedModels,
+              fullyConnectedModels[i]
+            );
             i = 0;
           } else {
             i++;
           }
-          if ((fullyConnectedModels.length > 0) && (i >= fullyConnectedModels.length)) {
+          if (
+            fullyConnectedModels.length > 0 &&
+            i >= fullyConnectedModels.length
+          ) {
             for (var j = 0; j < ExecutionOrder.length; j++) {
               var targets = getTargetsOfAModel(ExecutionOrder[j]);
               for (var k = 0; k < targets.length; k++) {
                 if (fullyConnectedModels.indexOf(targets[k]) >= 0) {
                   aLoopModels.push(targets[k]);
-                  fullyConnectedModels = arrayRemove(fullyConnectedModels, targets[k]);
+                  fullyConnectedModels = arrayRemove(
+                    fullyConnectedModels,
+                    targets[k]
+                  );
                 }
               }
             }
-            if (aLoopModels.length>0)
-            throw {
-              code: "UMKEOAL",
-              message: "arthematic loop(s) found"
-            };
-            else throw {
-              code: "UMKEOIC",
-              message: "Incomplete/improper connections detected"
-            }
+            if (aLoopModels.length > 0)
+              throw {
+                code: "UMKEOAL",
+                message: "arthematic loop(s) found"
+              };
+            else
+              throw {
+                code: "UMKEOIC",
+                message: "Incomplete/improper connections detected"
+              };
           }
         }
       } catch (e) {
@@ -2893,8 +2693,12 @@
       for (var i = 0; i < inModel.children.length; i++) {
         if (inModel.children[i].geometry.x === 0) {
           try {
-            if (modelSources.indexOf(inModel.children[i].edges[0].source.parent) < 0)
-              modelSources.push(inModel.children[i].edges[0].source.parent)
+            if (
+              modelSources.indexOf(
+                inModel.children[i].edges[0].source.parent
+              ) < 0
+            )
+              modelSources.push(inModel.children[i].edges[0].source.parent);
           } catch (e) {}
         }
       }
@@ -2907,8 +2711,12 @@
         if (inModel.children[i].geometry.x === 1) {
           for (var j = 0; j < inModel.children[i].edges.length; j++) {
             try {
-              if (modelTargets.indexOf(inModel.children[i].edges[j].target.parent) < 0)
-                modelTargets.push(inModel.children[i].edges[j].target.parent)
+              if (
+                modelTargets.indexOf(
+                  inModel.children[i].edges[j].target.parent
+                ) < 0
+              )
+                modelTargets.push(inModel.children[i].edges[j].target.parent);
             } catch (e) {}
           }
         }
@@ -2929,7 +2737,10 @@
       }
       var allTheModels = [];
       for (var i = 0; i < allTheBlocks.length; i++) {
-        if (allTheBlocks[i].isVertex() && (typeof allTheBlocks[i].value == "object"))
+        if (
+          allTheBlocks[i].isVertex() &&
+          typeof allTheBlocks[i].value == "object"
+        )
           allTheModels.push(allTheBlocks[i]);
       }
       return allTheModels;
@@ -2948,39 +2759,63 @@
       }
       var allTheValidEdges = [];
       for (var i = 0; i < allTheBlocks.length; i++) {
-        if (allTheBlocks[i].isEdge() && (typeof allTheBlocks[i].source.parent.value == "object") && (
-            typeof allTheBlocks[i].target.parent.value == "object"))
+        if (
+          allTheBlocks[i].isEdge() &&
+          typeof allTheBlocks[i].source.parent.value == "object" &&
+          typeof allTheBlocks[i].target.parent.value == "object"
+        )
           allTheValidEdges.push(allTheBlocks[i]);
       }
       var allConnectedBlocks = [];
       for (var i = 0; i < allTheValidEdges.length; i++) {
-        if (allConnectedBlocks.indexOf(allTheValidEdges[i].source.parent) < 0) {
+        if (
+          allConnectedBlocks.indexOf(allTheValidEdges[i].source.parent) < 0
+        ) {
           allConnectedBlocks.push(allTheValidEdges[i].source.parent);
         }
-        if (allConnectedBlocks.indexOf(allTheValidEdges[i].target.parent) < 0) {
+        if (
+          allConnectedBlocks.indexOf(allTheValidEdges[i].target.parent) < 0
+        ) {
           allConnectedBlocks.push(allTheValidEdges[i].target.parent);
         }
       }
       var allFullyConnectedBlocks = [];
       var allPartiallyConnectedBlocks = [];
-      for (var i=0; i<allConnectedBlocks.length; i++){
+      for (var i = 0; i < allConnectedBlocks.length; i++) {
         var isFullyConnected = true;
-        for (var j=0; j<allConnectedBlocks[i].children.length; j++) {
-          if ((
-                    (allConnectedBlocks[i].children[j].geometry.x === 0)
-                ||  (allConnectedBlocks[i].children[j].geometry.x === 1)
-              ) && (
-                    (!allConnectedBlocks[i].children[j].edges)
-                ||  (allConnectedBlocks[i].children[j].edges.length < 1)))
-          isFullyConnected = false;
+        for (var j = 0; j < allConnectedBlocks[i].children.length; j++) {
+          if (
+            (allConnectedBlocks[i].children[j].geometry.x === 0 ||
+              allConnectedBlocks[i].children[j].geometry.x === 1) &&
+            (!allConnectedBlocks[i].children[j].edges ||
+              allConnectedBlocks[i].children[j].edges.length < 1)
+          )
+            isFullyConnected = false;
         }
-        if (isFullyConnected) allFullyConnectedBlocks.push(allConnectedBlocks[i]);
+        if (isFullyConnected)
+          allFullyConnectedBlocks.push(allConnectedBlocks[i]);
         else allPartiallyConnectedBlocks.push(allConnectedBlocks[i]);
       }
 
+      return {
+        ac: allConnectedBlocks,
+        fc: allFullyConnectedBlocks,
+        pc: allPartiallyConnectedBlocks
+      };
+    }
 
-      return {ac: allConnectedBlocks, fc: allFullyConnectedBlocks, pc: allPartiallyConnectedBlocks};
-
+    function showExecutionOrderMessage(cells, message, warning) {
+      for (var i = 0; i < cells.length; i++) {
+        for (var j = 0; j < cells[i].children.length; j++) {
+          if (
+            cells[i].children[j].geometry.x === 0.5 &&
+            cells[i].children[j].geometry.y === 0
+          ) {
+            cells[i].children[j].setValue(message);
+          }
+        }
+        graph.setCellWarning(cells[i], warning);
+      }
     }
 
     function arrayRemove(arr, value) {
