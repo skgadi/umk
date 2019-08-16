@@ -419,6 +419,19 @@
         keyHandler.bindKey(46, function (evt) {
           if (graph.isEnabled()) graph.removeCells();
         });
+        //Arrow keys
+        keyHandler.bindKey(38, function (evt) {
+          moveGraph("up")
+        });
+        keyHandler.bindKey(40, function (evt) {
+          moveGraph("down")
+        });
+        keyHandler.bindKey(39, function (evt) {
+          moveGraph("right")
+        });
+        keyHandler.bindKey(37, function (evt) {
+          moveGraph("left")
+        });
         //undo and redo
         keyHandler.bindControlKey(90, function (evt) {
           if (graph.isEnabled()) {
@@ -766,15 +779,27 @@
                   }
                   ctx.closePath();
                   ctx.stroke();
+
+                  stepping = stepping*5;
+                  xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  xe = Math.ceil(w / stepping) * stepping;
+                  ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  ixs = Math.round(xs);
+                  ixe = Math.round(xe);
+                  iys = Math.round(ys);
+                  iye = Math.round(ye);
                   ctx.beginPath();
-                  ctx.lineWidth = 2;
-                  for (var x = xs; x <= xe; x += 5 * stepping) {
+                  ctx.lineWidth = 3;
+                  for (var x = xs; x <= xe; x += stepping) {
                     x = Math.round((x - tx) / stepping) * stepping + tx;
                     var ix = Math.round(x);
                     ctx.moveTo(ix + 0.5, iys + 0.5);
                     ctx.lineTo(ix + 0.5, iye + 0.5);
                   }
-                  for (var y = ys; y <= ye; y += 5 * stepping) {
+                  for (var y = ys; y <= ye; y += stepping) {
                     y = Math.round((y - ty) / stepping) * stepping + ty;
                     var iy = Math.round(y);
                     ctx.moveTo(ixs + 0.5, iy + 0.5);
@@ -782,15 +807,26 @@
                   }
                   ctx.closePath();
                   ctx.stroke();
+                  stepping = stepping*2;
+                  xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  xe = Math.ceil(w / stepping) * stepping;
+                  ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  ixs = Math.round(xs);
+                  ixe = Math.round(xe);
+                  iys = Math.round(ys);
+                  iye = Math.round(ye);
                   ctx.beginPath();
-                  ctx.lineWidth = 3;
-                  for (var x = xs; x <= xe; x += 10 * stepping) {
+                  ctx.lineWidth = 5;
+                  for (var x = xs; x <= xe; x += stepping) {
                     x = Math.round((x - tx) / stepping) * stepping + tx;
                     var ix = Math.round(x);
                     ctx.moveTo(ix + 0.5, iys + 0.5);
                     ctx.lineTo(ix + 0.5, iye + 0.5);
                   }
-                  for (var y = ys; y <= ye; y += 10 * stepping) {
+                  for (var y = ys; y <= ye; y += stepping) {
                     y = Math.round((y - ty) / stepping) * stepping + ty;
                     var iy = Math.round(y);
                     ctx.moveTo(ixs + 0.5, iy + 0.5);
@@ -1273,6 +1309,28 @@
       }
     }
 
+    //Move the graph
+    function moveGraph(direction = "up", step = 10) {
+      //step = step*graph.view.scale;
+      var value = graph.view.getTranslate();
+      switch (direction) {
+        case "up":
+          value.y += step;
+          break;
+        case "down":
+          value.y -= step;
+          break;
+        case "left":
+          value.x += step;
+          break;
+        case "right":
+          value.x -= step;
+          break;
+      }
+      graph.view.setTranslate(value.x, value.y)
+      graph.view.refresh();
+    }
+
     /*//pan the graph
     function panTheGraph(direction) {
       switch (direction) {
@@ -1310,7 +1368,7 @@
     #modelContainer {
       position: absolute;
       overflow: hidden;
-      top: 36px;
+      top: 22px;
       left: 0px;
       bottom: 18px;
       right: 0px;
@@ -1399,6 +1457,25 @@
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="graph.fit()"
       title="Fit all (Ctrl+1)&#10;Zooms the block diagram to fit the whole whole diagram">
       <i class="fa-fw fas fa-expand"></i>
+    </div>
+    <div class="w3-bar-item" style="padding: 0px;">
+      <i class="fa-fw fas fa-ellipsis-v"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('up')"
+      title="Move up (Up arrow)&#10;Moves the graph up">
+      <i class="fa-fw fas fa-arrow-up"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('down')"
+      title="Move down (Down arrow)&#10;Moves the graph down">
+      <i class="fa-fw fas fa-arrow-down"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('left')"
+      title="Move left (Left arrow)&#10;Moves the graph left">
+      <i class="fa-fw fas fa-arrow-left"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('right')"
+      title="Move right (Right arrow)&#10;Moves the graph right">
+      <i class="fa-fw fas fa-arrow-right"></i>
     </div>
     <div class="w3-bar-item" style="padding: 0px;">
       <i class="fa-fw fas fa-ellipsis-v"></i>
