@@ -79,9 +79,9 @@
         graph.setMultigraph(false);
         graph.dropEnabled = true;
         graph.constrainChildren =
-        false; // this won't let the the blocks inside the groups to not change size when groups are resized
+          false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
-        graph.setRecursiveResize(true);
+        graph.setRecursiveResize(false);
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
@@ -94,7 +94,7 @@
         eStyle["fontSize"] = 15;
         eStyle["targetJettySize"] = 25;
         eStyle["shadow"] = false;
-        eStyle["endArrow"]="none";
+        eStyle["endArrow"] = "none";
         //eStyle["startArrow"]="oval";
         //Block properties editor
         graph
@@ -115,7 +115,8 @@
             arguments
           );
           if (defaultRetValue) {
-            if (cell.getStyle() && cell.getStyle().search("umk_group") >= 0) return true;
+            if (cell.getStyle() && cell.getStyle().search("umk_group") >= 0)
+              return true;
             /*else if (graph.getCellStyle(cell)["shape"] === "swimlane")
             return true;*/
             else
@@ -823,7 +824,7 @@
           var edge = evt.getProperty("cell");
           var source = graph.getModel().getTerminal(edge, true);
           var target = graph.getModel().getTerminal(edge, false);
-          if (source.geometry.x === 0 && target.geometry.x === 1) {
+          if (source.style.search("umk_input") >= 0 && target.style.search("umk_output") >= 0) {
             graph.getModel().setTerminal(edge, source, false);
             graph.getModel().setTerminal(edge, target, true);
           }
@@ -846,13 +847,13 @@
             var outError;
             if (source.parent === target.parent)
               outError = "Cannot connect to the same block.";
-            if (source.geometry.x === 0 && target.geometry.x === 0)
+            if (source.style.search("umk_input") >= 0 && target.style.search("umk_input") >= 0)
               outError = "Cannot connect both the inputs.";
-            if (source.geometry.x === 1 && target.geometry.x === 1)
+            if (source.style.search("umk_output") >= 0 && target.style.search("umk_output") >= 0)
               outError = "Cannot connect both the outputs.";
             if (
-              (target.geometry.x == 0 && target.getEdgeCount() > 0) ||
-              (source.geometry.x == 0 && source.getEdgeCount() > 0)
+              (target.style.search("umk_input") >= 0 && target.getEdgeCount() > 0) ||
+              (source.style.search("umk_input") >= 0 && source.getEdgeCount() > 0)
             )
               outError = "Only one input is allowed per port.";
             return outError || defaultOut;
@@ -910,7 +911,7 @@
                   " (cell.value);"
                 );
                 setCaption(cell, tempModel.Name);
-                return "<p>"+tempModel.Icon().html+"</p>";
+                return "<p>" + tempModel.Icon().html + "</p>";
               } catch (e) {
                 pullDBAndGenModel(cell.value.bid)
                   .then(function () {
@@ -968,8 +969,8 @@
       model.beginUpdate();
       try {
         var IconDetails = umkModel.Icon();
-        var inLabels = IconDetails.inLabels||[];
-        var outLabels = IconDetails.outLabels||[];
+        var inLabels = IconDetails.inLabels || [];
+        var outLabels = IconDetails.outLabels || [];
         var newPt = {
           x: x,
           y: y
@@ -999,8 +1000,8 @@
 
         v1.setConnectable(false);
         v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
-        setTermianls(v1,"umk_input");
-        setTermianls(v1,"umk_output");
+        setTermianls(v1, "umk_input");
+        setTermianls(v1, "umk_output");
         var EO = graph.insertVertex(
           v1,
           null,
@@ -1068,8 +1069,8 @@
         "src",
         svgTextToURL(getIconWith(data.colors, data.icon))
       );
-      img.style.width = "64px";
-      img.style.height = "64px";
+      img.style.width = "50px";
+      img.style.height = "50px";
       img.title =
         data.name +
         ": " +
@@ -1093,6 +1094,7 @@
       );
       ds.setGuidesEnabled(true);
     }
+
     function generateStylesheets() {
       var style = new Object();
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
@@ -1103,7 +1105,7 @@
       style = new Object();
       style.constituent = 1;
       style.verticalLabelPosition = "bottom";
-      style.verticalAlign = "top"
+      style.verticalAlign = "top";
       style.fontColor = "#000";
       //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
       graph.getStylesheet().putCellStyle("umk_caption", style);
@@ -1116,7 +1118,7 @@
       graph.getStylesheet().putCellStyle("umk_EO", style);
       style = new Object();
       style.constituent = 1;
-      style.verticalAlign = "middle"
+      style.verticalAlign = "middle";
       style.fontColor = "#fff";
       style.labelPosition = "right";
       style.labelWidth = 80;
@@ -1127,7 +1129,7 @@
       graph.getStylesheet().putCellStyle("umk_input", style);
       style = new Object();
       style.constituent = 1;
-      style.verticalAlign = "middle"
+      style.verticalAlign = "middle";
       style.fontColor = "#fff";
       style.labelPosition = "left";
       style.labelWidth = 80;
@@ -1136,11 +1138,6 @@
       style.portConstraint = "east";
       //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
       graph.getStylesheet().putCellStyle("umk_output", style);
-
-
-
-
-      
     }
     //Group blocks
     function createSubModel() {
@@ -1188,7 +1185,7 @@
     //Change caption
     function setCaption(Cell, value) {
       var children = Cell.children;
-      for (var i=0; i<children.length; i++) {
+      for (var i = 0; i < children.length; i++) {
         if (children[i].style.search("umk_caption") >= 0) {
           children[i].setValue(value);
           graph.refresh(children[i]);
@@ -1196,30 +1193,53 @@
       }
     }
     //Prepare input and output terminals
-    function setTermianls(Cell, type="umk_input") {
+    function setTermianls(Cell, type = "umk_input") {
       if (!!Cell && typeof Cell === "object") {
         var IconDetails = Cell.value.Icon();
         var Labels;
         var RequiredCount;
         var position;
         if (type === "umk_input") {
-          Labels = IconDetails.inLabels||[];
+          Labels = IconDetails.inLabels || [];
           RequiredCount = Cell.value.TerminalsIn.value;
-          position = {x:0, size:{width:4, height:8}, offset: {x:-4, y:-4}};
+          position = {
+            x: 0,
+            size: {
+              width: 4,
+              height: 8
+            },
+            offset: {
+              x: -4,
+              y: -4
+            }
+          };
         } else {
-          Labels = IconDetails.outLabels||[];
+          Labels = IconDetails.outLabels || [];
           RequiredCount = Cell.value.TerminalsOut.value;
-          position = {x:1, size:{width:4, height:8}, offset: {x:0, y:-4}};
+          position = {
+            x: 1,
+            size: {
+              width: 4,
+              height: 8
+            },
+            offset: {
+              x: 0,
+              y: -4
+            }
+          };
         }
         //Adjust input terminals
         //Check count of available input terminals
         var availableCount = 0;
         var cellsToRemove = [];
-        for (var i=0; i<(!!Cell.children?Cell.children.length:0); i++) {
+        for (
+          var i = 0; i < (!!Cell.children ? Cell.children.length : 0); i++
+        ) {
           if (Cell.children[i].style.search(type) >= 0) {
-            if (availableCount<RequiredCount) {
-              Cell.children[i].geometry.y = (availableCount+1)/(RequiredCount + 1);
-              Cell.children[i].setValue(Labels[availableCount]||"");
+            if (availableCount < RequiredCount) {
+              Cell.children[i].geometry.y =
+                (availableCount + 1) / (RequiredCount + 1);
+              Cell.children[i].setValue(Labels[availableCount] || "");
             } else {
               cellsToRemove.push(Cell.children[i]);
             }
@@ -1228,23 +1248,27 @@
         }
         graph.removeCells(cellsToRemove);
         //Add more cells if required
-        for (var i=0; i< (RequiredCount-availableCount); i++) {
+        for (var i = 0; i < RequiredCount - availableCount; i++) {
           var port = graph.insertVertex(
             Cell,
             null,
-            (Labels[i+availableCount]||""),
+            Labels[i + availableCount] || "",
             position.x,
             (availableCount + i + 1) / (RequiredCount + 1),
             position.size.width,
             position.size.height,
-            type+";fillColor=" +
+            type +
+            ";fillColor=" +
             LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
             ";strokeColor=" +
             LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
             ";",
             true
           );
-          port.geometry.offset = new mxPoint(position.offset.x, position.offset.y);
+          port.geometry.offset = new mxPoint(
+            position.offset.x,
+            position.offset.y
+          );
         }
       }
     }
@@ -1313,7 +1337,7 @@
 
 <body>
   <div id="modelContainer" class="umk_main" style="transition: margin 700ms;"></div>
-  <div id="toolBar" class="umk_main w3-bar w3-indigo w3-card w3-xlarge"
+  <div id="toolBar" class="umk_main w3-bar w3-indigo w3-card"
     style="transition: margin 700ms;position:fixed;top:0;left:0;">
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick=""
       title="Show menu (Ctrl+)&#10;Pull the menu drawer.">
@@ -1862,11 +1886,11 @@
             )
           );
           for (var i = 0; i < graph.getSelectionCell().children.length; i++) {
-            if (graph.getSelectionCell().children[i].geometry.x === 0)
+            if (graph.getSelectionCell().children[i].style.search("umk_input") >= 0)
               graph.setCellStyles("portConstraint", pConstarins[ang].in, [
                 graph.getSelectionCell().children[i]
               ]);
-            if (graph.getSelectionCell().children[i].geometry.x === 1)
+            if (graph.getSelectionCell().children[i].style.search("umk_output") >= 0)
               graph.setCellStyles("portConstraint", pConstarins[ang].out, [
                 graph.getSelectionCell().children[i]
               ]);
@@ -1889,8 +1913,8 @@
             "(this.uyamakModel);"
           );
           graph.getSelectionCell().setValue(tempModel);
-          setTermianls(graph.getSelectionCell(),"umk_input");
-          setTermianls(graph.getSelectionCell(),"umk_output");
+          setTermianls(graph.getSelectionCell(), "umk_input");
+          setTermianls(graph.getSelectionCell(), "umk_output");
           graph.refresh();
         },
         getBlockDetails: function () {
@@ -2193,7 +2217,7 @@
     }
 
     var iconText = {
-      icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='20' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
+      icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='0' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
       icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
       icon3: "' stroke-width='10' fill='none'>",
       icon4: "</g></svg>"
@@ -2614,7 +2638,7 @@
     function getSourcesOfAModel(inModel) {
       var modelSources = [];
       for (var i = 0; i < inModel.children.length; i++) {
-        if (inModel.children[i].geometry.x === 0) {
+        if (inModel.children[i].style.search("umk_input") >= 0) {
           try {
             if (
               modelSources.indexOf(
@@ -2631,7 +2655,7 @@
     function getTargetsOfAModel(inModel) {
       var modelTargets = [];
       for (var i = 0; i < inModel.children.length; i++) {
-        if (inModel.children[i].geometry.x === 1) {
+        if (inModel.children[i].style.search("umk_output") >= 0) {
           for (var j = 0; j < inModel.children[i].edges.length; j++) {
             try {
               if (
@@ -2708,8 +2732,8 @@
         var isFullyConnected = true;
         for (var j = 0; j < allConnectedBlocks[i].children.length; j++) {
           if (
-            (allConnectedBlocks[i].children[j].geometry.x === 0 ||
-              allConnectedBlocks[i].children[j].geometry.x === 1) &&
+            (allConnectedBlocks[i].children[j].style.search("umk_input") >= 0 ||
+              allConnectedBlocks[i].children[j].style.search("umk_input") >= 0) &&
             (!allConnectedBlocks[i].children[j].edges ||
               allConnectedBlocks[i].children[j].edges.length < 1)
           )
@@ -2730,10 +2754,7 @@
     function showExecutionOrderMessage(cells, message, warning) {
       for (var i = 0; i < cells.length; i++) {
         for (var j = 0; j < cells[i].children.length; j++) {
-          if (
-            cells[i].children[j].geometry.x === 0.5 &&
-            cells[i].children[j].geometry.y === 0
-          ) {
+          if (cells[i].children[j].style.search("umk_EO") >= 0) {
             cells[i].children[j].setValue(message);
           }
         }
