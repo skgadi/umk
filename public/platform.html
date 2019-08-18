@@ -62,10 +62,10 @@
         mxConstants.SHADOW_OFFSET_X = 5;
         mxConstants.SHADOW_OFFSET_Y = 5;
         mxConstants.EDGE_SELECTION_COLOR = "#ddd";
-        mxConstants.VERTEX_SELECTION_COLOR = "#f00";
+        mxConstants.VERTEX_SELECTION_COLOR = "#000";
         mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
         mxConstants.EDGE_SELECTION_STROKEWIDTH = 2;
-        //mxConstants.HANDLE_SIZE = 10;
+        mxConstants.HANDLE_SIZE = 3;
         mxEdgeHandler.prototype.snapToTerminals = true;
         mxConnectionHandler.prototype.movePreviewAway = false;
         //mxClient.NO_FO = mxClient.NO_FO || mxClient.IS_SF || mxClient.IS_GC;
@@ -82,6 +82,7 @@
           false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
         graph.setRecursiveResize(false);
+        graph.setConnectableEdges(false);
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
@@ -91,10 +92,14 @@
         vStyle["rounded"] = 1;
         eStyle["edgeStyle"] = "orthogonalEdgeStyle";
         eStyle["strokeWidth"] = 1;
-        eStyle["fontSize"] = 15;
+        //eStyle["fontSize"] = 15;
         eStyle["targetJettySize"] = 25;
         eStyle["shadow"] = false;
         eStyle["endArrow"] = "none";
+        eStyle["fontColor"] = "#000";
+        eStyle["verticalAlign"] = "top";
+        eStyle["overflow"] = "width";
+        eStyle["align"] = "right";
         //eStyle["startArrow"]="oval";
         //Block properties editor
         graph
@@ -421,16 +426,16 @@
         });
         //Arrow keys
         keyHandler.bindKey(38, function (evt) {
-          moveGraph("up")
+          moveGraph("up");
         });
         keyHandler.bindKey(40, function (evt) {
-          moveGraph("down")
+          moveGraph("down");
         });
         keyHandler.bindKey(39, function (evt) {
-          moveGraph("right")
+          moveGraph("right");
         });
         keyHandler.bindKey(37, function (evt) {
-          moveGraph("left")
+          moveGraph("left");
         });
         //undo and redo
         keyHandler.bindControlKey(90, function (evt) {
@@ -780,7 +785,7 @@
                   ctx.closePath();
                   ctx.stroke();
 
-                  stepping = stepping*5;
+                  stepping = stepping * 5;
                   xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                   xe = Math.ceil(w / stepping) * stepping;
                   ys = Math.floor((0 - ty) / stepping) * stepping + ty;
@@ -807,7 +812,7 @@
                   }
                   ctx.closePath();
                   ctx.stroke();
-                  stepping = stepping*2;
+                  stepping = stepping * 2;
                   xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                   xe = Math.ceil(w / stepping) * stepping;
                   ys = Math.floor((0 - ty) / stepping) * stepping + ty;
@@ -860,7 +865,10 @@
           var edge = evt.getProperty("cell");
           var source = graph.getModel().getTerminal(edge, true);
           var target = graph.getModel().getTerminal(edge, false);
-          if (source.style.search("umk_input") >= 0 && target.style.search("umk_output") >= 0) {
+          if (
+            source.style.search("umk_input") >= 0 &&
+            target.style.search("umk_output") >= 0
+          ) {
             graph.getModel().setTerminal(edge, source, false);
             graph.getModel().setTerminal(edge, target, true);
           }
@@ -881,18 +889,29 @@
           );
           if (customValidationError) {
             var outError;
-            if (source.parent === target.parent)
-              outError = "Cannot connect to the same block.";
-            if (source.style.search("umk_input") >= 0 && target.style.search("umk_input") >= 0)
-              outError = "Cannot connect both the inputs.";
-            if (source.style.search("umk_output") >= 0 && target.style.search("umk_output") >= 0)
-              outError = "Cannot connect both the outputs.";
-            if (
-              (target.style.search("umk_input") >= 0 && target.getEdgeCount() > 0) ||
-              (source.style.search("umk_input") >= 0 && source.getEdgeCount() > 0)
-            )
-              outError = "Only one input is allowed per port.";
-            return outError || defaultOut;
+            try {
+              if (source.parent === target.parent)
+                outError = "Cannot connect to the same block.";
+              if (
+                source.style.search("umk_input") >= 0 &&
+                target.style.search("umk_input") >= 0
+              )
+                outError = "Cannot connect both the inputs.";
+              if (
+                source.style.search("umk_output") >= 0 &&
+                target.style.search("umk_output") >= 0
+              )
+                outError = "Cannot connect both the outputs.";
+              if (
+                (target.style.search("umk_input") >= 0 &&
+                  target.getEdgeCount() > 0) ||
+                (source.style.search("umk_input") >= 0 &&
+                  source.getEdgeCount() > 0)
+              )
+                outError = "Only one input is allowed per port.";
+            } catch (e) {} finally {
+              return outError || defaultOut;
+            }
           } else return defaultOut;
         };
         mxGraph.prototype.validationAlert = function (message) {
@@ -964,7 +983,7 @@
                   });
                 return "Loading...";
               }
-            } else return cell.value;
+            } else return cell.value; //"$\\text{"+cell.value+"}$";
           } else return null;
         };
         graph.getEditingValue = function (cell, evt) {
@@ -1038,6 +1057,11 @@
         v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
         setTermianls(v1, "umk_input");
         setTermianls(v1, "umk_output");
+        if ((umkModel.Category === "sinks") && (IconDetails.output === 'display')) {
+          var disp = graph.insertVertex(
+            v1, null, "$[.]$", 0.5, 0, 0, 0, "umk_display", true
+          );
+        }
         var EO = graph.insertVertex(
           v1,
           null,
@@ -1174,6 +1198,13 @@
       style.portConstraint = "east";
       //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
       graph.getStylesheet().putCellStyle("umk_output", style);
+
+      style = new Object();
+      style.constituent = 1;
+      style.align = "center";
+      style.verticalAlign = "top";
+      style.fontColor = "#fff";
+      graph.getStylesheet().putCellStyle("umk_display", style);
     }
     //Group blocks
     function createSubModel() {
@@ -1327,7 +1358,7 @@
           value.x -= step;
           break;
       }
-      graph.view.setTranslate(value.x, value.y)
+      graph.view.setTranslate(value.x, value.y);
       graph.view.refresh();
     }
 
@@ -1395,6 +1426,17 @@
 
 <body>
   <div id="modelContainer" class="umk_main" style="transition: margin 700ms;"></div>
+  <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
+    style="transition: margin 700ms;position:fixed;top:0;left:0;display: none;">
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="showSimulationToolbar(false)"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-arrow-left"></i>
+    </div>
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="executeSimulation()"
+      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
+      <i class="fa-fw fas fa-play"></i>
+    </div>
+  </div>
   <div id="toolBar" class="umk_main w3-bar w3-indigo w3-card"
     style="transition: margin 700ms;position:fixed;top:0;left:0;">
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick=""
@@ -1434,8 +1476,7 @@
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
       <i class="fa-fw fas fa-cogs"></i>
     </div>
-    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('printingTheModel')"
+    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="showSimulationToolbar()"
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
       <i class="fa-fw fas fa-play"></i>
     </div>
@@ -1744,7 +1785,7 @@
 
   <div id="app">
     <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
-      <div class="w3-display-middle w3-center w3-padding" style="background-color: rgba(255, 255, 255, 0.9);">
+      <div class="w3-display-middle w3-center w3-padding" style="background-color: #e1e1e180;">
         <p id="DOMWaitingHead" class="w3-large"></p>
         <div class="fa-3x">
           <i class="fas fa-spinner fa-pulse"></i>
@@ -1752,16 +1793,23 @@
         <p id="DOMWaitingDesc" class="w3-large"></p>
       </div>
     </div>
-
-    <div class="w3-overlay w3-animate-opacity" onclick="closeLeftMenu()"
-      style="cursor:pointer; position: fixed; left: 0px; top: 0px;" id="leftMenuOverlay"></div>
-    <div class="w3-sidebar w3-card w3-animate-left"
-      style="z-index: 2; left: 0px; top: 0px; width: 500px; max-width: 100%; display: none;" id="leftMenu"></div>
   </div>
   <div id="tempSideForAlwaysHidden" style="width:0px;"></div>
   <script>
     function prepareSVGURL(svg) {
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
+    function showSimulationToolbar(show = true) {
+      if (show) {
+        toggleSideBar();
+        document.getElementById("toolBar").style.display = "none";
+        document.getElementById("sToolBar").style.display = "block";
+      } else {
+        stopSimulation();
+        document.getElementById("sToolBar").style.display = "none";
+        document.getElementById("toolBar").style.display = "block";
+      }
     }
 
     function toggleSideBar(sidebar = "tempSideForAlwaysHidden") {
@@ -1812,6 +1860,7 @@
   </script>
   <script>
     var LIBRARY_SUMMARY = {};
+    var ALLFUNCTIONS = {};
     var fullyLoadedTimeCheck;
   </script>
   <script>
@@ -1963,11 +2012,19 @@
             )
           );
           for (var i = 0; i < graph.getSelectionCell().children.length; i++) {
-            if (graph.getSelectionCell().children[i].style.search("umk_input") >= 0)
+            if (
+              graph
+              .getSelectionCell()
+              .children[i].style.search("umk_input") >= 0
+            )
               graph.setCellStyles("portConstraint", pConstarins[ang].in, [
                 graph.getSelectionCell().children[i]
               ]);
-            if (graph.getSelectionCell().children[i].style.search("umk_output") >= 0)
+            if (
+              graph
+              .getSelectionCell()
+              .children[i].style.search("umk_output") >= 0
+            )
               graph.setCellStyles("portConstraint", pConstarins[ang].out, [
                 graph.getSelectionCell().children[i]
               ]);
@@ -2526,10 +2583,10 @@
       });
     }
 
-    function pullDBAndGenModel(bid) {
+    function pullDBAndGenModel(bid, storeData = null) {
       return new Promise(function (resolve, reject) {
         if (eval("typeof umk_" + bid) === "function") {
-          resolve();
+          resolve(storeData);
         } else {
           db.collection("blocks")
             .doc(bid)
@@ -2552,8 +2609,8 @@
     }
 
     function createAModel(bid, dbBlockData) {
-      var constructorStr = "window.umk_" + bid + " = function(obj={}){";
-      var prototypesStr = "";
+      var constructorStr = "umk_" + bid + " = function(obj={}){";
+      var prototypesArr = [];
       blockTemplate.forEach(function (item) {
         let tempObj = {};
         var tempVal;
@@ -2586,8 +2643,8 @@
           case "function":
             if (!dbBlockData[item.name]) tempVal = "";
             else tempVal = dbBlockData[item.name].toString();
-            prototypesStr +=
-              "\nwindow.umk_" +
+            prototypesArr.push(
+              "umk_" +
               bid +
               ".prototype." +
               item.name +
@@ -2595,15 +2652,21 @@
               item.argument +
               "){" +
               tempVal +
-              "}";
+              "}");
             break;
         }
       });
       constructorStr +=
         "for(var prop in obj){if (typeof obj[prop] !== 'function') this[prop] = JSON.parse2(JSON.stringify2(obj[prop]));}";
       constructorStr += "}";
-      eval(constructorStr);
-      eval(prototypesStr);
+      eval("window." + constructorStr);
+      for (var i = 0; i < prototypesArr.length; i++) {
+        eval("window." + prototypesArr[i]);
+      }
+      ALLFUNCTIONS["umk_" + bid] = {
+        cs: constructorStr,
+        ps: prototypesArr
+      };
       //console.log(constructorStr);
     }
   </script>
@@ -2809,8 +2872,10 @@
         var isFullyConnected = true;
         for (var j = 0; j < allConnectedBlocks[i].children.length; j++) {
           if (
-            (allConnectedBlocks[i].children[j].style.search("umk_input") >= 0 ||
-              allConnectedBlocks[i].children[j].style.search("umk_input") >= 0) &&
+            (allConnectedBlocks[i].children[j].style.search("umk_input") >=
+              0 ||
+              allConnectedBlocks[i].children[j].style.search("umk_input") >=
+              0) &&
             (!allConnectedBlocks[i].children[j].edges ||
               allConnectedBlocks[i].children[j].edges.length < 1)
           )
@@ -2843,6 +2908,119 @@
       return arr.filter(function (ele) {
         return ele != value;
       });
+    }
+  </script>
+  <script>
+    var w;
+    var updateOutputs = [];
+
+    function executeSimulation() {
+      if (typeof Worker !== "undefined") {
+        if (!w) {
+          try {
+            w = new Worker("js/simulate.js?date=" + Date.now());
+            var order = getExecutionOrder();
+            var getResults = [];
+            var modelsForExec = [];
+            var inputsArray = [];
+            for (var i = 0; i < order.eo.length; i++) {
+              var tempSources = [];
+              getSourcesWithIndexes(order.eo[i]).forEach(function (item) {
+                tempSources.push([order.eo.indexOf(item.model), item.index]);
+              });
+              //Obtaining execution order
+              modelsForExec.push({
+                "m": order.eo[i].value,
+                "s": tempSources
+              });
+
+              //Obtaining inputs array
+              //Creating handles to update sinks
+              if (order.eo[i].value.Category === "sinks") {
+                getResults[i] = true;
+                for (var j = 0; j < order.eo[i].children.length; j++) {
+                  if (order.eo[i].children[j].style.search("umk_display") >= 0) {
+                    updateOutputs[i] = {
+                      data: order.eo[i].children[j],
+                      update: function (val) {
+                        this.data.setValue(val);
+                        graph.refresh(this.data);
+                      }
+                    }
+                  }
+                }
+              } else getResults[i] = false;
+            }
+            w.postMessage({
+              "em": modelsForExec,
+              "oa": getResults,
+              "am": ALLFUNCTIONS,
+              "state": "start",
+              "endAt": -1,
+              "timeStep": 0.1,
+              "resetTime": true
+            });
+            w.onmessage = function (event) {
+              if (!!event.data.out) {
+                for (var i = 0; i < updateOutputs.length; i++) {
+                  if (!!updateOutputs[i]) updateOutputs[i].update(makeATEXMatrix(event.data.out[i][0][0]));
+                }
+              }
+              console.log(event.data);
+            };
+          } catch (e) {
+            console.log(e);
+            stopSimulation();
+          }
+        }
+      } else {
+        notyf.error("Your browser doesn't support multi-threading.");
+      }
+    }
+
+    function stopSimulation() {
+      if (!!w) {
+        w.terminate();
+        w = null;
+      }
+    }
+
+    function getSourcesWithIndexes(inModel) {
+      var modelSources = [];
+      var indexes = [];
+      for (var i = 0; i < inModel.children.length; i++) {
+        if (inModel.children[i].style.search("umk_input") >= 0) {
+          var index = -1;
+          var tempPModel = inModel.children[i].edges[0].source.parent;
+          for (j = 0; j < tempPModel.children.length; j++) {
+            if (tempPModel.children[j].style.search("umk_output") >= 0) {
+              index++;
+              if ((!!tempPModel.children[j].edges) && (tempPModel.children[j].edges.indexOf(inModel.children[i].edges[
+                  0]) >= 0)) {
+                indexes.push({
+                  "model": inModel.children[i].edges[0].source.parent,
+                  "index": index
+                });
+              }
+            }
+          }
+        }
+      }
+      return indexes
+    }
+    function makeATEXMatrix(inArray) {
+      var StrOut = "$\\begin{bmatrix}\n";
+      for (var i = 0; i < inArray.length; i++) {
+        for (var j = 0; j < inArray[0].length; j++) {
+          if (j !== 0) StrOut += "\t&\t";
+          StrOut += math.round(math.evaluate(inArray[i][j]), 3);
+        }
+        StrOut += "\t\\\\\n";
+      }
+      StrOut += "\\end{bmatrix}$";
+      console.log(StrOut);
+      return StrOut;
+
     }
   </script>
 </body>
