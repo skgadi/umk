@@ -1061,6 +1061,7 @@
           var disp = graph.insertVertex(
             v1, null, "$[.]$", 0.5, 0, 0, 0, "umk_display", true
           );
+          disp.setConnectable(false);
         }
         var EO = graph.insertVertex(
           v1,
@@ -1204,6 +1205,7 @@
       style.align = "center";
       style.verticalAlign = "top";
       style.fontColor = "#fff";
+      style.overflow = "width";
       graph.getStylesheet().putCellStyle("umk_display", style);
     }
     //Group blocks
