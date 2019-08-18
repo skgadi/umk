@@ -113,6 +113,15 @@
           return group;
         };
 
+        //resize children with parents
+        graph.getModel().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
+        graph.getView().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
+        var resizeChildren = function (sender, evt) {
+          console.log(sender);
+          console.log(evt);
+        }
+
+
         //Undo/redo activities
         undoManager = new mxUndoManager();
         var listener = function (sender, evt) {
@@ -918,7 +927,10 @@
         graph.getLabel = function (cell) {
           //console.log(cell);
           if (!!cell.value) {
-            if (typeof cell.value === "object") {
+            if (cell.style.search("umk_display") >= 0) {
+              return cell.value.show || "$[\\cdot]$";
+            }
+            if (cell.style.search("umk_model") >= 0) {
               try {
                 eval(
                   "var tempModel = new umk_" +
@@ -926,7 +938,7 @@
                   " (cell.value);"
                 );
                 setCaption(cell, tempModel.Name);
-                return "<p>" + tempModel.Icon().html + "</p>";
+                return "<p style='margin:0; padding: 0;'>" + tempModel.Icon().html + "</p>";
               } catch (e) {
                 pullDBAndGenModel(cell.value.bid)
                   .then(function () {
@@ -995,6 +1007,11 @@
           newPt.x -= pt.x;
           newPt.y -= pt.y;
         }
+        //additional style
+        var addStyle = "";
+        if ((umkModel.Category === "sinks") && (IconDetails.output === 'display')) {
+          addStyle += "umk_display;"
+        }
         v1 = graph.insertVertex(
           cell,
           null,
@@ -1005,9 +1022,9 @@
           .width,
           LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
           .height,
-          "foldable=0;overflow=hidden;verticalAlign=middle;fillColor=" +
+          "umk_model;" + addStyle + "fillColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
-          ";fontColor=#fff;verticalAlign=top;strokeColor=" +
+          ";strokeColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";"
         );
@@ -1017,12 +1034,12 @@
         v1.geometry.alternateBounds = new mxRectangle(0, 0, 200, 20);
         setTermianls(v1, "umk_input");
         setTermianls(v1, "umk_output");
-        if ((umkModel.Category === "sinks") && (IconDetails.output === 'display')) {
+        /*if ((umkModel.Category === "sinks") && (IconDetails.output === 'display')) {
           var disp = graph.insertVertex(
-            v1, null, "$[.]$", 0.5, 0, 0, 0, "umk_display", true
+            v1, null, "$[.]$", 0, 0, 0, 0, "umk_display", true
           );
           disp.setConnectable(false);
-        }
+        }*/
         var EO = graph.insertVertex(
           v1,
           null,
@@ -1118,6 +1135,13 @@
 
     function generateStylesheets() {
       var style = new Object();
+      style.foldable = 0;
+      style.overflow = "hidden";
+      style.verticalAlign = "middle";
+      style.fontColor = "#fff";
+      //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
+      graph.getStylesheet().putCellStyle("umk_model", style);
+      var style = new Object();
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
       style.startSize = 25;
       style.strokeWidth = 2;
@@ -1142,10 +1166,11 @@
       style.verticalAlign = "middle";
       style.fontColor = "#fff";
       style.labelPosition = "right";
-      style.labelWidth = 80;
+      style.labelWidth = 15;
       style.align = "left";
       style.shape = "triangle";
       style.portConstraint = "west";
+      style.overflow = "fit";
       //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
       graph.getStylesheet().putCellStyle("umk_input", style);
       style = new Object();
@@ -1153,20 +1178,21 @@
       style.verticalAlign = "middle";
       style.fontColor = "#fff";
       style.labelPosition = "left";
-      style.labelWidth = 80;
+      style.labelWidth = 15;
       style.align = "right";
       style.shape = "triangle";
       style.portConstraint = "east";
+      style.overflow = "fit";
       //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
       graph.getStylesheet().putCellStyle("umk_output", style);
 
-      style = new Object();
+      /*style = new Object();
       style.constituent = 1;
       style.align = "center";
       style.verticalAlign = "top";
       style.fontColor = "#fff";
       style.overflow = "width";
-      graph.getStylesheet().putCellStyle("umk_display", style);
+      graph.getStylesheet().putCellStyle("umk_display", style);*/
     }
     //Group blocks
     function createSubModel() {
@@ -2451,14 +2477,12 @@
               //Creating handles to update sinks
               if (order.eo[i].value.Category === "sinks") {
                 getResults[i] = true;
-                for (var j = 0; j < order.eo[i].children.length; j++) {
-                  if (order.eo[i].children[j].style.search("umk_display") >= 0) {
-                    updateOutputs[i] = {
-                      data: order.eo[i].children[j],
-                      update: function (val) {
-                        this.data.setValue(val);
-                        graph.refresh(this.data);
-                      }
+                if (order.eo[i].value.Icon().output === "display") {
+                  updateOutputs[i] = {
+                    data: order.eo[i],
+                    update: function (val) {
+                      this.data.value.show=val;
+                      graph.refresh(this.data);
                     }
                   }
                 }
@@ -2521,6 +2545,7 @@
       }
       return indexes
     }
+
     function makeATEXMatrix(inArray) {
       var StrOut = "$\\begin{bmatrix}\n";
       for (var i = 0; i < inArray.length; i++) {
