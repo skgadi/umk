@@ -79,7 +79,7 @@
         graph.setMultigraph(false);
         graph.dropEnabled = true;
         graph.constrainChildren =
-          false; // this won't let the the blocks inside the groups to not change size when groups are resized
+        false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
         graph.setRecursiveResize(false);
         graph.setConnectableEdges(false);
@@ -159,8 +159,7 @@
         var resizeChildren = function (sender, evt) {
           console.log(sender);
           console.log(evt);
-        }
-
+        };
 
         //Undo/redo activities
         undoManager = new mxUndoManager();
@@ -601,15 +600,15 @@
                   (cellSelected && graph.isCellSelected(me.getCell())))));
           mxPopupMenuHandler.prototype.mouseUp.apply(this, arguments);
         };
-        /*// Adds mouse wheel handling for zoom
-				mxEvent.addMouseWheelListener(function (evt, up) {
-					if (up) {
-						graph.zoomIn();
-					} else {
-						graph.zoomOut();
-					}
-					mxEvent.consume(evt);
-				});*/
+        // Adds mouse wheel handling for zoom
+        /*mxEvent.addMouseWheelListener(function (evt, up) {
+        	if (up) {
+        		graph.zoomIn();
+        	} else {
+        		graph.zoomOut();
+        	}
+        	mxEvent.consume(evt);
+        });*/
 
         // Tap and hold on background starts rubberband for multiple selected
         // cells the cell associated with the event is deselected
@@ -978,7 +977,11 @@
                   " (cell.value);"
                 );
                 setCaption(cell, tempModel.Name);
-                return "<p style='margin:0; padding: 0;'>" + tempModel.Icon().html + "</p>";
+                return (
+                  "<p style='margin:0; padding: 0;'>" +
+                  tempModel.Icon().html +
+                  "</p>"
+                );
               } catch (e) {
                 pullDBAndGenModel(cell.value.bid)
                   .then(function () {
@@ -1049,8 +1052,11 @@
         }
         //additional style
         var addStyle = "";
-        if ((umkModel.Category === "sinks") && (IconDetails.output === 'display')) {
-          addStyle += "umk_display;"
+        if (
+          umkModel.Category === "sinks" &&
+          IconDetails.output === "display"
+        ) {
+          addStyle += "umk_display;";
         }
         v1 = graph.insertVertex(
           cell,
@@ -1062,7 +1068,9 @@
           .width,
           LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
           .height,
-          "umk_model;" + addStyle + "fillColor=" +
+          "umk_model;" +
+          addStyle +
+          "fillColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
           ";strokeColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
@@ -1425,9 +1433,9 @@
     }
 
     #modelContainer {
-      position: absolute;
+      position: fixed;
       overflow: hidden;
-      top: 22px;
+      top: 40px;
       left: 0px;
       bottom: 18px;
       right: 0px;
@@ -1449,13 +1457,38 @@
       -ms-transform: rotate(90deg);
       transform: rotate(90deg);
     }
+
+    .tool-item {
+      padding: 0px 8px !important;
+    }
   </style>
 </head>
 
 <body>
   <div id="modelContainer" class="umk_main" style="transition: margin 700ms;"></div>
+  <div id="mainToobar" class="w3-bar w3-blue-gray" style="padding: 0px 0px">
+    <div class="w3-bar-item w3-button tool-item">
+      <i class="fa-fw fas fa-home"></i>
+    </div>
+    <template v-for="(topTool, index) in toolBar">
+      <div class="w3-dropdown-hover">
+        <div class="w3-button tool-item">{{ topTool.value }}</div>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4" style="width: 400px;">
+          <template v-for="(tool, index) in topTool.items">
+            <hr v-if="tool.value === 'hl'" style="margin:0;" />
+            <div v-else class="w3-bar-item w3-button" v-bind:title="tool.text">
+              <span><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span>
+              <span>{{ tool.value }}</span>
+              <span class="w3-right w3-small">{{tool.shortcut}}</span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+  </div>
+
   <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
-    style="transition: margin 700ms;position:fixed;top:0;left:0;display: none;">
+    style="transition: margin 700ms;/*position:fixed;top:0;left:0;display: none;*/">
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="showSimulationToolbar(false)"
       title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
       <i class="fa-fw fas fa-arrow-left"></i>
@@ -1466,7 +1499,7 @@
     </div>
   </div>
   <div id="toolBar" class="umk_main w3-bar w3-indigo w3-card"
-    style="transition: margin 700ms;position:fixed;top:0;left:0;">
+    style="transition: margin 700ms;/*position:fixed;top:0;left:0;*/">
     <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick=""
       title="Show menu (Ctrl+)&#10;Pull the menu drawer.">
       <i class="fa-fw fas fa-bars"></i>
@@ -1582,10 +1615,10 @@
   </div>
   <div id="statusBar" class="umk_main w3-bar w3-dark-grey"
     style="transition: margin 700ms;position:fixed; bottom:0;right:0">
-    <div class="w3-bar-item w3-right w3-small" style="padding: 0px;">
+    <div class="w3-bar-item w3-right" style="padding: 0px;">
       Design mode
     </div>
-    <div class="w3-bar-item w3-right w3-small" style="padding: 0px; margin: 0 8px;">
+    <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
       <i class="fas fa-braille"></i>
     </div>
   </div>
@@ -1890,6 +1923,178 @@
     var LIBRARY_SUMMARY = {};
     var ALLFUNCTIONS = {};
     var fullyLoadedTimeCheck;
+  </script>
+  <script>
+    var mainToobar = new Vue({
+      el: "#mainToobar",
+      data: {
+        toolBar: [{
+            value: "File",
+            icon: "fas fa-arrow-left",
+            function: "",
+            text: "Good to go when eveything is fine and also I want to say something more 1",
+            shortcut: "Ctrl + C",
+            items: [{
+                value: "New",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 2",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Save",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 3",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Load",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 4",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "hl",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 5",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Print",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 6",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "hl",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 7",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Account",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 8",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Extend licence period",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 9",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "File explorer",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 10",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Sign out",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 11",
+                shortcut: "Ctrl + C"
+              }
+            ]
+          },
+          {
+            value: "Edit",
+            icon: "fas fa-arrow-left",
+            function: "showSimulationToolbar(false)",
+            text: "Good to go when eveything is fine and also I want to say something more 12",
+            shortcut: "Ctrl + C",
+            items: [{
+                value: "Cut",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 13",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Copy",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 14",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Paste",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 15",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "hl",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 16",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Edit block",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 17",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Edit ",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 18",
+                shortcut: "Ctrl + C"
+              }
+            ]
+          },
+          {
+            value: "View",
+            icon: "fas fa-arrow-left",
+            function: "showSimulationToolbar(false)",
+            text: "Good to go when eveything is fine and also I want to say something more 19",
+            shortcut: "Ctrl + C",
+            items: [{
+                value: "Zoom in",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 20",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Zoom out",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 21",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Original size",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 22",
+                shortcut: "Ctrl + C"
+              },
+              {
+                value: "Fit all",
+                icon: "fas fa-arrow-left",
+                function: "showSimulationToolbar(false)",
+                text: "Good to go when eveything is fine and also I want to say something more 23",
+                shortcut: "Ctrl + C"
+              }
+            ]
+          }
+        ]
+      }
+    });
   </script>
   <script>
     var printingTheModel = new Vue({
@@ -2680,7 +2885,8 @@
               item.argument +
               "){" +
               tempVal +
-              "}");
+              "}"
+            );
             break;
         }
       });
@@ -2958,8 +3164,8 @@
               });
               //Obtaining execution order
               modelsForExec.push({
-                "m": order.eo[i].value,
-                "s": tempSources
+                m: order.eo[i].value,
+                s: tempSources
               });
 
               //Obtaining inputs array
@@ -2970,26 +3176,29 @@
                   updateOutputs[i] = {
                     data: order.eo[i],
                     update: function (val) {
-                      this.data.value.show=val;
+                      this.data.value.show = val;
                       graph.refresh(this.data);
                     }
-                  }
+                  };
                 }
               } else getResults[i] = false;
             }
             w.postMessage({
-              "em": modelsForExec,
-              "oa": getResults,
-              "am": ALLFUNCTIONS,
-              "state": "start",
-              "endAt": -1,
-              "timeStep": 0.1,
-              "resetTime": true
+              em: modelsForExec,
+              oa: getResults,
+              am: ALLFUNCTIONS,
+              state: "start",
+              endAt: -1,
+              timeStep: 0.1,
+              resetTime: true
             });
             w.onmessage = function (event) {
               if (!!event.data.out) {
                 for (var i = 0; i < updateOutputs.length; i++) {
-                  if (!!updateOutputs[i]) updateOutputs[i].update(makeATEXMatrix(event.data.out[i][0][0]));
+                  if (!!updateOutputs[i])
+                    updateOutputs[i].update(
+                      makeATEXMatrix(event.data.out[i][0][0])
+                    );
                 }
               }
               console.log(event.data);
@@ -3021,18 +3230,22 @@
           for (j = 0; j < tempPModel.children.length; j++) {
             if (tempPModel.children[j].style.search("umk_output") >= 0) {
               index++;
-              if ((!!tempPModel.children[j].edges) && (tempPModel.children[j].edges.indexOf(inModel.children[i].edges[
-                  0]) >= 0)) {
+              if (
+                !!tempPModel.children[j].edges &&
+                tempPModel.children[j].edges.indexOf(
+                  inModel.children[i].edges[0]
+                ) >= 0
+              ) {
                 indexes.push({
-                  "model": inModel.children[i].edges[0].source.parent,
-                  "index": index
+                  model: inModel.children[i].edges[0].source.parent,
+                  index: index
                 });
               }
             }
           }
         }
       }
-      return indexes
+      return indexes;
     }
 
     function makeATEXMatrix(inArray) {
@@ -3047,7 +3260,6 @@
       StrOut += "\\end{bmatrix}$";
       console.log(StrOut);
       return StrOut;
-
     }
   </script>
 </body>
