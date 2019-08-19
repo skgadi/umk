@@ -2077,7 +2077,7 @@
           graph.getSelectionCell().setValue(tempModel);
           setTermianls(graph.getSelectionCell(), "umk_input");
           setTermianls(graph.getSelectionCell(), "umk_output");
-          graph.refresh();
+          graph.refresh(graph.getSelectionCell());
         },
         getBlockDetails: function () {
           try {
