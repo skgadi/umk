@@ -1441,15 +1441,15 @@
       background-color: #f1f1f1 !important;
     }
 
-    #modelContainer {
-      /*position: fixed;
+    /*#modelContainer {
+      position: fixed;
       overflow: hidden;
       top: 40px;
       left: 0px;
       bottom: 18px;
       right: 0px;
-      cursor: default;*/
-    }
+      cursor: default;
+    }*/
 
     /*.MJXc-display {
       margin: 0 !important;
@@ -1525,10 +1525,15 @@
         </div>
       </div>
     </template>
+    <div id="simulationToolForBar">
+      <div class="w3-bar-item w3-button tool-item single-tool-item w3-right">
+        <i class="fas fa-play"></i> / <i class="fas fa-stop"></i>
+      </div>
+    </div>
   </div>
-  <div id="flex" style="height:calc(100% - 23.92px)">
+  <div id="flex" style="height:calc(100% - 38.92px)">
     <div id="flex-1" style="overflow:auto;">
-      <div class="w3-block w3-khaki w3-hover-yellow w3-button" onclick="mainSplit.setSizes([0,100])">
+      <div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding: 0 8px;" onclick="mainSplit.setSizes([0,100])">
         <div class="w3-right">
           <i class="fas fa-sign-out-alt fa-rotate-180"></i>
         </div>
@@ -1756,11 +1761,74 @@
         </div>
       </div>
       <div class="tabContent" style="display: none;" id="settings"></div>
-      <div class="tabContent" style="display: none;" id="simulation"></div>
-      <div class="tabContent" style="display: none;" id="folder"></div>
+      <div class="tabContent" style="display: none;" id="simulation">
+        <div v-if="available">
+        <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="showExecutionOrder">
+          <div class="w3-right">
+              <i class="fas fa-sort-numeric-up-alt"></i>
+            </div>
+            <div class="w3-left">
+              Show execution order
+            </div>
+        </div>
+        <label>Sampling time ($T_S$)</label>
+        <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams">
+        <label>Simulation duration ($T$)</label>
+        <input class="w3-input w3-border w3-border-blue" v-model="sParams.T" v-on:blur="validateParams">
+        <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green">
+          <div class="w3-right">
+              <i class="fas fa-play"></i>
+            </div>
+            <div class="w3-left">
+              Run
+            </div>
+        </div>
+        <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green">
+          <div class="w3-right">
+              <i class="fas fa-pause"></i>
+            </div>
+            <div class="w3-left">
+              Pause
+            </div>
+        </div>
+        <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green">
+          <div class="w3-right">
+              <i class="fas fa-stop"></i>
+            </div>
+            <div class="w3-left">
+              Stop
+            </div>
+        </div>
+        <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green">
+          <div class="w3-right">
+              <i class="fas fa-step-forward"></i>
+            </div>
+            <div class="w3-left">
+              Step
+            </div>
+        </div>
+        <label>Number of steps ($N$)</label>
+        <input class="w3-input w3-border w3-border-blue" type="number" min=2 step=1 v-model.number="sParams.N" v-on:blur="validateParams">
+        <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green">
+          <div class="w3-right">
+              <i class="fas fa-fast-forward"></i>
+            </div>
+            <div class="w3-left">
+              $N$-steps
+            </div>
+        </div>
+        <input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime" >
+        <label for="sRealtime">Real time simulation</label>
+        <br>
+        <input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts" >
+        <label for="showOutputs">Show all the outputs (Not recommended)</label>
+      </div>
+      <div v-else><h3>Cannot simulate</h3><p>Your browser doesn't support multi threading.</p></div>
+      </div>
+    <div class="tabContent" style="display: none;" id="folder"></div>
     </div>
     <div id="flex-2">
-      <div id="modelContainer" class="umk_main" style="transition: margin 700ms;height:100%;width:100%"></div>
+      <div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div>
     </div>
   </div>
   <script>
@@ -1785,6 +1853,14 @@
       }
     });
   </script>
+  <div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny">
+    <div class="w3-bar-item w3-right" style="padding: 0px;">
+      Design mode
+    </div>
+    <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
+      <i class="fas fa-braille"></i>
+    </div>
+  </div>
 
   <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
     style="transition: margin 700ms;/*position:fixed;top:0;left:0;display: none;*/">
@@ -1912,15 +1988,6 @@
       <i class="fa-fw fas fa-window-maximize"></i>
     </div>
   </div>
-  <!--div id="statusBar" class="umk_main w3-bar w3-dark-grey"
-    style="transition: margin 700ms;position:fixed; bottom:0;right:0">
-    <div class="w3-bar-item w3-right" style="padding: 0px;">
-      Design mode
-    </div>
-    <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
-      <i class="fas fa-braille"></i>
-    </div>
-  </div-->
   <div id="outlineContainer" class="w3-hide-small w3-hide-medium"
     style="position:fixed;overflow:hidden;top:50px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
   </div>
@@ -2030,6 +2097,46 @@
     var ALLFUNCTIONS = {};
     var fullyLoadedTimeCheck;
   </script>
+  <script>
+    var simulation = new Vue ({
+      "el": "#simulation",
+      "data": {
+        "available": false,
+        "sParams": {
+          "Ts":0.001,
+          "T": 10,
+          "N": 2,
+          "showOuts": false,
+          "sRealtime": false
+        },
+        "state": "Design",
+        "threads": {}
+      },
+      "startComputationThread": function () {
+        if (!!this.threads.ct) 
+      },
+      "created": function () {
+        this.available = !! Worker;
+        var simulationToolForBar = document.getElementById("simulationToolForBar");
+        if (this.available) simulationToolForBar.style.display = "block";
+        else simulationToolForBar.style.display = "none";
+      },
+      "methods": {
+        validateParams: function () {
+          var infArray = ["inf", "infinity", "∞"];
+          this.sParams.Ts = parseFloat(this.sParams.Ts);
+          if (isNaN(this.sParams.Ts)|| this.sParams.Ts<=0) this.sParams.Ts = 0.001;
+          this.sParams.T = parseFloat(this.sParams.T);
+          if (isNaN(this.sParams.T)|| this.sParams.T<=0) this.sParams.T = Infinity;
+          this.sParams.N = parseInt(this.sParams.N);
+          if (isNaN(this.sParams.N)|| this.sParams.N<=0) this.sParams.N = 2;
+        },
+        showExecutionOrder: function () {
+          displayExecutionOrder();
+        }
+      }
+    });
+ </script>
   <script>
     var mainToobar = new Vue({
       el: "#mainToobar",
