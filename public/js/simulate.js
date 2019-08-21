@@ -4,6 +4,8 @@ importScripts("https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.4/math.min.js")
 var ExecutingModels = [];
 var recEM;
 var T_E=0;
+var t=0;
+var Ts = 0.001
 var secondsToRun = -1;
 var displayOut =[];
 self.onmessage = function (m) {
@@ -30,7 +32,7 @@ self.onmessage = function (m) {
   }
 
   simulate ();
-  postMessage({"in":m.data, "out":displayOut});
+  
 }
 
 function prepareVariableLinks () {
@@ -48,13 +50,25 @@ function prepareVariableLinks () {
   }
 }
 
-
+var simulating = false;
 function simulate () {
-  for (var i=0; i<recEM.length;i++) {
-    for (var j=0; j<recEM[i].s.length; j++) {
-      //throw ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
-      ExecutingModels[i].inputs[j] = ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+  if (!simulating) {
+    simulating = true;
+    for (var i=0; i<recEM.length;i++) {
+      for (var j=0; j<recEM[i].s.length; j++) {
+        //throw ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+        ExecutingModels[i].inputs[j] = ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+      }
+      ExecutingModels[i].Evaluate();
     }
-    ExecutingModels[i].Evaluate();
+    t += Ts;
+    simulating = false;
+    postMessage({"out":displayOut});
   }
+}
+
+var simulationLoop;
+var minTs;
+function setSimulationLoop(timeInterval) {
+  simulationLoop = setInterval (simulate, (timeInterval>=minTs ? timeInterval : minTs));
 }
