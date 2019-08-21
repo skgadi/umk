@@ -781,7 +781,7 @@
                   var ixe = Math.round(xe);
                   var iys = Math.round(ys);
                   var iye = Math.round(ye);
-                  ctx.strokeStyle = "#e6e6e6";
+                  ctx.strokeStyle = "#c0c0c0";
                   ctx.fillStyle = "#fff";//"#f1f1f1";
                   ctx.fillRect(0, 0, canvas.width, canvas.height);
                   ctx.beginPath();
@@ -800,7 +800,7 @@
                   }
                   ctx.closePath();
                   ctx.stroke();
-                  ctx.strokeStyle = "#888";
+                  ctx.strokeStyle = "#808080";
                   stepping = stepping * 5;
                   xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                   xe = Math.ceil(w / stepping) * stepping;
@@ -828,7 +828,7 @@
                   }
                   ctx.closePath();
                   ctx.stroke();
-                  ctx.strokeStyle = "#000";
+                  ctx.strokeStyle = "#404040";
                   stepping = stepping * 2;
                   xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                   xe = Math.ceil(w / stepping) * stepping;
@@ -1769,8 +1769,8 @@
           <label>Sampling time ($T_S$)</label>
           <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams">
           <label>Simulation duration ($T$)</label>
-          <input class="w3-input w3-border w3-border-blue" v-model="sParams.T" v-on:blur="validateParams">
-          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green">
+          <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams">
+          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run">
             <div class="w3-right">
               <i class="fas fa-play"></i>
             </div>
@@ -1778,7 +1778,7 @@
               Run
             </div>
           </div>
-          <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green">
+          <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause">
             <div class="w3-right">
               <i class="fas fa-pause"></i>
             </div>
@@ -1786,15 +1786,15 @@
               Pause
             </div>
           </div>
-          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="terminateAThread(threads.ct)">
+          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="stop">
             <div class="w3-right">
               <i class="fas fa-stop"></i>
             </div>
             <div class="w3-left">
-              Stop
+              Stop/Reset
             </div>
           </div>
-          <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="restartComputationThread">
+          <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="runNSteps">
             <div class="w3-right">
               <i class="fas fa-step-forward"></i>
             </div>
@@ -1805,7 +1805,7 @@
           <label>Number of steps ($N$)</label>
           <input class="w3-input w3-border w3-border-blue" type="number" min=2 step=1 v-model.number="sParams.N"
             v-on:blur="validateParams">
-          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green">
+          <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)">
             <div class="w3-right">
               <i class="fas fa-fast-forward"></i>
             </div>
@@ -1826,7 +1826,7 @@
       </div>
       <div class="tabContent" style="display: none;" id="folder"></div>
     </div>
-    <div id="flex-2">
+    <div id="flex-2" style="overflow:auto;">
       <div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div>
     </div>
   </div>
@@ -1853,12 +1853,12 @@
     });
   </script>
   <div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny">
-    <div class="w3-bar-item w3-right" style="padding: 0px;">
-      Design mode
-    </div>
+    <div id="stateOfSystem" class="w3-bar-item w3-right" style="padding: 0px;">Design</div>
     <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
       <i class="fas fa-braille"></i>
     </div>
+    <div id="simulationTime" class="w3-bar-item w3-right" style="padding: 0px;">0.000</div>
+    <div class="w3-bar-item w3-right" style="padding: 0px;">$t=$</div>
   </div>
 
   <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
@@ -2102,13 +2102,15 @@
       "data": {
         "available": false,
         "sParams": {
-          "Ts": 0.001,
-          "T": 10,
+          "Ts": 0.1,
+          "T_E": 10,
           "N": 2,
           "showOuts": false,
-          "sRealtime": false
+          "sRealtime": true
         },
         "state": "Design",
+        "t": 0,
+        "timePrecision": 1,
         "threads": {}
       },
       "created": function () {
@@ -2117,11 +2119,47 @@
         if (this.available) simulationToolForBar.style.display = "block";
         else simulationToolForBar.style.display = "none";
       },
+      "watch": {
+        "state": function (val) {
+          document.getElementById("stateOfSystem").innerHTML = val;
+        },
+        "t": function (val) {
+          document.getElementById("simulationTime").innerHTML = val.toFixed(this.timePrecision);
+        }
+      },
       "methods": {
+        "stop": function () {
+          this.state = "Design";
+          this.terminateAThread(this.threads.ct);
+          delete this.threads.ct;
+        },
+        "pause": function () {
+          this.threads.ct.postMessage({
+            "state": "Pause"
+          });
+        },
+        "run": function () {
+          if (!this.threads.ct) this.restartComputationThread();
+          this.threads.ct.postMessage({
+            "sParams": {"T_E": this.sParams.T_E},
+            "state": "Run"
+          });
+          this.state = "Simulating";
+        },
+        "runNSteps": function (oneStep=true) {
+          var N;
+          if (oneStep) N = 1;
+          else N = this.sParams.N;
+          if (!this.threads.ct) this.restartComputationThread();
+          this.threads.ct.postMessage({
+            "sParams": {"T_E": (N*this.Ts)},
+            "state": "Run"
+          });
+          this.state = "Simulating";
+        },
         "terminateAThread": function (umk_thread) {
           if (!!umk_thread) {
             umk_thread.terminate();
-            umk_thread = undefined;
           }
         },
         "restartComputationThread": function () {
@@ -2172,12 +2210,16 @@
                 em: modelsForExec,
                 oa: getResults,
                 am: ALLFUNCTIONS,
+                sParams: this.sParams,
                 state: "start",
                 endAt: -1,
                 timeStep: 0.1,
                 resetTime: true
               });
               this.threads.ct.onmessage = function (event) {
+                //console.log(event);
+                if ((!!event.data.status) && (event.data.status === "EOS")) simulation.$set(simulation.$data,"state", "Design");
+                if (!!event.data.t) simulation.$set(simulation.$data,"t", event.data.t);
                 if (!!event.data.out) {
                   for (var i = 0; i < updateOutputs.length; i++) {
                     if (!!updateOutputs[i])
@@ -2200,10 +2242,11 @@
           var infArray = ["inf", "infinity", "∞"];
           this.sParams.Ts = parseFloat(this.sParams.Ts);
           if (isNaN(this.sParams.Ts) || this.sParams.Ts <= 0) this.sParams.Ts = 0.001;
-          this.sParams.T = parseFloat(this.sParams.T);
-          if (isNaN(this.sParams.T) || this.sParams.T <= 0) this.sParams.T = Infinity;
+          this.sParams.T_E = parseFloat(this.sParams.T_E);
+          if (isNaN(this.sParams.T_E) || this.sParams.T_E <= 0) this.sParams.T_E = Infinity;
           this.sParams.N = parseInt(this.sParams.N);
           if (isNaN(this.sParams.N) || this.sParams.N <= 0) this.sParams.N = 2;
+          this.timePrecision = precision(this.sParams.Ts);
         },
         "showExecutionOrder": function () {
           displayExecutionOrder();
@@ -3550,6 +3593,12 @@
       }
       StrOut += "\\end{bmatrix}$";
       return StrOut;
+    }
+    function precision(a) {
+      if (!isFinite(a)) return 0;
+      var e = 1, p = 0;
+      while (Math.round(a * e) / e !== a) { e *= 10; p++; }
+      return p;
     }
   </script>
 </body>

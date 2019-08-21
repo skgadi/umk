@@ -6,8 +6,13 @@ var recEM;
 var T_E=0;
 var t=0;
 var Ts = 0.001
+var aTs = 0.01;
 var secondsToRun = -1;
 var displayOut =[];
+var simulationLoop;
+var minTs = 4;
+var showOuts = false;
+var sRealtime = false;
 self.onmessage = function (m) {
   if (!!m.data.am) {
     Object.keys(m.data.am).forEach(function (key) {
@@ -26,13 +31,20 @@ self.onmessage = function (m) {
     }
     prepareVariableLinks();
   }
-  if (!!m.data.resetTime) t=0;
-  if (typeof m.data.endAt !== "undefined") {
-    if (typeof m.data.endAt !== "number") T_E=-1; else T_E= m.data.endAt;
+  if (!!m.data.sParams) {
+    if (!!m.data.sParams.Ts) Ts = m.data.sParams.Ts;
+    if (!!m.data.sParams.T_E) T_E = m.data.sParams.T_E;
+    if (!!m.data.sParams.N) N = m.data.sParams.N;
+    if (!!m.data.sParams.showOuts) showOuts = m.data.sParams.showOuts;
+    if (!!m.data.sParams.sRealtime) sRealtime = m.data.sParams.sRealtime;
   }
-
-  simulate ();
-  
+  if (!!m.data.state) {
+    if (m.data.state === "Run") {
+      if (sRealtime) setSimulationLoop (Ts*1000);
+      else setSimulationLoop (0);
+    }
+    if (m.data.state === "Pause") stopSimulationLoop();
+  }
 }
 
 function prepareVariableLinks () {
@@ -52,23 +64,30 @@ function prepareVariableLinks () {
 
 var simulating = false;
 function simulate () {
-  if (!simulating) {
-    simulating = true;
-    for (var i=0; i<recEM.length;i++) {
-      for (var j=0; j<recEM[i].s.length; j++) {
-        //throw ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
-        ExecutingModels[i].inputs[j] = ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+  if (t <= T_E){
+    if (!simulating) {
+      simulating = true;
+      for (var i=0; i<recEM.length;i++) {
+        for (var j=0; j<recEM[i].s.length; j++) {
+          //throw ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+          ExecutingModels[i].inputs[j] = ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+        }
+        ExecutingModels[i].Evaluate();
       }
-      ExecutingModels[i].Evaluate();
+      postMessage({"out":displayOut, "t": t});
+      t += Ts;
+      simulating = false;
     }
-    t += Ts;
-    simulating = false;
-    postMessage({"out":displayOut});
+  } else {
+    postMessage({"status": "EOS"}); //EOS = end of simulation
   }
 }
 
-var simulationLoop;
-var minTs;
 function setSimulationLoop(timeInterval) {
-  simulationLoop = setInterval (simulate, (timeInterval>=minTs ? timeInterval : minTs));
+  stopSimulationLoop();
+  simulationLoop = setInterval (simulate, (timeInterval >= minTs ? timeInterval : minTs));
+}
+
+function stopSimulationLoop() {
+  if (!!simulationLoop) clearInterval(simulationLoop);
 }
