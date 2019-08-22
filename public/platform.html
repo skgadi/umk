@@ -782,7 +782,7 @@
                   var iys = Math.round(ys);
                   var iye = Math.round(ye);
                   ctx.strokeStyle = "#c0c0c0";
-                  ctx.fillStyle = "#fff";//"#f1f1f1";
+                  ctx.fillStyle = "#fff"; //"#f1f1f1";
                   ctx.fillRect(0, 0, canvas.width, canvas.height);
                   ctx.beginPath();
                   ctx.lineWidth = 0.5;
@@ -1767,15 +1767,15 @@
             </div>
           </div>
           <label>Sampling time ($T_S$)</label>
-          <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams">
+          <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams" />
           <label>Simulation duration ($T$)</label>
-          <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams">
+          <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams" />
           <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run">
             <div class="w3-right">
               <i class="fas fa-play"></i>
             </div>
             <div class="w3-left">
-              Run
+              Run/Continue
             </div>
           </div>
           <div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause">
@@ -1803,8 +1803,8 @@
             </div>
           </div>
           <label>Number of steps ($N$)</label>
-          <input class="w3-input w3-border w3-border-blue" type="number" min=2 step=1 v-model.number="sParams.N"
-            v-on:blur="validateParams">
+          <input class="w3-input w3-border w3-border-blue" type="number" min="2" step="1" v-model.number="sParams.N"
+            v-on:blur="validateParams" />
           <div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)">
             <div class="w3-right">
               <i class="fas fa-fast-forward"></i>
@@ -1813,10 +1813,10 @@
               $N$-steps
             </div>
           </div>
-          <input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime">
+          <input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime" />
           <label for="sRealtime">Real time simulation</label>
-          <br>
-          <input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts">
+          <br />
+          <input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts" />
           <label for="showOutputs">Show all the outputs (Not recommended)</label>
         </div>
         <div v-else>
@@ -1853,12 +1853,27 @@
     });
   </script>
   <div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny">
-    <div id="stateOfSystem" class="w3-bar-item w3-right" style="padding: 0px;">Design</div>
-    <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
-      <i class="fas fa-braille"></i>
+    <div id="stateOfSystem" class="w3-bar-item w3-right" style="padding: 0px;">
+      Design
     </div>
-    <div id="simulationTime" class="w3-bar-item w3-right" style="padding: 0px;">0.000</div>
-    <div class="w3-bar-item w3-right" style="padding: 0px;">$t=$</div>
+    <div id="showWhenSimulating">
+      <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+      <div id="simulationTime" class="w3-bar-item w3-right" style="padding: 0px;">
+        0
+      </div>
+      <div class="w3-bar-item w3-right" style="padding: 0px;">$t$=</div>
+      <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+      <div id="aSimulationTime" class="w3-bar-item w3-right" style="padding: 0px;">
+        NaN
+      </div>
+      <div class="w3-bar-item w3-right" style="padding: 0px;">
+        Actual $T_S$=
+      </div>
+    </div>
   </div>
 
   <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
@@ -2098,83 +2113,120 @@
   </script>
   <script>
     var simulation = new Vue({
-      "el": "#simulation",
-      "data": {
-        "available": false,
-        "sParams": {
-          "Ts": 0.1,
-          "T_E": 10,
-          "N": 2,
-          "showOuts": false,
-          "sRealtime": true
+      el: "#simulation",
+      data: {
+        available: false,
+        sParams: {
+          Ts: 0.1,
+          T_E: 10,
+          N: 2,
+          showOuts: false,
+          sRealtime: true
         },
-        "state": "Design",
-        "t": 0,
-        "timePrecision": 1,
-        "threads": {}
+        state: "Design",
+        t: 0,
+        aTs: NaN,
+        timePrecision: 1,
+        threads: {}
       },
-      "created": function () {
+      created: function () {
         this.available = !!Worker;
-        var simulationToolForBar = document.getElementById("simulationToolForBar");
+        var simulationToolForBar = document.getElementById(
+          "simulationToolForBar"
+        );
         if (this.available) simulationToolForBar.style.display = "block";
         else simulationToolForBar.style.display = "none";
       },
-      "watch": {
-        "state": function (val) {
+      watch: {
+        "sParams.Ts": function (val) {
+          this.changeSParamsOnThread();
+        },
+        "sParams.T_E": function (val) {
+          this.changeSParamsOnThread();
+        },
+        "sParams.N": function (val) {
+          this.changeSParamsOnThread();
+        },
+        "sParams.showOuts": function (val) {
+          this.changeSParamsOnThread();
+        },
+        "sParams.sRealtime": function (val) {
+          this.changeSParamsOnThread();
+        },
+        state: function (val) {
           document.getElementById("stateOfSystem").innerHTML = val;
         },
-        "t": function (val) {
-          document.getElementById("simulationTime").innerHTML = val.toFixed(this.timePrecision);
+        t: function (val) {
+          document.getElementById("simulationTime").innerHTML = val.toFixed(
+            this.timePrecision
+          );
+        },
+        aTs: function (val) {
+          document.getElementById("aSimulationTime").innerHTML = val.toFixed(
+            this.timePrecision
+          );
         }
       },
-      "methods": {
-        "stop": function () {
+      methods: {
+        changeSParamsOnThread: function () {
+          if (!!this.threads.ct) {
+            this.threads.ct.postMessage({
+              sParams: this.sParams
+            });
+          }
+        },
+        stop: function () {
           this.state = "Design";
           this.terminateAThread(this.threads.ct);
           delete this.threads.ct;
         },
-        "pause": function () {
+        pause: function () {
           this.threads.ct.postMessage({
-            "state": "Pause"
+            state: "Pause"
           });
         },
-        "run": function () {
+        run: function () {
           if (!this.threads.ct) this.restartComputationThread();
           this.threads.ct.postMessage({
-            "sParams": {"T_E": this.sParams.T_E},
-            "state": "Run"
+            sParams: this.sParams,
+            state: "Run"
           });
           this.state = "Simulating";
         },
-        "runNSteps": function (oneStep=true) {
+        runNSteps: function (oneStep = true) {
           var N;
           if (oneStep) N = 1;
           else N = this.sParams.N;
           if (!this.threads.ct) this.restartComputationThread();
           this.threads.ct.postMessage({
-            "sParams": {"T_E": (N*this.Ts)},
-            "state": "Run"
+            sParams: Object.assign({},this.sParams, {
+              T_E: this.t + N * this.sParams.Ts
+            }),
+            state: "Run"
           });
           this.state = "Simulating";
         },
-        "terminateAThread": function (umk_thread) {
+        terminateAThread: function (umk_thread) {
           if (!!umk_thread) {
             umk_thread.terminate();
           }
         },
-        "restartComputationThread": function () {
+        restartComputationThread: function () {
           //Remove thread if exists
           this.terminateAThread(this.threads.ct);
           //Check if a valid execution order is available
           var order = getExecutionOrder();
-          if (order.eo.length <= 0) throw {
-            code: "UMK_SM_NO_EO",
-            message: "Executing blocks are not available"
-          };
+          if (order.eo.length <= 0)
+            throw {
+              code: "UMK_SM_NO_EO",
+              message: "Executing blocks are not available"
+            };
           else {
             try {
               //Create a new thread
-              this.threads.ct = new Worker("js/simulate.js?date=" + Date.now());
+              this.threads.ct = new Worker(
+                "js/simulate.js?date=" + Date.now()
+              );
               updateOutputs = [];
               var getResults = [];
               var modelsForExec = [];
@@ -2182,7 +2234,10 @@
               for (var i = 0; i < order.eo.length; i++) {
                 var tempSources = [];
                 getSourcesWithIndexes(order.eo[i]).forEach(function (item) {
-                  tempSources.push([order.eo.indexOf(item.model), item.index]);
+                  tempSources.push([
+                    order.eo.indexOf(item.model),
+                    item.index
+                  ]);
                 });
                 //Obtaining execution order
                 modelsForExec.push({
@@ -2194,17 +2249,13 @@
                 if (order.eo[i].value.Category === "sinks") {
                   getResults[i] = true;
                   if (order.eo[i].value.Icon().output === "display") {
-                    updateOutputs[i] = {
-                      data: order.eo[i],
-                      update: function (val) {
-                        this.data.value.show = val;
-                        graph.refresh(this.data);
-                      }
-                    };
+                    updateOutputs[i] = new umk_displayItem(order.eo[i]);
                   }
+                  if (order.eo[i].value.Icon().output === "plot") {
+                    updateOutputs[i] = new umk_plotItem(order.eo[i]);
+                  }                  
                 } else getResults[i] = false;
               }
-
 
               this.threads.ct.postMessage({
                 em: modelsForExec,
@@ -2218,14 +2269,27 @@
               });
               this.threads.ct.onmessage = function (event) {
                 //console.log(event);
-                if ((!!event.data.status) && (event.data.status === "EOS")) simulation.$set(simulation.$data,"state", "Design");
-                if (!!event.data.t) simulation.$set(simulation.$data,"t", event.data.t);
+                if (!!event.data.status) {
+                  if (event.data.status === "EOS")
+                    simulation.$set(simulation.$data, "state", "Design");
+                  if (event.data.status === "running")
+                    simulation.$set(simulation.$data, "state", "Simulating");
+                  if (event.data.status === "paused")
+                    simulation.$set(
+                      simulation.$data,
+                      "state",
+                      "Simulation on pause"
+                    );
+                  refreshAllOutputViews();
+                }
+                if (!!event.data.t)
+                  simulation.$set(simulation.$data, "t", event.data.t);
+                if (!!event.data.aTs)
+                  simulation.$set(simulation.$data, "aTs", event.data.aTs);
                 if (!!event.data.out) {
                   for (var i = 0; i < updateOutputs.length; i++) {
                     if (!!updateOutputs[i])
-                      updateOutputs[i].update(
-                        makeATEXMatrix(event.data.out[i][0][0])
-                      );
+                      updateOutputs[i].update(event.data.out[i][0][0]);
                   }
                 }
               };
@@ -2234,21 +2298,24 @@
               throw {
                 code: "UMK_SM_TCE",
                 message: "Error in creating thread. Cannot simulate. Please check your system again. Contact support if this error keeps popping up."
-              }
+              };
             }
           }
         },
-        "validateParams": function () {
+        validateParams: function () {
           var infArray = ["inf", "infinity", "∞"];
           this.sParams.Ts = parseFloat(this.sParams.Ts);
-          if (isNaN(this.sParams.Ts) || this.sParams.Ts <= 0) this.sParams.Ts = 0.001;
+          if (isNaN(this.sParams.Ts) || this.sParams.Ts <= 0)
+            this.sParams.Ts = 0.001;
           this.sParams.T_E = parseFloat(this.sParams.T_E);
-          if (isNaN(this.sParams.T_E) || this.sParams.T_E <= 0) this.sParams.T_E = Infinity;
+          if (isNaN(this.sParams.T_E) || this.sParams.T_E <= 0)
+            this.sParams.T_E = Infinity;
           this.sParams.N = parseInt(this.sParams.N);
-          if (isNaN(this.sParams.N) || this.sParams.N <= 0) this.sParams.N = 2;
+          if (isNaN(this.sParams.N) || this.sParams.N <= 0)
+            this.sParams.N = 2;
           this.timePrecision = precision(this.sParams.Ts);
         },
-        "showExecutionOrder": function () {
+        showExecutionOrder: function () {
           displayExecutionOrder();
         }
       }
@@ -3594,11 +3661,62 @@
       StrOut += "\\end{bmatrix}$";
       return StrOut;
     }
+
     function precision(a) {
       if (!isFinite(a)) return 0;
-      var e = 1, p = 0;
-      while (Math.round(a * e) / e !== a) { e *= 10; p++; }
+      var e = 1,
+        p = 0;
+      while (Math.round(a * e) / e !== a) {
+        e *= 10;
+        p++;
+      }
       return p;
+    }
+  </script>
+  <script>
+    function refreshAllOutputViews() {
+      for (var i = 0; i < updateOutputs.length; i++) {
+        if (!!updateOutputs[i])
+          updateOutputs[i].refresh();
+      }
+    }
+    var umk_displayItem = function (Data) {
+      this.data = Data;
+      this.lastUpdate = 0;
+    }
+    umk_displayItem.prototype.update = function (val) {
+      if (Date.now() - this
+          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+        this.lastUpdate = Date.now();
+        this.data.value.show = makeATEXMatrix(val);
+        graph.refresh(this.data);
+      }
+    }
+    umk_displayItem.prototype.refresh = function () {
+      graph.refresh(this.data);
+    }
+    var umk_plotItem = function (Data) {
+      this.data = Data;
+      this.lastUpdate = 0;
+    }
+    umk_plotItem.prototype.update = function (val) {
+      console.log(this.data);
+      this.data.value.chartData = val;
+      if (Date.now() - this
+          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+        this.lastUpdate = Date.now();
+        graph.refresh(this.data);
+      }
+    }
+    umk_plotItem.prototype.refresh = function () {}
+
+    function openChart(data) {
+
+      //graph.getCellAt
+      console.log(data);
+      if (!data.window || data.window.closed) {
+        data.window = window.open("chart");
+      } else data.window.focus();
     }
   </script>
 </body>

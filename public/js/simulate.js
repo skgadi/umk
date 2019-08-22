@@ -10,7 +10,7 @@ var aTs = 0.01;
 var secondsToRun = -1;
 var displayOut =[];
 var simulationLoop;
-var minTs = 4;
+var minTs = 5;
 var showOuts = false;
 var sRealtime = false;
 self.onmessage = function (m) {
@@ -36,14 +36,11 @@ self.onmessage = function (m) {
     if (!!m.data.sParams.T_E) T_E = m.data.sParams.T_E;
     if (!!m.data.sParams.N) N = m.data.sParams.N;
     if (!!m.data.sParams.showOuts) showOuts = m.data.sParams.showOuts;
-    if (!!m.data.sParams.sRealtime) sRealtime = m.data.sParams.sRealtime;
+    if (!!m.data.sParams.sRealtime) ticker.changeInterval(Ts*1000); else ticker.changeInterval(minTs);
   }
   if (!!m.data.state) {
-    if (m.data.state === "Run") {
-      if (sRealtime) setSimulationLoop (Ts*1000);
-      else setSimulationLoop (0);
-    }
-    if (m.data.state === "Pause") stopSimulationLoop();
+    if (m.data.state === "Run") runSimulationLoop();
+    if (m.data.state === "Pause") pauseSimulationLoop();
   }
 }
 
@@ -63,6 +60,7 @@ function prepareVariableLinks () {
 }
 
 var simulating = false;
+var prevT = 0;
 function simulate () {
   if (t <= T_E){
     if (!simulating) {
@@ -74,20 +72,90 @@ function simulate () {
         }
         ExecutingModels[i].Evaluate();
       }
-      postMessage({"out":displayOut, "t": t});
+      
+      if (prevT === 0) aTs = NaN;
+      var presT = Date.now();
+      aTs = presT - prevT;
+      prevT = presT;
+      postMessage({"out":displayOut, "t": t, "aTs": aTs});
       t += Ts;
       simulating = false;
     }
   } else {
-    postMessage({"status": "EOS"}); //EOS = end of simulation
+    pauseSimulationLoop();
   }
 }
 
-function setSimulationLoop(timeInterval) {
-  stopSimulationLoop();
-  simulationLoop = setInterval (simulate, (timeInterval >= minTs ? timeInterval : minTs));
+var ticker = new umkSimulationLoop(simulate, minTs);
+function runSimulationLoop() {
+  ticker.start();
+  postMessage({"status": "running"}); //simulation is running
 }
 
-function stopSimulationLoop() {
-  if (!!simulationLoop) clearInterval(simulationLoop);
+function pauseSimulationLoop() {
+  ticker.pause();
+  postMessage({"status": "paused"}); //simulation paused
 }
+
+/**
+ * Designed by Suresh Kumar Gadi
+ */
+function umkSimulationLoop (simFunc, interval) {
+  this.timerHandler = setInterval(simFunc, this.interval);
+  var that = this;
+  this.simFunc = simFunc;
+  this.interval = interval;
+  this.isRunning = true;
+  this.start = function () {
+    clearInterval(this.timerHandler);
+    this.timerHandler = setInterval(this.simFunc, this.interval);
+  }
+  this.changeInterval = function (newInterval) {
+    clearInterval(this.timerHandler);
+    this.interval = newInterval;
+    if (this.isRunning) this.start();
+  }
+  this.pause = function () {
+    clearInterval(this.timerHandler);
+    this.isRunning = false;
+  }
+}
+
+
+
+/**
+ * Self-adjusting interval to account for drifting
+ * 
+ * @param {function} workFunc  Callback containing the work to be done
+ *                             for each interval
+ * @param {int}      interval  Interval speed (in milliseconds) - This 
+ * @param {function} errorFunc (Optional) Callback to run if the drift
+ *                             exceeds interval
+ */
+function AdjustingInterval(workFunc, interval, errorFunc) {
+    var that = this;
+    var expected, timeout;
+    this.interval = interval;
+
+    this.start = function() {
+        expected = Date.now() + this.interval;
+        timeout = setTimeout(step, this.interval);
+    }
+
+    this.stop = function() {
+        clearTimeout(timeout);
+    }
+
+    function step() {
+        var drift = Date.now() - expected;
+        if (drift > that.interval) {
+            // You could have some default stuff here too...
+            if (errorFunc) errorFunc();
+        }
+        workFunc();
+        expected += that.interval;
+        timeout = setTimeout(step, Math.max(0, that.interval-drift));
+    }
+}
+
+
