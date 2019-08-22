@@ -14,8 +14,6 @@
     data = google.visualization.arrayToDataTable([
       ['time ($t$)', "hey"],[NaN, NaN]
     ]);
-    data.addRow([9,2]);
-    data.addRow([10,5]);
     options = {'title':'How Much Pizza I Ate Last Night',
     chartArea : {
 				right : 20,
@@ -32,8 +30,12 @@
   function addRow(val){
     data.addRow(val);
   }
-  function refreshPlotView () {
+  function refreshPlotView() {
     chart.draw(data, options);
+  }
+  function clearPlotView() {
+    data.removeRows(0,data.getNumberOfRows());
+    refreshPlotView()
   }
 </script>
 <style>
@@ -48,7 +50,7 @@
 </style>
 </head>
 
-<body>
+<body onresize="refreshPlotView()">
 <div id="chart_div"></div>
 </body>
 </html>

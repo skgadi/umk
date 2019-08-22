@@ -1831,15 +1831,22 @@
     </div>
   </div>
   <script>
-    new ResizeObserver(function () {
-      if (graph) graph.umkGridsRefresh();
-      if (outln) outln.refresh();
-    }).observe(modelContainer);
+    //not universally used
+    if (!!ResizeObserver) {
+      new ResizeObserver(function () {
+        if (graph) graph.umkGridsRefresh();
+        if (outln) outln.refresh();
+      }).observe(modelContainer);
+    }
     var mainSplit = Split(["#flex-1", "#flex-2"], {
       minSize: 0,
       snapOffset: 100,
       sizes: [25, 75],
       gutterSize: 4,
+      onDrag: function () {
+        if (graph) graph.umkGridsRefresh();
+        if (outln) outln.refresh();
+      },
       elementStyle: function (dimension, size, gutterSize) {
         return {
           "flex-basis": "calc(" + size + "% - " + gutterSize + "px)"
@@ -2153,18 +2160,14 @@
         "sParams.sRealtime": function (val) {
           this.changeSParamsOnThread();
         },
-        state: function (val) {
+        state: function (val, oldVal) {
+          if ((oldVal === "Design") && (val === "Simulating")) {
+            for (var i = 0; i < updateOutputs.length; i++) {
+              if (!!updateOutputs[i])
+                updateOutputs[i].initialize();
+            }
+          }
           document.getElementById("stateOfSystem").innerHTML = val;
-        },
-        t: function (val) {
-          document.getElementById("simulationTime").innerHTML = val.toFixed(
-            this.timePrecision
-          );
-        },
-        aTs: function (val) {
-          document.getElementById("aSimulationTime").innerHTML = val.toFixed(
-            this.timePrecision
-          );
         }
       },
       methods: {
@@ -2179,6 +2182,7 @@
           this.state = "Design";
           this.terminateAThread(this.threads.ct);
           delete this.threads.ct;
+          this.t=0;
         },
         pause: function () {
           this.threads.ct.postMessage({
@@ -2269,6 +2273,20 @@
               });
               this.threads.ct.onmessage = function (event) {
                 //console.log(event);
+                if (!!event.data.t)
+                  simulation.$set(simulation.$data, "t", event.data.t);
+                if (!!event.data.aTs)
+                  simulation.$set(simulation.$data, "aTs", event.data.aTs);
+                if (!!event.data.out && simulation.$data.state !== "Design") {
+                  for (var i = 0; i < updateOutputs.length; i++) {
+                    if (!!updateOutputs[i])
+                      updateOutputs[i].update(event.data.out[i][0][0]);
+                  }
+                }
+                if (((Date.now() - updateDOMS.lastupdate)>=updateDOMS.updateEvery) && simulation.$data.state !== "Design") {
+                  updateDOMS.lastupdate = Date.now();
+                  updateDOMS.DOMFuncs.forEach((DOMfn)=>{DOMfn();});
+                }
                 if (!!event.data.status) {
                   if (event.data.status === "EOS")
                     simulation.$set(simulation.$data, "state", "Design");
@@ -2281,16 +2299,6 @@
                       "Simulation on pause"
                     );
                   refreshAllOutputViews();
-                }
-                if (!!event.data.t)
-                  simulation.$set(simulation.$data, "t", event.data.t);
-                if (!!event.data.aTs)
-                  simulation.$set(simulation.$data, "aTs", event.data.aTs);
-                if (!!event.data.out) {
-                  for (var i = 0; i < updateOutputs.length; i++) {
-                    if (!!updateOutputs[i])
-                      updateOutputs[i].update(event.data.out[i][0][0]);
-                  }
                 }
               };
             } catch (e) {
@@ -2591,7 +2599,8 @@
       },
       computed: {
         parametersValidationComments: function () {
-          return this.uyamakModel.ValidateParams();
+          if (!!this.uyamakModel && !! this.uyamakModel.ValidateParams) return this.uyamakModel.ValidateParams();
+          return "OK";
         },
         inputErrors: function () {
           return (
@@ -3545,6 +3554,13 @@
   <script>
     var w;
     var updateOutputs = [];
+    var updateDOMS = {updateEvery: 1000, lastupdate: 0, DOMFuncs: []};
+    updateDOMS.DOMFuncs.push((function(){
+      document.getElementById("simulationTime").innerHTML = simulation.$data.t.toFixed(simulation.$data.timePrecision);
+    }));
+    updateDOMS.DOMFuncs.push((function(){
+      document.getElementById("aSimulationTime").innerHTML = simulation.$data.aTs.toFixed(simulation.$data.timePrecision);
+    }));
 
     function executeSimulation() {
       if (typeof Worker !== "undefined") {
@@ -3679,11 +3695,13 @@
         if (!!updateOutputs[i])
           updateOutputs[i].refresh();
       }
+      updateDOMS.DOMFuncs.forEach((DOMfn)=>{DOMfn();});
     }
     var umk_displayItem = function (Data) {
       this.data = Data;
       this.lastUpdate = 0;
     }
+    umk_displayItem.prototype.initialize = function () {}
     umk_displayItem.prototype.update = function (val) {
       if (Date.now() - this
           .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
@@ -3699,24 +3717,34 @@
       this.data = Data;
       this.lastUpdate = 0;
     }
-    umk_plotItem.prototype.update = function (val) {
-      console.log(this.data);
-      this.data.value.chartData = val;
-      if (Date.now() - this
-          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
-        this.lastUpdate = Date.now();
-        graph.refresh(this.data);
+    umk_plotItem.prototype.initialize = function () {
+      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
+        listOfCharts[this.data.value.chartID].clearPlotView();
       }
     }
-    umk_plotItem.prototype.refresh = function () {}
+    umk_plotItem.prototype.update = function (val) {
+      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
+        listOfCharts[this.data.value.chartID].addRow([simulation.$data.t, val[0][0]]);
+        if (Date.now() - this
+            .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+          this.lastUpdate = Date.now();
+          listOfCharts[this.data.value.chartID].refreshPlotView();
+        }
+      }
+    }
+    umk_plotItem.prototype.refresh = function () {
+      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
+        listOfCharts[this.data.value.chartID].refreshPlotView();
+      }
+    }
 
-    function openChart(data) {
-
-      //graph.getCellAt
-      console.log(data);
-      if (!data.window || data.window.closed) {
-        data.window = window.open("chart");
-      } else data.window.focus();
+    var listOfCharts = {};
+    function openChart(evt) {
+      var graphCell = graph.getCellAt(evt.layerX, evt.layerY);
+      if (!graphCell.value.chartID) graphCell.value.chartID = Date.now();
+      if ((!listOfCharts[graphCell.value.chartID]) || (listOfCharts[graphCell.value.chartID].closed))
+        listOfCharts[graphCell.value.chartID] = window.open("chart?date="+Date.now(),graphCell.value.Name,"menubar=0, height=400, width=500, titlebar=no, toolbar=no");
+      else listOfCharts[graphCell.value.chartID].focus();
     }
   </script>
 </body>
