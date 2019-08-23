@@ -84,18 +84,17 @@
       else expectedLength = inParams.lTitles.Value.length + 1;
       try {
         for (var i = 0; i < val.length; i++) {
-          for (var j = 0; j < val.length; j++) {
+          for (var j = 0; j < val[i].length; j++) {
             try {
-              console.log(math.complex(val[i][j]));
               switch (inParams.numHandling.Value[0][0]) {
                 case "both":
                   times = 2;
-                  tempRowToSend.push(math.complex(val[i][j]).re)
+                  tempRowToSend.push(math.Complex(val[i][j]).re)
                 case "img":
-                  tempRowToSend.push(math.complex(val[i][j]).im)
+                  tempRowToSend.push(math.Complex(val[i][j]).im)
                   break;
                 case "real":
-                  tempRowToSend.push(math.complex(val[i][j]).re)
+                  tempRowToSend.push(math.Complex(val[i][j]).re)
                   break;
               }
             } catch (e) {console.log(e);}
@@ -120,6 +119,7 @@
     }
     function resetPlotView(newParams) {
       if (!!newParams) putInParams(newParams);
+      document.body.style.background = inParams.bgColor.Value[0][0];
       prepareData();
       prepareOptions();
       chart.draw(data, options);
