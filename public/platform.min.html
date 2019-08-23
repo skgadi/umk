@@ -1384,15 +1384,22 @@
       }
       graph.view.setTranslate(value.x, value.y);
       graph.view.refresh();
-    }</script><style>body,html{width:100%;height:100%;overflow:hidden}.block-margin{margin:.5em 0 5em 0!important}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.tool-item{padding:0 8px!important}.single-tool-item{height:23.92px}.zeroPadding{padding:0!important}#flex{display:flex;flex-direction:row}.gutter{background-color:#aaa;background-repeat:no-repeat;background-position:50%}.gutter.gutter-vertical{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);cursor:row-resize}.gutter.gutter-horizontal{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);cursor:col-resize}</style><script src="https://unpkg.com/split.js/dist/split.min.js"></script></head><body><div id="mainToobar" class="w3-bar w3-blue-gray" style="padding:0 0"><div class="w3-bar-item w3-button tool-item single-tool-item"><i class="fa-fw fas fa-home"></i></div><template v-for="(topTool, index) in toolBar"><div class="w3-dropdown-hover"><div class="w3-button tool-item">{{ topTool.value }}</div><div class="w3-dropdown-content w3-bar-block w3-card-4" style="width:400px"><template v-for="(tool, index) in topTool.items"><hr v-if="tool.value === 'hl'" style="margin:0;border-color:#ddd"><div v-else class="w3-bar-item w3-button" v-bind:title="tool.text" style="padding:8px 4px"><span><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span> <span style="margin-left:1em">{{ tool.value }}</span> <span v-if="!!tool.shortcut" class="w3-right w3-small w3-gray w3-round" style="padding:4px">{{ tool.shortcut }}</span></div></template></div></div></template><div id="simulationToolForBar"><div class="w3-bar-item w3-button tool-item single-tool-item w3-right"><i class="fas fa-play"></i> / <i class="fas fa-stop"></i></div></div></div><div id="flex" style="height:calc(100% - 38.92px)"><div id="flex-1" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px" onclick="mainSplit.setSizes([0,100])"><div class="w3-right"><i class="fas fa-sign-out-alt fa-rotate-180"></i></div><div class="w3-left">Close</div></div><div class="w3-row w3-gray"><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'folder')"><i class="far fa-folder"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,'library')" style="padding:0"><i class="fas fa-drafting-compass"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'editorForParameters')"><i class="far fa-edit"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'simulation')"><i class="fas fa-play"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'settings')"><i class="fas fa-cogs"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'printingTheModel')"><i class="fas fa-print"></i></div></div><div class="tabContent" style="display:block" id="library"><div id="blocksBar"></div></div><div class="tabContent" style="display:none" id="editorForParameters"><div v-if="!!cellModel.model"><div><p class="w3-large" style="margin:0"><b>Connection name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"><div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div></div><div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue"><div class="w3-right"><i class="fas fa-check"></i></div><div class="w3-left">Appy</div></div></div><div v-else-if="!!uyamakModel"><div><p class="w3-large" style="margin:0"><b>Block name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text"><div class="w3-container w3-pale-yellow" v-html="uyamakModel.Name"></div></div><div v-if="uyamakModel.TerminalsIn.editable"><p class="w3-large" style="margin:0"><b>Input terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max"></div><div v-if="uyamakModel.TerminalsOut.editable"><p class="w3-large" style="margin:0"><b>Output terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value" type="number" v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max"></div><div v-if="uyamakModel.Parameters.length>0"><p class="w3-large" style="margin:0"><b>Parameters</b></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span>{{ Parameter.Name }}</span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"></td></template></tr></template></table></div></div></template></div><div><template v-if="invalidInputs.length>0"><p class="w3-large" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-large" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-large" style="margin:0"><b>Functionality</b></p><div v-html="getBlockDetails()"></div><div class="w3-button w3-ripple w3-lime w3-hover-green w3-bar w3-large" @click="saveModel()"><div class="w3-left">Apply</div><div class="w3-right"><i class="far fa-save"></i></div></div><div class="w3-button w3-ripple w3-amber w3-hover-red w3-bar w3-large" onclick="changeEditModelWithSelectedBlock()"><div class="w3-left">Reset changes</div><div class="w3-right"><i class="fas fa-undo-alt"></i></div></div></template><div class="w3-row"><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)"><i class="far fa-smile"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)"><i class="far fa-smile fa-rotate-90"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)"><i class="far fa-smile fa-rotate-180"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)"><i class="far fa-smile fa-rotate-270"></i></div></div></div></div></div><div v-else>Select a block to edit its parameters.</div></div><div class="tabContent" style="display:none" id="printingTheModel"><select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value"><option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option></select> <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value"><option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option></select> <label>Page title</label> <input class="w3-input w3-border w3-border-theme" v-model="title" type="text"> <input id="forcePages" class="w3-check" type="checkbox" checked v-model="fit.force"> <label for="forcePages">Scale the graph to fit in <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model.number="fit.numberOfPages" style="display:inline-flex;width:50px"> page(s).</label><div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()"><div class="w3-right"><i class="fas fa-file-import"></i></div><div class="w3-left">Prepare document</div></div></div><div class="tabContent" style="display:none" id="settings"></div><div class="tabContent" style="display:none" id="simulation"><div v-if="available"><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="showExecutionOrder"><div class="w3-right"><i class="fas fa-sort-numeric-up-alt"></i></div><div class="w3-left">Show execution order</div></div><label>Sampling time ($T_S$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams"> <label>Simulation duration ($T$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run"><div class="w3-right"><i class="fas fa-play"></i></div><div class="w3-left">Run/Continue</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause"><div class="w3-right"><i class="fas fa-pause"></i></div><div class="w3-left">Pause</div></div><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="stop"><div class="w3-right"><i class="fas fa-stop"></i></div><div class="w3-left">Stop/Reset</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="runNSteps"><div class="w3-right"><i class="fas fa-step-forward"></i></div><div class="w3-left">Step</div></div><label>Number of steps ($N$)</label> <input class="w3-input w3-border w3-border-blue" type="number" min="2" step="1" v-model.number="sParams.N" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)"><div class="w3-right"><i class="fas fa-fast-forward"></i></div><div class="w3-left">$N$-steps</div></div><input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime"> <label for="sRealtime">Real time simulation</label><br><input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts"> <label for="showOutputs">Show all the outputs (Not recommended)</label></div><div v-else><h3>Cannot simulate</h3><p>Your browser doesn't support multi threading.</p></div></div><div class="tabContent" style="display:none" id="folder"></div></div><div id="flex-2" style="overflow:auto"><div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div></div></div><script>new ResizeObserver(function () {
-      if (graph) graph.umkGridsRefresh();
-      if (outln) outln.refresh();
-    }).observe(modelContainer);
+    }</script><style>body,html{width:100%;height:100%;overflow:hidden}.block-margin{margin:.5em 0 5em 0!important}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.tool-item{padding:0 8px!important}.single-tool-item{height:23.92px}.zeroPadding{padding:0!important}#flex{display:flex;flex-direction:row}.gutter{background-color:#aaa;background-repeat:no-repeat;background-position:50%}.gutter.gutter-vertical{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);cursor:row-resize}.gutter.gutter-horizontal{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);cursor:col-resize}</style><script src="https://unpkg.com/split.js/dist/split.min.js"></script></head><body><div id="mainToobar" class="w3-bar w3-blue-gray" style="padding:0 0"><div class="w3-bar-item w3-button tool-item single-tool-item"><i class="fa-fw fas fa-home"></i></div><template v-for="(topTool, index) in toolBar"><div class="w3-dropdown-hover"><div class="w3-button tool-item">{{ topTool.value }}</div><div class="w3-dropdown-content w3-bar-block w3-card-4" style="width:400px"><template v-for="(tool, index) in topTool.items"><hr v-if="tool.value === 'hl'" style="margin:0;border-color:#ddd"><div v-else class="w3-bar-item w3-button" v-bind:title="tool.text" style="padding:8px 4px"><span><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span> <span style="margin-left:1em">{{ tool.value }}</span> <span v-if="!!tool.shortcut" class="w3-right w3-small w3-gray w3-round" style="padding:4px">{{ tool.shortcut }}</span></div></template></div></div></template><div id="simulationToolForBar"><div class="w3-bar-item w3-button tool-item single-tool-item w3-right"><i class="fas fa-play"></i> / <i class="fas fa-stop"></i></div></div></div><div id="flex" style="height:calc(100% - 38.92px)"><div id="flex-1" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px" onclick="mainSplit.setSizes([0,100])"><div class="w3-right"><i class="fas fa-sign-out-alt fa-rotate-180"></i></div><div class="w3-left">Close</div></div><div class="w3-row w3-gray"><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'folder')"><i class="far fa-folder"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,'library')" style="padding:0"><i class="fas fa-drafting-compass"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'editorForParameters')"><i class="far fa-edit"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'simulation')"><i class="fas fa-play"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'settings')"><i class="fas fa-cogs"></i></div><div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,'printingTheModel')"><i class="fas fa-print"></i></div></div><div class="tabContent" style="display:block" id="library"><div id="blocksBar"></div></div><div class="tabContent" style="display:none" id="editorForParameters"><div v-if="!!cellModel.model"><div><p class="w3-large" style="margin:0"><b>Connection name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"><div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div></div><div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue"><div class="w3-right"><i class="fas fa-check"></i></div><div class="w3-left">Appy</div></div></div><div v-else-if="!!uyamakModel"><div><p class="w3-large" style="margin:0"><b>Block name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text"><div class="w3-container w3-pale-yellow" v-html="uyamakModel.Name"></div></div><div v-if="uyamakModel.TerminalsIn.editable"><p class="w3-large" style="margin:0"><b>Input terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max"></div><div v-if="uyamakModel.TerminalsOut.editable"><p class="w3-large" style="margin:0"><b>Output terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value" type="number" v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max"></div><div v-if="Object.keys(uyamakModel.Parameters).length>0"><p class="w3-large" style="margin:0"><b>Parameters</b></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span>{{ Parameter.Name }}</span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"> <select v-if="Parameter.Type === 'Options'" class="w3-select w3-border-0" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]"><template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']"><option v-bind:value="opnVal">{{opnName}}</option></template></select></td></template></tr></template></table></div></div></template></div><div><template v-if="invalidInputs.length>0"><p class="w3-large" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-large" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-large" style="margin:0"><b>Functionality</b></p><div v-html="getBlockDetails()"></div><div class="w3-button w3-ripple w3-lime w3-hover-green w3-bar w3-large" @click="saveModel()"><div class="w3-left">Apply</div><div class="w3-right"><i class="far fa-save"></i></div></div><div class="w3-button w3-ripple w3-amber w3-hover-red w3-bar w3-large" onclick="changeEditModelWithSelectedBlock()"><div class="w3-left">Reset changes</div><div class="w3-right"><i class="fas fa-undo-alt"></i></div></div></template><div class="w3-row"><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)"><i class="far fa-smile"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)"><i class="far fa-smile fa-rotate-90"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)"><i class="far fa-smile fa-rotate-180"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)"><i class="far fa-smile fa-rotate-270"></i></div></div></div></div></div><div v-else>Select a block to edit its parameters.</div></div><div class="tabContent" style="display:none" id="printingTheModel"><select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value"><option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option></select> <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value"><option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option></select> <label>Page title</label> <input class="w3-input w3-border w3-border-theme" v-model="title" type="text"> <input id="forcePages" class="w3-check" type="checkbox" checked v-model="fit.force"> <label for="forcePages">Scale the graph to fit in <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model.number="fit.numberOfPages" style="display:inline-flex;width:50px"> page(s).</label><div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()"><div class="w3-right"><i class="fas fa-file-import"></i></div><div class="w3-left">Prepare document</div></div></div><div class="tabContent" style="display:none" id="settings"></div><div class="tabContent" style="display:none" id="simulation"><div v-if="available"><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="showExecutionOrder"><div class="w3-right"><i class="fas fa-sort-numeric-up-alt"></i></div><div class="w3-left">Show execution order</div></div><label>Sampling time ($T_S$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams"> <label>Simulation duration ($T$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run"><div class="w3-right"><i class="fas fa-play"></i></div><div class="w3-left">Run/Continue</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause"><div class="w3-right"><i class="fas fa-pause"></i></div><div class="w3-left">Pause</div></div><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="stop"><div class="w3-right"><i class="fas fa-stop"></i></div><div class="w3-left">Stop/Reset</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="runNSteps"><div class="w3-right"><i class="fas fa-step-forward"></i></div><div class="w3-left">Step</div></div><label>Number of steps ($N$)</label> <input class="w3-input w3-border w3-border-blue" type="number" min="2" step="1" v-model.number="sParams.N" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)"><div class="w3-right"><i class="fas fa-fast-forward"></i></div><div class="w3-left">$N$-steps</div></div><input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime"> <label for="sRealtime">Real time simulation</label><br><input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts"> <label for="showOutputs">Show all the outputs (Not recommended)</label></div><div v-else><h3>Cannot simulate</h3><p>Your browser doesn't support multi threading.</p></div></div><div class="tabContent" style="display:none" id="folder"></div></div><div id="flex-2" style="overflow:auto"><div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div></div></div><script>//not universally used
+    if (!!ResizeObserver) {
+      new ResizeObserver(function () {
+        if (graph) graph.umkGridsRefresh();
+        if (outln) outln.refresh();
+      }).observe(modelContainer);
+    }
     var mainSplit = Split(["#flex-1", "#flex-2"], {
       minSize: 0,
       snapOffset: 100,
       sizes: [25, 75],
       gutterSize: 4,
+      onDrag: function () {
+        if (graph) graph.umkGridsRefresh();
+        if (outln) outln.refresh();
+      },
       elementStyle: function (dimension, size, gutterSize) {
         return {
           "flex-basis": "calc(" + size + "% - " + gutterSize + "px)"
@@ -1513,18 +1520,13 @@
         "sParams.sRealtime": function (val) {
           this.changeSParamsOnThread();
         },
-        state: function (val) {
+        state: function (val, oldVal) {
+          if (oldVal === "Design" && val === "Simulating") {
+            for (var i = 0; i < updateOutputs.length; i++) {
+              if (!!updateOutputs[i]) updateOutputs[i].initialize();
+            }
+          }
           document.getElementById("stateOfSystem").innerHTML = val;
-        },
-        t: function (val) {
-          document.getElementById("simulationTime").innerHTML = val.toFixed(
-            this.timePrecision
-          );
-        },
-        aTs: function (val) {
-          document.getElementById("aSimulationTime").innerHTML = val.toFixed(
-            this.timePrecision
-          );
         }
       },
       methods: {
@@ -1539,11 +1541,14 @@
           this.state = "Design";
           this.terminateAThread(this.threads.ct);
           delete this.threads.ct;
+          this.t = 0;
         },
         pause: function () {
-          this.threads.ct.postMessage({
-            state: "Pause"
-          });
+          if (!!this.threads.ct) {
+            this.threads.ct.postMessage({
+              state: "Pause"
+            });
+          }
         },
         run: function () {
           if (!this.threads.ct) this.restartComputationThread();
@@ -1559,7 +1564,7 @@
           else N = this.sParams.N;
           if (!this.threads.ct) this.restartComputationThread();
           this.threads.ct.postMessage({
-            sParams: Object.assign({},this.sParams, {
+            sParams: Object.assign({}, this.sParams, {
               T_E: this.t + N * this.sParams.Ts
             }),
             state: "Run"
@@ -1613,7 +1618,7 @@
                   }
                   if (order.eo[i].value.Icon().output === "plot") {
                     updateOutputs[i] = new umk_plotItem(order.eo[i]);
-                  }                  
+                  }
                 } else getResults[i] = false;
               }
 
@@ -1629,6 +1634,26 @@
               });
               this.threads.ct.onmessage = function (event) {
                 //console.log(event);
+                if (!!event.data.t)
+                  simulation.$set(simulation.$data, "t", event.data.t);
+                if (!!event.data.aTs)
+                  simulation.$set(simulation.$data, "aTs", event.data.aTs);
+                if (!!event.data.out && simulation.$data.state !== "Design") {
+                  for (var i = 0; i < updateOutputs.length; i++) {
+                    if (!!updateOutputs[i])
+                      updateOutputs[i].update(event.data.out[i][0][0]);
+                  }
+                }
+                if (
+                  Date.now() - updateDOMS.lastupdate >=
+                  updateDOMS.updateEvery &&
+                  simulation.$data.state !== "Design"
+                ) {
+                  updateDOMS.lastupdate = Date.now();
+                  updateDOMS.DOMFuncs.forEach(DOMfn => {
+                    DOMfn();
+                  });
+                }
                 if (!!event.data.status) {
                   if (event.data.status === "EOS")
                     simulation.$set(simulation.$data, "state", "Design");
@@ -1641,16 +1666,6 @@
                       "Simulation on pause"
                     );
                   refreshAllOutputViews();
-                }
-                if (!!event.data.t)
-                  simulation.$set(simulation.$data, "t", event.data.t);
-                if (!!event.data.aTs)
-                  simulation.$set(simulation.$data, "aTs", event.data.aTs);
-                if (!!event.data.out) {
-                  for (var i = 0; i < updateOutputs.length; i++) {
-                    if (!!updateOutputs[i])
-                      updateOutputs[i].update(event.data.out[i][0][0]);
-                  }
                 }
               };
             } catch (e) {
@@ -1942,7 +1957,9 @@
       },
       computed: {
         parametersValidationComments: function () {
-          return this.uyamakModel.ValidateParams();
+          if (!!this.uyamakModel && !!this.uyamakModel.ValidateParams)
+            return this.uyamakModel.ValidateParams();
+          return "OK";
         },
         inputErrors: function () {
           return (
@@ -1952,7 +1969,7 @@
               return (
                 "<tr><td>" +
                 editBlocksApp.$data.uyamakModel.Parameters[
-                  parseInt(currentValue.split(",")[0])
+                  currentValue.split(",")[0]
                 ].Name +
                 " at [" +
                 (parseInt(currentValue.split(",")[1]) + 1) +
@@ -2069,7 +2086,7 @@
                 break;
               case "Text":
               case "Color":
-              case "Option":
+              case "Options":
                 outValue = tempValue !== "" && tempValue !== null;
                 break;
             }
@@ -2097,7 +2114,7 @@
               tempItem = "";
               break;
             case "Color":
-              tempItem = "Black";
+              tempItem = "#000";
               break;
           }
           switch (func) {
@@ -2164,8 +2181,7 @@
       editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", editModel);
       editBlocksApp.$set(
         editBlocksApp.$data,
-        "parametersDisplay",
-        new Array(editModel.Parameters.length).fill(false)
+        "parametersDisplay", {}
       );
       editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
         model: false,
@@ -2880,6 +2896,25 @@
       });
     }</script><script>var w;
     var updateOutputs = [];
+    var updateDOMS = {
+      updateEvery: 1000,
+      lastupdate: 0,
+      DOMFuncs: []
+    };
+    updateDOMS.DOMFuncs.push(function () {
+      document.getElementById(
+        "simulationTime"
+      ).innerHTML = simulation.$data.t.toFixed(
+        simulation.$data.timePrecision
+      );
+    });
+    updateDOMS.DOMFuncs.push(function () {
+      document.getElementById(
+        "aSimulationTime"
+      ).innerHTML = simulation.$data.aTs.toFixed(
+        simulation.$data.timePrecision
+      );
+    });
 
     function executeSimulation() {
       if (typeof Worker !== "undefined") {
@@ -3008,45 +3043,80 @@
       return p;
     }</script><script>function refreshAllOutputViews() {
       for (var i = 0; i < updateOutputs.length; i++) {
-        if (!!updateOutputs[i])
-          updateOutputs[i].refresh();
+        if (!!updateOutputs[i]) updateOutputs[i].refresh();
       }
+      updateDOMS.DOMFuncs.forEach(DOMfn => {
+        DOMfn();
+      });
     }
     var umk_displayItem = function (Data) {
       this.data = Data;
       this.lastUpdate = 0;
-    }
+    };
+    umk_displayItem.prototype.initialize = function () {};
     umk_displayItem.prototype.update = function (val) {
-      if (Date.now() - this
-          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+      if (
+        Date.now() - this.lastUpdate >=
+        this.data.value.Parameters[0].Value[0][0] * 1000
+      ) {
         this.lastUpdate = Date.now();
         this.data.value.show = makeATEXMatrix(val);
         graph.refresh(this.data);
       }
-    }
+    };
     umk_displayItem.prototype.refresh = function () {
       graph.refresh(this.data);
-    }
+    };
     var umk_plotItem = function (Data) {
       this.data = Data;
       this.lastUpdate = 0;
-    }
-    umk_plotItem.prototype.update = function (val) {
-      console.log(this.data);
-      this.data.value.chartData = val;
-      if (Date.now() - this
-          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
-        this.lastUpdate = Date.now();
-        graph.refresh(this.data);
+    };
+    umk_plotItem.prototype.initialize = function () {
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
+        listOfCharts[this.data.value.chartID].resetPlotView(this.data.value.Parameters);
       }
-    }
-    umk_plotItem.prototype.refresh = function () {}
+    };
+    umk_plotItem.prototype.update = function (val) {
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
+        listOfCharts[this.data.value.chartID].addRow({t:simulation.$data.t, val: val});
+        if (
+          Date.now() - this.lastUpdate >=
+          this.data.value.Parameters['refreshRate'].Value[0][0] * 1000
+        ) {
+          this.lastUpdate = Date.now();
+          listOfCharts[this.data.value.chartID].refreshPlotView();
+        }
+      }
+    };
+    umk_plotItem.prototype.refresh = function () {
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
+        listOfCharts[this.data.value.chartID].refreshPlotView();
+      }
+    };
 
-    function openChart(data) {
+    var listOfCharts = {};
 
-      //graph.getCellAt
-      console.log(data);
-      if (!data.window || data.window.closed) {
-        data.window = window.open("chart");
-      } else data.window.focus();
+    function openChart(evt) {
+      var graphCell = graph.getCellAt(evt.layerX, evt.layerY);
+      if (!graphCell.value.chartID) graphCell.value.chartID = Date.now();
+      if (
+        !listOfCharts[graphCell.value.chartID] ||
+        listOfCharts[graphCell.value.chartID].closed
+      ) {
+        listOfCharts[graphCell.value.chartID] = window.open(
+          "chart?date=" + Date.now(),
+          graphCell.value.Name,
+          "menubar=0, height=400, width=700, titlebar=no, toolbar=no"
+        );
+        listOfCharts[graphCell.value.chartID].inParams = graphCell.value.Parameters;
+      } else listOfCharts[graphCell.value.chartID].focus();
     }</script></body></html>

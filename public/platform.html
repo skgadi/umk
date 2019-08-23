@@ -1602,7 +1602,7 @@
             <input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value"
               type="number" v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max" />
           </div>
-          <div v-if="uyamakModel.Parameters.length>0">
+          <div v-if="Object.keys(uyamakModel.Parameters).length>0">
             <p class="w3-large" style="margin:0px;"><b>Parameters</b></p>
             <template v-for="(Parameter, index) in uyamakModel.Parameters">
               <div class="w3-theme-d3 w3-border w3-border-theme w3-padding w3-ripple" @click="toggleParamDisplay(index)"
@@ -1671,6 +1671,12 @@
                               class="w3-input w3-border-0"
                               style="padding: 0; min-width: 75px; padding: 0px; min-height: 35px;"
                               v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color" />
+                            <select v-if="Parameter.Type === 'Options'" class="w3-select w3-border-0"
+                              v-model="uyamakModel.Parameters[index]['Value'][index1][index2]">
+                              <template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']">
+                                <option v-bind:value="opnVal">{{opnName}}</option>
+                              </template>
+                            </select>
                           </td>
                         </template>
                       </tr>
@@ -2161,10 +2167,9 @@
           this.changeSParamsOnThread();
         },
         state: function (val, oldVal) {
-          if ((oldVal === "Design") && (val === "Simulating")) {
+          if (oldVal === "Design" && val === "Simulating") {
             for (var i = 0; i < updateOutputs.length; i++) {
-              if (!!updateOutputs[i])
-                updateOutputs[i].initialize();
+              if (!!updateOutputs[i]) updateOutputs[i].initialize();
             }
           }
           document.getElementById("stateOfSystem").innerHTML = val;
@@ -2182,12 +2187,14 @@
           this.state = "Design";
           this.terminateAThread(this.threads.ct);
           delete this.threads.ct;
-          this.t=0;
+          this.t = 0;
         },
         pause: function () {
-          this.threads.ct.postMessage({
-            state: "Pause"
-          });
+          if (!!this.threads.ct) {
+            this.threads.ct.postMessage({
+              state: "Pause"
+            });
+          }
         },
         run: function () {
           if (!this.threads.ct) this.restartComputationThread();
@@ -2203,7 +2210,7 @@
           else N = this.sParams.N;
           if (!this.threads.ct) this.restartComputationThread();
           this.threads.ct.postMessage({
-            sParams: Object.assign({},this.sParams, {
+            sParams: Object.assign({}, this.sParams, {
               T_E: this.t + N * this.sParams.Ts
             }),
             state: "Run"
@@ -2257,7 +2264,7 @@
                   }
                   if (order.eo[i].value.Icon().output === "plot") {
                     updateOutputs[i] = new umk_plotItem(order.eo[i]);
-                  }                  
+                  }
                 } else getResults[i] = false;
               }
 
@@ -2283,9 +2290,15 @@
                       updateOutputs[i].update(event.data.out[i][0][0]);
                   }
                 }
-                if (((Date.now() - updateDOMS.lastupdate)>=updateDOMS.updateEvery) && simulation.$data.state !== "Design") {
+                if (
+                  Date.now() - updateDOMS.lastupdate >=
+                  updateDOMS.updateEvery &&
+                  simulation.$data.state !== "Design"
+                ) {
                   updateDOMS.lastupdate = Date.now();
-                  updateDOMS.DOMFuncs.forEach((DOMfn)=>{DOMfn();});
+                  updateDOMS.DOMFuncs.forEach(DOMfn => {
+                    DOMfn();
+                  });
                 }
                 if (!!event.data.status) {
                   if (event.data.status === "EOS")
@@ -2599,7 +2612,8 @@
       },
       computed: {
         parametersValidationComments: function () {
-          if (!!this.uyamakModel && !! this.uyamakModel.ValidateParams) return this.uyamakModel.ValidateParams();
+          if (!!this.uyamakModel && !!this.uyamakModel.ValidateParams)
+            return this.uyamakModel.ValidateParams();
           return "OK";
         },
         inputErrors: function () {
@@ -2610,7 +2624,7 @@
               return (
                 "<tr><td>" +
                 editBlocksApp.$data.uyamakModel.Parameters[
-                  parseInt(currentValue.split(",")[0])
+                  currentValue.split(",")[0]
                 ].Name +
                 " at [" +
                 (parseInt(currentValue.split(",")[1]) + 1) +
@@ -2727,7 +2741,7 @@
                 break;
               case "Text":
               case "Color":
-              case "Option":
+              case "Options":
                 outValue = tempValue !== "" && tempValue !== null;
                 break;
             }
@@ -2755,7 +2769,7 @@
               tempItem = "";
               break;
             case "Color":
-              tempItem = "Black";
+              tempItem = "#000";
               break;
           }
           switch (func) {
@@ -2825,8 +2839,7 @@
       editBlocksApp.$set(editBlocksApp.$data, "uyamakModel", editModel);
       editBlocksApp.$set(
         editBlocksApp.$data,
-        "parametersDisplay",
-        new Array(editModel.Parameters.length).fill(false)
+        "parametersDisplay", {}
       );
       editBlocksApp.$set(editBlocksApp.$data, "cellModel", {
         model: false,
@@ -3554,13 +3567,25 @@
   <script>
     var w;
     var updateOutputs = [];
-    var updateDOMS = {updateEvery: 1000, lastupdate: 0, DOMFuncs: []};
-    updateDOMS.DOMFuncs.push((function(){
-      document.getElementById("simulationTime").innerHTML = simulation.$data.t.toFixed(simulation.$data.timePrecision);
-    }));
-    updateDOMS.DOMFuncs.push((function(){
-      document.getElementById("aSimulationTime").innerHTML = simulation.$data.aTs.toFixed(simulation.$data.timePrecision);
-    }));
+    var updateDOMS = {
+      updateEvery: 1000,
+      lastupdate: 0,
+      DOMFuncs: []
+    };
+    updateDOMS.DOMFuncs.push(function () {
+      document.getElementById(
+        "simulationTime"
+      ).innerHTML = simulation.$data.t.toFixed(
+        simulation.$data.timePrecision
+      );
+    });
+    updateDOMS.DOMFuncs.push(function () {
+      document.getElementById(
+        "aSimulationTime"
+      ).innerHTML = simulation.$data.aTs.toFixed(
+        simulation.$data.timePrecision
+      );
+    });
 
     function executeSimulation() {
       if (typeof Worker !== "undefined") {
@@ -3692,59 +3717,82 @@
   <script>
     function refreshAllOutputViews() {
       for (var i = 0; i < updateOutputs.length; i++) {
-        if (!!updateOutputs[i])
-          updateOutputs[i].refresh();
+        if (!!updateOutputs[i]) updateOutputs[i].refresh();
       }
-      updateDOMS.DOMFuncs.forEach((DOMfn)=>{DOMfn();});
+      updateDOMS.DOMFuncs.forEach(DOMfn => {
+        DOMfn();
+      });
     }
     var umk_displayItem = function (Data) {
       this.data = Data;
       this.lastUpdate = 0;
-    }
-    umk_displayItem.prototype.initialize = function () {}
+    };
+    umk_displayItem.prototype.initialize = function () {};
     umk_displayItem.prototype.update = function (val) {
-      if (Date.now() - this
-          .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+      if (
+        Date.now() - this.lastUpdate >=
+        this.data.value.Parameters[0].Value[0][0] * 1000
+      ) {
         this.lastUpdate = Date.now();
         this.data.value.show = makeATEXMatrix(val);
         graph.refresh(this.data);
       }
-    }
+    };
     umk_displayItem.prototype.refresh = function () {
       graph.refresh(this.data);
-    }
+    };
     var umk_plotItem = function (Data) {
       this.data = Data;
       this.lastUpdate = 0;
-    }
+    };
     umk_plotItem.prototype.initialize = function () {
-      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
-        listOfCharts[this.data.value.chartID].clearPlotView();
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
+        listOfCharts[this.data.value.chartID].resetPlotView(this.data.value.Parameters);
       }
-    }
+    };
     umk_plotItem.prototype.update = function (val) {
-      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
-        listOfCharts[this.data.value.chartID].addRow([simulation.$data.t, val[0][0]]);
-        if (Date.now() - this
-            .lastUpdate >= (this.data.value.Parameters[0].Value[0][0] * 1000)) {
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
+        listOfCharts[this.data.value.chartID].addRow({t:simulation.$data.t, val: val});
+        if (
+          Date.now() - this.lastUpdate >=
+          this.data.value.Parameters['refreshRate'].Value[0][0] * 1000
+        ) {
           this.lastUpdate = Date.now();
           listOfCharts[this.data.value.chartID].refreshPlotView();
         }
       }
-    }
+    };
     umk_plotItem.prototype.refresh = function () {
-      if ((!!listOfCharts[this.data.value.chartID]) && (!listOfCharts[this.data.value.chartID].closed)) {
+      if (
+        !!listOfCharts[this.data.value.chartID] &&
+        !listOfCharts[this.data.value.chartID].closed
+      ) {
         listOfCharts[this.data.value.chartID].refreshPlotView();
       }
-    }
+    };
 
     var listOfCharts = {};
+
     function openChart(evt) {
       var graphCell = graph.getCellAt(evt.layerX, evt.layerY);
       if (!graphCell.value.chartID) graphCell.value.chartID = Date.now();
-      if ((!listOfCharts[graphCell.value.chartID]) || (listOfCharts[graphCell.value.chartID].closed))
-        listOfCharts[graphCell.value.chartID] = window.open("chart?date="+Date.now(),graphCell.value.Name,"menubar=0, height=400, width=500, titlebar=no, toolbar=no");
-      else listOfCharts[graphCell.value.chartID].focus();
+      if (
+        !listOfCharts[graphCell.value.chartID] ||
+        listOfCharts[graphCell.value.chartID].closed
+      ) {
+        listOfCharts[graphCell.value.chartID] = window.open(
+          "chart?date=" + Date.now(),
+          graphCell.value.Name,
+          "menubar=0, height=400, width=700, titlebar=no, toolbar=no"
+        );
+        listOfCharts[graphCell.value.chartID].inParams = graphCell.value.Parameters;
+      } else listOfCharts[graphCell.value.chartID].focus();
     }
   </script>
 </body>
