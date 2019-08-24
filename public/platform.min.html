@@ -915,10 +915,10 @@
         };
 
         //Dynamic Edge coloring
-        var defaultModelStyle = graph.model.getStyle;
+        var defaultModelStyle = mxGraphModel.prototype.getStyle;
         graph.model.getStyle = function (cell) {
           var style = defaultModelStyle.apply(this, arguments);
-          if (cell != null) {
+          /*if (cell != null) {
             if (this.isEdge(cell)) {
               var target = this.getTerminal(cell, true);
               if (target != null) {
@@ -934,7 +934,7 @@
                 }
               }
             }
-          }
+          }*/
           return style;
         };
 
@@ -1046,6 +1046,8 @@
         ) {
           addStyle += "umk_display;";
         }
+        var splStyle="";
+        if (!!IconDetails.splStyle) splStyle = IconDetails.splStyle;
         v1 = graph.insertVertex(
           cell,
           null,
@@ -1056,7 +1058,7 @@
           .width,
           LIBRARY_SUMMARY[umkModel.Category]["blocks"][umkModel.bid].size
           .height,
-          "umk_model;" +
+          "umk_model;" + splStyle +
           addStyle +
           "fillColor=" +
           LIBRARY_SUMMARY[umkModel.Category].colors.bg +
@@ -1314,7 +1316,7 @@
               height: 8
             },
             offset: {
-              x: 0,
+              x: -4,
               y: -4
             }
           };
@@ -1350,9 +1352,9 @@
             position.size.height,
             type +
             ";fillColor=" +
-            LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
+            ((type === "umk_input") ? LIBRARY_SUMMARY[Cell.value.Category].colors.bg: "none") +
             ";strokeColor=" +
-            LIBRARY_SUMMARY[Cell.value.Category].colors.bg +
+            ((type === "umk_input") ? LIBRARY_SUMMARY[Cell.value.Category].colors.bg: "none") +
             ";",
             true
           );
