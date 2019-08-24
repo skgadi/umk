@@ -1505,15 +1505,18 @@
     </div>
     <template v-for="(topTool, index) in toolBar">
       <div class="w3-dropdown-hover">
-        <div class="w3-button tool-item">{{ topTool.value }}</div>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4" style="width: 400px;">
+        <div class="w3-button tool-item" @mouseleave="hideInfo()" @mouseover="showInfo(topTool.text)">
+            <span><i v-if="!!topTool.icon" class="fa-fw" v-bind:class="topTool.icon"></i></span>
+            <span v-html="topTool.value"></span>
+        </div>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4" > <!--v-bind:style="'width: ' + (topTool.width) + 'px;'"-->
           <template v-for="(tool, index) in topTool.items">
             <hr v-if="tool.value === 'hl'" style="margin:0; border-color: #ddd;" />
-            <div v-else class="w3-bar-item w3-button" v-bind:title="tool.text" style="padding: 8px 4px;">
+            <div v-else class="w3-bar-item w3-button" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)" style="padding: 2px 4px;">
               <span><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span>
-              <span style="margin-left: 1em;">{{ tool.value }}</span>
-              <span v-if="!!tool.shortcut" class="w3-right w3-small w3-gray w3-round"
-                style="padding: 4px;">{{ tool.shortcut }}</span>
+              <span style="margin-left: 0.5em;" v-html="tool.value"></span>
+              <span v-if="!!tool.shortcut" class="w3-right w3-small w3-light-gray w3-round"
+                style="padding: 2px; margin-left: 4em; font-family: 'Courier New', Courier, monospace; font-weight: bold;" v-html="tool.shortcut" ></span>
             </div>
           </template>
         </div>
@@ -1911,26 +1914,20 @@
     });
   </script>
   <div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny">
-    <div id="stateOfSystem" class="w3-bar-item w3-right" style="padding: 0px;">
+    <div style="padding: 0px; display: inline-block;">
+      <span><i class="fas fa-info-circle"></i></span>
+      <span id="infoInStatus"></span>
+    </div>  
+    <div id="stateOfSystem" class="w3-bar-item w3-right" style="padding: 0px; display: inline-block;">
       Design
     </div>
-    <div id="showWhenSimulating">
-      <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
-        <i class="fas fa-ellipsis-v"></i>
-      </div>
-      <div id="simulationTime" class="w3-bar-item w3-right" style="padding: 0px;">
-        0
-      </div>
-      <div class="w3-bar-item w3-right" style="padding: 0px;">$t$=</div>
-      <div class="w3-bar-item w3-right" style="padding: 0px; margin: 0 8px;">
-        <i class="fas fa-ellipsis-v"></i>
-      </div>
-      <div id="aSimulationTime" class="w3-bar-item w3-right" style="padding: 0px;">
-        NaN
-      </div>
-      <div class="w3-bar-item w3-right" style="padding: 0px;">
-        Actual $T_S$=
-      </div>
+    <div id="showWhenSimulating" class="w3-bar-item w3-right" style="display: inline-block; padding: 0px; margin: 0 8px;">
+      <span>$t=$&nbsp;</span>
+      <span id="simulationTime">0</span>
+      <span><i class="fas fa-ellipsis-v"></i></span>
+      <span>Actual $T_S=$&nbsp;</span>
+      <span id="aSimulationTime">NaN</span>
+      <span><i class="fas fa-ellipsis-v"></i></span>
     </div>
   </div>
 
@@ -2395,171 +2392,15 @@
       el: "#mainToobar",
       data: {
         visibleItem: "library",
-        toolBar: [{
-            value: "File",
-            icon: "fas fa-arrow-left",
-            function: "",
-            text: "Good to go when eveything is fine and also I want to say something more 1",
-            shortcut: "Ctrl + C",
-            items: [{
-                value: "New",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 2",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Save",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 3",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Load",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 4",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "hl",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 5",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Print",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 6",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "hl",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 7",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Account",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 8",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Extend licence period",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 9",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "File explorer",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 10",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Sign out",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 11",
-                shortcut: "Ctrl + C"
-              }
-            ]
-          },
-          {
-            value: "Edit",
-            icon: "fas fa-arrow-left",
-            function: "showSimulationToolbar(false)",
-            text: "Good to go when eveything is fine and also I want to say something more 12",
-            shortcut: "Ctrl + C",
-            items: [{
-                value: "Cut",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 13",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Copy",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 14",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Paste",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 15",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "hl",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 16",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Edit block",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 17",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Edit ",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 18",
-                shortcut: "Ctrl + C"
-              }
-            ]
-          },
-          {
-            value: "View",
-            icon: "fas fa-arrow-left",
-            function: "showSimulationToolbar(false)",
-            text: "Good to go when eveything is fine and also I want to say something more 19",
-            shortcut: "Ctrl + C",
-            items: [{
-                value: "Zoom in",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 20",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Zoom out",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 21",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Original size",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 22",
-                shortcut: "Ctrl + C"
-              },
-              {
-                value: "Fit all",
-                icon: "fas fa-arrow-left",
-                function: "showSimulationToolbar(false)",
-                text: "Good to go when eveything is fine and also I want to say something more 23",
-                shortcut: "Ctrl + C"
-              }
-            ]
-          }
-        ]
+        "toolBar":[{"value":"File","icon":"fas fa-file-alt","width":"350","text":"Menu gives options to manage your files","shortcut":"","items":[{"value":"Cloud organizer","icon":"far fa-folder","function":"","text":"Organize your Uyamak systems on your cloud storage","shortcut":"Ctrl + O"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Save to local machine","icon":"fas fa-download","function":"","text":"Download the Uyamak system to your local device as a file","shortcut":"Ctrl + S"},{"value":"Load from local machine","icon":"fas fa-upload","function":"","text":"Load a Uyamak system from your local device","shortcut":"Ctrl + L"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Share privately","icon":"fas fa-share-alt-square","function":"","text":"Share Uyamak system with your friends and teachers","shortcut":"Ctrl + J"},{"value":"Make public","icon":"fas fa-share-alt","function":"","text":"Publish your Uyamak system to the public","shortcut":"Ctrl + Shift + J"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Print","icon":"fas fa-print","function":"","text":"Print the Uyamak system","shortcut":"Ctrl + P"}]},{"value":"System","icon":"fas fa-project-diagram","width":"375","text":"Menu gives options to manage your Uyamak system","shortcut":"","items":[{"value":"Show Uyamak library","icon":"fas fa-puzzle-piece","function":"","text":"Displays the Uyamak library drawer where you can find all the Uyamak models","shortcut":"Ctrl +U"},{"value":"Show Model Editor","icon":"fas fa-edit","function":"","text":"Displays the Uyamak model editor where you can tweak the model settings","shortcut":"Ctrl + E"},{"value":"Show Simulation drawer","icon":"fas fa-play","function":"","text":"Displays the simulation drawer where you can execute the Uyamak system","shortcut":"Ctrl + Alt + S"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Create sub-system","icon":"far fa-object-group","function":"","text":"Creates Uyamak sub-system out of the selected Uyamak models","shortcut":"Ctrl + K"},{"value":"Dismantle sub-system","icon":"far fa-object-ungroup","function":"","text":"Dismantles all the selected Uyamak sub-systems.","shortcut":"Ctrl + Shift + K"}]},{"value":"Edit","icon":"fas fa-pen","width":"300","text":"Menu gives options to manipulate the Uyamak system","shortcut":"","items":[{"value":"Cut","icon":"fas fa-cut","function":"","text":"Copies the selected Uyamak models into the clipboard and deletes the original ones","shortcut":"Ctrl + X"},{"value":"Copy","icon":"fas fa-copy","function":"","text":"Copies the selected Uyamak models into the clipboard","shortcut":"Ctrl + C"},{"value":"Paste","icon":"fas fa-paste","function":"","text":"Pastes the clipboard Uyamak models to the present Uyamak system","shortcut":"Ctrl + V"},{"value":"Clone","icon":"fas fa-clone","function":"","text":"Clones the selected Uyamak models","shortcut":"Ctrl + Shift + C"},{"value":"Delete","icon":"fas fa-trash-alt","function":"","text":"Delete the selected Uyamak models and Sub-systems","shortcut":"Delete"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Undo","icon":"fas fa-undo","function":"","text":"Undo the recent changes","shortcut":"Ctrl + Z"},{"value":"Redo","icon":"fas fa-redo","function":"","text":"Redo the recent changes","shortcut":"Ctrl + Shift + Z"}]},{"value":"View","icon":"fas fa-desktop","width":"375","text":"Menu gives different options to visualize the Uyamak system","shortcut":"","items":[{"value":"Zoom in","icon":"fas fa-search-plus","function":"","text":"Zooms in","shortcut":"Ctrl + +"},{"value":"Zoom out","icon":"fas fa-search-minus","function":"","text":"Zooms out","shortcut":"Ctrl + -"},{"value":"Original size","icon":"fas fa-compress","function":"","text":"Shows the original size. Some items may be out of view. You can see them by scrolling","shortcut":"Ctrl + 0"},{"value":"Fit all","icon":"fas fa-expand","function":"","text":"Shows the complete Uyamak system","shortcut":"Ctrl + Shift + 0"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Minimize  subsystem(s)","icon":"fas fa-window-minimize","function":"","text":"Minimizes the selected subsystem. If nothing is selected, all the sub-systems will be minimized","shortcut":"Ctrl + M"},{"value":"Maximize  subsystem(s)","icon":"fas fa-window-maximize","function":"","text":"Maximizes the selected subsystem. If nothing is selected, all the sub-systems will be maximized","shortcut":"Ctrl + Shift + M"},{"value":"hl","icon":"fas fa-window-maximize","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"System outline","icon":"fas fa-image","function":"","text":"Shows outline of the Uyamak system in a small window on the top right corner","shortcut":"Ctrl + F"},{"value":"Show/Hide Grid lines","icon":"fas fa-border-all","function":"","text":"Shows or hide the grid lines","shortcut":"Ctrl + G"},{"value":"Toggle snap to grid","icon":"fas fa-magnet","function":"","text":"When snap to grid is activated, the blocks are moved at a steps instead of smoothly","shortcut":"Ctrl + T"},{"value":"Keyboard shortcuts","icon":"far fa-keyboard","function":"","text":"Displays all the keyboard shortcuts","shortcut":"Ctrl + Y"}]},{"value":"Account","icon":"fas fa-user-alt","width":"275","text":"Menu gives options to manage the user account","shortcut":"","items":[{"value":"Profile","icon":"fas fa-user-cog","function":"","text":"Opens another page where you can manage your Uyamak profile","shortcut":"Ctrl + A"},{"value":"Extend licence period","icon":"fas fa-ticket-alt","function":"","text":"Lets you extend the license period","shortcut":"Ctrl + B"},{"value":"Sign out","icon":"fas fa-door-open","function":"","text":"Signing out","shortcut":"Ctrl + W"}]},{"value":"Help","icon":"far fa-life-ring","width":"300","text":"Menu gives access to documentation and help","shortcut":"","items":[{"value":"Documentation","icon":"fas fa-book","function":"","text":"Takes you to the documentation page","shortcut":"Ctrl + D"},{"value":"Context help","icon":"far fa-question-circle","function":"","text":"Shows the documentation for the selected Uyamak model","shortcut":"Ctrl  + H"},{"value":"About","icon":"fas fa-info","function":"","text":"Shows credits and version information","shortcut":"Ctrl + Shift + A"}]},]
+      },
+      methods: {
+        showInfo: function (text) {
+          document.getElementById("infoInStatus").innerText = text;
+        },
+        hideInfo: function () {
+          document.getElementById("infoInStatus").innerText = "";
+        }
       }
     });
   </script>
@@ -3868,7 +3709,7 @@
         listOfCharts[graphCell.value.chartID] = window.open(
           "chart?date=" + Date.now(),
           "",
-          "menubar=0, height=400, width=700, titlebar=no, toolbar=no"
+          "menubar=0, height=400, width=700, titlebar=no"
         );
         listOfCharts[graphCell.value.chartID].inParams =
           graphCell.value.Parameters;

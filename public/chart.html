@@ -120,6 +120,7 @@
     function resetPlotView(newParams) {
       if (!!newParams) putInParams(newParams);
       document.body.style.background = inParams.bgColor.Value[0][0];
+      document.title = inParams.title.Value[0][0];
       prepareData();
       prepareOptions();
       chart.draw(data, options);
