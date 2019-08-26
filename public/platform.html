@@ -428,90 +428,6 @@
           }
           textInput.select();
         });
-        //Delete blocks
-        keyHandler.bindKey(46, function (evt) {
-          if (graph.isEnabled()) graph.removeCells();
-        });
-        //Arrow keys
-        keyHandler.bindKey(38, function (evt) {
-          moveGraph("up");
-        });
-        keyHandler.bindKey(40, function (evt) {
-          moveGraph("down");
-        });
-        keyHandler.bindKey(39, function (evt) {
-          moveGraph("right");
-        });
-        keyHandler.bindKey(37, function (evt) {
-          moveGraph("left");
-        });
-        //undo and redo
-        keyHandler.bindControlKey(90, function (evt) {
-          if (graph.isEnabled()) {
-            undoManager.undo();
-          }
-        });
-        keyHandler.bindControlShiftKey(90, function (evt) {
-          if (graph.isEnabled()) {
-            undoManager.redo();
-          }
-        });
-        //Toggle Blocks drawer
-        keyHandler.bindControlKey(66, function (evt) {
-          toggleSideBar("libraryOfBlocks");
-        });
-        //Toggle Editor drawer
-        keyHandler.bindControlKey(69, function (evt) {
-          toggleSideBar("editorForParameters");
-        });
-        //Toggle Printer drawer
-        keyHandler.bindControlKey(80, function (evt) {
-          toggleSideBar("printingTheModel");
-        });
-        //Toggle Zoom
-        keyHandler.bindControlKey(107, function (evt) {
-          graph.zoomIn();
-        });
-        keyHandler.bindControlKey(187, function (evt) {
-          graph.zoomIn();
-        });
-        keyHandler.bindControlKey(109, function (evt) {
-          graph.zoomOut();
-        });
-        keyHandler.bindControlKey(189, function (evt) {
-          graph.zoomOut();
-        });
-        keyHandler.bindControlKey(96, function (evt) {
-          graph.zoomActual();
-        });
-        keyHandler.bindControlKey(48, function (evt) {
-          graph.zoomActual();
-        });
-        keyHandler.bindControlKey(97, function (evt) {
-          graph.fit();
-        });
-        keyHandler.bindControlKey(49, function (evt) {
-          graph.fit();
-        });
-        //Group and ungroup
-        keyHandler.bindControlKey(71, function (evt) {
-          if (graph.isEnabled()) {
-            createSubModel();
-          }
-        });
-        keyHandler.bindControlShiftKey(71, function (evt) {
-          if (graph.isEnabled()) {
-            ungroupSubModel();
-          }
-        });
-
-        //Minimize and maximize
-        keyHandler.bindControlKey(77, function (evt) {
-          foldItems();
-        });
-        keyHandler.bindControlShiftKey(77, function (evt) {
-          foldItems(false);
-        });
 
         // To detect if touch events are actually supported, the following condition is recommended:
         // mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
@@ -1508,18 +1424,36 @@
     <template v-for="(topTool, index) in toolBar">
       <div class="w3-dropdown-hover">
         <div class="w3-button tool-item" @mouseleave="hideInfo()" @mouseover="showInfo(topTool.text)">
-            <span><i v-if="!!topTool.icon" class="fa-fw" v-bind:class="topTool.icon"></i></span>
+            <span><i v-if="!!topTool.icon" v-bind:class="topTool.icon"></i></span>
             <span v-html="topTool.value"></span>
         </div>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4" > <!--v-bind:style="'width: ' + (topTool.width) + 'px;'"-->
+        <div class="w3-dropdown-content w3-bar-block w3-card-4" v-bind:style="'width: ' + (topTool.width) + 'px;'">
           <template v-for="(tool, index) in topTool.items">
             <hr v-if="tool.value === 'hl'" style="margin:0; border-color: #ddd;" />
-            <div v-else class="w3-bar-item w3-button" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)" style="padding: 2px 4px;">
-              <span><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span>
-              <span style="margin-left: 0.5em;" v-html="tool.value"></span>
-              <span v-if="!!tool.shortcut" class="w3-right w3-small w3-light-gray w3-round"
-                style="padding: 2px; margin-left: 4em; font-family: 'Courier New', Courier, monospace; font-weight: bold;" v-html="tool.shortcut" ></span>
+            <div v-else class="w3-bar-item w3-button" style="padding: 0px; vertical-align: middle;" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)">
+              <div class="w3-display-container" style="height: 30px; margin: 0 4px;">
+                <div class="w3-display-left">
+                  <span class="w3-xlarge" style="display:inline-block; vertical-align:middle"><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span>
+                  <span style="margin-left: 0.25em;display:inline-block; vertical-align:middle" v-html="tool.value"></span>
+                </div>
+                <div class="w3-display-right">
+                  <div style="margin-left: 0.25em;display:inline-block; vertical-align:middle;">
+                  <template v-for="(key, index) in tool.shortcut">
+                    <span v-if="index!==0" style="padding:0;">+</span><span class="w3-light-gray w3-round w3-border w3-border-black" style="padding: 0 2px; font-family: 'Courier New', Courier, monospace; font-weight: bold;" v-html="key"></span>
+                  </template>
+                  </div>
+                </div>
+              </div>
             </div>
+            <!--div v-else class="w3-bar-item w3-button w3-display-container"  style="height: 35px;">
+              <div class="w3-display-left" style="margin-left: 4px;">
+              </div>
+              <div class="w3-display-right" style="margin-right: 4px;">
+                <template v-for="(key, index) in tool.shortcut">
+                  <span v-if="index!==0" style="padding:0;">+</span><span class="w3-light-gray w3-round w3-border w3-border-black" style="padding: 0 2px; font-family: 'Courier New', Courier, monospace; font-weight: bold;" v-html="key"></span>
+                </template>
+              </div>
+            </div-->
           </template>
         </div>
       </div>
@@ -1548,7 +1482,7 @@
         </div>
         <div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue"
           onclick="selectTabItem(event,'library')" style="padding: 0;">
-          <i class="fas fa-drafting-compass"></i>
+          <i class="fas fa-puzzle-piece"></i>
         </div>
         <!--div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
           onclick="selectTabItem(event,'printingTheModel')">
@@ -1933,145 +1867,6 @@
     </div>
   </div>
 
-  <div id="sToolBar" class="umk_main w3-bar w3-indigo w3-card"
-    style="transition: margin 700ms;/*position:fixed;top:0;left:0;display: none;*/">
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="showSimulationToolbar(false)"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-arrow-left"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="executeSimulation()"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-play"></i>
-    </div>
-  </div>
-  <div id="toolBar" class="umk_main w3-bar w3-indigo w3-card"
-    style="transition: margin 700ms;/*position:fixed;top:0;left:0;*/">
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick=""
-      title="Show menu (Ctrl+)&#10;Pull the menu drawer.">
-      <i class="fa-fw fas fa-bars"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('libraryOfBlocks')" title="Add Blocks (Ctrl+B)&#10;Displays or hides the blocks drawer">
-      <i class="fa-fw fas fa-th-large"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('editorForParameters')"
-      title="Edit block (Ctrl+E)&#10;Displays or hides the editor drawer for blocks.">
-      <i class="fa-fw far fa-edit"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="if (graph.isEnabled()) graph.removeCells();" title="Delete (Del)&#10;Delete the selected blocks.">
-      <i class="fa-fw fas fa-trash-alt"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('printingTheModel')"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-print"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-indigo w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="displayExecutionOrder()" title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-sort-numeric-up-alt"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-red w3-hover-indigo" style="padding: 0px 4px;"
-      onclick="toggleSideBar('printingTheModel')"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-cogs"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="showSimulationToolbar()"
-      title="Show all blocks (Ctrl+P)&#10;Displays or hides the printer drawer">
-      <i class="fa-fw fas fa-play"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="graph.zoomOut()"
-      title="Zoom out (Ctrl+minus)&#10;Zooms out the block diagram">
-      <i class="fa-fw fas fa-search-minus"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="graph.zoomIn()"
-      title="Zoom in (Ctrl+plus)&#10;Zooms in the block diagram">
-      <i class="fa-fw fas fa-search-plus"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="graph.zoomActual()"
-      title="Zoom 1:1 (Ctrl+0)&#10;Zooms the block diagram to its original size">
-      <i class="fa-fw fas fa-compress"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="graph.fit()"
-      title="Fit all (Ctrl+1)&#10;Zooms the block diagram to fit the whole whole diagram">
-      <i class="fa-fw fas fa-expand"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('up')"
-      title="Move up (Up arrow)&#10;Moves the graph up">
-      <i class="fa-fw fas fa-arrow-up"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('down')"
-      title="Move down (Down arrow)&#10;Moves the graph down">
-      <i class="fa-fw fas fa-arrow-down"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('left')"
-      title="Move left (Left arrow)&#10;Moves the graph left">
-      <i class="fa-fw fas fa-arrow-left"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="moveGraph('right')"
-      title="Move right (Right arrow)&#10;Moves the graph right">
-      <i class="fa-fw fas fa-arrow-right"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="undoManager.undo()"
-      title="Undo (Ctrl+Z)&#10;Undo the recent changes">
-      <i class="fa-fw fas fa-undo"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="undoManager.redo()"
-      title="Redo (Ctrl+Shift+Z)&#10;Redo the recent changes">
-      <i class="fa-fw fas fa-redo"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="createSubModel()"
-      title="Group (Ctrl+G)&#10;Group the selected blocks to create a sub-model">
-      <i class="fa-fw far fa-object-group"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="ungroupSubModel()"
-      title="Ungroup (Ctrl+Shift+G)&#10;Ungroup the selected sub-models">
-      <i class="fa-fw far fa-object-ungroup"></i>
-    </div>
-    <div class="w3-bar-item" style="padding: 0px;">
-      <i class="fa-fw fas fa-ellipsis-v"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="foldItems()"
-      title="Minimize (Ctrl+M)&#10;Minimize the selected blocks and sub-models">
-      <i class="fa-fw fas fa-window-minimize"></i>
-    </div>
-    <div class="w3-bar-item w3-button w3-hover-indigo" style="padding: 0px 4px;" onclick="foldItems(false)"
-      title="Maximize (Ctrl+Shift+M)&#10;Maximize the selected blocks and sub-models">
-      <i class="fa-fw fas fa-window-maximize"></i>
-    </div>
-  </div>
-
-  <div id="libraryOfBlocks" class="w3-sidebar w3-animate-left"
-    style="z-index: 2; left: 0px; top: 0px; width: 25%;display: none;touch-action: none; border-right: solid 2px black;">
-    <div class="w3-block w3-yellow w3-hover-red w3-button" onclick="toggleSideBar('libraryOfBlocks')">
-      <div class="w3-right">
-        <i class="fas fa-sign-out-alt fa-rotate-180"></i>
-      </div>
-      <div class="w3-left">
-        Close
-      </div>
-    </div>
-  </div>
-
   <div id="app">
     <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
       <div class="w3-display-middle w3-center w3-padding" style="background-color: #e1e1e180;">
@@ -2394,8 +2189,8 @@
       el: "#mainToobar",
       data: {
         visibleItem: "library",
-        "toolBar":[{"value":"File","icon":"fas fa-file-alt","width":"350","text":"Menu gives options to manage your files","shortcut":"","items":[{"value":"Cloud organizer","icon":"far fa-folder","function":"","text":"Organize your Uyamak systems on your cloud storage","shortcut":"Ctrl + O"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Save to local machine","icon":"fas fa-download","function":"","text":"Download the Uyamak system to your local device as a file","shortcut":"Ctrl + S"},{"value":"Load from local machine","icon":"fas fa-upload","function":"","text":"Load a Uyamak system from your local device","shortcut":"Ctrl + L"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Share privately","icon":"fas fa-share-alt-square","function":"","text":"Share Uyamak system with your friends and teachers","shortcut":"Ctrl + J"},{"value":"Make public","icon":"fas fa-share-alt","function":"","text":"Publish your Uyamak system to the public","shortcut":"Ctrl + Shift + J"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Print","icon":"fas fa-print","function":"","text":"Print the Uyamak system","shortcut":"Ctrl + P"}]},{"value":"System","icon":"fas fa-project-diagram","width":"375","text":"Menu gives options to manage your Uyamak system","shortcut":"","items":[{"value":"Show Uyamak library","icon":"fas fa-puzzle-piece","function":"","text":"Displays the Uyamak library drawer where you can find all the Uyamak models","shortcut":"Ctrl +U"},{"value":"Show Model Editor","icon":"fas fa-edit","function":"","text":"Displays the Uyamak model editor where you can tweak the model settings","shortcut":"Ctrl + E"},{"value":"Show Simulation drawer","icon":"fas fa-play","function":"","text":"Displays the simulation drawer where you can execute the Uyamak system","shortcut":"Ctrl + Alt + S"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Create sub-system","icon":"far fa-object-group","function":"","text":"Creates Uyamak sub-system out of the selected Uyamak models","shortcut":"Ctrl + K"},{"value":"Dismantle sub-system","icon":"far fa-object-ungroup","function":"","text":"Dismantles all the selected Uyamak sub-systems.","shortcut":"Ctrl + Shift + K"}]},{"value":"Edit","icon":"fas fa-pen","width":"300","text":"Menu gives options to manipulate the Uyamak system","shortcut":"","items":[{"value":"Cut","icon":"fas fa-cut","function":"","text":"Copies the selected Uyamak models into the clipboard and deletes the original ones","shortcut":"Ctrl + X"},{"value":"Copy","icon":"fas fa-copy","function":"","text":"Copies the selected Uyamak models into the clipboard","shortcut":"Ctrl + C"},{"value":"Paste","icon":"fas fa-paste","function":"","text":"Pastes the clipboard Uyamak models to the present Uyamak system","shortcut":"Ctrl + V"},{"value":"Clone","icon":"fas fa-clone","function":"","text":"Clones the selected Uyamak models","shortcut":"Ctrl + Shift + C"},{"value":"Delete","icon":"fas fa-trash-alt","function":"","text":"Delete the selected Uyamak models and Sub-systems","shortcut":"Delete"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Undo","icon":"fas fa-undo","function":"","text":"Undo the recent changes","shortcut":"Ctrl + Z"},{"value":"Redo","icon":"fas fa-redo","function":"","text":"Redo the recent changes","shortcut":"Ctrl + Shift + Z"}]},{"value":"View","icon":"fas fa-desktop","width":"375","text":"Menu gives different options to visualize the Uyamak system","shortcut":"","items":[{"value":"Zoom in","icon":"fas fa-search-plus","function":"","text":"Zooms in","shortcut":"Ctrl + +"},{"value":"Zoom out","icon":"fas fa-search-minus","function":"","text":"Zooms out","shortcut":"Ctrl + -"},{"value":"Original size","icon":"fas fa-compress","function":"","text":"Shows the original size. Some items may be out of view. You can see them by scrolling","shortcut":"Ctrl + 0"},{"value":"Fit all","icon":"fas fa-expand","function":"","text":"Shows the complete Uyamak system","shortcut":"Ctrl + Shift + 0"},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"Minimize  subsystem(s)","icon":"fas fa-window-minimize","function":"","text":"Minimizes the selected subsystem. If nothing is selected, all the sub-systems will be minimized","shortcut":"Ctrl + M"},{"value":"Maximize  subsystem(s)","icon":"fas fa-window-maximize","function":"","text":"Maximizes the selected subsystem. If nothing is selected, all the sub-systems will be maximized","shortcut":"Ctrl + Shift + M"},{"value":"hl","icon":"fas fa-window-maximize","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":""},{"value":"System outline","icon":"fas fa-image","function":"","text":"Shows outline of the Uyamak system in a small window on the top right corner","shortcut":"Ctrl + F"},{"value":"Show/Hide Grid lines","icon":"fas fa-border-all","function":"","text":"Shows or hide the grid lines","shortcut":"Ctrl + G"},{"value":"Toggle snap to grid","icon":"fas fa-magnet","function":"","text":"When snap to grid is activated, the blocks are moved at a steps instead of smoothly","shortcut":"Ctrl + T"},{"value":"Keyboard shortcuts","icon":"far fa-keyboard","function":"","text":"Displays all the keyboard shortcuts","shortcut":"Ctrl + Y"}]},{"value":"Account","icon":"fas fa-user-alt","width":"275","text":"Menu gives options to manage the user account","shortcut":"","items":[{"value":"Profile","icon":"fas fa-user-cog","function":"","text":"Opens another page where you can manage your Uyamak profile","shortcut":"Ctrl + A"},{"value":"Extend licence period","icon":"fas fa-ticket-alt","function":"","text":"Lets you extend the license period","shortcut":"Ctrl + B"},{"value":"Sign out","icon":"fas fa-door-open","function":"","text":"Signing out","shortcut":"Ctrl + W"}]},{"value":"Help","icon":"far fa-life-ring","width":"300","text":"Menu gives access to documentation and help","shortcut":"","items":[{"value":"Documentation","icon":"fas fa-book","function":"","text":"Takes you to the documentation page","shortcut":"Ctrl + D"},{"value":"Context help","icon":"far fa-question-circle","function":"","text":"Shows the documentation for the selected Uyamak model","shortcut":"Ctrl  + H"},{"value":"About","icon":"fas fa-info","function":"","text":"Shows credits and version information","shortcut":"Ctrl + Shift + A"}]},]
-      },
+"toolBar":[{"value":"File","icon":"fas fa-file-alt","width":"335","text":"Menu gives options to manage your files","shortcut":[],"items":[{"value":"Cloud organizer","icon":"far fa-folder","function":"","text":"Organize your Uyamak systems on your cloud storage","shortcut":['Ctrl','O',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Save to local machine","icon":"fas fa-download","function":"","text":"Download the Uyamak system to your local device as a file","shortcut":['Ctrl','S',]},{"value":"Load from local machine","icon":"fas fa-upload","function":"","text":"Load a Uyamak system from your local device","shortcut":['Ctrl','L',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Share privately","icon":"fas fa-share-alt-square","function":"","text":"Share Uyamak system with your friends and teachers","shortcut":['Ctrl','J',]},{"value":"Make public","icon":"fas fa-share-alt","function":"","text":"Publish your Uyamak system to the public","shortcut":['Ctrl','Shift','J',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Print","icon":"fas fa-print","function":"","text":"Print the Uyamak system","shortcut":['Ctrl','P',]}]},{"value":"System","icon":"fas fa-project-diagram","width":"400","text":"Menu gives options to manage your Uyamak system","shortcut":[],"items":[{"value":"Show Uyamak library","icon":"fas fa-puzzle-piece","function":"","text":"Displays the Uyamak library drawer where you can find all the Uyamak models","shortcut":['Ctrl','U',]},{"value":"Show Model Editor","icon":"fas fa-edit","function":"","text":"Displays the Uyamak model editor where you can tweak the model settings","shortcut":['Ctrl','E',]},{"value":"Show Simulation drawer","icon":"fas fa-play","function":"","text":"Displays the simulation drawer where you can execute the Uyamak system","shortcut":['Ctrl','Shift','S',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Create sub-system","icon":"far fa-object-group","function":"","text":"Creates Uyamak sub-system out of the selected Uyamak models","shortcut":['Ctrl','K',]},{"value":"Dismantle sub-system","icon":"far fa-object-ungroup","function":"","text":"Dismantles all the selected Uyamak sub-systems.","shortcut":['Ctrl','Shift','K',]}]},{"value":"Edit","icon":"fas fa-pen","width":"300","text":"Menu gives options to manipulate the Uyamak system","shortcut":[],"items":[{"value":"Select all","icon":"far fa-check-square","function":"","text":"","shortcut":['Ctrl','A',]},{"value":"Select none","icon":"far fa-square","function":"","text":"","shortcut":['Ctrl','Shift','A',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"","shortcut":[]},{"value":"Cut","icon":"fas fa-cut","function":"","text":"Copies the selected Uyamak models into the clipboard and deletes the original ones","shortcut":['Ctrl','X',]},{"value":"Copy","icon":"fas fa-copy","function":"","text":"Copies the selected Uyamak models into the clipboard","shortcut":['Ctrl','C',]},{"value":"Paste","icon":"fas fa-paste","function":"","text":"Pastes the clipboard Uyamak models to the present Uyamak system","shortcut":['Ctrl','V',]},{"value":"Clone","icon":"fas fa-clone","function":"","text":"Clones the selected Uyamak models","shortcut":['Ctrl','Shift','C',]},{"value":"Delete","icon":"fas fa-trash-alt","function":"","text":"Delete the selected Uyamak models and Sub-systems","shortcut":['Delete',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Undo","icon":"fas fa-undo","function":"","text":"Undo the recent changes","shortcut":['Ctrl','Z',]},{"value":"Redo","icon":"fas fa-redo","function":"","text":"Redo the recent changes","shortcut":['Ctrl','Shift','Z',]}]},{"value":"View","icon":"fas fa-desktop","width":"390","text":"Menu gives different options to visualize the Uyamak system","shortcut":[],"items":[{"value":"Zoom in","icon":"fas fa-search-plus","function":"","text":"Zooms in","shortcut":['Ctrl','+',]},{"value":"Zoom out","icon":"fas fa-search-minus","function":"","text":"Zooms out","shortcut":['Ctrl','-',]},{"value":"Original size","icon":"fas fa-compress","function":"","text":"Shows the original size. Some items may be out of view. You can see them by scrolling","shortcut":['Ctrl','0',]},{"value":"Fit all","icon":"fas fa-expand","function":"","text":"Shows the complete Uyamak system","shortcut":['Ctrl','Shift','0',]},{"value":"hl","icon":"fas fa-arrow-left","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"Minimize  subsystem(s)","icon":"fas fa-window-minimize","function":"","text":"Minimizes the selected subsystem. If nothing is selected, all the sub-systems will be minimized","shortcut":['Ctrl','M',]},{"value":"Maximize  subsystem(s)","icon":"fas fa-window-maximize","function":"","text":"Maximizes the selected subsystem. If nothing is selected, all the sub-systems will be maximized","shortcut":['Ctrl','Shift','M',]},{"value":"hl","icon":"fas fa-window-maximize","function":"","text":"Good to go when eveything is fine and also I want to say something more 1","shortcut":[]},{"value":"System outline","icon":"fas fa-image","function":"","text":"Shows outline of the Uyamak system in a small window on the top right corner","shortcut":['Ctrl','F',]},{"value":"Show/Hide Grid lines","icon":"fas fa-border-all","function":"","text":"Shows or hide the grid lines","shortcut":['Ctrl','G',]},{"value":"Toggle snap to grid","icon":"fas fa-magnet","function":"","text":"When snap to grid is activated, the blocks are moved at a steps instead of smoothly","shortcut":['Ctrl','T',]},{"value":"Keyboard shortcuts","icon":"far fa-keyboard","function":"","text":"Displays all the keyboard shortcuts","shortcut":['Ctrl','Y',]}]},{"value":"Account","icon":"fas fa-user-alt","width":"315","text":"Menu gives options to manage the user account","shortcut":[],"items":[{"value":"Profile","icon":"fas fa-user-cog","function":"","text":"Opens another page where you can manage your Uyamak profile","shortcut":[]},{"value":"Extend licence period","icon":"fas fa-ticket-alt","function":"","text":"Lets you extend the license period","shortcut":['Ctrl','B',]},{"value":"Sign out","icon":"fas fa-door-open","function":"","text":"Signing out","shortcut":['Ctrl','W',]}]},{"value":"Help","icon":"far fa-life-ring","width":"275","text":"Menu gives access to documentation and help","shortcut":[],"items":[{"value":"Documentation","icon":"fas fa-book","function":"","text":"Takes you to the documentation page","shortcut":['Ctrl','D',]},{"value":"Context help","icon":"far fa-question-circle","function":"","text":"Shows the documentation for the selected Uyamak model","shortcut":['Ctrl','H',]},{"value":"hl","icon":"fas fa-window-maximize","function":"","text":"Shows the documentation for the selected Uyamak model","shortcut":[]},{"value":"About","icon":"fas fa-info","function":"","text":"Shows the documentation for the selected Uyamak model","shortcut":[]}]},]
+        },
       methods: {
         showInfo: function (text) {
           document.getElementById("infoInStatus").innerText = text;
@@ -3717,6 +3512,11 @@
           graphCell.value.Parameters;
       } else listOfCharts[graphCell.value.chartID].focus();
     }
+  </script>
+  <script>
+    
+document.addEventListener('keydown', (event) => {if ((event.ctrlKey) && (event.key.toUpperCase()==="O") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="S") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="L") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="J") ){alert();}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="J") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="P") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="U") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="E") ){alert();}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="S") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="K") ){if (graph.isEnabled()) createSubModel();;}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="K") ){if (graph.isEnabled()) ungroupSubModel();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="A") ){alert();}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="A") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="X") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="C") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="V") ){alert();}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="C") ){alert();}if ((event.key.toUpperCase()==="DELETE") ){if (graph.isEnabled()) graph.removeCells();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="Z") ){undoManager.undo();;}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="Z") ){undoManager.redo();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="+") ){graph.zoomIn();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="-") ){graph.zoomOut();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="0") ){graph.zoomActual();;}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="0") ){graph.fit();;}if ((event.ctrlKey) && (event.key.toUpperCase()==="M") ){foldItems();;}if ((event.ctrlKey) && (event.shiftKey) && (event.key.toUpperCase()==="M") ){foldItems(false);;}if ((event.ctrlKey) && (event.key.toUpperCase()==="F") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="G") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="T") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="Y") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="B") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="W") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="D") ){alert();}if ((event.ctrlKey) && (event.key.toUpperCase()==="H") ){alert();}if ((event.key.toUpperCase()==="ARROWUP") ){moveGraph("up");;}if ((event.key.toUpperCase()==="ARROWDOWN") ){moveGraph("down");;}if ((event.key.toUpperCase()==="ARROWRIGHT") ){moveGraph("right");;}if ((event.key.toUpperCase()==="ARROWLEFT") ){moveGraph("left");;}});
+
   </script>
 </body>
 
