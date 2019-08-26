@@ -874,23 +874,23 @@
         var defaultModelStyle = mxGraphModel.prototype.getStyle;
         graph.model.getStyle = function (cell) {
           var style = defaultModelStyle.apply(this, arguments);
-          /*if (cell != null) {
+          /**/if (cell != null) {
             if (this.isEdge(cell)) {
-              var target = this.getTerminal(cell, true);
+              var target = cell.getTerminal(false);
               if (target != null) {
                 var state = graph.getView().getState(target);
                 var targetStyle =
                   state != null ? state.style : graph.getCellStyle(target);
                 var fill = mxUtils.getValue(
                   targetStyle,
-                  mxConstants.STYLE_FILLCOLOR
+                  'strokeColor'
                 );
                 if (fill != null) {
                   style += ";strokeColor=" + fill;
                 }
               }
             }
-          }*/
+          }/**/
           return style;
         };
 
@@ -910,9 +910,6 @@
         graph.getLabel = function (cell) {
           //console.log(cell);
           if (!!cell.value) {
-            if (cell.style.search("umk_display") >= 0) {
-              return cell.value.show || "$[\\cdot]$";
-            }
             if (cell.style.search("umk_model") >= 0) {
               try {
                 eval(
@@ -921,6 +918,9 @@
                   " (cell.value);"
                 );
                 setCaption(cell, tempModel.Name);
+                if (cell.style.search("umk_display") >= 0) {
+                  return cell.value.show || "$[\\cdot]$";
+                }
                 return (
                   "<p style='margin:0; padding: 0;'>" +
                   tempModel.Icon().html +
@@ -1476,15 +1476,19 @@
         </div>
       </div>
       <div class="w3-row w3-gray" style="height:29px;">
-        <div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
+        <div class="w3-col s4 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
           onclick="selectTabItem(event,'folder')">
           <i class="far fa-folder"></i>
         </div>
-        <div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue"
+        <div class="w3-col s4 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue"
           onclick="selectTabItem(event,'library')" style="padding: 0;">
           <i class="fas fa-puzzle-piece"></i>
         </div>
-        <!--div class="w3-col s2 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
+        <div class="w3-col s4 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
+          onclick="selectTabItem(event,'variablesManager')">
+          <i class="fas fa-equals"></i>
+        </div>
+        <!--div class="w3-col s3 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
           onclick="selectTabItem(event,'printingTheModel')">
           <i class="fas fa-print"></i>
         </div-->
@@ -1492,6 +1496,16 @@
       <div style="overflow:auto; height:calc(100% - 51px);">
         <div class="tabContent" style="display: block;" id="library">
           <div id="blocksBar"></div>
+        </div>
+        <div class="tabContent" style="display: none;" id="variablesManager">
+          <label>Variables</label>
+          <select class="w3-select w3-border w3-border-blue" v-model="selVar">
+            <template v-for = "(varItem, index) in vars">
+              <option v-bind:value="index" v-text="varItem.id+'='+varItem.value.toString()"></option>
+            </template>
+          </select>
+          <div v-html="vars[selVar].desc"></div>
+          <div :key="'disp_'+updatingCounter">{{genVarView(selVar)}}</div>
         </div>
         <div class="tabContent" style="display: none;" id="printingTheModel">
           <select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value">
@@ -1967,6 +1981,46 @@
     var fullyLoadedTimeCheck;
   </script>
   <script>
+    var variablesManager = new Vue({
+      el: "#variablesManager",
+      data: {
+        selVar: 0,
+        updatingCounter: 0,
+        vars:[{id: "g", desc: "Acceleration due to gravity", value: [[9.8]]},{id: "G", desc: "Gravitational constant", value: [[6.67408e-11]]}]
+      },
+      updated: function () {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      },
+      watch:{
+        selVar: function () {
+          this.updatingCounter++;
+        }
+      },
+      methods: {
+        genVarView: function (index) {
+          var item = this.vars[index];
+          if (!!item.value) {
+            var inArray = item.value;
+            if (inArray.length === 1 && inArray[0].length === 1) {
+              return "$"+item.id + "=" + inArray[0][0] + "$";
+            }
+            var StrOut = "$"+item.id + "=" + "\\begin{bmatrix}\n";
+            for (var i = 0; i < inArray.length; i++) {
+              for (var j = 0; j < inArray[0].length; j++) {
+                if (j !== 0) StrOut += "\t&\t";
+                StrOut += math.round(math.Complex(inArray[i][j]), 3);
+              }
+              StrOut += "\t\\\\\n";
+            }
+            StrOut += "\\end{bmatrix}$";
+            return StrOut;
+          }
+        }
+      }
+
+    });
+  </script>
+  <script>
     var simulation = new Vue({
       el: "#simulation",
       data: {
@@ -2094,7 +2148,7 @@
                 });
                 //Obtaining execution order
                 modelsForExec.push({
-                  m: order.eo[i].value,
+                  m: JSON.parse2(JSON.stringify2(order.eo[i].value)),
                   s: tempSources
                 });
                 //Obtaining inputs array
@@ -2158,6 +2212,7 @@
               };
             } catch (e) {
               this.terminateAThread(this.threads.ct);
+              console.log(e);
               throw {
                 code: "UMK_SM_TCE",
                 message: "Error in creating thread. Cannot simulate. Please check your system again. Contact support if this error keeps popping up."
