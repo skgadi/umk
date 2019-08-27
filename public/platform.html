@@ -1896,16 +1896,16 @@
     </div>
   </div>
 
-  <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;">
+  <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff0">
     <div class="w3-modal-content w3-card-4" style="height: 100%;">
-      <header class="w3-container w3-teal" style=" height: 27px;">
-        <span onclick="document.getElementById('varEditor').style.display='none'" class="w3-display-topright"
-          style="padding-right: 4px; cursor:pointer;">&times;</span>
-        <div class="w3-large">Variable manager</div>
+      <header class="w3-teal" style=" height: 22px;">
+        <span onclick="document.getElementById('varEditor').style.display='none'" class="w3-display-topright w3-hover-red"
+          style="cursor:pointer;padding: 0 6px;"><i class="fas fa-times"></i></span>
+        <div style="padding:0 4px;"><i class="fas fa-equals"></i> Variable manager</div>
       </header>
-      <div id="variablesManager" style="height: calc(100% - 27px); overflow: hidden;">
+      <div id="variablesManager" style="height: calc(100% - 22px); overflow: hidden;">
         <div v-if="isNaN(selVar)" class="w3-responsive" style="height: 100%;">
-          <div class="w3-button w3-text-teal w3-hover-green w3-light-green w3-block" style="height: 39px;">
+          <div class="w3-button w3-hover-green w3-light-green w3-block" style="height: 39px;" @click="editItem={id:'',desc:'',value:[[0]]};selVar=-1;">
             New variable
           </div>
           <div style="height: calc(100% - 39px); overflow: auto;">
@@ -1945,37 +1945,34 @@
             </table>
           </div>
         </div>
-        <div v-else class="w3-container">
+        <div v-else class="" style="height: 100%; overflow: auto;">
           <label>ID</label>
-          <input class="w3-input w3-border w3-border-theme" :value="editItem.id"
-            @change="idChange(vars[selVar],$event)" />
+          <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"/>
             <label>Description</label>
             <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc"
             style="resize: vertical;"></textarea>
-            <label>Value</label>
-            <br/>
             <div class="w3-center">
-              <div click="valueDimensionsModify(0, index)" style="width: 40px; height: 40px; padding:0px;"
+              <div @click="valueDimensionsModify(0)" style="width: 40px; height: 40px; padding:0px;"
                 class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
                 <div class="w3-display-middle">
                   <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
                 </div>
               </div>
-              <div click="valueDimensionsModify(1, index)" style="width: 40px; height: 40px; padding:0px;"
+              <div @click="valueDimensionsModify(1)" style="width: 40px; height: 40px; padding:0px;"
                 v-if=""
                 class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
                 <div class="w3-display-middle">
                   <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i>
                 </div>
               </div>
-              <div click="valueDimensionsModify(2, index)"
+              <div @click="valueDimensionsModify(2)"
                 style="width: 40px; height: 40px; padding:0px;" v-if=""
                 class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
                 <div class="w3-display-middle">
                   <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
                 </div>
               </div>
-              <div click="valueDimensionsModify(3, index)"
+              <div @click="valueDimensionsModify(3)"
                 style="width: 40px; height: 40px; padding:0px;" v-if=""
                 class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
                 <div class="w3-display-middle">
@@ -1983,56 +1980,57 @@
                 </div>
               </div>
             </div>
-
             <div class="w3-responsive">
-                <table class="w3-table-all">
-                  <template v-for="(rowValue, index1) in editItem.value">
-                    <tr style="padding: 0;">
-                      <td class="w3-light-gray w3-border w3-border-theme"></td>
-                      <template v-for="(value, index2) in rowValue">
-                        <td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">
-                          {{ index2 + 1 }}
-                        </td>
-                      </template>
-                    </tr>
-                    <tr style="padding: 0;" class="w3-border-theme">
-                      <td 
-                        style="padding:0; vertical-align: middle;" class="w3-light-gray w3-border w3-border-theme">
-                        {{ index1 + 1 }}
+              <table class="w3-table-all">
+                <template v-for="(rowValue, index1) in editItem.value">
+                  <tr  v-if="(index1 === 0)" style="padding: 0;">
+                    <td class="w3-light-gray w3-border w3-border-theme"></td>
+                    <template v-for="(value, index2) in editItem.value[index1]">
+                      <td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">
+                        {{ index2 + 1 }}
                       </td>
-                      <template v-for="(value, index2) in rowValue">
-                        <td style="padding: 0;" class="w3-border w3-border-theme">
-                          <input 
-                            v-model.trim="value"
-                            class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px; text-align: right;" type="text" />
-                        </td>
-                      </template>
-                    </tr>
-                  </template>
-                </table>
-              </div>
-
-
-
-
-            <div :key="'disp_'+updatingCounter">
-              {{ genVarView(editItem) }}
+                    </template>
+                  </tr>
+                  <tr style="padding: 0;" class="w3-border-theme">
+                    <td 
+                      style="padding:0; vertical-align: middle;" class="w3-center w3-light-gray w3-border w3-border-theme">
+                      {{ index1 + 1 }}
+                    </td>
+                    <template v-for="(value, index2) in editItem.value[index1]">
+                      <td style="padding: 0;" class="w3-border w3-border-theme">
+                        <input 
+                          v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++;"
+                          class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px; text-align: right;" />
+                      </td>
+                    </template>
+                  </tr>
+                </template>
+              </table>
             </div>
-            <div v-if=""></div>
-          <div class="w3-button w3-orange w3-hover-red w3-block" @click="selVar=NaN">
-            Cancel
+            <label>Value</label>
+            <div style="overflow-x: auto; overflow-y: hidden;">
+              <div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)">
+              </div>
+            </div>
+            <div class="w3-row">
+            <div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">
+              Save
+            </div>
+            <div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">
+                Cancel
+              </div>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
   <script>
     var varEditor = document.getElementById("varEditor");
-    window.onclick = function (event) {
+    /*window.onclick = function (event) {
       if (event.target == varEditor) {
         varEditor.style.display = "none";
       }
-    };
+    };*/
 
     function ShowModelItem(showDiv) {
       if (showDiv === "variablesManager") varEditor.style.display = "block";
@@ -2155,153 +2153,6 @@
             ]
           },
           {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
-            id: "g",
-            desc: "Acceleration due to gravity",
-            value: [
-              [9.8]
-            ]
-          },
-          {
             id: "G",
             desc: "Gravitational constant",
             value: [
@@ -2312,8 +2163,50 @@
       },
       updated: function () {
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        this.updateParser();
       },
       methods: {
+        updateParser: function () {
+          parser.clear();
+          for (var i=0; i<this.vars.length; i++) {
+            try {
+              console.log(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
+              parser.evaluate(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
+            }catch(e){
+              console.log(e)
+            }
+          }
+        },
+        saveItem: function () {
+          if (this.isValidVarID(this.editItem, this.selVar)) {
+            if (this.selVar<0) this.vars.push(this.editItem);
+            else this.vars[this.selVar] = JSON.parse2(JSON.stringify2(this.editItem));
+            this.selVar = NaN;
+          }
+        },
+        valueDimensionsModify: function (val) {
+          switch (val) {
+            case 0:
+              this.editItem.value.push(new Array(this.editItem.value[0].length).fill(0));
+              break;
+            case 1:
+              if (this.editItem.value.length>1) this.editItem.value.pop();
+              break;
+            case 2:
+              this.editItem.value.map(function (val) {
+                return val.push(0);
+              });
+              break;
+            case 3:
+              if (this.editItem.value[0].length>1) {
+                this.editItem.value.map(function (val) {
+                  return val.pop(0);
+                });
+              }
+              break;
+          }
+          //this.updatingCounter++;
+        },
         selectAExistingItem: function (index) {
           this.editItem = JSON.parse2(JSON.stringify2(this.vars[index]));
           this.selVar = index;
@@ -2322,50 +2215,52 @@
           this.vars.splice(index, 1);
           this.updatingCounter++;
         },
-        isValidInput: function (item) {
+        isValidVarID: function (item, ignoreIndex) {
+          
+          if (!(/^\w+$/.test(item.id))) {
+            notyf.error(
+              'Invalid ID: "<b>' +
+              item.id +
+              "</b>\" contains invalid characters."
+            );
+            return false;
+          }
+          if (!isNaN(item.id.charAt(0))) {
+            notyf.error(
+              'Invalid ID: Variable name cannot start with a number.'
+            );
+            return false;
+          }
+          if (item.id === "") {
+            notyf.error(
+              'Invalid ID: Variable name cannot be blank.'
+            );
+            return false;
+          }
           if (this.varBanList.indexOf(item.id) >= 0) {
             notyf.error(
-              'Invalid ID found. "<b>' +
+              'Invalid ID: "<b>' +
               item.id +
               "</b>\" is a Uyamak's keyword."
             );
             return false;
           }
           for (var i = 0; i < this.vars.length; i++) {
-            if (item.id === this.vars[i].id) {
+            if ((item.id === this.vars[i].id) && (ignoreIndex>=0?item.id !== this.vars[ignoreIndex].id:true)) {
               notyf.error(
-                'Invalid ID found. "<b>' +
+                'Invalid ID: "<b>' +
                 item.id +
                 '</b>" is already in use.'
               );
               return false;
             }
           }
-          try {
-            parser.evaluate(item.id + "=" + JSON.stringify(item.id));
-          } catch (e) {
-            notyf.error(
-              'Invalid ID found. "<b>' +
-              item.id +
-              '</b>" is a invalid expresssion.'
-            );
-            return false;
-          }
           return true;
-        },
-        pullItemForEdit: function (item) {
-          this.editItem = JSON.parse2(JSON.stringify2(item));
-        },
-        idChange: function (a, b) {
-          /*console.log(a);
-          console.log(b.target.value);
-          if (isValidInput()) {
-            a = 
-          }
-          this.updatingCounter++;*/
         },
         genVarView: function (item) {
           if (!!item.value) {
+            return "$"+math.parse(item.id + "=" + JSON.stringify (item.value)).toTex()+"$";
+            /*
             var inArray = item.value;
             if (inArray.length === 1 && inArray[0].length === 1) {
               return "$" + inArray[0][0] + "$";
@@ -2374,12 +2269,12 @@
             for (var i = 0; i < inArray.length; i++) {
               for (var j = 0; j < inArray[0].length; j++) {
                 if (j !== 0) StrOut += "\t&\t";
-                StrOut += math.round(math.Complex(inArray[i][j]), 3);
+                StrOut += inArray[i][j].toString();
               }
               StrOut += "\t\\\\\n";
             }
             StrOut += "\\end{bmatrix}$";
-            return StrOut;
+            return StrOut;*/
           }
         }
       }
