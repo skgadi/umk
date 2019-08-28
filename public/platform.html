@@ -1905,44 +1905,71 @@
       </header>
       <div id="variablesManager" style="height: calc(100% - 22px); overflow: hidden;">
         <div v-if="isNaN(selVar)" class="w3-responsive" style="height: 100%;">
-          <div class="w3-button w3-hover-green w3-light-green w3-block" style="height: 39px;" @click="editItem={id:'',desc:'',value:[[0]]};selVar=-1;">
+          <div class="w3-button w3-hover-green w3-light-green w3-block" style="height: 39px;" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">
             New variable
           </div>
           <div style="height: calc(100% - 39px); overflow: auto;">
-            <table class="w3-table-all w3-hoverable">
-              <thead>
-                <tr class="w3-light-grey w3-center">
-                  <th>Variable</th>
-                  <th>Value</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template v-for="(varItem, index) in vars">
-                  <tr :key="'table_'+index+'_'+updatingCounter">
-                    <td>
-                      {{ varItem.id }}
-                    </td>
-                    <td>
-                      {{ genVarView(varItem) }}
-                    </td>
-                    <td>
-                      <div class="w3-display-container" style="padding-right: 40px;">
-                        <div v-html="varItem.desc"></div>
-                        <div class="w3-display-topright">
-                          <span class="w3-text-teal" style="cursor: pointer;" @click="selectAExistingItem(index)">
-                            <i class="fa-fw fas fa-pencil-alt"></i>
-                          </span>
-                          <span class="w3-text-red" style="cursor: pointer;" @click="removeItem(index)">
-                            <i class="far fa-trash-alt"></i>
-                          </span>
-                        </div>
-                      </div>
-                    </td>
+            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor: pointer;">
+              <i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i>
+              <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i>
+              Local variables
+            </div>
+            <div v-if="visible.vars">
+              <table class="w3-table-all w3-hoverable">
+                <thead>
+                  <tr class="w3-light-grey w3-center">
+                    <th>Variable</th>
+                    <th>Description</th>
                   </tr>
-                </template>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <template v-for="(varItem, index) in vars">
+                    <tr :key="'table_'+index+'_'+updatingCounter">
+                      <td>
+                        {{ genVarView(varItem) }}
+                      </td>
+                      <td>
+                        <div class="w3-display-container" style="padding-right: 40px;">
+                          <div v-html="varItem.desc"></div>
+                          <div class="w3-display-topright">
+                            <span class="w3-text-teal" style="cursor: pointer;" @click="selectAExistingItem(index)">
+                              <i class="fa-fw fas fa-pencil-alt"></i>
+                            </span>
+                            <span class="w3-text-red" style="cursor: pointer;" @click="removeItem(index)">
+                              <i class="far fa-trash-alt"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor: pointer;">
+              <i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i>
+              <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i>
+              Uyamak constants
+            </div>
+            <div v-if="visible.uVars">
+              <table class="w3-table-all w3-hoverable">
+                <thead>
+                  <tr class="w3-light-grey w3-center">
+                    <th>Variable</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="(uVarItem, index) in uVars">
+                    <tr>
+                      <td v-html="getUVarItem(uVarItem)">
+                      </td>
+                      <td v-html="uVarItem.desc"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div v-else class="" style="height: 100%; overflow: auto;">
@@ -2145,6 +2172,56 @@
         updatingCounter: 0,
         varBanList: ["mod", "to", "in", "and", "xor", "or", "not", "end"],
         editItem: {},
+        visible: {vars: true, uVars: true},
+        uVars:[{
+          id:['e','E'],
+          desc: "Euler’s number, the base of the natural logarithm.",
+          value: "2.718281828459045"
+        },{
+          id:['i'],
+          desc: "Imaginary unit, defined as $i\\times i=-1$. A complex number is described as $a + bi$, where $a$ is the real part, and $b$ is the imaginary part.",
+          value: "\\sqrt{-1}"
+        },{
+          id:['Infinity'],
+          desc: "Infinity, a number which is larger than the maximum number that can be handled by a floating point number.",
+          value: "\\infty"
+        },{
+          id:['LN2'],
+          desc: "Returns the natural logarithm of 2.",
+          value: "0.6931471805599453"
+        },{
+          id:['LN10'],
+          desc: "Returns the natural logarithm of 10.",
+          value: "2.302585092994046"
+        },{
+          id:['LOG2E'],
+          desc: "Returns the base-2 logarithm of E.",
+          value: "1.4426950408889634"
+        },{
+          id:['LOG10E'],
+          desc: "Returns the base-10 logarithm of E.",
+          value: "0.4342944819032518"
+        },{
+          id:['phi'],
+          desc: "Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as $\\frac{1 + \\sqrt{5}}{2}$",
+          value: "1.618033988749895"
+        },{
+          id:['pi', 'PI'],
+          desc: "The number pi is a mathematical constant that is the ratio of a circle's circumference to its diameter.	",
+          value: "3.141592653589793"
+        },{
+          id:['SQRT1\\_2'],
+          desc: "Returns the square root of 1/2.",
+          value: "0.7071067811865476"
+        },{
+          id:['SQRT2'],
+          desc: "Returns the square root of 2.	",
+          value: "1.4142135623730951"
+        },{
+          id:['tau'],
+          desc: "Tau is the ratio constant of a circle's circumference to radius, equal to $2\\times \\pi$",
+          value: "6.283185307179586"
+        }],
         vars: [{
             id: "g",
             desc: "Acceleration due to gravity",
@@ -2166,6 +2243,9 @@
         this.updateParser();
       },
       methods: {
+        getUVarItem: function (uVarItem) {
+          return "$\\mathrm{" + uVarItem.id.join("}:=\\mathrm{") + "}:=" + uVarItem.value + "$";
+        },
         updateParser: function () {
           parser.clear();
           for (var i=0; i<this.vars.length; i++) {
@@ -2259,7 +2339,7 @@
         },
         genVarView: function (item) {
           if (!!item.value) {
-            return "$"+math.parse(item.id + "=" + JSON.stringify (item.value)).toTex()+"$";
+            return "$"+math.parse(item.id + "=" + math.evaluate(JSON.stringify (item.value))).toTex()+"$";
             /*
             var inArray = item.value;
             if (inArray.length === 1 && inArray[0].length === 1) {
