@@ -1896,8 +1896,8 @@
     </div>
   </div>
 
-  <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff0">
-    <div class="w3-modal-content w3-card-4" style="height: 100%;">
+  <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff8">
+    <div class="w3-modal-content w3-card-4" style="height: calc(100% - 50px); margin-top: 25px;">
       <header class="w3-teal" style=" height: 22px;">
         <span onclick="document.getElementById('varEditor').style.display='none'" class="w3-display-topright w3-hover-red"
           style="cursor:pointer;padding: 0 6px;"><i class="fas fa-times"></i></span>
@@ -4585,6 +4585,15 @@
         alert();
       }
     });
+  </script>
+  <script>
+    function getTheParameterValueFromEntry(inVar) {
+      var outArray = [[]];
+      for (var i=0; i<inVar.length; i++) {
+        for (var j=0; j<inVar[0].length; j++) {
+          if (math.size(parser.evaluate('sin(20)'))._size[0] === 0) outArray[i][j]=parser.evaluate('sin(20)');
+      }
+    }
   </script>
 </body>
 
