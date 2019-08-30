@@ -1932,7 +1932,7 @@
                 </thead>
                 <tbody>
                   <template v-for="(varItem, index) in vars">
-                    <tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent>
+                    <tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent @dragstart = "dragSource = index">
                       <td>
                         {{ genVarView(varItem) }}
                       </td>
@@ -2168,7 +2168,7 @@
     var fullyLoadedTimeCheck;
   </script>
   <script>
-    getTheParameterValueFromEntry = (function (inVar) {
+    getTheParameterValueFromEntry = function (inVar) {
       var outArray = new Array();
       console.log(outArray);
       for (var i = 0; i < inVar.length; i++) {
@@ -2179,11 +2179,14 @@
             tempRows[0].push(evalValue);
           }
           if (math.isMatrix(evalValue)) {
-            var subMatrix = evalValue.toArray();
+            var subMatrix;
+            //if (evalValue)
+            subMatrix = getTheParameterValueFromEntry(evalValue.toArray());//evalValue.toArray();
+            console.log(subMatrix);
             for (var k = 0; k < subMatrix.length; k++) {
               if (k === tempRows.length) tempRows.push(new Array());
               for (var l = 0; l < subMatrix[0].length; l++) {
-                tempRows[k].push(math.parse(subMatrix[k][l]));
+                tempRows[k].push(subMatrix[k][l]);
               }
             }
           }
@@ -2194,7 +2197,7 @@
       }
       console.log(outArray);
       return outArray;
-    })
+    }
   </script>
   <script>
     const parser = math.parser();
@@ -2209,6 +2212,7 @@
           vars: true,
           uVars: true
         },
+        dragSource: null,
         uVars: [{
             id: ["e", "E"],
             desc: "Euler’s number, the base of the natural logarithm.",
@@ -2274,7 +2278,7 @@
             id: "g",
             desc: "Acceleration due to gravity",
             value: [
-              [9.8]
+              [9.80665]
             ]
           },
           {
@@ -2292,20 +2296,16 @@
       },
       methods: {
         changeIndex: function (e){
-          var startID, endID;
-          var src = e.srcElement;
+          var startID = this.dragSource, endID;
           var trg = e.toElement;
           for(var i=0; i<100; i++) {
-            console.log(i);
             if ((startID !== undefined) && (endID !== undefined)) {
-              console.log (startID +"--"+ endID)
+              var tempRow = this.vars[endID];
+              this.vars[endID] = this.vars[startID];
+              this.vars[startID] = tempRow;
+              console.log (e);
+              this.updatingCounter++;
               break;
-            }
-            console.log(startID);
-            if (startID === undefined) {
-              if (src.getAttribute('draggable') === "true") {
-                startID = parseInt(src.id.split("_")[1]);
-              } else src = src.parentElement;
             }
             if (endID === undefined) {
               if (trg.getAttribute('draggable') === "true") {
@@ -2339,13 +2339,15 @@
         },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
-            if (this.selVar < 0) this.vars.push(this.editItem);
-            else
-              this.vars[this.selVar] = JSON.parse2(
-                JSON.stringify2(this.editItem)
-              );
+            this.editItem
+            if (this.selVar < 0){
+              this.vars.push(this.editItem);
+            } else  {
+              this.vars.splice(this.selVar, 1, JSON.parse2(JSON.stringify2(this.editItem)));
+            }
             this.selVar = NaN;
           }
+          this.updatingCounter++;
         },
         valueDimensionsModify: function (val) {
           switch (val) {
