@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UYAMAK platform</title><link rel="manifest" href="manifest.json"><script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script><script src="js/config.js"></script><script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script><script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script><script src="/js/augmented-json-serialization-functions.js"></script><link rel="stylesheet" href="/css/notyf.min.css"><script src="/js/notyf.min.js"></script><script src="/js/vue.min.js"></script><script type="text/javascript">mxBasePath="/javascript/src"</script><script type="text/javascript" src="/javascript/src/js/mxClient.js"></script><script type="text/javascript">var graph;
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UYAMAK platform</title><link rel="manifest" href="manifest.json"><script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script><script src="js/config.js"></script><script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script><script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js" integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script><script src="/js/augmented-json-serialization-functions.js"></script><link rel="stylesheet" href="/css/notyf.min.css"><script src="/js/notyf.min.js"></script><script src="/js/vue.min.js"></script><script>Vue.prototype.global=window</script><script type="text/javascript">mxBasePath="/javascript/src"</script><script type="text/javascript" src="/javascript/src/js/mxClient.js"></script><script type="text/javascript">var graph;
     var undoManager;
     var tempGlobal;
     var outln;
@@ -1348,7 +1348,7 @@
           "flex-basis": gutterSize + "px"
         };
       }
-    });</script><div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny"><div style="padding:0;display:inline-block"><span><i class="fas fa-info-circle"></i></span> <span id="infoInStatus"></span></div><div id="stateOfSystem" class="w3-bar-item w3-right" style="padding:0;display:inline-block">Design</div><div id="showWhenSimulating" class="w3-bar-item w3-right" style="display:inline-block;padding:0;margin:0 8px"><span>$t=$&nbsp;</span> <span id="simulationTime">0</span> <span><i class="fas fa-ellipsis-v"></i></span> <span>Actual $T_S=$&nbsp;</span> <span id="aSimulationTime">NaN</span> <span><i class="fas fa-ellipsis-v"></i></span></div></div><div id="varEditor" class="w3-modal" style="padding:0;height:100%;overflow:hidden;background-color:#fffffff8"><div class="w3-modal-content w3-card-4" style="height:calc(100% - 50px);margin-top:25px"><header class="w3-teal" style="height:22px"><span onclick="document.getElementById(&#34;varEditor&#34;).style.display=&#34;none&#34;" class="w3-display-topright w3-hover-red" style="cursor:pointer;padding:0 6px"><i class="fas fa-times"></i></span><div style="padding:0 4px"><i class="fas fa-equals"></i> Variable manager</div></header><div id="variablesManager" style="height:calc(100% - 22px);overflow:hidden"><div v-if="isNaN(selVar)" class="w3-responsive" style="height:100%"><div class="w3-button w3-hover-green w3-light-green w3-block" style="height:39px" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">New variable</div><div style="height:calc(100% - 39px);overflow:auto"><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor:pointer"><i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i> Local variables</div><div v-if="visible.vars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(varItem, index) in vars"><tr :key="'table_'+index+'_'+updatingCounter"><td>{{ genVarView(varItem) }}</td><td><div class="w3-display-container" style="padding-right:40px"><div v-html="varItem.desc"></div><div class="w3-display-topright"><span class="w3-text-teal" style="cursor:pointer" @click="selectAExistingItem(index)"><i class="fa-fw fas fa-pencil-alt"></i> </span><span class="w3-text-red" style="cursor:pointer" @click="removeItem(index)"><i class="far fa-trash-alt"></i></span></div></div></td></tr></template></tbody></table></div><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor:pointer"><i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i> Uyamak constants</div><div v-if="visible.uVars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(uVarItem, index) in uVars"><tr><td v-html="getUVarItem(uVarItem)"></td><td v-html="uVarItem.desc"></td></tr></template></tbody></table></div></div></div><div v-else class="" style="height:100%;overflow:auto"><label>ID</label> <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"> <label>Description</label> <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc" style="resize:vertical"></textarea><div class="w3-center"><div @click="valueDimensionsModify(0)" style="width:40px;height:40px;padding:0" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div @click="valueDimensionsModify(2)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(3)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in editItem.value"><tr v-if="(index1 === 0)" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td style="padding:0;vertical-align:middle" class="w3-center w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0;text-align:right"></td></template></tr></template></table></div><label>Value</label><div style="overflow-x:auto;overflow-y:hidden"><div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)"></div></div><div class="w3-row"><div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">Save</div><div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">Cancel</div></div></div></div></div></div><script>function ShowModelItem(a){"variablesManager"===a&&(varEditor.style.display="block")}var varEditor=document.getElementById("varEditor")</script><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:#e1e1e180"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div></div><div id="tempSideForAlwaysHidden" style="width:0"></div><script>function selectTabItem(
+    });</script><div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny"><div style="padding:0;display:inline-block"><span><i class="fas fa-info-circle"></i></span> <span id="infoInStatus"></span></div><div id="stateOfSystem" class="w3-bar-item w3-right" style="padding:0;display:inline-block">Design</div><div id="showWhenSimulating" class="w3-bar-item w3-right" style="display:inline-block;padding:0;margin:0 8px"><span>$t=$&nbsp;</span> <span id="simulationTime">0</span> <span><i class="fas fa-ellipsis-v"></i></span> <span>Actual $T_S=$&nbsp;</span> <span id="aSimulationTime">NaN</span> <span><i class="fas fa-ellipsis-v"></i></span></div></div><div id="varEditor" class="w3-modal" style="padding:0;height:100%;overflow:hidden;background-color:#fffffff8"><div class="w3-modal-content w3-card-4" style="height:calc(100% - 50px);margin-top:25px"><header class="w3-teal" style="height:22px"><span onclick="document.getElementById(&#34;varEditor&#34;).style.display=&#34;none&#34;" class="w3-display-topright w3-hover-red" style="cursor:pointer;padding:0 6px"><i class="fas fa-times"></i></span><div style="padding:0 4px"><i class="fas fa-equals"></i> Variable manager</div></header><div id="variablesManager" style="height:calc(100% - 22px);overflow:hidden"><div v-if="isNaN(selVar)" class="w3-responsive" style="height:100%"><div class="w3-button w3-hover-green w3-light-green w3-block" style="height:39px" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">New variable</div><div style="height:calc(100% - 39px);overflow:auto"><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor:pointer"><i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i> Local variables</div><div v-if="visible.vars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(varItem, index) in vars"><tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent><td>{{ genVarView(varItem) }}</td><td><div class="w3-display-container" style="padding-right:40px"><div v-html="varItem.desc"></div><div class="w3-display-topright"><span class="w3-text-teal" style="cursor:pointer" @click="selectAExistingItem(index)"><i class="fa-fw fas fa-pencil-alt"></i> </span><span class="w3-text-red" style="cursor:pointer" @click="removeItem(index)"><i class="far fa-trash-alt"></i></span></div></div></td></tr></template></tbody></table></div><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor:pointer"><i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i> Uyamak constants</div><div v-if="visible.uVars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(uVarItem, index) in uVars"><tr><td v-html="getUVarItem(uVarItem)"></td><td v-html="uVarItem.desc"></td></tr></template></tbody></table></div></div></div><div v-else class="" style="height:100%;overflow:auto"><label>ID</label> <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"> <label>Description</label> <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc" style="resize:vertical"></textarea><div class="w3-center"><div @click="valueDimensionsModify(0)" style="width:40px;height:40px;padding:0" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div @click="valueDimensionsModify(2)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(3)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in editItem.value"><tr v-if="(index1 === 0)" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td style="padding:0;vertical-align:middle" class="w3-center w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0;text-align:right"></td></template></tr></template></table></div><label>Value</label><div style="overflow-x:auto;overflow-y:hidden"><div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)"></div></div><div class="w3-row"><div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">Save</div><div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">Cancel</div></div></div></div></div></div><script>function ShowModelItem(a){"variablesManager"===a&&(varEditor.style.display="block")}var varEditor=document.getElementById("varEditor")</script><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:#e1e1e180"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div></div><div id="tempSideForAlwaysHidden" style="width:0"></div><script>function selectTabItem(
       evt,
       divName,
       tablink = "tablink",
@@ -1398,7 +1398,7 @@
         allTheMains[i].style.marginLeft = thisSidebar.clientWidth + "px";
       }
       outln.refresh();
-    }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><script>var fullyLoadedTimeCheck,LIBRARY_SUMMARY={},ALLFUNCTIONS={}</script><script>const parser = math.parser();
+    }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><script>var fullyLoadedTimeCheck,LIBRARY_SUMMARY={},ALLFUNCTIONS={}</script><script>getTheParameterValueFromEntry=function(r){var a=new Array;console.log(a);for(var e=0;e<r.length;e++){for(var t=new Array(new Array),n=0;n<r[0].length;n++){var o=parser.evaluate(r[e][n]);if((math.isNumber(o)||math.isComplex(o))&&t[0].push(o),math.isMatrix(o))for(var h=o.toArray(),l=0;l<h.length;l++){l===t.length&&t.push(new Array);for(var s=0;s<h[0].length;s++)t[l].push(math.parse(h[l][s]))}}t.forEach(function(r){a.push(r)})}return console.log(a),a}</script><script>const parser = math.parser();
     var variablesManager = new Vue({
       el: "#variablesManager",
       data: {
@@ -1406,56 +1406,71 @@
         updatingCounter: 0,
         varBanList: ["mod", "to", "in", "and", "xor", "or", "not", "end"],
         editItem: {},
-        visible: {vars: true, uVars: true},
-        uVars:[{
-          id:['e','E'],
-          desc: "Euler’s number, the base of the natural logarithm.",
-          value: "2.718281828459045"
-        },{
-          id:['i'],
-          desc: "Imaginary unit, defined as $i\\times i=-1$. A complex number is described as $a + bi$, where $a$ is the real part, and $b$ is the imaginary part.",
-          value: "\\sqrt{-1}"
-        },{
-          id:['Infinity'],
-          desc: "Infinity, a number which is larger than the maximum number that can be handled by a floating point number.",
-          value: "\\infty"
-        },{
-          id:['LN2'],
-          desc: "Returns the natural logarithm of 2.",
-          value: "0.6931471805599453"
-        },{
-          id:['LN10'],
-          desc: "Returns the natural logarithm of 10.",
-          value: "2.302585092994046"
-        },{
-          id:['LOG2E'],
-          desc: "Returns the base-2 logarithm of E.",
-          value: "1.4426950408889634"
-        },{
-          id:['LOG10E'],
-          desc: "Returns the base-10 logarithm of E.",
-          value: "0.4342944819032518"
-        },{
-          id:['phi'],
-          desc: "Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as $\\frac{1 + \\sqrt{5}}{2}$",
-          value: "1.618033988749895"
-        },{
-          id:['pi', 'PI'],
-          desc: "The number pi is a mathematical constant that is the ratio of a circle's circumference to its diameter.	",
-          value: "3.141592653589793"
-        },{
-          id:['SQRT1\\_2'],
-          desc: "Returns the square root of 1/2.",
-          value: "0.7071067811865476"
-        },{
-          id:['SQRT2'],
-          desc: "Returns the square root of 2.	",
-          value: "1.4142135623730951"
-        },{
-          id:['tau'],
-          desc: "Tau is the ratio constant of a circle's circumference to radius, equal to $2\\times \\pi$",
-          value: "6.283185307179586"
-        }],
+        visible: {
+          vars: true,
+          uVars: true
+        },
+        uVars: [{
+            id: ["e", "E"],
+            desc: "Euler’s number, the base of the natural logarithm.",
+            value: "2.718281828459045"
+          },
+          {
+            id: ["i"],
+            desc: "Imaginary unit, defined as $i\\times i=-1$. A complex number is described as $a + bi$, where $a$ is the real part, and $b$ is the imaginary part.",
+            value: "\\sqrt{-1}"
+          },
+          {
+            id: ["Infinity"],
+            desc: "Infinity, a number which is larger than the maximum number that can be handled by a floating point number.",
+            value: "\\infty"
+          },
+          {
+            id: ["LN2"],
+            desc: "Returns the natural logarithm of 2.",
+            value: "0.6931471805599453"
+          },
+          {
+            id: ["LN10"],
+            desc: "Returns the natural logarithm of 10.",
+            value: "2.302585092994046"
+          },
+          {
+            id: ["LOG2E"],
+            desc: "Returns the base-2 logarithm of E.",
+            value: "1.4426950408889634"
+          },
+          {
+            id: ["LOG10E"],
+            desc: "Returns the base-10 logarithm of E.",
+            value: "0.4342944819032518"
+          },
+          {
+            id: ["phi"],
+            desc: "Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as $\\frac{1 + \\sqrt{5}}{2}$",
+            value: "1.618033988749895"
+          },
+          {
+            id: ["pi", "PI"],
+            desc: "The number pi is a mathematical constant that is the ratio of a circle's circumference to its diameter.	",
+            value: "3.141592653589793"
+          },
+          {
+            id: ["SQRT1\\_2"],
+            desc: "Returns the square root of 1/2.",
+            value: "0.7071067811865476"
+          },
+          {
+            id: ["SQRT2"],
+            desc: "Returns the square root of 2.	",
+            value: "1.4142135623730951"
+          },
+          {
+            id: ["tau"],
+            desc: "Tau is the ratio constant of a circle's circumference to radius, equal to $2\\times \\pi$",
+            value: "6.283185307179586"
+          }
+        ],
         vars: [{
             id: "g",
             desc: "Acceleration due to gravity",
@@ -1477,34 +1492,71 @@
         this.updateParser();
       },
       methods: {
+        changeIndex: function (e){
+          var startID, endID;
+          var src = e.srcElement;
+          var trg = e.toElement;
+          for(var i=0; i<100; i++) {
+            console.log(i);
+            if ((startID !== undefined) && (endID !== undefined)) {
+              console.log (startID +"--"+ endID)
+              break;
+            }
+            console.log(startID);
+            if (startID === undefined) {
+              if (src.getAttribute('draggable') === "true") {
+                startID = parseInt(src.id.split("_")[1]);
+              } else src = src.parentElement;
+            }
+            if (endID === undefined) {
+              if (trg.getAttribute('draggable') === "true") {
+                endID = parseInt(trg.id.split("_")[1]);
+              } else trg = trg.parentElement;
+            }
+          }
+          tempGlobal = e;
+          
+        },
         getUVarItem: function (uVarItem) {
-          return "$\\mathrm{" + uVarItem.id.join("}:=\\mathrm{") + "}:=" + uVarItem.value + "$";
+          return (
+            "$\\mathrm{" +
+            uVarItem.id.join("}:=\\mathrm{") +
+            "}:=" +
+            uVarItem.value +
+            "$"
+          );
         },
         updateParser: function () {
           parser.clear();
-          for (var i=0; i<this.vars.length; i++) {
+          for (var i = 0; i < this.vars.length; i++) {
             try {
-              console.log(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
-              parser.evaluate(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
-            }catch(e){
-              console.log(e)
+              parser.evaluate(
+                this.vars[i].id + "=" + JSON.stringify(this.vars[i].value)
+              );
+            } catch (e) {
+              console.log(e);
             }
           }
         },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
-            if (this.selVar<0) this.vars.push(this.editItem);
-            else this.vars[this.selVar] = JSON.parse2(JSON.stringify2(this.editItem));
+            if (this.selVar < 0) this.vars.push(this.editItem);
+            else
+              this.vars[this.selVar] = JSON.parse2(
+                JSON.stringify2(this.editItem)
+              );
             this.selVar = NaN;
           }
         },
         valueDimensionsModify: function (val) {
           switch (val) {
             case 0:
-              this.editItem.value.push(new Array(this.editItem.value[0].length).fill(0));
+              this.editItem.value.push(
+                new Array(this.editItem.value[0].length).fill(0)
+              );
               break;
             case 1:
-              if (this.editItem.value.length>1) this.editItem.value.pop();
+              if (this.editItem.value.length > 1) this.editItem.value.pop();
               break;
             case 2:
               this.editItem.value.map(function (val) {
@@ -1512,7 +1564,7 @@
               });
               break;
             case 3:
-              if (this.editItem.value[0].length>1) {
+              if (this.editItem.value[0].length > 1) {
                 this.editItem.value.map(function (val) {
                   return val.pop(0);
                 });
@@ -1530,41 +1582,39 @@
           this.updatingCounter++;
         },
         isValidVarID: function (item, ignoreIndex) {
-          
-          if (!(/^\w+$/.test(item.id))) {
+          if (!/^\w+$/.test(item.id)) {
             notyf.error(
               'Invalid ID: "<b>' +
               item.id +
-              "</b>\" contains invalid characters."
+              '</b>" contains invalid characters.'
             );
             return false;
           }
           if (!isNaN(item.id.charAt(0))) {
             notyf.error(
-              'Invalid ID: Variable name cannot start with a number.'
+              "Invalid ID: Variable name cannot start with a number."
             );
             return false;
           }
           if (item.id === "") {
-            notyf.error(
-              'Invalid ID: Variable name cannot be blank.'
-            );
+            notyf.error("Invalid ID: Variable name cannot be blank.");
             return false;
           }
           if (this.varBanList.indexOf(item.id) >= 0) {
             notyf.error(
-              'Invalid ID: "<b>' +
-              item.id +
-              "</b>\" is a Uyamak's keyword."
+              'Invalid ID: "<b>' + item.id + "</b>\" is a Uyamak's keyword."
             );
             return false;
           }
           for (var i = 0; i < this.vars.length; i++) {
-            if ((item.id === this.vars[i].id) && (ignoreIndex>=0?item.id !== this.vars[ignoreIndex].id:true)) {
+            if (
+              item.id === this.vars[i].id &&
+              (ignoreIndex >= 0 ?
+                item.id !== this.vars[ignoreIndex].id :
+                true)
+            ) {
               notyf.error(
-                'Invalid ID: "<b>' +
-                item.id +
-                '</b>" is already in use.'
+                'Invalid ID: "<b>' + item.id + '</b>" is already in use.'
               );
               return false;
             }
@@ -1573,7 +1623,21 @@
         },
         genVarView: function (item) {
           if (!!item.value) {
-            return "$"+math.parse(item.id + "=" + math.evaluate(JSON.stringify (item.value))).toTex()+"$";
+            try {
+              return (
+                "$" +
+                math
+                .parse(
+                  item.id + "=" + math.parse(math.matrix(this.global.getTheParameterValueFromEntry(item.value))
+                    .toString())
+                )
+                .toTex(4) +
+                "$"
+              );
+            } catch (e) {
+              console.log(e);
+              return "Possible input error!"
+            }
             /*
             var inArray = item.value;
             if (inArray.length === 1 && inArray[0].length === 1) {
@@ -2654,10 +2718,4 @@
       ) {
         alert();
       }
-    });</script><script>function getTheParameterValueFromEntry(inVar) {
-      var outArray = [[]];
-      for (var i=0; i<inVar.length; i++) {
-        for (var j=0; j<inVar[0].length; j++) {
-          if (math.size(parser.evaluate('sin(20)'))._size[0] === 0) outArray[i][j]=parser.evaluate('sin(20)');
-      }
-    }</script></body></html>
+    });</script></body></html>

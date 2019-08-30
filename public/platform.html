@@ -28,6 +28,9 @@
   <link rel="stylesheet" href="/css/notyf.min.css" />
   <script src="/js/notyf.min.js"></script>
   <script src="/js/vue.min.js"></script>
+  <script>
+    Vue.prototype.global = window;
+  </script>
 
   <!-- Sets the basepath for the library if not in same directory -->
   <script type="text/javascript">
@@ -1899,17 +1902,22 @@
   <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff8">
     <div class="w3-modal-content w3-card-4" style="height: calc(100% - 50px); margin-top: 25px;">
       <header class="w3-teal" style=" height: 22px;">
-        <span onclick="document.getElementById('varEditor').style.display='none'" class="w3-display-topright w3-hover-red"
-          style="cursor:pointer;padding: 0 6px;"><i class="fas fa-times"></i></span>
-        <div style="padding:0 4px;"><i class="fas fa-equals"></i> Variable manager</div>
+        <span onclick="document.getElementById('varEditor').style.display='none'"
+          class="w3-display-topright w3-hover-red" style="cursor:pointer;padding: 0 6px;"><i
+            class="fas fa-times"></i></span>
+        <div style="padding:0 4px;">
+          <i class="fas fa-equals"></i> Variable manager
+        </div>
       </header>
       <div id="variablesManager" style="height: calc(100% - 22px); overflow: hidden;">
         <div v-if="isNaN(selVar)" class="w3-responsive" style="height: 100%;">
-          <div class="w3-button w3-hover-green w3-light-green w3-block" style="height: 39px;" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">
+          <div class="w3-button w3-hover-green w3-light-green w3-block" style="height: 39px;"
+            @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">
             New variable
           </div>
           <div style="height: calc(100% - 39px); overflow: auto;">
-            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor: pointer;">
+            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme"
+              @click="visible.vars=!visible.vars" style="cursor: pointer;">
               <i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i>
               <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i>
               Local variables
@@ -1924,7 +1932,7 @@
                 </thead>
                 <tbody>
                   <template v-for="(varItem, index) in vars">
-                    <tr :key="'table_'+index+'_'+updatingCounter">
+                    <tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent>
                       <td>
                         {{ genVarView(varItem) }}
                       </td>
@@ -1946,7 +1954,8 @@
                 </tbody>
               </table>
             </div>
-            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor: pointer;">
+            <div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme"
+              @click="visible.uVars=!visible.uVars" style="cursor: pointer;">
               <i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i>
               <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i>
               Uyamak constants
@@ -1962,8 +1971,7 @@
                 <tbody>
                   <template v-for="(uVarItem, index) in uVars">
                     <tr>
-                      <td v-html="getUVarItem(uVarItem)">
-                      </td>
+                      <td v-html="getUVarItem(uVarItem)"></td>
                       <td v-html="uVarItem.desc"></td>
                     </tr>
                   </template>
@@ -1974,80 +1982,76 @@
         </div>
         <div v-else class="" style="height: 100%; overflow: auto;">
           <label>ID</label>
-          <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"/>
-            <label>Description</label>
-            <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc"
+          <input class="w3-input w3-border w3-border-theme" v-model="editItem.id" />
+          <label>Description</label>
+          <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc"
             style="resize: vertical;"></textarea>
-            <div class="w3-center">
-              <div @click="valueDimensionsModify(0)" style="width: 40px; height: 40px; padding:0px;"
-                class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
-                <div class="w3-display-middle">
-                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
-                </div>
-              </div>
-              <div @click="valueDimensionsModify(1)" style="width: 40px; height: 40px; padding:0px;"
-                v-if=""
-                class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
-                <div class="w3-display-middle">
-                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i>
-                </div>
-              </div>
-              <div @click="valueDimensionsModify(2)"
-                style="width: 40px; height: 40px; padding:0px;" v-if=""
-                class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
-                <div class="w3-display-middle">
-                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
-                </div>
-              </div>
-              <div @click="valueDimensionsModify(3)"
-                style="width: 40px; height: 40px; padding:0px;" v-if=""
-                class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
-                <div class="w3-display-middle">
-                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i>
-                </div>
+          <div class="w3-center">
+            <div @click="valueDimensionsModify(0)" style="width: 40px; height: 40px; padding:0px;"
+              class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
+              <div class="w3-display-middle">
+                <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
               </div>
             </div>
-            <div class="w3-responsive">
-              <table class="w3-table-all">
-                <template v-for="(rowValue, index1) in editItem.value">
-                  <tr  v-if="(index1 === 0)" style="padding: 0;">
-                    <td class="w3-light-gray w3-border w3-border-theme"></td>
-                    <template v-for="(value, index2) in editItem.value[index1]">
-                      <td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">
-                        {{ index2 + 1 }}
-                      </td>
-                    </template>
-                  </tr>
-                  <tr style="padding: 0;" class="w3-border-theme">
-                    <td 
-                      style="padding:0; vertical-align: middle;" class="w3-center w3-light-gray w3-border w3-border-theme">
-                      {{ index1 + 1 }}
+            <div @click="valueDimensionsModify(1)" style="width: 40px; height: 40px; padding:0px;" v-if=""
+              class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote">
+              <div class="w3-display-middle">
+                <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i>
+              </div>
+            </div>
+            <div @click="valueDimensionsModify(2)" style="width: 40px; height: 40px; padding:0px;" v-if=""
+              class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
+              <div class="w3-display-middle">
+                <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i>
+              </div>
+            </div>
+            <div @click="valueDimensionsModify(3)" style="width: 40px; height: 40px; padding:0px;" v-if=""
+              class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container">
+              <div class="w3-display-middle">
+                <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i>
+              </div>
+            </div>
+          </div>
+          <div class="w3-responsive">
+            <table class="w3-table-all">
+              <template v-for="(rowValue, index1) in editItem.value">
+                <tr v-if="(index1 === 0)" style="padding: 0;">
+                  <td class="w3-light-gray w3-border w3-border-theme"></td>
+                  <template v-for="(value, index2) in editItem.value[index1]">
+                    <td style="padding:0;" class="w3-light-gray w3-center w3-border w3-border-theme">
+                      {{ index2 + 1 }}
                     </td>
-                    <template v-for="(value, index2) in editItem.value[index1]">
-                      <td style="padding: 0;" class="w3-border w3-border-theme">
-                        <input 
-                          v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++;"
-                          class="w3-input w3-border-0" style="padding: 0; min-width: 75px; padding: 8px 0px; text-align: right;" />
-                      </td>
-                    </template>
-                  </tr>
-                </template>
-              </table>
-            </div>
-            <label>Value</label>
-            <div style="overflow-x: auto; overflow-y: hidden;">
-              <div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)">
-              </div>
-            </div>
-            <div class="w3-row">
+                  </template>
+                </tr>
+                <tr style="padding: 0;" class="w3-border-theme">
+                  <td style="padding:0; vertical-align: middle;"
+                    class="w3-center w3-light-gray w3-border w3-border-theme">
+                    {{ index1 + 1 }}
+                  </td>
+                  <template v-for="(value, index2) in editItem.value[index1]">
+                    <td style="padding: 0;" class="w3-border w3-border-theme">
+                      <input v-model.trim=" editItem.value[index1][index2]"
+                        onchange="variablesManager.$data.updatingCounter++;" class="w3-input w3-border-0"
+                        style="padding: 0; min-width: 75px; padding: 8px 0px; text-align: right;" />
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </table>
+          </div>
+          <label>Value</label>
+          <div style="overflow-x: auto; overflow-y: hidden;">
+            <div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)"></div>
+          </div>
+          <div class="w3-row">
             <div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">
               Save
             </div>
             <div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">
-                Cancel
-              </div>
+              Cancel
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2164,6 +2168,35 @@
     var fullyLoadedTimeCheck;
   </script>
   <script>
+    getTheParameterValueFromEntry = (function (inVar) {
+      var outArray = new Array();
+      console.log(outArray);
+      for (var i = 0; i < inVar.length; i++) {
+        var tempRows = new Array(new Array());
+        for (var j = 0; j < inVar[0].length; j++) {
+          var evalValue = parser.evaluate(inVar[i][j]);
+          if (math.isNumber(evalValue) || math.isComplex(evalValue)) {
+            tempRows[0].push(evalValue);
+          }
+          if (math.isMatrix(evalValue)) {
+            var subMatrix = evalValue.toArray();
+            for (var k = 0; k < subMatrix.length; k++) {
+              if (k === tempRows.length) tempRows.push(new Array());
+              for (var l = 0; l < subMatrix[0].length; l++) {
+                tempRows[k].push(math.parse(subMatrix[k][l]));
+              }
+            }
+          }
+        }
+        tempRows.forEach(function (tempRow) {
+          outArray.push(tempRow);
+        });
+      }
+      console.log(outArray);
+      return outArray;
+    })
+  </script>
+  <script>
     const parser = math.parser();
     var variablesManager = new Vue({
       el: "#variablesManager",
@@ -2172,56 +2205,71 @@
         updatingCounter: 0,
         varBanList: ["mod", "to", "in", "and", "xor", "or", "not", "end"],
         editItem: {},
-        visible: {vars: true, uVars: true},
-        uVars:[{
-          id:['e','E'],
-          desc: "Euler’s number, the base of the natural logarithm.",
-          value: "2.718281828459045"
-        },{
-          id:['i'],
-          desc: "Imaginary unit, defined as $i\\times i=-1$. A complex number is described as $a + bi$, where $a$ is the real part, and $b$ is the imaginary part.",
-          value: "\\sqrt{-1}"
-        },{
-          id:['Infinity'],
-          desc: "Infinity, a number which is larger than the maximum number that can be handled by a floating point number.",
-          value: "\\infty"
-        },{
-          id:['LN2'],
-          desc: "Returns the natural logarithm of 2.",
-          value: "0.6931471805599453"
-        },{
-          id:['LN10'],
-          desc: "Returns the natural logarithm of 10.",
-          value: "2.302585092994046"
-        },{
-          id:['LOG2E'],
-          desc: "Returns the base-2 logarithm of E.",
-          value: "1.4426950408889634"
-        },{
-          id:['LOG10E'],
-          desc: "Returns the base-10 logarithm of E.",
-          value: "0.4342944819032518"
-        },{
-          id:['phi'],
-          desc: "Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as $\\frac{1 + \\sqrt{5}}{2}$",
-          value: "1.618033988749895"
-        },{
-          id:['pi', 'PI'],
-          desc: "The number pi is a mathematical constant that is the ratio of a circle's circumference to its diameter.	",
-          value: "3.141592653589793"
-        },{
-          id:['SQRT1\\_2'],
-          desc: "Returns the square root of 1/2.",
-          value: "0.7071067811865476"
-        },{
-          id:['SQRT2'],
-          desc: "Returns the square root of 2.	",
-          value: "1.4142135623730951"
-        },{
-          id:['tau'],
-          desc: "Tau is the ratio constant of a circle's circumference to radius, equal to $2\\times \\pi$",
-          value: "6.283185307179586"
-        }],
+        visible: {
+          vars: true,
+          uVars: true
+        },
+        uVars: [{
+            id: ["e", "E"],
+            desc: "Euler’s number, the base of the natural logarithm.",
+            value: "2.718281828459045"
+          },
+          {
+            id: ["i"],
+            desc: "Imaginary unit, defined as $i\\times i=-1$. A complex number is described as $a + bi$, where $a$ is the real part, and $b$ is the imaginary part.",
+            value: "\\sqrt{-1}"
+          },
+          {
+            id: ["Infinity"],
+            desc: "Infinity, a number which is larger than the maximum number that can be handled by a floating point number.",
+            value: "\\infty"
+          },
+          {
+            id: ["LN2"],
+            desc: "Returns the natural logarithm of 2.",
+            value: "0.6931471805599453"
+          },
+          {
+            id: ["LN10"],
+            desc: "Returns the natural logarithm of 10.",
+            value: "2.302585092994046"
+          },
+          {
+            id: ["LOG2E"],
+            desc: "Returns the base-2 logarithm of E.",
+            value: "1.4426950408889634"
+          },
+          {
+            id: ["LOG10E"],
+            desc: "Returns the base-10 logarithm of E.",
+            value: "0.4342944819032518"
+          },
+          {
+            id: ["phi"],
+            desc: "Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as $\\frac{1 + \\sqrt{5}}{2}$",
+            value: "1.618033988749895"
+          },
+          {
+            id: ["pi", "PI"],
+            desc: "The number pi is a mathematical constant that is the ratio of a circle's circumference to its diameter.	",
+            value: "3.141592653589793"
+          },
+          {
+            id: ["SQRT1\\_2"],
+            desc: "Returns the square root of 1/2.",
+            value: "0.7071067811865476"
+          },
+          {
+            id: ["SQRT2"],
+            desc: "Returns the square root of 2.	",
+            value: "1.4142135623730951"
+          },
+          {
+            id: ["tau"],
+            desc: "Tau is the ratio constant of a circle's circumference to radius, equal to $2\\times \\pi$",
+            value: "6.283185307179586"
+          }
+        ],
         vars: [{
             id: "g",
             desc: "Acceleration due to gravity",
@@ -2243,34 +2291,71 @@
         this.updateParser();
       },
       methods: {
+        changeIndex: function (e){
+          var startID, endID;
+          var src = e.srcElement;
+          var trg = e.toElement;
+          for(var i=0; i<100; i++) {
+            console.log(i);
+            if ((startID !== undefined) && (endID !== undefined)) {
+              console.log (startID +"--"+ endID)
+              break;
+            }
+            console.log(startID);
+            if (startID === undefined) {
+              if (src.getAttribute('draggable') === "true") {
+                startID = parseInt(src.id.split("_")[1]);
+              } else src = src.parentElement;
+            }
+            if (endID === undefined) {
+              if (trg.getAttribute('draggable') === "true") {
+                endID = parseInt(trg.id.split("_")[1]);
+              } else trg = trg.parentElement;
+            }
+          }
+          tempGlobal = e;
+          
+        },
         getUVarItem: function (uVarItem) {
-          return "$\\mathrm{" + uVarItem.id.join("}:=\\mathrm{") + "}:=" + uVarItem.value + "$";
+          return (
+            "$\\mathrm{" +
+            uVarItem.id.join("}:=\\mathrm{") +
+            "}:=" +
+            uVarItem.value +
+            "$"
+          );
         },
         updateParser: function () {
           parser.clear();
-          for (var i=0; i<this.vars.length; i++) {
+          for (var i = 0; i < this.vars.length; i++) {
             try {
-              console.log(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
-              parser.evaluate(this.vars[i].id + "=" + JSON.stringify(this.vars[i].value));
-            }catch(e){
-              console.log(e)
+              parser.evaluate(
+                this.vars[i].id + "=" + JSON.stringify(this.vars[i].value)
+              );
+            } catch (e) {
+              console.log(e);
             }
           }
         },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
-            if (this.selVar<0) this.vars.push(this.editItem);
-            else this.vars[this.selVar] = JSON.parse2(JSON.stringify2(this.editItem));
+            if (this.selVar < 0) this.vars.push(this.editItem);
+            else
+              this.vars[this.selVar] = JSON.parse2(
+                JSON.stringify2(this.editItem)
+              );
             this.selVar = NaN;
           }
         },
         valueDimensionsModify: function (val) {
           switch (val) {
             case 0:
-              this.editItem.value.push(new Array(this.editItem.value[0].length).fill(0));
+              this.editItem.value.push(
+                new Array(this.editItem.value[0].length).fill(0)
+              );
               break;
             case 1:
-              if (this.editItem.value.length>1) this.editItem.value.pop();
+              if (this.editItem.value.length > 1) this.editItem.value.pop();
               break;
             case 2:
               this.editItem.value.map(function (val) {
@@ -2278,7 +2363,7 @@
               });
               break;
             case 3:
-              if (this.editItem.value[0].length>1) {
+              if (this.editItem.value[0].length > 1) {
                 this.editItem.value.map(function (val) {
                   return val.pop(0);
                 });
@@ -2296,41 +2381,39 @@
           this.updatingCounter++;
         },
         isValidVarID: function (item, ignoreIndex) {
-          
-          if (!(/^\w+$/.test(item.id))) {
+          if (!/^\w+$/.test(item.id)) {
             notyf.error(
               'Invalid ID: "<b>' +
               item.id +
-              "</b>\" contains invalid characters."
+              '</b>" contains invalid characters.'
             );
             return false;
           }
           if (!isNaN(item.id.charAt(0))) {
             notyf.error(
-              'Invalid ID: Variable name cannot start with a number.'
+              "Invalid ID: Variable name cannot start with a number."
             );
             return false;
           }
           if (item.id === "") {
-            notyf.error(
-              'Invalid ID: Variable name cannot be blank.'
-            );
+            notyf.error("Invalid ID: Variable name cannot be blank.");
             return false;
           }
           if (this.varBanList.indexOf(item.id) >= 0) {
             notyf.error(
-              'Invalid ID: "<b>' +
-              item.id +
-              "</b>\" is a Uyamak's keyword."
+              'Invalid ID: "<b>' + item.id + "</b>\" is a Uyamak's keyword."
             );
             return false;
           }
           for (var i = 0; i < this.vars.length; i++) {
-            if ((item.id === this.vars[i].id) && (ignoreIndex>=0?item.id !== this.vars[ignoreIndex].id:true)) {
+            if (
+              item.id === this.vars[i].id &&
+              (ignoreIndex >= 0 ?
+                item.id !== this.vars[ignoreIndex].id :
+                true)
+            ) {
               notyf.error(
-                'Invalid ID: "<b>' +
-                item.id +
-                '</b>" is already in use.'
+                'Invalid ID: "<b>' + item.id + '</b>" is already in use.'
               );
               return false;
             }
@@ -2339,7 +2422,21 @@
         },
         genVarView: function (item) {
           if (!!item.value) {
-            return "$"+math.parse(item.id + "=" + math.evaluate(JSON.stringify (item.value))).toTex()+"$";
+            try {
+              return (
+                "$" +
+                math
+                .parse(
+                  item.id + "=" + math.parse(math.matrix(this.global.getTheParameterValueFromEntry(item.value))
+                    .toString())
+                )
+                .toTex(4) +
+                "$"
+              );
+            } catch (e) {
+              console.log(e);
+              return "Possible input error!"
+            }
             /*
             var inArray = item.value;
             if (inArray.length === 1 && inArray[0].length === 1) {
@@ -4585,15 +4682,6 @@
         alert();
       }
     });
-  </script>
-  <script>
-    function getTheParameterValueFromEntry(inVar) {
-      var outArray = [[]];
-      for (var i=0; i<inVar.length; i++) {
-        for (var j=0; j<inVar[0].length; j++) {
-          if (math.size(parser.evaluate('sin(20)'))._size[0] === 0) outArray[i][j]=parser.evaluate('sin(20)');
-      }
-    }
   </script>
 </body>
 
