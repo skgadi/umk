@@ -81,7 +81,7 @@ function simulate () {
           //console.log(ExecutingModels[i].inputs[j]);
         }
         ExecutingModels[i].Evaluate();
-        console.log(ExecutingModels[i].outputs[0]);
+        //console.log(ExecutingModels[i].outputs[0]);
       }
       
       if (prevT === 0) aTs = NaN;

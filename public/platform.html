@@ -86,6 +86,7 @@
         //graph.connectableEdges = false;
         graph.setRecursiveResize(false);
         graph.setConnectableEdges(false);
+        graph.setTooltips(true);
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
@@ -143,6 +144,9 @@
         // Creates rubberband selection
         var rubberband = new mxRubberband(graph);
         var keyHandler = new mxKeyHandler(graph);
+        //Code for KeyHandlers
+keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey(83, function (evt){alert()});keyHandler.bindControlKey(76, function (evt){alert()});keyHandler.bindControlKey(74, function (evt){alert()});keyHandler.bindControlShiftKey(74, function (evt){alert()});keyHandler.bindControlKey(80, function (evt){alert()});keyHandler.bindControlKey(85, function (evt){alert()});keyHandler.bindControlKey(69, function (evt){alert()});keyHandler.bindControlShiftKey(83, function (evt){alert()});keyHandler.bindControlShiftKey(86, function (evt){ShowModelItem('variablesManager')});keyHandler.bindControlKey(75, function (evt){if (graph.isEnabled()) createSubModel();});keyHandler.bindControlShiftKey(75, function (evt){if (graph.isEnabled()) ungroupSubModel();});keyHandler.bindControlKey(65, function (evt){alert()});keyHandler.bindControlShiftKey(65, function (evt){alert()});keyHandler.bindControlKey(88, function (evt){alert()});keyHandler.bindControlKey(67, function (evt){alert()});keyHandler.bindControlKey(86, function (evt){alert()});keyHandler.bindControlShiftKey(67, function (evt){alert()});keyHandler.bindKey(46, function (evt){if (graph.isEnabled()) graph.removeCells();});keyHandler.bindControlKey(90, function (evt){undoManager.undo();});keyHandler.bindControlShiftKey(90, function (evt){undoManager.redo();});keyHandler.bindControlKey(107, function (evt){graph.zoomIn();});keyHandler.bindControlKey(109, function (evt){graph.zoomOut();});keyHandler.bindControlKey(96, function (evt){graph.zoomActual();});keyHandler.bindControlShiftKey(96, function (evt){graph.fit();});keyHandler.bindControlKey(77, function (evt){foldItems();});keyHandler.bindControlShiftKey(77, function (evt){foldItems(false);});keyHandler.bindControlKey(82, function (evt){displayExecutionOrder()});keyHandler.bindControlKey(70, function (evt){alert()});keyHandler.bindControlKey(71, function (evt){alert()});keyHandler.bindControlKey(84, function (evt){alert()});keyHandler.bindControlKey(89, function (evt){alert()});keyHandler.bindControlKey(66, function (evt){alert()});keyHandler.bindControlKey(87, function (evt){alert()});keyHandler.bindControlKey(68, function (evt){alert()});keyHandler.bindControlKey(72, function (evt){alert()});keyHandler.bindKey(38, function (evt){moveGraph("up");});keyHandler.bindKey(40, function (evt){moveGraph("down");});keyHandler.bindKey(39, function (evt){moveGraph("right");});keyHandler.bindKey(37, function (evt){moveGraph("left");});keyHandler.bindControlKey(48, function (evt){graph.zoomActual();});keyHandler.bindControlShiftKey(48, function (evt){graph.fit();});
+
         var parent = graph.getDefaultParent();
         outln = new mxOutline(graph, outline);
         /*graph.autoSizeCellsOnAdd = true;
@@ -2180,7 +2184,7 @@
         if (modifyFor.indexOf(model.Parameters[param].Type) >=0) {
           tempParam["Value"] = getTheParameterValueFromEntry(model.Parameters[param].Value);
         }
-        console.log(model.Parameters[param]);
+        //console.log(model.Parameters[param]);
         outPrams[param] = Object.assign({}, model.Parameters[param], tempParam);
       }
       outModel = Object.assign({}, model, {Parameters: outPrams});
@@ -4355,7 +4359,7 @@
     };
     umk_displayItem.prototype.initialize = function () {};
     umk_displayItem.prototype.update = function (val) {
-      console.log(val);
+      //console.log(val);
       if (
         Date.now() - this.lastUpdate >=
         this.data.value.Parameters[0].Value[0][0] * 1000
@@ -4431,298 +4435,6 @@
           graphCell.value.Parameters;
       } else listOfCharts[graphCell.value.chartID].focus();
     }
-  </script>
-  <script>
-    document.addEventListener("keydown", event => {
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "O"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "S"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "L"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "J"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "J"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "P"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "U"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "E"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "S"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "V"
-      ) {
-        ShowModelItem("variablesManager");
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "K"
-      ) {
-        if (graph.isEnabled()) createSubModel();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "K"
-      ) {
-        if (graph.isEnabled()) ungroupSubModel();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "A"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "A"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "X"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "C"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "V"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "C"
-      ) {
-        alert();
-      }
-      if (
-        !event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "DELETE"
-      ) {
-        if (graph.isEnabled()) graph.removeCells();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "Z"
-      ) {
-        undoManager.undo();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "Z"
-      ) {
-        undoManager.redo();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "+"
-      ) {
-        graph.zoomIn();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "-"
-      ) {
-        graph.zoomOut();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "0"
-      ) {
-        graph.zoomActual();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "0"
-      ) {
-        graph.fit();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "M"
-      ) {
-        foldItems();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "M"
-      ) {
-        foldItems(false);
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "R"
-      ) {
-        displayExecutionOrder();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "F"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "G"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "T"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "Y"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "B"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "W"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "D"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "H"
-      ) {
-        alert();
-      }
-    });
   </script>
 </body>
 
