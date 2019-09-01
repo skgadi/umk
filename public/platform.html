@@ -1725,7 +1725,9 @@
                 <p class="w3-large" style="margin:0px;">
                   <b>Functionality</b>
                 </p>
-                <div v-html="getBlockDetails()"></div>
+                <div style="overflow-x: auto; overflow-y: hidden;">
+                  <div v-html="getBlockDetails()"></div>
+                </div>
                 <div class="w3-button w3-ripple w3-lime w3-hover-green w3-bar w3-large" @click="saveModel()">
                   <div class="w3-left">Apply</div>
                   <div class="w3-right"><i class="far fa-save"></i></div>
@@ -1902,7 +1904,7 @@
   <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff8">
     <div class="w3-modal-content w3-card-4" style="height: calc(100% - 50px); margin-top: 25px;">
       <header class="w3-teal" style=" height: 22px;">
-        <span onclick="document.getElementById('varEditor').style.display='none'"
+        <span onclick="document.getElementById('varEditor').style.display='none';graph.refresh();"
           class="w3-display-topright w3-hover-red" style="cursor:pointer;padding: 0 6px;"><i
             class="fas fa-times"></i></span>
         <div style="padding:0 4px;">
@@ -1932,8 +1934,8 @@
                 </thead>
                 <tbody>
                   <template v-for="(varItem, index) in vars">
-                    <tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent @dragstart = "dragSource = index">
-                      <td>
+                    <tr :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent @dragstart = "dragSource = index">
+                      <td :key="'table_'+index+'_'+updatingCounter">
                         {{ genVarView(varItem) }}
                       </td>
                       <td>
@@ -2168,13 +2170,35 @@
     var fullyLoadedTimeCheck;
   </script>
   <script>
+    convertAllTheParamsforAModel = function (model) {
+      var a =5;
+      var outModel = {};
+      var outPrams = {};
+      modifyFor = ["Integer", "Real", "Complex"]
+      for (let param in model.Parameters) {
+        var tempParam = {};
+        if (modifyFor.indexOf(model.Parameters[param].Type) >=0) {
+          tempParam["Value"] = getTheParameterValueFromEntry(model.Parameters[param].Value);
+        }
+        console.log(model.Parameters[param]);
+        outPrams[param] = Object.assign({}, model.Parameters[param], tempParam);
+      }
+      outModel = Object.assign({}, model, {Parameters: outPrams});
+      return outModel;
+    }
     getTheParameterValueFromEntry = function (inVar) {
       var outArray = new Array();
-      console.log(outArray);
+      //console.log(outArray);
       for (var i = 0; i < inVar.length; i++) {
         var tempRows = new Array(new Array());
         for (var j = 0; j < inVar[0].length; j++) {
-          var evalValue = parser.evaluate(inVar[i][j]);
+          var evalValue
+          try {
+            evalValue = parser.evaluate(inVar[i][j]);
+          } catch (e) {
+            //this is useful in the case of complex multiplied to a variable
+            evalValue = inVar[i][j];
+          }
           if (math.isNumber(evalValue) || math.isComplex(evalValue)) {
             tempRows[0].push(evalValue);
           }
@@ -2182,7 +2206,7 @@
             var subMatrix;
             //if (evalValue)
             subMatrix = getTheParameterValueFromEntry(evalValue.toArray());//evalValue.toArray();
-            console.log(subMatrix);
+            //console.log(subMatrix);
             for (var k = 0; k < subMatrix.length; k++) {
               if (k === tempRows.length) tempRows.push(new Array());
               for (var l = 0; l < subMatrix[0].length; l++) {
@@ -2195,7 +2219,7 @@
           outArray.push(tempRow);
         });
       }
-      console.log(outArray);
+      //console.log(outArray);
       return outArray;
     }
   </script>
@@ -2290,11 +2314,26 @@
           }
         ]
       },
+      mounted: function() {
+        this.updateParser();
+      },
       updated: function () {
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         this.updateParser();
       },
       methods: {
+        updateParser: function () {
+          parser.clear();
+          for (var i = 0; i < this.vars.length; i++) {
+            try {
+              parser.evaluate(
+                this.vars[i].id + "=" + JSON.stringify(this.vars[i].value)
+              );
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
         changeIndex: function (e){
           var startID = this.dragSource, endID;
           var trg = e.toElement;
@@ -2325,18 +2364,6 @@
             "$"
           );
         },
-        updateParser: function () {
-          parser.clear();
-          for (var i = 0; i < this.vars.length; i++) {
-            try {
-              parser.evaluate(
-                this.vars[i].id + "=" + JSON.stringify(this.vars[i].value)
-              );
-            } catch (e) {
-              console.log(e);
-            }
-          }
-        },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
             this.editItem
@@ -2347,7 +2374,9 @@
             }
             this.selVar = NaN;
           }
-          this.updatingCounter++;
+          this.$nextTick(() => {
+            this.updatingCounter++;
+          });
         },
         valueDimensionsModify: function (val) {
           switch (val) {
@@ -2587,7 +2616,7 @@
                 });
                 //Obtaining execution order
                 modelsForExec.push({
-                  m: JSON.parse2(JSON.stringify2(order.eo[i].value)),
+                  m: JSON.parse2(JSON.stringify2(convertAllTheParamsforAModel(order.eo[i].value))),
                   s: tempSources
                 });
                 //Obtaining inputs array
@@ -2622,7 +2651,7 @@
                 if (!!event.data.out && simulation.$data.state !== "Design") {
                   for (var i = 0; i < updateOutputs.length; i++) {
                     if (!!updateOutputs[i])
-                      updateOutputs[i].update(event.data.out[i][0][0]);
+                      updateOutputs[i].update(event.data.out[i][0]);
                   }
                 }
                 if (
@@ -3188,13 +3217,13 @@
               return (
                 "<tr><td>" +
                 editBlocksApp.$data.uyamakModel.Parameters[
-                  currentValue.split(",")[0]
+                  currentValue
                 ].Name +
-                " at [" +
+                /*" at [" +
                 (parseInt(currentValue.split(",")[1]) + 1) +
                 ", " +
                 (parseInt(currentValue.split(",")[2]) + 1) +
-                "]" +
+                "]" +*/
                 "</td></tr>"
               );
             })
@@ -3283,32 +3312,47 @@
           this.parametersDisplay[index] = !this.parametersDisplay[index];
         },
         validateParamCellEntry: function (index, index1, index2) {
+          /* Old one
           var tempValidateItem = index + "," + index1 + "," + index2;
+          */
+          var tempValidateItem = index;
           var outValue;
-          var tempValue = this.uyamakModel.Parameters[index].Value[index1][
-            index2
-          ];
+          var tempValue1;
+          
           try {
-            switch (this.uyamakModel.Parameters[index].Type) {
-              case "Integer":
-                outValue =
-                  typeof math.evaluate(tempValue) === "number" &&
-                  math.evaluate(tempValue) % 1 === 0;
-                break;
-              case "Real":
-                outValue = typeof math.evaluate(tempValue) === "number";
-                break;
-              case "Complex":
-                outValue =
-                  math.evaluate(tempValue).type === "Complex" ||
-                  typeof math.evaluate(tempValue) === "number";
-                break;
-              case "Text":
-              case "Color":
-              case "Options":
-                outValue = tempValue !== "" && tempValue !== null;
-                break;
+            if (
+              (this.uyamakModel.Parameters[index].Type === "Integer")
+              || (this.uyamakModel.Parameters[index].Type === "Real")
+              || (this.uyamakModel.Parameters[index].Type === "Complex")
+            ) {
+              tempValue1 = getTheParameterValueFromEntry (this.uyamakModel.Parameters[index].Value);
+              for (var i=0; i<tempValue1.length; i++) {
+                for (var j=0; j<tempValue1[0].length; j++) {
+                  var tempValue = tempValue1[0][0];
+                  switch (this.uyamakModel.Parameters[index].Type) {
+                    case "Integer":
+                      outValue = math.isInteger(tempValue);
+                      break;
+                    case "Real":
+                      outValue = math.isNumber(tempValue);
+                      break;
+                    case "Complex":
+                      outValue =
+                        math.isComplex(tempValue) ||
+                        math.isNumber(tempValue);
+                      break;
+                    case "Text":
+                    case "Color":
+                    case "Options":
+                      outValue = ((tempValue !== "") && (tempValue !== null));
+                      break;
+                  }
+                }
+              }
+            } else {
+              outValue = true;
             }
+            console.log(tempValue1);
           } catch (e) {
             console.log(e);
             outValue = false;
@@ -3434,6 +3478,7 @@
         model: false,
         value: null
       });
+      editBlocksApp.$set(editBlocksApp.$data, "invalidInputs", []);
     }
   </script>
 
@@ -4277,19 +4322,11 @@
     }
 
     function makeATEXMatrix(inArray) {
+      //console.log(inArray);
       if (inArray.length === 1 && inArray[0].length === 1) {
         return "$" + inArray[0][0] + "$";
       }
-      var StrOut = "$\\begin{bmatrix}\n";
-      for (var i = 0; i < inArray.length; i++) {
-        for (var j = 0; j < inArray[0].length; j++) {
-          if (j !== 0) StrOut += "\t&\t";
-          StrOut += math.round(math.Complex(inArray[i][j]), 3);
-        }
-        StrOut += "\t\\\\\n";
-      }
-      StrOut += "\\end{bmatrix}$";
-      return StrOut;
+      return "$" + math.parse(math.matrix(inArray).toString()).toTex(4) + "$";
     }
 
     function precision(a) {
@@ -4318,6 +4355,7 @@
     };
     umk_displayItem.prototype.initialize = function () {};
     umk_displayItem.prototype.update = function (val) {
+      console.log(val);
       if (
         Date.now() - this.lastUpdate >=
         this.data.value.Parameters[0].Value[0][0] * 1000
@@ -4345,6 +4383,7 @@
       }
     };
     umk_plotItem.prototype.update = function (val) {
+      //console.log(val);
       if (
         !!listOfCharts[this.data.value.chartID] &&
         !listOfCharts[this.data.value.chartID].closed

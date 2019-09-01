@@ -26,6 +26,15 @@ self.onmessage = function (m) {
     recEM = m.data.em;
     for (var i=0; i<m.data.em.length; i++) {
       eval ("var tempModel = new umk_"+m.data.em[i].m.bid+"(m.data.em[i].m)");
+      for (let param in tempModel.Parameters) {
+        //console.log(tempModel.Parameters[param].Value);
+        tempModel.Parameters[param].Value = math.evaluate(
+          math.matrix(
+            tempModel.Parameters[param].Value
+            ).toString()
+            ).toArray();
+        //console.log(tempModel.Parameters[param].Value);
+      }
       tempModel.Init();
       ExecutingModels.push(tempModel);
     }
@@ -69,8 +78,10 @@ function simulate () {
         for (var j=0; j<recEM[i].s.length; j++) {
           //throw ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
           ExecutingModels[i].inputs[j] = ExecutingModels[recEM[i].s[j][0]].outputs[recEM[i].s[j][1]];
+          //console.log(ExecutingModels[i].inputs[j]);
         }
         ExecutingModels[i].Evaluate();
+        console.log(ExecutingModels[i].outputs[0]);
       }
       
       if (prevT === 0) aTs = NaN;
