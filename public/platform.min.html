@@ -39,10 +39,11 @@
         graph.setMultigraph(false);
         graph.dropEnabled = true;
         graph.constrainChildren =
-          false; // this won't let the the blocks inside the groups to not change size when groups are resized
+        false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
         graph.setRecursiveResize(false);
         graph.setConnectableEdges(false);
+        graph.setTooltips(true);
         var vStyle = graph.getStylesheet().getDefaultVertexStyle();
         var eStyle = graph.getStylesheet().getDefaultEdgeStyle();
         vStyle["shadow"] = false;
@@ -100,6 +101,134 @@
         // Creates rubberband selection
         var rubberband = new mxRubberband(graph);
         var keyHandler = new mxKeyHandler(graph);
+        //Code for KeyHandlers
+        keyHandler.bindControlKey(79, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(83, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(76, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(74, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(74, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(80, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(85, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(69, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(83, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(86, function (evt) {
+          ShowModelItem("variablesManager");
+        });
+        keyHandler.bindControlKey(75, function (evt) {
+          if (graph.isEnabled()) createSubModel();
+        });
+        keyHandler.bindControlShiftKey(75, function (evt) {
+          if (graph.isEnabled()) ungroupSubModel();
+        });
+        keyHandler.bindControlKey(65, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(65, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(88, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(67, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(86, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(67, function (evt) {
+          alert();
+        });
+        keyHandler.bindKey(46, function (evt) {
+          if (graph.isEnabled()) graph.removeCells();
+        });
+        keyHandler.bindControlKey(90, function (evt) {
+          undoManager.undo();
+        });
+        keyHandler.bindControlShiftKey(90, function (evt) {
+          undoManager.redo();
+        });
+        keyHandler.bindControlKey(107, function (evt) {
+          graph.zoomIn();
+        });
+        keyHandler.bindControlKey(109, function (evt) {
+          graph.zoomOut();
+        });
+        keyHandler.bindControlKey(96, function (evt) {
+          graph.zoomActual();
+        });
+        keyHandler.bindControlShiftKey(96, function (evt) {
+          graph.fit();
+        });
+        keyHandler.bindControlKey(77, function (evt) {
+          foldItems();
+        });
+        keyHandler.bindControlShiftKey(77, function (evt) {
+          foldItems(false);
+        });
+        keyHandler.bindControlKey(82, function (evt) {
+          displayExecutionOrder();
+        });
+        keyHandler.bindControlKey(70, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(71, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(84, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(89, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(66, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(87, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(68, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(72, function (evt) {
+          alert();
+        });
+        keyHandler.bindKey(38, function (evt) {
+          moveGraph("up");
+        });
+        keyHandler.bindKey(40, function (evt) {
+          moveGraph("down");
+        });
+        keyHandler.bindKey(39, function (evt) {
+          moveGraph("right");
+        });
+        keyHandler.bindKey(37, function (evt) {
+          moveGraph("left");
+        });
+        keyHandler.bindControlKey(48, function (evt) {
+          graph.zoomActual();
+        });
+        keyHandler.bindControlShiftKey(48, function (evt) {
+          graph.fit();
+        });
+
         var parent = graph.getDefaultParent();
         outln = new mxOutline(graph, outline);
         /*graph.autoSizeCellsOnAdd = true;
@@ -1305,7 +1434,7 @@
       }
       graph.view.setTranslate(value.x, value.y);
       graph.view.refresh();
-    }</script><style>.tableForVarmanager,.tableForVarmanager>tbody,.tableForVarmanager>tbody>tr,.tableForVarmanager>tbody>tr>td,.tableForVarmanager>thead,.tableForVarmanager>thead>tr,.tableForVarmanager>thead>tr>th{padding:0!important}.tableForVarmanager{border-collapse:collapse}.tableForVarmanager>tbody>tr>td,.tableForVarmanager>thead>tr>th{border-right:solid 1px #aaa}body,html{width:100%;height:100%;overflow:hidden}.block-margin{margin:.5em 0 5em 0!important}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.tool-item{padding:0 8px!important}.single-tool-item{height:23.92px}.zeroPadding{padding:0!important}#flex{display:flex;flex-direction:row}.gutter{background-color:#aaa;background-repeat:no-repeat;background-position:50%}.gutter.gutter-vertical{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);cursor:row-resize}.gutter.gutter-horizontal{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);cursor:col-resize}</style><script src="https://unpkg.com/split.js/dist/split.min.js"></script></head><body><div id="mainToobar" class="w3-bar w3-blue-gray" style="padding:0 0"><div class="w3-bar-item w3-button tool-item single-tool-item"><i class="fa-fw fas fa-home"></i></div><template v-for="(topTool, index) in toolBar"><div class="w3-dropdown-hover"><div class="w3-button tool-item" @mouseleave="hideInfo()" @mouseover="showInfo(topTool.text)"><span><i v-if="!!topTool.icon" v-bind:class="topTool.icon"></i></span> <span v-html="topTool.value"></span></div><div class="w3-dropdown-content w3-bar-block w3-card-4" v-bind:style="'width: ' + (topTool.width) + 'px;'"><template v-for="(tool, index) in topTool.items"><hr v-if="tool.value === 'hl'" style="margin:0;border-color:#ddd"><div v-else class="w3-bar-item w3-button" style="padding:0;vertical-align:middle" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)"><div class="w3-display-container" style="height:30px;margin:0 4px"><div class="w3-display-left"><span class="w3-xlarge" style="display:inline-block;vertical-align:middle"><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span> <span style="margin-left:.25em;display:inline-block;vertical-align:middle" v-html="tool.value"></span></div><div class="w3-display-right"><div style="margin-left:.25em;display:inline-block;vertical-align:middle"><template v-for="(key, index) in tool.shortcut"><span v-if="index!==0" style="padding:0">+</span><span class="w3-light-gray w3-round w3-border w3-border-black" style="padding:0 2px;font-family:'Courier New',Courier,monospace;font-weight:700" v-html="key"></span></template></div></div></div></div></template></div></div></template><div id="simulationToolForBar"><div class="w3-bar-item w3-button tool-item single-tool-item w3-right"><i class="fas fa-play"></i> / <i class="fas fa-stop"></i></div></div></div><div id="flex" style="height:calc(100% - 38.92px)"><div id="flex-1" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px;height:22px" onclick="hideSidesOnMainSplit()"><div class="w3-right"><i class="fas fa-sign-out-alt fa-rotate-180"></i></div><div class="w3-left">Hide</div></div><div class="w3-row w3-gray" style="height:29px"><div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,&#34;folder&#34;)"><i class="far fa-folder"></i></div><div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,&#34;library&#34;)" style="padding:0"><i class="fas fa-puzzle-piece"></i></div></div><div style="overflow:auto;height:calc(100% - 51px)"><div class="tabContent" style="display:block" id="library"><div id="blocksBar"></div></div><div class="tabContent" style="display:none" id="printingTheModel"><select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value"><option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option></select> <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value"><option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option></select> <label>Page title</label> <input class="w3-input w3-border w3-border-theme" v-model="title" type="text"> <input id="forcePages" class="w3-check" type="checkbox" checked v-model="fit.force"> <label for="forcePages">Scale the graph to fit in <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model.number="fit.numberOfPages" style="display:inline-flex;width:50px"> page(s).</label><div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()"><div class="w3-right"><i class="fas fa-file-import"></i></div><div class="w3-left">Prepare document</div></div></div><div class="tabContent" style="display:none" id="folder">To do part of code</div></div></div><div id="flex-2" style="overflow:auto"><div style="height:100%;width:100%;position:relative"><div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div><div id="outlineContainer" class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:0 0;border-style:solid;border-color:#000"></div></div></div><div id="flex-3" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px;height:22px" onclick="hideSidesOnMainSplit(!1)"><div class="w3-left"><i class="fas fa-sign-out-alt"></i></div><div class="w3-right">Hide</div></div><div class="w3-row w3-gray" style="height:29px"><div class="w3-col s6 w3-button rTabLink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,&#34;editorForParameters&#34;,&#34;rTabLink&#34;,&#34;rTabContent&#34;)"><i class="far fa-edit"></i></div><div class="w3-col s6 w3-button rTabLink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,&#34;simulation&#34;,&#34;rTabLink&#34;,&#34;rTabContent&#34;)"><i class="fas fa-play"></i></div></div><div style="overflow:auto;height:calc(100% - 51px)"><div class="rTabContent" id="editorForParameters"><div v-if="!!cellModel.model"><div><p class="w3-large" style="margin:0"><b>Connection name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"><div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div></div><div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue"><div class="w3-right"><i class="fas fa-check"></i></div><div class="w3-left">Appy</div></div></div><div v-else-if="!!uyamakModel"><div><p class="w3-large" style="margin:0"><b>Block name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text"><div class="w3-container w3-pale-yellow" v-html="uyamakModel.Name"></div></div><div v-if="uyamakModel.TerminalsIn.editable"><p class="w3-large" style="margin:0"><b>Input terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max"></div><div v-if="uyamakModel.TerminalsOut.editable"><p class="w3-large" style="margin:0"><b>Output terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value" type="number" v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max"></div><div v-if="Object.keys(uyamakModel.Parameters).length>0"><p class="w3-large" style="margin:0"><b>Parameters</b></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span v-html="Parameter.Name"></span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"> <select v-if="Parameter.Type === 'Options'" class="w3-select w3-border-0" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]"><template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']"><option v-bind:value="opnVal">{{ opnName }}</option></template></select></td></template></tr></template></table></div></div></template></div><div><template v-if="invalidInputs.length>0"><p class="w3-large" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-large" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-large" style="margin:0"><b>Functionality</b></p><div v-html="getBlockDetails()"></div><div class="w3-button w3-ripple w3-lime w3-hover-green w3-bar w3-large" @click="saveModel()"><div class="w3-left">Apply</div><div class="w3-right"><i class="far fa-save"></i></div></div><div class="w3-button w3-ripple w3-amber w3-hover-red w3-bar w3-large" onclick="changeEditModelWithSelectedBlock()"><div class="w3-left">Reset changes</div><div class="w3-right"><i class="fas fa-undo-alt"></i></div></div></template><label>Icon orientation</label><div class="w3-row"><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)"><i class="far fa-smile"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)"><i class="far fa-smile fa-rotate-90"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)"><i class="far fa-smile fa-rotate-180"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)"><i class="far fa-smile fa-rotate-270"></i></div></div></div></div></div><div v-else>Select a block to edit its parameters.</div></div><div class="rTabContent" style="display:none" id="simulation"><div v-if="available"><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="showExecutionOrder"><div class="w3-right"><i class="fas fa-sort-numeric-up-alt"></i></div><div class="w3-left">Show execution order</div></div><label>Sampling time ($T_S$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams"> <label>Simulation duration ($T$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run"><div class="w3-right"><i class="fas fa-play"></i></div><div class="w3-left">Run/Continue</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause"><div class="w3-right"><i class="fas fa-pause"></i></div><div class="w3-left">Pause</div></div><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="stop"><div class="w3-right"><i class="fas fa-stop"></i></div><div class="w3-left">Stop/Reset</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="runNSteps"><div class="w3-right"><i class="fas fa-step-forward"></i></div><div class="w3-left">Step</div></div><label>Number of steps ($N$)</label> <input class="w3-input w3-border w3-border-blue" type="number" min="2" step="1" v-model.number="sParams.N" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)"><div class="w3-right"><i class="fas fa-fast-forward"></i></div><div class="w3-left">$N$-steps</div></div><input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime"> <label for="sRealtime">Real time simulation</label><br><input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts"> <label for="showOutputs">Show all the outputs (Not recommended)</label></div><div v-else><h3>Cannot simulate</h3><p>Your browser doesn't support multi threading.</p></div></div></div></div></div><script>//not universally used
+    }</script><style>.tableForVarmanager,.tableForVarmanager>tbody,.tableForVarmanager>tbody>tr,.tableForVarmanager>tbody>tr>td,.tableForVarmanager>thead,.tableForVarmanager>thead>tr,.tableForVarmanager>thead>tr>th{padding:0!important}.tableForVarmanager{border-collapse:collapse}.tableForVarmanager>tbody>tr>td,.tableForVarmanager>thead>tr>th{border-right:solid 1px #aaa}body,html{width:100%;height:100%;overflow:hidden}.block-margin{margin:.5em 0 5em 0!important}.rotateNote{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.tool-item{padding:0 8px!important}.single-tool-item{height:23.92px}.zeroPadding{padding:0!important}#flex{display:flex;flex-direction:row}.gutter{background-color:#aaa;background-repeat:no-repeat;background-position:50%}.gutter.gutter-vertical{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);cursor:row-resize}.gutter.gutter-horizontal{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);cursor:col-resize}</style><script src="https://unpkg.com/split.js/dist/split.min.js"></script></head><body><div id="mainToobar" class="w3-bar w3-blue-gray" style="padding:0 0"><div class="w3-bar-item w3-button tool-item single-tool-item"><i class="fa-fw fas fa-home"></i></div><template v-for="(topTool, index) in toolBar"><div class="w3-dropdown-hover"><div class="w3-button tool-item" @mouseleave="hideInfo()" @mouseover="showInfo(topTool.text)"><span><i v-if="!!topTool.icon" v-bind:class="topTool.icon"></i></span> <span v-html="topTool.value"></span></div><div class="w3-dropdown-content w3-bar-block w3-card-4" v-bind:style="'width: ' + (topTool.width) + 'px;'"><template v-for="(tool, index) in topTool.items"><hr v-if="tool.value === 'hl'" style="margin:0;border-color:#ddd"><div v-else class="w3-bar-item w3-button" style="padding:0;vertical-align:middle" v-bind:onclick="(tool.function)" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)"><div class="w3-display-container" style="height:30px;margin:0 4px"><div class="w3-display-left"><span class="w3-xlarge" style="display:inline-block;vertical-align:middle"><i v-if="!!tool.icon" class="fa-fw" v-bind:class="tool.icon"></i></span> <span style="margin-left:.25em;display:inline-block;vertical-align:middle" v-html="tool.value"></span></div><div class="w3-display-right"><div style="margin-left:.25em;display:inline-block;vertical-align:middle"><template v-for="(key, index) in tool.shortcut"><span v-if="index!==0" style="padding:0">+</span><span class="w3-light-gray w3-round w3-border w3-border-black" style="padding:0 2px;font-family:'Courier New',Courier,monospace;font-weight:700" v-html="key"></span></template></div></div></div></div></template></div></div></template><div id="simulationToolForBar"><div class="w3-bar-item w3-button tool-item single-tool-item w3-right"><i class="fas fa-play"></i> / <i class="fas fa-stop"></i></div></div></div><div id="flex" style="height:calc(100% - 38.92px)"><div id="flex-1" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px;height:22px" onclick="hideSidesOnMainSplit()"><div class="w3-right"><i class="fas fa-sign-out-alt fa-rotate-180"></i></div><div class="w3-left">Hide</div></div><div class="w3-row w3-gray" style="height:29px"><div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,&#34;folder&#34;)"><i class="far fa-folder"></i></div><div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,&#34;library&#34;)" style="padding:0"><i class="fas fa-puzzle-piece"></i></div></div><div style="overflow:auto;height:calc(100% - 51px)"><div class="tabContent" style="display:block" id="library"><div id="blocksBar"></div></div><div class="tabContent" style="display:none" id="printingTheModel"><select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value"><option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option></select> <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value"><option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option></select> <label>Page title</label> <input class="w3-input w3-border w3-border-theme" v-model="title" type="text"> <input id="forcePages" class="w3-check" type="checkbox" checked v-model="fit.force"> <label for="forcePages">Scale the graph to fit in <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1" v-model.number="fit.numberOfPages" style="display:inline-flex;width:50px"> page(s).</label><div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()"><div class="w3-right"><i class="fas fa-file-import"></i></div><div class="w3-left">Prepare document</div></div></div><div class="tabContent" style="display:none" id="folder">To do part of code</div></div></div><div id="flex-2" style="overflow:auto"><div style="height:100%;width:100%;position:relative"><div id="modelContainer" class="umk_main" style="height:100%;width:100%"></div><div id="outlineContainer" class="w3-hide-small w3-hide-medium" style="position:absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:0 0;border-style:solid;border-color:#000"></div></div></div><div id="flex-3" style="overflow:auto"><div class="w3-block w3-khaki w3-hover-yellow w3-button" style="padding:0 8px;height:22px" onclick="hideSidesOnMainSplit(!1)"><div class="w3-left"><i class="fas fa-sign-out-alt"></i></div><div class="w3-right">Hide</div></div><div class="w3-row w3-gray" style="height:29px"><div class="w3-col s6 w3-button rTabLink w3-large zeroPadding w3-border w3-border-black w3-blue" onclick="selectTabItem(event,&#34;editorForParameters&#34;,&#34;rTabLink&#34;,&#34;rTabContent&#34;)"><i class="far fa-edit"></i></div><div class="w3-col s6 w3-button rTabLink w3-large zeroPadding w3-border w3-border-black" onclick="selectTabItem(event,&#34;simulation&#34;,&#34;rTabLink&#34;,&#34;rTabContent&#34;)"><i class="fas fa-play"></i></div></div><div style="overflow:auto;height:calc(100% - 51px)"><div class="rTabContent" id="editorForParameters"><div v-if="!!cellModel.model"><div><p class="w3-large" style="margin:0"><b>Connection name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="cellModel.value" type="text" placeholder="Enter a name"><div class="w3-container w3-pale-yellow" v-html="cellModel.value"></div></div><div class="w3-block w3-theme w3-hover-green w3-button" @click="applyCellValue"><div class="w3-right"><i class="fas fa-check"></i></div><div class="w3-left">Appy</div></div></div><div v-else-if="!!uyamakModel"><div><p class="w3-large" style="margin:0"><b>Block name</b></p><input class="w3-input w3-border w3-border-theme" v-model.trim="uyamakModel.Name" type="text"><div class="w3-container w3-pale-yellow" v-html="uyamakModel.Name"></div></div><div v-if="uyamakModel.TerminalsIn.editable"><p class="w3-large" style="margin:0"><b>Input terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min" v-bind:max="uyamakModel.TerminalsIn.max"></div><div v-if="uyamakModel.TerminalsOut.editable"><p class="w3-large" style="margin:0"><b>Output terminals count</b></p><input class="w3-input w3-border w3-border-theme" v-model.number="uyamakModel.TerminalsOut.value" type="number" v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max"></div><div v-if="Object.keys(uyamakModel.Parameters).length>0"><p class="w3-large" style="margin:0"><b>Parameters</b></p><template v-for="(Parameter, index) in uyamakModel.Parameters"><div class="w3-theme-d3 w3-border w3-border-theme w3-ripple" @click="toggleParamDisplay(index)" style="cursor:pointer"><span v-if="!!parametersDisplay[index]" :key="index+'_'+updatingCounter"><i class="fas fa-caret-down fa-fw"></i></span> <span v-else :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"></i></span> <span v-html="Parameter.Name"></span></div><div v-if="!!parametersDisplay[index]"><div v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" class="w3-center w3-border-bottom w3-border-theme w3-theme-d1"><div @click="valueDimensionsModify(0, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']"><tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" style="padding:0;vertical-align:middle" class="w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text"> <input v-if="Parameter.Type === 'Color'" v-bind:class="(!validateParamCellEntry(index, index1, index2))? 'w3-red':''" v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:0;min-height:35px" v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color"> <select v-if="Parameter.Type === 'Options'" class="w3-select w3-border-0" v-model="uyamakModel.Parameters[index]['Value'][index1][index2]"><template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']"><option v-bind:value="opnVal">{{ opnName }}</option></template></select></td></template></tr></template></table></div></div></template></div><div><template v-if="invalidInputs.length>0"><p class="w3-large" style="margin:0"><b>Input error(s)</b></p><div v-html="inputErrors" class="w3-text-red"></div></template><template v-else-if="parametersValidationComments !== 'OK'"><p class="w3-large" style="margin:0"><b>Incompatable parameters</b></p><div v-html="parametersValidationComments"></div></template><template v-else><p class="w3-large" style="margin:0"><b>Functionality</b></p><div style="overflow-x:auto;overflow-y:hidden"><div v-html="getBlockDetails()"></div></div><div class="w3-button w3-ripple w3-lime w3-hover-green w3-bar w3-large" @click="saveModel()"><div class="w3-left">Apply</div><div class="w3-right"><i class="far fa-save"></i></div></div><div class="w3-button w3-ripple w3-amber w3-hover-red w3-bar w3-large" onclick="changeEditModelWithSelectedBlock()"><div class="w3-left">Reset changes</div><div class="w3-right"><i class="fas fa-undo-alt"></i></div></div></template><label>Icon orientation</label><div class="w3-row"><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(0)"><i class="far fa-smile"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(90)"><i class="far fa-smile fa-rotate-90"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(180)"><i class="far fa-smile fa-rotate-180"></i></div></div><div class="w3-col s12 m6 l3"><div class="w3-button w3-theme-d1 w3-hover-theme w3-ripple w3-bar w3-xlarge" @click="rotate(270)"><i class="far fa-smile fa-rotate-270"></i></div></div></div></div></div><div v-else>Select a block to edit its parameters.</div></div><div class="rTabContent" style="display:none" id="simulation"><div v-if="available"><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="showExecutionOrder"><div class="w3-right"><i class="fas fa-sort-numeric-up-alt"></i></div><div class="w3-left">Show execution order</div></div><label>Sampling time ($T_S$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.Ts" v-on:blur="validateParams"> <label>Simulation duration ($T$)</label> <input class="w3-input w3-border w3-border-blue" v-model="sParams.T_E" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="run"><div class="w3-right"><i class="fas fa-play"></i></div><div class="w3-left">Run/Continue</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="pause"><div class="w3-right"><i class="fas fa-pause"></i></div><div class="w3-left">Pause</div></div><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="stop"><div class="w3-right"><i class="fas fa-stop"></i></div><div class="w3-left">Stop/Reset</div></div><div class="w3-button w3-ripple w3-bar w3-teal w3-hover-light-green" @click="runNSteps"><div class="w3-right"><i class="fas fa-step-forward"></i></div><div class="w3-left">Step</div></div><label>Number of steps ($N$)</label> <input class="w3-input w3-border w3-border-blue" type="number" min="2" step="1" v-model.number="sParams.N" v-on:blur="validateParams"><div class="w3-button w3-ripple w3-bar w3-green w3-hover-light-green" @click="runNSteps(false)"><div class="w3-right"><i class="fas fa-fast-forward"></i></div><div class="w3-left">$N$-steps</div></div><input id="sRealtime" class="w3-check" type="checkbox" v-model="sParams.sRealtime"> <label for="sRealtime">Real time simulation</label><br><input id="showOutputs" class="w3-check" type="checkbox" v-model="sParams.showOuts"> <label for="showOutputs">Show all the outputs (Not recommended)</label></div><div v-else><h3>Cannot simulate</h3><p>Your browser doesn't support multi threading.</p></div></div></div></div></div><script>//not universally used
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(function () {
         if (graph) graph.umkGridsRefresh();
@@ -1313,20 +1442,24 @@
       }).observe(modelContainer);
     }
 
-    function hideSidesOnMainSplit(isLeft = true) {
+    function hideSidesOnMainSplit(isLeft = true, isHide = true) {
       var presentSplit = mainSplit.getSizes();
-      if (isLeft) {
-        mainSplit.setSizes([
-          0,
-          presentSplit[0] + presentSplit[1],
-          presentSplit[2]
-        ]);
+      if (isHide) {
+        if (isLeft) {
+          mainSplit.setSizes([
+            0,
+            presentSplit[0] + presentSplit[1],
+            presentSplit[2]
+          ]);
+        } else {
+          mainSplit.setSizes([
+            presentSplit[0],
+            presentSplit[1] + presentSplit[2],
+            0
+          ]);
+        }
       } else {
-        mainSplit.setSizes([
-          presentSplit[0],
-          presentSplit[1] + presentSplit[2],
-          0
-        ]);
+        mainSplit.setSizes([15, 60,  25]);
       }
     }
     var mainSplit = Split(["#flex-1", "#flex-2", "#flex-3"], {
@@ -1348,7 +1481,7 @@
           "flex-basis": gutterSize + "px"
         };
       }
-    });</script><div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny"><div style="padding:0;display:inline-block"><span><i class="fas fa-info-circle"></i></span> <span id="infoInStatus"></span></div><div id="stateOfSystem" class="w3-bar-item w3-right" style="padding:0;display:inline-block">Design</div><div id="showWhenSimulating" class="w3-bar-item w3-right" style="display:inline-block;padding:0;margin:0 8px"><span>$t=$&nbsp;</span> <span id="simulationTime">0</span> <span><i class="fas fa-ellipsis-v"></i></span> <span>Actual $T_S=$&nbsp;</span> <span id="aSimulationTime">NaN</span> <span><i class="fas fa-ellipsis-v"></i></span></div></div><div id="varEditor" class="w3-modal" style="padding:0;height:100%;overflow:hidden;background-color:#fffffff8"><div class="w3-modal-content w3-card-4" style="height:calc(100% - 50px);margin-top:25px"><header class="w3-teal" style="height:22px"><span onclick="document.getElementById(&#34;varEditor&#34;).style.display=&#34;none&#34;" class="w3-display-topright w3-hover-red" style="cursor:pointer;padding:0 6px"><i class="fas fa-times"></i></span><div style="padding:0 4px"><i class="fas fa-equals"></i> Variable manager</div></header><div id="variablesManager" style="height:calc(100% - 22px);overflow:hidden"><div v-if="isNaN(selVar)" class="w3-responsive" style="height:100%"><div class="w3-button w3-hover-green w3-light-green w3-block" style="height:39px" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">New variable</div><div style="height:calc(100% - 39px);overflow:auto"><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor:pointer"><i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i> Local variables</div><div v-if="visible.vars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(varItem, index) in vars"><tr :key="'table_'+index+'_'+updatingCounter" :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent><td>{{ genVarView(varItem) }}</td><td><div class="w3-display-container" style="padding-right:40px"><div v-html="varItem.desc"></div><div class="w3-display-topright"><span class="w3-text-teal" style="cursor:pointer" @click="selectAExistingItem(index)"><i class="fa-fw fas fa-pencil-alt"></i> </span><span class="w3-text-red" style="cursor:pointer" @click="removeItem(index)"><i class="far fa-trash-alt"></i></span></div></div></td></tr></template></tbody></table></div><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor:pointer"><i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i> Uyamak constants</div><div v-if="visible.uVars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(uVarItem, index) in uVars"><tr><td v-html="getUVarItem(uVarItem)"></td><td v-html="uVarItem.desc"></td></tr></template></tbody></table></div></div></div><div v-else class="" style="height:100%;overflow:auto"><label>ID</label> <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"> <label>Description</label> <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc" style="resize:vertical"></textarea><div class="w3-center"><div @click="valueDimensionsModify(0)" style="width:40px;height:40px;padding:0" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div @click="valueDimensionsModify(2)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(3)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in editItem.value"><tr v-if="(index1 === 0)" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td style="padding:0;vertical-align:middle" class="w3-center w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0;text-align:right"></td></template></tr></template></table></div><label>Value</label><div style="overflow-x:auto;overflow-y:hidden"><div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)"></div></div><div class="w3-row"><div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">Save</div><div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">Cancel</div></div></div></div></div></div><script>function ShowModelItem(a){"variablesManager"===a&&(varEditor.style.display="block")}var varEditor=document.getElementById("varEditor")</script><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:#e1e1e180"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div></div><div id="tempSideForAlwaysHidden" style="width:0"></div><script>function selectTabItem(
+    });</script><div id="statusBar" class="umk_main w3-bar w3-dark-grey w3-tiny"><div style="padding:0;display:inline-block"><span><i class="fas fa-info-circle"></i></span> <span id="infoInStatus"></span></div><div id="stateOfSystem" class="w3-bar-item w3-right" style="padding:0;display:inline-block">Design</div><div id="showWhenSimulating" class="w3-bar-item w3-right" style="display:inline-block;padding:0;margin:0 8px"><span>$t=$&nbsp;</span> <span id="simulationTime">0</span> <span><i class="fas fa-ellipsis-v"></i></span> <span>Actual $T_S=$&nbsp;</span> <span id="aSimulationTime">NaN</span> <span><i class="fas fa-ellipsis-v"></i></span></div></div><div id="varEditor" class="w3-modal" style="padding:0;height:100%;overflow:hidden;background-color:#fffffff8"><div class="w3-modal-content w3-card-4" style="height:calc(100% - 50px);margin-top:25px"><header class="w3-teal" style="height:22px"><span onclick="document.getElementById(&#34;varEditor&#34;).style.display=&#34;none&#34;,graph.refresh()" class="w3-display-topright w3-hover-red" style="cursor:pointer;padding:0 6px"><i class="fas fa-times"></i></span><div style="padding:0 4px"><i class="fas fa-equals"></i> Variable manager</div></header><div id="variablesManager" style="height:calc(100% - 22px);overflow:hidden"><div v-if="isNaN(selVar)" class="w3-responsive" style="height:100%"><div class="w3-button w3-hover-green w3-light-green w3-block" style="height:39px" @click="editItem={id:'newVar',desc:'',value:[[0]]};selVar=-1;">New variable</div><div style="height:calc(100% - 39px);overflow:auto"><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.vars=!visible.vars" style="cursor:pointer"><i v-if="visible.vars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.vars" class="fa-fw fas fa-caret-right"></i> Local variables</div><div v-if="visible.vars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(varItem, index) in vars"><tr :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent @dragstart="dragSource = index"><td :key="'table_'+index+'_'+updatingCounter">{{ genVarView(varItem) }}</td><td><div class="w3-display-container" style="padding-right:40px"><div v-html="varItem.desc"></div><div class="w3-display-topright"><span class="w3-text-teal" style="cursor:pointer" @click="selectAExistingItem(index)"><i class="fa-fw fas fa-pencil-alt"></i> </span><span class="w3-text-red" style="cursor:pointer" @click="removeItem(index)"><i class="far fa-trash-alt"></i></span></div></div></td></tr></template></tbody></table></div><div class="w3-gray w3-ripple w3-button w3-left-align w3-block w3-border w3-border-theme" @click="visible.uVars=!visible.uVars" style="cursor:pointer"><i v-if="visible.uVars" class="fa-fw fas fa-caret-down"></i> <i v-if="!visible.uVars" class="fa-fw fas fa-caret-right"></i> Uyamak constants</div><div v-if="visible.uVars"><table class="w3-table-all w3-hoverable"><thead><tr class="w3-light-grey w3-center"><th>Variable</th><th>Description</th></tr></thead><tbody><template v-for="(uVarItem, index) in uVars"><tr><td v-html="getUVarItem(uVarItem)"></td><td v-html="uVarItem.desc"></td></tr></template></tbody></table></div></div></div><div v-else class="" style="height:100%;overflow:auto"><label>ID</label> <input class="w3-input w3-border w3-border-theme" v-model="editItem.id"> <label>Description</label> <textarea class="w3-input w3-border w3-border-theme" v-model="editItem.desc" style="resize:vertical"></textarea><div class="w3-center"><div @click="valueDimensionsModify(0)" style="width:40px;height:40px;padding:0" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(1)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container rotateNote"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle fa-rotate-90"></i></div></div><div @click="valueDimensionsModify(2)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-plus-circle"></i></div></div><div @click="valueDimensionsModify(3)" style="width:40px;height:40px;padding:0" v-if="" class="w3-circle w3-button w3-theme-l3 w3-hover-theme w3-ripple w3-border w3-border-theme w3-display-container"><div class="w3-display-middle"><i class="fas fa-ellipsis-h"></i><i class="fas fa-minus-circle"></i></div></div></div><div class="w3-responsive"><table class="w3-table-all"><template v-for="(rowValue, index1) in editItem.value"><tr v-if="(index1 === 0)" style="padding:0"><td class="w3-light-gray w3-border w3-border-theme"></td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-light-gray w3-center w3-border w3-border-theme">{{ index2 + 1 }}</td></template></tr><tr style="padding:0" class="w3-border-theme"><td style="padding:0;vertical-align:middle" class="w3-center w3-light-gray w3-border w3-border-theme">{{ index1 + 1 }}</td><template v-for="(value, index2) in editItem.value[index1]"><td style="padding:0" class="w3-border w3-border-theme"><input v-model.trim=" editItem.value[index1][index2]" onchange="variablesManager.$data.updatingCounter++" class="w3-input w3-border-0" style="padding:0;min-width:75px;padding:8px 0;text-align:right"></td></template></tr></template></table></div><label>Value</label><div style="overflow-x:auto;overflow-y:hidden"><div :key="'disp_'+updatingCounter" v-html="genVarView(editItem)"></div></div><div class="w3-row"><div class="w3-button w3-teal w3-hover-green w3-col s6" @click="saveItem">Save</div><div class="w3-button w3-orange w3-hover-red w3-col s6" @click="selVar=NaN">Cancel</div></div></div></div></div></div><script>function ShowModelItem(a){"variablesManager"===a&&(varEditor.style.display="block")}var varEditor=document.getElementById("varEditor")</script><div id="app"><div id="waitForProcessToFinish" class="w3-modal w3-display-container"><div class="w3-display-middle w3-center w3-padding" style="background-color:#e1e1e180"><p id="DOMWaitingHead" class="w3-large"></p><div class="fa-3x"><i class="fas fa-spinner fa-pulse"></i></div><p id="DOMWaitingDesc" class="w3-large"></p></div></div></div><div id="tempSideForAlwaysHidden" style="width:0"></div><script>function selectTabItem(
       evt,
       divName,
       tablink = "tablink",
@@ -1398,7 +1531,65 @@
         allTheMains[i].style.marginLeft = thisSidebar.clientWidth + "px";
       }
       outln.refresh();
-    }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><script>var fullyLoadedTimeCheck,LIBRARY_SUMMARY={},ALLFUNCTIONS={}</script><script>getTheParameterValueFromEntry=function(r){var a=new Array;console.log(a);for(var e=0;e<r.length;e++){for(var t=new Array(new Array),n=0;n<r[0].length;n++){var o=parser.evaluate(r[e][n]);if((math.isNumber(o)||math.isComplex(o))&&t[0].push(o),math.isMatrix(o))for(var h=o.toArray(),l=0;l<h.length;l++){l===t.length&&t.push(new Array);for(var s=0;s<h[0].length;s++)t[l].push(math.parse(h[l][s]))}}t.forEach(function(r){a.push(r)})}return console.log(a),a}</script><script>const parser = math.parser();
+    }</script><script>MathJax.Hub.Config({showMathMenu:!1,messageStyle:"none",menuSettings:{inTabOrder:!1},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}})</script><script>var notyf=new Notyf({duration:1e4})</script><script>var fullyLoadedTimeCheck,LIBRARY_SUMMARY={},ALLFUNCTIONS={}</script><script>convertAllTheParamsforAModel = function (model) {
+      var a = 5;
+      var outModel = {};
+      var outPrams = {};
+      modifyFor = ["Integer", "Real", "Complex"];
+      for (let param in model.Parameters) {
+        var tempParam = {};
+        if (modifyFor.indexOf(model.Parameters[param].Type) >= 0) {
+          tempParam["Value"] = getTheParameterValueFromEntry(
+            model.Parameters[param].Value
+          );
+        }
+        //console.log(model.Parameters[param]);
+        outPrams[param] = Object.assign({},
+          model.Parameters[param],
+          tempParam
+        );
+      }
+      outModel = Object.assign({}, model, {
+        Parameters: outPrams
+      });
+      return outModel;
+    };
+    getTheParameterValueFromEntry = function (inVar) {
+      var outArray = new Array();
+      //console.log(outArray);
+      for (var i = 0; i < inVar.length; i++) {
+        var tempRows = new Array(new Array());
+        for (var j = 0; j < inVar[0].length; j++) {
+          var evalValue;
+          try {
+            evalValue = parser.evaluate(inVar[i][j]);
+          } catch (e) {
+            //this is useful in the case of complex multiplied to a variable
+            evalValue = inVar[i][j];
+          }
+          if (math.isNumber(evalValue) || math.isComplex(evalValue)) {
+            tempRows[0].push(evalValue);
+          }
+          if (math.isMatrix(evalValue)) {
+            var subMatrix;
+            //if (evalValue)
+            subMatrix = getTheParameterValueFromEntry(evalValue.toArray()); //evalValue.toArray();
+            //console.log(subMatrix);
+            for (var k = 0; k < subMatrix.length; k++) {
+              if (k === tempRows.length) tempRows.push(new Array());
+              for (var l = 0; l < subMatrix[0].length; l++) {
+                tempRows[k].push(subMatrix[k][l]);
+              }
+            }
+          }
+        }
+        tempRows.forEach(function (tempRow) {
+          outArray.push(tempRow);
+        });
+      }
+      //console.log(outArray);
+      return outArray;
+    };</script><script>const parser = math.parser();
     var variablesManager = new Vue({
       el: "#variablesManager",
       data: {
@@ -1410,6 +1601,7 @@
           vars: true,
           uVars: true
         },
+        dragSource: null,
         uVars: [{
             id: ["e", "E"],
             desc: "Euler’s number, the base of the natural logarithm.",
@@ -1475,7 +1667,7 @@
             id: "g",
             desc: "Acceleration due to gravity",
             value: [
-              [9.8]
+              [9.80665]
             ]
           },
           {
@@ -1487,45 +1679,14 @@
           }
         ]
       },
+      mounted: function () {
+        this.updateParser();
+      },
       updated: function () {
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         this.updateParser();
       },
       methods: {
-        changeIndex: function (e){
-          var startID, endID;
-          var src = e.srcElement;
-          var trg = e.toElement;
-          for(var i=0; i<100; i++) {
-            console.log(i);
-            if ((startID !== undefined) && (endID !== undefined)) {
-              console.log (startID +"--"+ endID)
-              break;
-            }
-            console.log(startID);
-            if (startID === undefined) {
-              if (src.getAttribute('draggable') === "true") {
-                startID = parseInt(src.id.split("_")[1]);
-              } else src = src.parentElement;
-            }
-            if (endID === undefined) {
-              if (trg.getAttribute('draggable') === "true") {
-                endID = parseInt(trg.id.split("_")[1]);
-              } else trg = trg.parentElement;
-            }
-          }
-          tempGlobal = e;
-          
-        },
-        getUVarItem: function (uVarItem) {
-          return (
-            "$\\mathrm{" +
-            uVarItem.id.join("}:=\\mathrm{") +
-            "}:=" +
-            uVarItem.value +
-            "$"
-          );
-        },
         updateParser: function () {
           parser.clear();
           for (var i = 0; i < this.vars.length; i++) {
@@ -1538,15 +1699,53 @@
             }
           }
         },
+        changeIndex: function (e) {
+          var startID = this.dragSource,
+            endID;
+          var trg = e.toElement;
+          for (var i = 0; i < 100; i++) {
+            if (startID !== undefined && endID !== undefined) {
+              var tempRow = this.vars[endID];
+              this.vars[endID] = this.vars[startID];
+              this.vars[startID] = tempRow;
+              console.log(e);
+              this.updatingCounter++;
+              break;
+            }
+            if (endID === undefined) {
+              if (trg.getAttribute("draggable") === "true") {
+                endID = parseInt(trg.id.split("_")[1]);
+              } else trg = trg.parentElement;
+            }
+          }
+          tempGlobal = e;
+        },
+        getUVarItem: function (uVarItem) {
+          return (
+            "$\\mathrm{" +
+            uVarItem.id.join("}:=\\mathrm{") +
+            "}:=" +
+            uVarItem.value +
+            "$"
+          );
+        },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
-            if (this.selVar < 0) this.vars.push(this.editItem);
-            else
-              this.vars[this.selVar] = JSON.parse2(
-                JSON.stringify2(this.editItem)
+            this.editItem;
+            if (this.selVar < 0) {
+              this.vars.push(this.editItem);
+            } else {
+              this.vars.splice(
+                this.selVar,
+                1,
+                JSON.parse2(JSON.stringify2(this.editItem))
               );
+            }
             this.selVar = NaN;
           }
+          this.$nextTick(() => {
+            this.updatingCounter++;
+          });
         },
         valueDimensionsModify: function (val) {
           switch (val) {
@@ -1628,15 +1827,24 @@
                 "$" +
                 math
                 .parse(
-                  item.id + "=" + math.parse(math.matrix(this.global.getTheParameterValueFromEntry(item.value))
-                    .toString())
+                  item.id +
+                  "=" +
+                  math.parse(
+                    math
+                    .matrix(
+                      this.global.getTheParameterValueFromEntry(
+                        item.value
+                      )
+                    )
+                    .toString()
+                  )
                 )
                 .toTex(4) +
                 "$"
               );
             } catch (e) {
               console.log(e);
-              return "Possible input error!"
+              return "Possible input error!";
             }
             /*
             var inArray = item.value;
@@ -1783,7 +1991,11 @@
                 });
                 //Obtaining execution order
                 modelsForExec.push({
-                  m: JSON.parse2(JSON.stringify2(order.eo[i].value)),
+                  m: JSON.parse2(
+                    JSON.stringify2(
+                      convertAllTheParamsforAModel(order.eo[i].value)
+                    )
+                  ),
                   s: tempSources
                 });
                 //Obtaining inputs array
@@ -1818,7 +2030,7 @@
                 if (!!event.data.out && simulation.$data.state !== "Design") {
                   for (var i = 0; i < updateOutputs.length; i++) {
                     if (!!updateOutputs[i])
-                      updateOutputs[i].update(event.data.out[i][0][0]);
+                      updateOutputs[i].update(event.data.out[i][0]);
                   }
                 }
                 if (
@@ -1872,7 +2084,7 @@
           displayExecutionOrder();
         }
       }
-    });</script><script>var mainToobar=new Vue({el:"#mainToobar",data:{visibleItem:"library",toolBar:[{value:"File",icon:"fas fa-file-alt",width:"335",text:"Menu gives options to manage your files",shortcut:[],items:[{value:"Cloud organizer",icon:"far fa-folder",function:"alert()",text:"Organize your Uyamak systems on your cloud storage",shortcut:["Ctrl","O"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Save to local machine",icon:"fas fa-download",function:"alert()",text:"Download the Uyamak system to your local device as a file",shortcut:["Ctrl","S"]},{value:"Load from local machine",icon:"fas fa-upload",function:"alert()",text:"Load a Uyamak system from your local device",shortcut:["Ctrl","L"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Share privately",icon:"fas fa-share-alt-square",function:"alert()",text:"Share Uyamak system with your friends and teachers",shortcut:["Ctrl","J"]},{value:"Make public",icon:"fas fa-share-alt",function:"alert()",text:"Publish your Uyamak system to the public",shortcut:["Ctrl","Shift","J"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Print",icon:"fas fa-print",function:"alert()",text:"Print the Uyamak system",shortcut:["Ctrl","P"]}]},{value:"System",icon:"fas fa-project-diagram",width:"400",text:"Menu gives options to manage your Uyamak system",shortcut:[],items:[{value:"Show Uyamak library",icon:"fas fa-puzzle-piece",function:"alert()",text:"Displays the Uyamak library drawer where you can find all the Uyamak models",shortcut:["Ctrl","U"]},{value:"Show Model Editor",icon:"fas fa-edit",function:"alert()",text:"Displays the Uyamak model editor where you can tweak the model settings",shortcut:["Ctrl","E"]},{value:"Show Simulation drawer",icon:"fas fa-play",function:"alert()",text:"Displays the simulation drawer where you can execute the Uyamak system",shortcut:["Ctrl","Shift","S"]},{value:"Show Variable manager",icon:"fas fa-equals",function:"ShowModelItem('variablesManager')",text:"Displays the Variable manager where you can add, edit or delete the Uyamak variables.",shortcut:["Ctrl","Shift","V"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Create sub-system",icon:"far fa-object-group",function:"if (graph.isEnabled()) createSubModel();",text:"Creates Uyamak sub-system out of the selected Uyamak models",shortcut:["Ctrl","K"]},{value:"Dismantle sub-system",icon:"far fa-object-ungroup",function:"if (graph.isEnabled()) ungroupSubModel();",text:"Dismantles all the selected Uyamak sub-systems.",shortcut:["Ctrl","Shift","K"]}]},{value:"Edit",icon:"fas fa-pen",width:"300",text:"Menu gives options to manipulate the Uyamak system",shortcut:[],items:[{value:"Select all",icon:"far fa-check-square",function:"alert()",text:"",shortcut:["Ctrl","A"]},{value:"Select none",icon:"far fa-square",function:"alert()",text:"",shortcut:["Ctrl","Shift","A"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"",shortcut:[]},{value:"Cut",icon:"fas fa-cut",function:"alert()",text:"Copies the selected Uyamak models into the clipboard and deletes the original ones",shortcut:["Ctrl","X"]},{value:"Copy",icon:"fas fa-copy",function:"alert()",text:"Copies the selected Uyamak models into the clipboard",shortcut:["Ctrl","C"]},{value:"Paste",icon:"fas fa-paste",function:"alert()",text:"Pastes the clipboard Uyamak models to the present Uyamak system",shortcut:["Ctrl","V"]},{value:"Clone",icon:"fas fa-clone",function:"alert()",text:"Clones the selected Uyamak models",shortcut:["Ctrl","Shift","C"]},{value:"Delete",icon:"fas fa-trash-alt",function:"if (graph.isEnabled()) graph.removeCells();",text:"Delete the selected Uyamak models and Sub-systems",shortcut:["Delete"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Undo",icon:"fas fa-undo",function:"undoManager.undo();",text:"Undo the recent changes",shortcut:["Ctrl","Z"]},{value:"Redo",icon:"fas fa-redo",function:"undoManager.redo();",text:"Redo the recent changes",shortcut:["Ctrl","Shift","Z"]}]},{value:"View",icon:"fas fa-desktop",width:"390",text:"Menu gives different options to visualize the Uyamak system",shortcut:[],items:[{value:"Zoom in",icon:"fas fa-search-plus",function:"graph.zoomIn();",text:"Zooms in",shortcut:["Ctrl","+"]},{value:"Zoom out",icon:"fas fa-search-minus",function:"graph.zoomOut();",text:"Zooms out",shortcut:["Ctrl","-"]},{value:"Original size",icon:"fas fa-compress",function:"graph.zoomActual();",text:"Shows the original size. Some items may be out of view. You can see them by scrolling",shortcut:["Ctrl","0"]},{value:"Fit all",icon:"fas fa-expand",function:"graph.fit();",text:"Shows the complete Uyamak system",shortcut:["Ctrl","Shift","0"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Minimize  subsystem(s)",icon:"fas fa-window-minimize",function:"foldItems();",text:"Minimizes the selected subsystem. If nothing is selected, all the sub-systems will be minimized",shortcut:["Ctrl","M"]},{value:"Maximize  subsystem(s)",icon:"fas fa-window-maximize",function:"foldItems(false);",text:"Maximizes the selected subsystem. If nothing is selected, all the sub-systems will be maximized",shortcut:["Ctrl","Shift","M"]},{value:"hl",icon:"fas fa-window-maximize",function:"",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Execution order",icon:"fas fa-sort-numeric-up-alt",function:"displayExecutionOrder()",text:"Shows simulation order and errors",shortcut:["Ctrl","R"]},{value:"hl",icon:"fas fa-window-maximize",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"System outline",icon:"fas fa-image",function:"alert()",text:"Shows outline of the Uyamak system in a small window on the top right corner",shortcut:["Ctrl","F"]},{value:"Show/Hide Grid lines",icon:"fas fa-border-all",function:"alert()",text:"Shows or hide the grid lines",shortcut:["Ctrl","G"]},{value:"Toggle snap to grid",icon:"fas fa-magnet",function:"alert()",text:"When snap to grid is activated, the blocks are moved at a steps instead of smoothly",shortcut:["Ctrl","T"]},{value:"Keyboard shortcuts",icon:"far fa-keyboard",function:"alert()",text:"Displays all the keyboard shortcuts",shortcut:["Ctrl","Y"]}]},{value:"Account",icon:"fas fa-user-alt",width:"315",text:"Menu gives options to manage the user account",shortcut:[],items:[{value:"Profile",icon:"fas fa-user-cog",function:"alert()",text:"Opens another page where you can manage your Uyamak profile",shortcut:[]},{value:"Extend licence period",icon:"fas fa-ticket-alt",function:"alert()",text:"Lets you extend the license period",shortcut:["Ctrl","B"]},{value:"Sign out",icon:"fas fa-door-open",function:"alert()",text:"Signing out",shortcut:["Ctrl","W"]}]},{value:"Help",icon:"far fa-life-ring",width:"275",text:"Menu gives access to documentation and help",shortcut:[],items:[{value:"Documentation",icon:"fas fa-book",function:"alert()",text:"Takes you to the documentation page",shortcut:["Ctrl","D"]},{value:"Context help",icon:"far fa-question-circle",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:["Ctrl","H"]},{value:"hl",icon:"fas fa-window-maximize",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:[]},{value:"About",icon:"fas fa-info",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:[]}]}]},methods:{showInfo:function(t){document.getElementById("infoInStatus").innerText=t},hideInfo:function(){document.getElementById("infoInStatus").innerText=""}}})</script><script>var printingTheModel=new Vue({el:"#printingTheModel",data:{addStartPages:[],addEndPages:[],title:"Uyamak model",orientation:{value:"portrait",options:{portrait:"Portrait",landscape:"Landscape"}},pageSize:{value:"letter",options:{letter:"Letter",a4:"A4"}},fit:{force:!1,numberOfPages:1}},methods:{prepareMPDoc:function(){graph.setSelectionCell();var t=1;this.fit.numberOfPages=Math.round(this.fit.numberOfPages),this.fit.numberOfPages<1&&(this.fit.numberOfPages=1),this.fit.force&&(t=mxUtils.getScaleForPageCount(this.fit.numberOfPages,graph));var e=new mxPrintPreview(graph,t);e.title=this.title,"portrait"===this.orientation.value&&"letter"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_LETTER_PORTRAIT),"portrait"===this.orientation.value&&"a4"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_A4_PORTRAIT),"landscape"===this.orientation.value&&"letter"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE),"landscape"===this.orientation.value&&"a4"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_A4_LANDSCAPE);var a=mxPrintPreview.prototype.writeHead;e.writePostfix=function(t){a.apply(this,arguments),t.writeln('<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>'),t.writeln("<script>"),t.writeln('MathJax.Hub.Config({showMathMenu:false,messageStyle:"none",menuSettings:{inTabOrder:false},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\\\(","\\\\)"]],displayMath:[["$$","$$"],["\\\\[","\\\\]"]]}});'),t.writeln("</script>")},e.open()}}})</script><script>var editBlocksApp=new Vue({updated:function(){MathJax.Hub.Queue(["Typeset",MathJax.Hub])},el:"#editorForParameters",data:{uyamakModel:null,cellModel:{model:!1,value:null},invalidInputs:[],parametersDisplay:null,updatingCounter:0},computed:{parametersValidationComments:function(){return this.uyamakModel&&this.uyamakModel.ValidateParams?this.uyamakModel.ValidateParams():"OK"},inputErrors:function(){return"<table class='w3-table'>"+this.invalidInputs.map(function(e,a,t){return"<tr><td>"+editBlocksApp.$data.uyamakModel.Parameters[e.split(",")[0]].Name+" at ["+(parseInt(e.split(",")[1])+1)+", "+(parseInt(e.split(",")[2])+1)+"]</td></tr>"}).join("")+"</table>"}},methods:{rotate:function(e){var a=[];a[0]={in:"west",out:"east"},a[90]={in:"north",out:"south"},a[180]={in:"east",out:"west"},a[270]={in:"south",out:"north"},graph.setCellStyles("rotation",e,[graph.getSelectionCell()].concat(graph.getSelectionCell().children));for(var t=0;t<graph.getSelectionCell().children.length;t++)0<=graph.getSelectionCell().children[t].style.search("umk_input")&&graph.setCellStyles("portConstraint",a[e].in,[graph.getSelectionCell().children[t]]),0<=graph.getSelectionCell().children[t].style.search("umk_output")&&graph.setCellStyles("portConstraint",a[e].out,[graph.getSelectionCell().children[t]])},applyCellValue:function(){(graph.getSelectionCell().isEdge()||0<=graph.getSelectionCell().style.search("umk_group"))&&(graph.getSelectionCell().value=this.cellModel.value,graph.refresh(graph.getSelectionCell()))},saveModel:function(){eval("var tempModel = new umk_"+this.uyamakModel.bid+"(this.uyamakModel);"),graph.getSelectionCell().setValue(tempModel),setTermianls(graph.getSelectionCell(),"umk_input"),setTermianls(graph.getSelectionCell(),"umk_output"),graph.refresh(graph.getSelectionCell())},getBlockDetails:function(){try{return this.uyamakModel.Details()}catch(e){return console.log(e),"¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support."}},toggleParamDisplay:function(e){this.updatingCounter++,this.parametersDisplay[e]=!this.parametersDisplay[e]},validateParamCellEntry:function(e,a,t){var l,r=e+","+a+","+t,s=this.uyamakModel.Parameters[e].Value[a][t];try{switch(this.uyamakModel.Parameters[e].Type){case"Integer":l="number"==typeof math.evaluate(s)&&math.evaluate(s)%1==0;break;case"Real":l="number"==typeof math.evaluate(s);break;case"Complex":l="Complex"===math.evaluate(s).type||"number"==typeof math.evaluate(s);break;case"Text":case"Color":case"Options":l=""!==s&&null!==s}}catch(e){console.log(e),l=!1}var n=this.invalidInputs.indexOf(r);return l?0<=n&&this.invalidInputs.splice(n,1):n<0&&this.invalidInputs.push(r),l},valueDimensionsModify:function(e,a){var t;switch(this.uyamakModel.Parameters[a].Type){case"Integer":case"Real":case"Complex":t=0;break;case"Text":t="";break;case"Color":t="#000"}switch(e){case 0:this.uyamakModel.Parameters[a].Value.push(new Array(this.uyamakModel.Parameters[a].Value[0].length).fill(t));break;case 1:if(1<this.uyamakModel.Parameters[a].Value.length){for(var l=0;l<this.uyamakModel.Parameters[a].Value[0].length;l++)this.removeFromInvalidInputs(a,this.uyamakModel.Parameters[a].Value.length-1,l);this.uyamakModel.Parameters[a].Value.pop()}break;case 2:this.uyamakModel.Parameters[a].Value.map(function(e){return e.push(t)});break;case 3:if(1<this.uyamakModel.Parameters[a].Value[0].length){for(l=0;l<this.uyamakModel.Parameters[a].Value.length;l++)this.removeFromInvalidInputs(a,l,this.uyamakModel.Parameters[a].Value[0].length-1);this.uyamakModel.Parameters[a].Value.map(function(e){return e.pop()})}}this.updatingCounter++},removeFromInvalidInputs:function(e,a,t){var l=e+","+a+","+t;console.log(this.invalidInputs),console.log(l),this.invalidInputs=arrayRemove(this.invalidInputs,l)}}})</script><script>function selectionChanged(){graph.getSelectionCell()&&graph.getSelectionCell().isVertex()&&"object"==typeof graph.getSelectionCell().value?changeEditModelWithSelectedBlock():(editBlocksApp.$set(editBlocksApp.$data,"uyamakModel",null),graph.getSelectionCell()&&(graph.getSelectionCell().isEdge()||0<=graph.getSelectionCell().style.search("umk_group"))?editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!0,value:graph.getSelectionCell().value||""}):editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!1,value:null}))}function changeEditModelWithSelectedBlock(){eval("var editModel = new umk_"+graph.getSelectionCell().value.bid+"(graph.getSelectionCell().value);"),editBlocksApp.$set(editBlocksApp.$data,"uyamakModel",editModel),editBlocksApp.$set(editBlocksApp.$data,"parametersDisplay",{}),editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!1,value:null})}</script><script>function holdToFinishAProcess(title = null, description = null) {
+    });</script><script>var mainToobar=new Vue({el:"#mainToobar",data:{visibleItem:"library",toolBar:[{value:"File",icon:"fas fa-file-alt",width:"335",text:"Menu gives options to manage your files",shortcut:[],items:[{value:"Cloud organizer",icon:"far fa-folder",function:"alert()",text:"Organize your Uyamak systems on your cloud storage",shortcut:["Ctrl","O"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Save to local machine",icon:"fas fa-download",function:"alert()",text:"Download the Uyamak system to your local device as a file",shortcut:["Ctrl","S"]},{value:"Load from local machine",icon:"fas fa-upload",function:"alert()",text:"Load a Uyamak system from your local device",shortcut:["Ctrl","L"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Share privately",icon:"fas fa-share-alt-square",function:"alert()",text:"Share Uyamak system with your friends and teachers",shortcut:["Ctrl","J"]},{value:"Make public",icon:"fas fa-share-alt",function:"alert()",text:"Publish your Uyamak system to the public",shortcut:["Ctrl","Shift","J"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Print",icon:"fas fa-print",function:"alert()",text:"Print the Uyamak system",shortcut:["Ctrl","P"]}]},{value:"System",icon:"fas fa-project-diagram",width:"400",text:"Menu gives options to manage your Uyamak system",shortcut:[],items:[{value:"Show Uyamak library",icon:"fas fa-puzzle-piece",function:"alert()",text:"Displays the Uyamak library drawer where you can find all the Uyamak models",shortcut:["Ctrl","U"]},{value:"Show Model Editor",icon:"fas fa-edit",function:"alert()",text:"Displays the Uyamak model editor where you can tweak the model settings",shortcut:["Ctrl","E"]},{value:"Show Simulation drawer",icon:"fas fa-play",function:"alert()",text:"Displays the simulation drawer where you can execute the Uyamak system",shortcut:["Ctrl","Shift","S"]},{value:"Show Variable manager",icon:"fas fa-equals",function:"ShowModelItem('variablesManager')",text:"Displays the Variable manager where you can add, edit or delete the Uyamak variables.",shortcut:["Ctrl","Shift","V"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Create sub-system",icon:"far fa-object-group",function:"if (graph.isEnabled()) createSubModel();",text:"Creates Uyamak sub-system out of the selected Uyamak models",shortcut:["Ctrl","K"]},{value:"Dismantle sub-system",icon:"far fa-object-ungroup",function:"if (graph.isEnabled()) ungroupSubModel();",text:"Dismantles all the selected Uyamak sub-systems.",shortcut:["Ctrl","Shift","K"]}]},{value:"Edit",icon:"fas fa-pen",width:"300",text:"Menu gives options to manipulate the Uyamak system",shortcut:[],items:[{value:"Select all",icon:"far fa-check-square",function:"alert()",text:"",shortcut:["Ctrl","A"]},{value:"Select none",icon:"far fa-square",function:"alert()",text:"",shortcut:["Ctrl","Shift","A"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"",shortcut:[]},{value:"Cut",icon:"fas fa-cut",function:"alert()",text:"Copies the selected Uyamak models into the clipboard and deletes the original ones",shortcut:["Ctrl","X"]},{value:"Copy",icon:"fas fa-copy",function:"alert()",text:"Copies the selected Uyamak models into the clipboard",shortcut:["Ctrl","C"]},{value:"Paste",icon:"fas fa-paste",function:"alert()",text:"Pastes the clipboard Uyamak models to the present Uyamak system",shortcut:["Ctrl","V"]},{value:"Clone",icon:"fas fa-clone",function:"alert()",text:"Clones the selected Uyamak models",shortcut:["Ctrl","Shift","C"]},{value:"Delete",icon:"fas fa-trash-alt",function:"if (graph.isEnabled()) graph.removeCells();",text:"Delete the selected Uyamak models and Sub-systems",shortcut:["Delete"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Undo",icon:"fas fa-undo",function:"undoManager.undo();",text:"Undo the recent changes",shortcut:["Ctrl","Z"]},{value:"Redo",icon:"fas fa-redo",function:"undoManager.redo();",text:"Redo the recent changes",shortcut:["Ctrl","Shift","Z"]}]},{value:"View",icon:"fas fa-desktop",width:"390",text:"Menu gives different options to visualize the Uyamak system",shortcut:[],items:[{value:"Zoom in",icon:"fas fa-search-plus",function:"graph.zoomIn();",text:"Zooms in",shortcut:["Ctrl","+"]},{value:"Zoom out",icon:"fas fa-search-minus",function:"graph.zoomOut();",text:"Zooms out",shortcut:["Ctrl","-"]},{value:"Original size",icon:"fas fa-compress",function:"graph.zoomActual();",text:"Shows the original size. Some items may be out of view. You can see them by scrolling",shortcut:["Ctrl","0"]},{value:"Fit all",icon:"fas fa-expand",function:"graph.fit();",text:"Shows the complete Uyamak system",shortcut:["Ctrl","Shift","0"]},{value:"hl",icon:"fas fa-arrow-left",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Minimize  subsystem(s)",icon:"fas fa-window-minimize",function:"foldItems();",text:"Minimizes the selected subsystem. If nothing is selected, all the sub-systems will be minimized",shortcut:["Ctrl","M"]},{value:"Maximize  subsystem(s)",icon:"fas fa-window-maximize",function:"foldItems(false);",text:"Maximizes the selected subsystem. If nothing is selected, all the sub-systems will be maximized",shortcut:["Ctrl","Shift","M"]},{value:"hl",icon:"fas fa-window-maximize",function:"",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"Execution order",icon:"fas fa-sort-numeric-up-alt",function:"displayExecutionOrder()",text:"Shows simulation order and errors",shortcut:["Ctrl","R"]},{value:"hl",icon:"fas fa-window-maximize",function:"alert()",text:"Good to go when eveything is fine and also I want to say something more 1",shortcut:[]},{value:"System outline",icon:"fas fa-image",function:"alert()",text:"Shows outline of the Uyamak system in a small window on the top right corner",shortcut:["Ctrl","F"]},{value:"Show/Hide Grid lines",icon:"fas fa-border-all",function:"alert()",text:"Shows or hide the grid lines",shortcut:["Ctrl","G"]},{value:"Toggle snap to grid",icon:"fas fa-magnet",function:"alert()",text:"When snap to grid is activated, the blocks are moved at a steps instead of smoothly",shortcut:["Ctrl","T"]},{value:"Keyboard shortcuts",icon:"far fa-keyboard",function:"alert()",text:"Displays all the keyboard shortcuts",shortcut:["Ctrl","Y"]}]},{value:"Account",icon:"fas fa-user-alt",width:"315",text:"Menu gives options to manage the user account",shortcut:[],items:[{value:"Profile",icon:"fas fa-user-cog",function:"alert()",text:"Opens another page where you can manage your Uyamak profile",shortcut:[]},{value:"Extend licence period",icon:"fas fa-ticket-alt",function:"alert()",text:"Lets you extend the license period",shortcut:["Ctrl","B"]},{value:"Sign out",icon:"fas fa-door-open",function:"alert()",text:"Signing out",shortcut:["Ctrl","W"]}]},{value:"Help",icon:"far fa-life-ring",width:"275",text:"Menu gives access to documentation and help",shortcut:[],items:[{value:"Documentation",icon:"fas fa-book",function:"alert()",text:"Takes you to the documentation page",shortcut:["Ctrl","D"]},{value:"Context help",icon:"far fa-question-circle",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:["Ctrl","H"]},{value:"hl",icon:"fas fa-window-maximize",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:[]},{value:"About",icon:"fas fa-info",function:"alert()",text:"Shows the documentation for the selected Uyamak model",shortcut:[]}]}]},methods:{showInfo:function(t){document.getElementById("infoInStatus").innerText=t},hideInfo:function(){document.getElementById("infoInStatus").innerText=""}}})</script><script>var printingTheModel=new Vue({el:"#printingTheModel",data:{addStartPages:[],addEndPages:[],title:"Uyamak model",orientation:{value:"portrait",options:{portrait:"Portrait",landscape:"Landscape"}},pageSize:{value:"letter",options:{letter:"Letter",a4:"A4"}},fit:{force:!1,numberOfPages:1}},methods:{prepareMPDoc:function(){graph.setSelectionCell();var t=1;this.fit.numberOfPages=Math.round(this.fit.numberOfPages),this.fit.numberOfPages<1&&(this.fit.numberOfPages=1),this.fit.force&&(t=mxUtils.getScaleForPageCount(this.fit.numberOfPages,graph));var e=new mxPrintPreview(graph,t);e.title=this.title,"portrait"===this.orientation.value&&"letter"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_LETTER_PORTRAIT),"portrait"===this.orientation.value&&"a4"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_A4_PORTRAIT),"landscape"===this.orientation.value&&"letter"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE),"landscape"===this.orientation.value&&"a4"===this.pageSize.value&&(e.pageFormat=mxConstants.PAGE_FORMAT_A4_LANDSCAPE);var a=mxPrintPreview.prototype.writeHead;e.writePostfix=function(t){a.apply(this,arguments),t.writeln('<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>'),t.writeln("<script>"),t.writeln('MathJax.Hub.Config({showMathMenu:false,messageStyle:"none",menuSettings:{inTabOrder:false},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{preview:"none",inlineMath:[["$","$"],["\\\\(","\\\\)"]],displayMath:[["$$","$$"],["\\\\[","\\\\]"]]}});'),t.writeln("</script>")},e.open()}}})</script><script>var editBlocksApp=new Vue({updated:function(){MathJax.Hub.Queue(["Typeset",MathJax.Hub])},el:"#editorForParameters",data:{uyamakModel:null,cellModel:{model:!1,value:null},invalidInputs:[],parametersDisplay:null,updatingCounter:0},computed:{parametersValidationComments:function(){return this.uyamakModel&&this.uyamakModel.ValidateParams?this.uyamakModel.ValidateParams():"OK"},inputErrors:function(){return"<table class='w3-table'>"+this.invalidInputs.map(function(e,a,t){return"<tr><td>"+editBlocksApp.$data.uyamakModel.Parameters[e].Name+"</td></tr>"}).join("")+"</table>"}},methods:{rotate:function(e){var a=[];a[0]={in:"west",out:"east"},a[90]={in:"north",out:"south"},a[180]={in:"east",out:"west"},a[270]={in:"south",out:"north"},graph.setCellStyles("rotation",e,[graph.getSelectionCell()].concat(graph.getSelectionCell().children));for(var t=0;t<graph.getSelectionCell().children.length;t++)0<=graph.getSelectionCell().children[t].style.search("umk_input")&&graph.setCellStyles("portConstraint",a[e].in,[graph.getSelectionCell().children[t]]),0<=graph.getSelectionCell().children[t].style.search("umk_output")&&graph.setCellStyles("portConstraint",a[e].out,[graph.getSelectionCell().children[t]])},applyCellValue:function(){(graph.getSelectionCell().isEdge()||0<=graph.getSelectionCell().style.search("umk_group"))&&(graph.getSelectionCell().value=this.cellModel.value,graph.refresh(graph.getSelectionCell()))},saveModel:function(){eval("var tempModel = new umk_"+this.uyamakModel.bid+"(this.uyamakModel);"),graph.getSelectionCell().setValue(tempModel),setTermianls(graph.getSelectionCell(),"umk_input"),setTermianls(graph.getSelectionCell(),"umk_output"),graph.refresh(graph.getSelectionCell())},getBlockDetails:function(){try{return this.uyamakModel.Details()}catch(e){return console.log(e),"¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support."}},toggleParamDisplay:function(e){this.updatingCounter++,this.parametersDisplay[e]=!this.parametersDisplay[e]},validateParamCellEntry:function(e,a,t){var l,r,s=e;try{if("Integer"===this.uyamakModel.Parameters[e].Type||"Real"===this.uyamakModel.Parameters[e].Type||"Complex"===this.uyamakModel.Parameters[e].Type){r=getTheParameterValueFromEntry(this.uyamakModel.Parameters[e].Value);for(var i=0;i<r.length;i++)for(var n=0;n<r[0].length;n++){var o=r[0][0];switch(this.uyamakModel.Parameters[e].Type){case"Integer":l=math.isInteger(o);break;case"Real":l=math.isNumber(o);break;case"Complex":l=math.isComplex(o)||math.isNumber(o);break;case"Text":case"Color":case"Options":l=""!==o&&null!==o}}}else l=!0}catch(e){console.log(e),l=!1}var u=this.invalidInputs.indexOf(s);return l?0<=u&&this.invalidInputs.splice(u,1):u<0&&this.invalidInputs.push(s),l},valueDimensionsModify:function(e,a){var t;switch(this.uyamakModel.Parameters[a].Type){case"Integer":case"Real":case"Complex":t=0;break;case"Text":t="";break;case"Color":t="#000"}switch(e){case 0:this.uyamakModel.Parameters[a].Value.push(new Array(this.uyamakModel.Parameters[a].Value[0].length).fill(t));break;case 1:if(1<this.uyamakModel.Parameters[a].Value.length){for(var l=0;l<this.uyamakModel.Parameters[a].Value[0].length;l++)this.removeFromInvalidInputs(a,this.uyamakModel.Parameters[a].Value.length-1,l);this.uyamakModel.Parameters[a].Value.pop()}break;case 2:this.uyamakModel.Parameters[a].Value.map(function(e){return e.push(t)});break;case 3:if(1<this.uyamakModel.Parameters[a].Value[0].length){for(l=0;l<this.uyamakModel.Parameters[a].Value.length;l++)this.removeFromInvalidInputs(a,l,this.uyamakModel.Parameters[a].Value[0].length-1);this.uyamakModel.Parameters[a].Value.map(function(e){return e.pop()})}}this.updatingCounter++},removeFromInvalidInputs:function(e,a,t){var l=e+","+a+","+t;console.log(this.invalidInputs),console.log(l),this.invalidInputs=arrayRemove(this.invalidInputs,l)}}})</script><script>function selectionChanged(){graph.getSelectionCell()&&graph.getSelectionCell().isVertex()&&"object"==typeof graph.getSelectionCell().value?changeEditModelWithSelectedBlock():(editBlocksApp.$set(editBlocksApp.$data,"uyamakModel",null),graph.getSelectionCell()&&(graph.getSelectionCell().isEdge()||0<=graph.getSelectionCell().style.search("umk_group"))?editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!0,value:graph.getSelectionCell().value||""}):editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!1,value:null}))}function changeEditModelWithSelectedBlock(){eval("var editModel = new umk_"+graph.getSelectionCell().value.bid+"(graph.getSelectionCell().value);"),editBlocksApp.$set(editBlocksApp.$data,"uyamakModel",editModel),editBlocksApp.$set(editBlocksApp.$data,"parametersDisplay",{}),editBlocksApp.$set(editBlocksApp.$data,"cellModel",{model:!1,value:null}),editBlocksApp.$set(editBlocksApp.$data,"invalidInputs",[])}</script><script>function holdToFinishAProcess(title = null, description = null) {
       if (title)
         document.getElementById("waitForProcessToFinish").style.display =
         "block";
@@ -2342,7 +2554,7 @@
         ps: prototypesArr
       };
       //console.log(constructorStr);
-    }</script><script>function displayExecutionOrder(){var e=getAllTheModels();showExecutionOrderMessage(e,"Ignored: NC");for(var r=getExecutionOrder(),t=r.eo,n=0;n<t.length;n++)showExecutionOrderMessage([t[n]],"EO: "+(n+1));showExecutionOrderMessage(r.al,"Ignored: Possible AL","Ignored: Possible AL"),showExecutionOrderMessage(r.ne,"Ignored: Error"),showExecutionOrderMessage(r.pc,"Ignored: PC"),graph.refresh()}function getExecutionOrder(){for(var e=[],r=getAllConnectedModels(),t=r.fc,n=[],o=0;o<t.length;o++)(0===t[o].value.TerminalsIn.max||t[o].value.FirstInExecutionOrder)&&e.push(t[o]);for(o=0;o<e.length;o++)t=arrayRemove(t,e[o]);var a=e.slice();o=0;try{for(;0<t.length;){for(var l=getSourcesOfAModel(t[o]),c=!0,h=0;h<l.length;h++)a.indexOf(l[h])<0&&(c=!1);if(c?(a.push(t[o]),t=arrayRemove(t,t[o]),o=0):o++,0<t.length&&o>=t.length){for(h=0;h<a.length;h++)for(var s=getTargetsOfAModel(a[h]),g=0;g<s.length;g++)0<=t.indexOf(s[g])&&(n.push(s[g]),t=arrayRemove(t,s[g]));throw 0<n.length?{code:"UMKEOAL",message:"arthematic loop(s) found"}:{code:"UMKEOIC",message:"Incomplete/improper connections detected"}}}}catch(e){"UMKEOAL"===e.code?notyf.error(e.message):notyf.error("Unknown error in obtaining the execution order")}return{eo:a,ne:t,al:n,pc:r.pc}}function getSourcesOfAModel(e){for(var r=[],t=0;t<e.children.length;t++)if(0<=e.children[t].style.search("umk_input"))try{r.indexOf(e.children[t].edges[0].source.parent)<0&&r.push(e.children[t].edges[0].source.parent)}catch(e){}return r}function getTargetsOfAModel(e){for(var r=[],t=0;t<e.children.length;t++)if(0<=e.children[t].style.search("umk_output"))for(var n=0;n<e.children[t].edges.length;n++)try{r.indexOf(e.children[t].edges[n].target.parent)<0&&r.push(e.children[t].edges[n].target.parent)}catch(e){}return r}function getAllTheModels(){graph.getDefaultParent();var e=[];graph.getDefaultParent().children&&(e=e.concat(graph.getDefaultParent().children));for(var r=0;r<e.length;r++)e[r].children&&(e=e.concat(e[r].children));var t=[];for(r=0;r<e.length;r++)e[r].isVertex()&&"object"==typeof e[r].value&&t.push(e[r]);return t}function getAllConnectedModels(){graph.getDefaultParent();var e=[];graph.getDefaultParent().children&&(e=e.concat(graph.getDefaultParent().children));for(var r=0;r<e.length;r++)e[r].children&&(e=e.concat(e[r].children));var t=[];for(r=0;r<e.length;r++)e[r].isEdge()&&"object"==typeof e[r].source.parent.value&&"object"==typeof e[r].target.parent.value&&t.push(e[r]);var n=[];for(r=0;r<t.length;r++)n.indexOf(t[r].source.parent)<0&&n.push(t[r].source.parent),n.indexOf(t[r].target.parent)<0&&n.push(t[r].target.parent);var o=[],a=[];for(r=0;r<n.length;r++){for(var l=!0,c=0;c<n[r].children.length;c++)(0<=n[r].children[c].style.search("umk_input")||0<=n[r].children[c].style.search("umk_input"))&&(!n[r].children[c].edges||n[r].children[c].edges.length<1)&&(l=!1);l?o.push(n[r]):a.push(n[r])}return{ac:n,fc:o,pc:a}}function showExecutionOrderMessage(e,r,t){for(var n=0;n<e.length;n++){for(var o=0;o<e[n].children.length;o++)0<=e[n].children[o].style.search("umk_EO")&&e[n].children[o].setValue(r);graph.setCellWarning(e[n],t)}}function arrayRemove(e,r){return e.filter(function(e){return e!=r})}</script><script>function executeSimulation(){if("undefined"!=typeof Worker){if(!w)try{w=new Worker("js/simulate.js?date="+Date.now());for(var t=getExecutionOrder(),e=[],n=[],a=0;a<t.eo.length;a++){var i=[];getSourcesWithIndexes(t.eo[a]).forEach(function(e){i.push([t.eo.indexOf(e.model),e.index])}),n.push({m:t.eo[a].value,s:i}),"sinks"===t.eo[a].value.Category?(e[a]=!0,"display"===t.eo[a].value.Icon().output&&(updateOutputs[a]={data:t.eo[a],update:function(e){this.data.value.show=e,graph.refresh(this.data)}})):e[a]=!1}w.postMessage({em:n,oa:e,am:ALLFUNCTIONS,state:"start",endAt:-1,timeStep:.1,resetTime:!0}),w.onmessage=function(e){if(e.data.out)for(var t=0;t<updateOutputs.length;t++)updateOutputs[t]&&updateOutputs[t].update(makeATEXMatrix(e.data.out[t][0][0]));console.log(e.data)}}catch(e){console.log(e),stopSimulation()}}else notyf.error("Your browser doesn't support multi-threading.")}function stopSimulation(){w&&(w.terminate(),w=null)}function getSourcesWithIndexes(e){for(var t=[],n=0;n<e.children.length;n++)if(0<=e.children[n].style.search("umk_input")){var a=-1,i=e.children[n].edges[0].source.parent;for(j=0;j<i.children.length;j++)0<=i.children[j].style.search("umk_output")&&(a++,i.children[j].edges&&0<=i.children[j].edges.indexOf(e.children[n].edges[0])&&t.push({model:e.children[n].edges[0].source.parent,index:a}))}return t}function makeATEXMatrix(e){if(1===e.length&&1===e[0].length)return"$"+e[0][0]+"$";for(var t="$\\begin{bmatrix}\n",n=0;n<e.length;n++){for(var a=0;a<e[0].length;a++)0!==a&&(t+="\t&\t"),t+=math.round(math.Complex(e[n][a]),3);t+="\t\\\\\n"}return t+="\\end{bmatrix}$",t}function precision(e){if(!isFinite(e))return 0;for(var t=1,n=0;Math.round(e*t)/t!==e;)t*=10,n++;return n}var w,updateOutputs=[],updateDOMS={updateEvery:1e3,lastupdate:0,DOMFuncs:[]};updateDOMS.DOMFuncs.push(function(){document.getElementById("simulationTime").innerHTML=simulation.$data.t.toFixed(simulation.$data.timePrecision)}),updateDOMS.DOMFuncs.push(function(){document.getElementById("aSimulationTime").innerHTML=simulation.$data.aTs.toFixed(simulation.$data.timePrecision)})</script><script>function refreshAllOutputViews() {
+    }</script><script>function displayExecutionOrder(){var e=getAllTheModels();showExecutionOrderMessage(e,"Ignored: NC");for(var r=getExecutionOrder(),t=r.eo,n=0;n<t.length;n++)showExecutionOrderMessage([t[n]],"EO: "+(n+1));showExecutionOrderMessage(r.al,"Ignored: Possible AL","Ignored: Possible AL"),showExecutionOrderMessage(r.ne,"Ignored: Error"),showExecutionOrderMessage(r.pc,"Ignored: PC"),graph.refresh()}function getExecutionOrder(){for(var e=[],r=getAllConnectedModels(),t=r.fc,n=[],o=0;o<t.length;o++)(0===t[o].value.TerminalsIn.max||t[o].value.FirstInExecutionOrder)&&e.push(t[o]);for(o=0;o<e.length;o++)t=arrayRemove(t,e[o]);var a=e.slice();o=0;try{for(;0<t.length;){for(var l=getSourcesOfAModel(t[o]),c=!0,h=0;h<l.length;h++)a.indexOf(l[h])<0&&(c=!1);if(c?(a.push(t[o]),t=arrayRemove(t,t[o]),o=0):o++,0<t.length&&o>=t.length){for(h=0;h<a.length;h++)for(var s=getTargetsOfAModel(a[h]),g=0;g<s.length;g++)0<=t.indexOf(s[g])&&(n.push(s[g]),t=arrayRemove(t,s[g]));throw 0<n.length?{code:"UMKEOAL",message:"arthematic loop(s) found"}:{code:"UMKEOIC",message:"Incomplete/improper connections detected"}}}}catch(e){"UMKEOAL"===e.code?notyf.error(e.message):notyf.error("Unknown error in obtaining the execution order")}return{eo:a,ne:t,al:n,pc:r.pc}}function getSourcesOfAModel(e){for(var r=[],t=0;t<e.children.length;t++)if(0<=e.children[t].style.search("umk_input"))try{r.indexOf(e.children[t].edges[0].source.parent)<0&&r.push(e.children[t].edges[0].source.parent)}catch(e){}return r}function getTargetsOfAModel(e){for(var r=[],t=0;t<e.children.length;t++)if(0<=e.children[t].style.search("umk_output"))for(var n=0;n<e.children[t].edges.length;n++)try{r.indexOf(e.children[t].edges[n].target.parent)<0&&r.push(e.children[t].edges[n].target.parent)}catch(e){}return r}function getAllTheModels(){graph.getDefaultParent();var e=[];graph.getDefaultParent().children&&(e=e.concat(graph.getDefaultParent().children));for(var r=0;r<e.length;r++)e[r].children&&(e=e.concat(e[r].children));var t=[];for(r=0;r<e.length;r++)e[r].isVertex()&&"object"==typeof e[r].value&&t.push(e[r]);return t}function getAllConnectedModels(){graph.getDefaultParent();var e=[];graph.getDefaultParent().children&&(e=e.concat(graph.getDefaultParent().children));for(var r=0;r<e.length;r++)e[r].children&&(e=e.concat(e[r].children));var t=[];for(r=0;r<e.length;r++)e[r].isEdge()&&"object"==typeof e[r].source.parent.value&&"object"==typeof e[r].target.parent.value&&t.push(e[r]);var n=[];for(r=0;r<t.length;r++)n.indexOf(t[r].source.parent)<0&&n.push(t[r].source.parent),n.indexOf(t[r].target.parent)<0&&n.push(t[r].target.parent);var o=[],a=[];for(r=0;r<n.length;r++){for(var l=!0,c=0;c<n[r].children.length;c++)(0<=n[r].children[c].style.search("umk_input")||0<=n[r].children[c].style.search("umk_input"))&&(!n[r].children[c].edges||n[r].children[c].edges.length<1)&&(l=!1);l?o.push(n[r]):a.push(n[r])}return{ac:n,fc:o,pc:a}}function showExecutionOrderMessage(e,r,t){for(var n=0;n<e.length;n++){for(var o=0;o<e[n].children.length;o++)0<=e[n].children[o].style.search("umk_EO")&&e[n].children[o].setValue(r);graph.setCellWarning(e[n],t)}}function arrayRemove(e,r){return e.filter(function(e){return e!=r})}</script><script>function executeSimulation(){if("undefined"!=typeof Worker){if(!w)try{w=new Worker("js/simulate.js?date="+Date.now());for(var t=getExecutionOrder(),e=[],n=[],a=0;a<t.eo.length;a++){var i=[];getSourcesWithIndexes(t.eo[a]).forEach(function(e){i.push([t.eo.indexOf(e.model),e.index])}),n.push({m:t.eo[a].value,s:i}),"sinks"===t.eo[a].value.Category?(e[a]=!0,"display"===t.eo[a].value.Icon().output&&(updateOutputs[a]={data:t.eo[a],update:function(e){this.data.value.show=e,graph.refresh(this.data)}})):e[a]=!1}w.postMessage({em:n,oa:e,am:ALLFUNCTIONS,state:"start",endAt:-1,timeStep:.1,resetTime:!0}),w.onmessage=function(e){if(e.data.out)for(var t=0;t<updateOutputs.length;t++)updateOutputs[t]&&updateOutputs[t].update(makeATEXMatrix(e.data.out[t][0][0]));console.log(e.data)}}catch(e){console.log(e),stopSimulation()}}else notyf.error("Your browser doesn't support multi-threading.")}function stopSimulation(){w&&(w.terminate(),w=null)}function getSourcesWithIndexes(e){for(var t=[],n=0;n<e.children.length;n++)if(0<=e.children[n].style.search("umk_input")){var a=-1,i=e.children[n].edges[0].source.parent;for(j=0;j<i.children.length;j++)0<=i.children[j].style.search("umk_output")&&(a++,i.children[j].edges&&0<=i.children[j].edges.indexOf(e.children[n].edges[0])&&t.push({model:e.children[n].edges[0].source.parent,index:a}))}return t}function makeATEXMatrix(e){return 1===e.length&&1===e[0].length?"$"+e[0][0]+"$":"$"+math.parse(math.matrix(e).toString()).toTex(4)+"$"}function precision(e){if(!isFinite(e))return 0;for(var t=1,n=0;Math.round(e*t)/t!==e;)t*=10,n++;return n}var w,updateOutputs=[],updateDOMS={updateEvery:1e3,lastupdate:0,DOMFuncs:[]};updateDOMS.DOMFuncs.push(function(){document.getElementById("simulationTime").innerHTML=simulation.$data.t.toFixed(simulation.$data.timePrecision)}),updateDOMS.DOMFuncs.push(function(){document.getElementById("aSimulationTime").innerHTML=simulation.$data.aTs.toFixed(simulation.$data.timePrecision)})</script><script>function refreshAllOutputViews() {
       for (var i = 0; i < updateOutputs.length; i++) {
         if (!!updateOutputs[i]) updateOutputs[i].refresh();
       }
@@ -2356,6 +2568,7 @@
     };
     umk_displayItem.prototype.initialize = function () {};
     umk_displayItem.prototype.update = function (val) {
+      //console.log(val);
       if (
         Date.now() - this.lastUpdate >=
         this.data.value.Parameters[0].Value[0][0] * 1000
@@ -2375,19 +2588,20 @@
     umk_plotItem.prototype.initialize = function () {
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].resetPlotView(
+        listOfCharts[this.data.value.chartID].window.resetPlotView(
           this.data.value.Parameters
         );
       }
     };
     umk_plotItem.prototype.update = function (val) {
+      //console.log(val);
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].addRow({
+        listOfCharts[this.data.value.chartID].window.addRow({
           t: simulation.$data.t,
           val: val
         });
@@ -2396,16 +2610,16 @@
           this.data.value.Parameters["refreshRate"].Value[0][0] * 1000
         ) {
           this.lastUpdate = Date.now();
-          listOfCharts[this.data.value.chartID].refreshPlotView();
+          listOfCharts[this.data.value.chartID].window.refreshPlotView();
         }
       }
     };
     umk_plotItem.prototype.refresh = function () {
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].refreshPlotView();
+        listOfCharts[this.data.value.chartID].window.refreshPlotView();
       }
     };
 
@@ -2416,306 +2630,24 @@
         evt.clientX - document.getElementById("flex-1").clientWidth,
         evt.clientY - 25
       );
-      if (!graphCell.value.chartID) graphCell.value.chartID = Date.now();
+
+      graphCell.value.chartID = getAChartID(graphCell);
       if (
         !listOfCharts[graphCell.value.chartID] ||
-        listOfCharts[graphCell.value.chartID].closed
+        listOfCharts[graphCell.value.chartID].window.closed
       ) {
-        listOfCharts[graphCell.value.chartID] = window.open(
+        listOfCharts[graphCell.value.chartID] = {cell: graphCell, window: window.open(
           "chart?date=" + Date.now(),
           "",
           "menubar=0, height=400, width=700, titlebar=no"
-        );
-        listOfCharts[graphCell.value.chartID].inParams =
+        )};
+        listOfCharts[graphCell.value.chartID].window.inParams =
           graphCell.value.Parameters;
-      } else listOfCharts[graphCell.value.chartID].focus();
-    }</script><script>document.addEventListener("keydown", event => {
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "O"
-      ) {
-        alert();
+      } else listOfCharts[graphCell.value.chartID].window.focus();
+    }
+    function getAChartID(cell) {
+      for (let chartID in listOfCharts) {
+        if (listOfCharts[chartID].cell === cell) return chartID;
       }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "S"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "L"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "J"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "J"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "P"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "U"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "E"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "S"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "V"
-      ) {
-        ShowModelItem("variablesManager");
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "K"
-      ) {
-        if (graph.isEnabled()) createSubModel();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "K"
-      ) {
-        if (graph.isEnabled()) ungroupSubModel();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "A"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "A"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "X"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "C"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "V"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "C"
-      ) {
-        alert();
-      }
-      if (
-        !event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "DELETE"
-      ) {
-        if (graph.isEnabled()) graph.removeCells();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "Z"
-      ) {
-        undoManager.undo();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "Z"
-      ) {
-        undoManager.redo();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "+"
-      ) {
-        graph.zoomIn();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "-"
-      ) {
-        graph.zoomOut();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "0"
-      ) {
-        graph.zoomActual();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "0"
-      ) {
-        graph.fit();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "M"
-      ) {
-        foldItems();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        event.shiftKey &&
-        event.key.toUpperCase() === "M"
-      ) {
-        foldItems(false);
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "R"
-      ) {
-        displayExecutionOrder();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "F"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "G"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "T"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "Y"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "B"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "W"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "D"
-      ) {
-        alert();
-      }
-      if (
-        event.ctrlKey &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toUpperCase() === "H"
-      ) {
-        alert();
-      }
-    });</script></body></html>
+      return Date.now();
+    }</script></body></html>

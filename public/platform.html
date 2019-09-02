@@ -82,7 +82,7 @@
         graph.setMultigraph(false);
         graph.dropEnabled = true;
         graph.constrainChildren =
-          false; // this won't let the the blocks inside the groups to not change size when groups are resized
+        false; // this won't let the the blocks inside the groups to not change size when groups are resized
         //graph.connectableEdges = false;
         graph.setRecursiveResize(false);
         graph.setConnectableEdges(false);
@@ -145,7 +145,132 @@
         var rubberband = new mxRubberband(graph);
         var keyHandler = new mxKeyHandler(graph);
         //Code for KeyHandlers
-keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey(83, function (evt){alert()});keyHandler.bindControlKey(76, function (evt){alert()});keyHandler.bindControlKey(74, function (evt){alert()});keyHandler.bindControlShiftKey(74, function (evt){alert()});keyHandler.bindControlKey(80, function (evt){alert()});keyHandler.bindControlKey(85, function (evt){alert()});keyHandler.bindControlKey(69, function (evt){alert()});keyHandler.bindControlShiftKey(83, function (evt){alert()});keyHandler.bindControlShiftKey(86, function (evt){ShowModelItem('variablesManager')});keyHandler.bindControlKey(75, function (evt){if (graph.isEnabled()) createSubModel();});keyHandler.bindControlShiftKey(75, function (evt){if (graph.isEnabled()) ungroupSubModel();});keyHandler.bindControlKey(65, function (evt){alert()});keyHandler.bindControlShiftKey(65, function (evt){alert()});keyHandler.bindControlKey(88, function (evt){alert()});keyHandler.bindControlKey(67, function (evt){alert()});keyHandler.bindControlKey(86, function (evt){alert()});keyHandler.bindControlShiftKey(67, function (evt){alert()});keyHandler.bindKey(46, function (evt){if (graph.isEnabled()) graph.removeCells();});keyHandler.bindControlKey(90, function (evt){undoManager.undo();});keyHandler.bindControlShiftKey(90, function (evt){undoManager.redo();});keyHandler.bindControlKey(107, function (evt){graph.zoomIn();});keyHandler.bindControlKey(109, function (evt){graph.zoomOut();});keyHandler.bindControlKey(96, function (evt){graph.zoomActual();});keyHandler.bindControlShiftKey(96, function (evt){graph.fit();});keyHandler.bindControlKey(77, function (evt){foldItems();});keyHandler.bindControlShiftKey(77, function (evt){foldItems(false);});keyHandler.bindControlKey(82, function (evt){displayExecutionOrder()});keyHandler.bindControlKey(70, function (evt){alert()});keyHandler.bindControlKey(71, function (evt){alert()});keyHandler.bindControlKey(84, function (evt){alert()});keyHandler.bindControlKey(89, function (evt){alert()});keyHandler.bindControlKey(66, function (evt){alert()});keyHandler.bindControlKey(87, function (evt){alert()});keyHandler.bindControlKey(68, function (evt){alert()});keyHandler.bindControlKey(72, function (evt){alert()});keyHandler.bindKey(38, function (evt){moveGraph("up");});keyHandler.bindKey(40, function (evt){moveGraph("down");});keyHandler.bindKey(39, function (evt){moveGraph("right");});keyHandler.bindKey(37, function (evt){moveGraph("left");});keyHandler.bindControlKey(48, function (evt){graph.zoomActual();});keyHandler.bindControlShiftKey(48, function (evt){graph.fit();});
+        keyHandler.bindControlKey(79, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(83, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(76, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(74, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(74, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(80, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(85, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(69, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(83, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(86, function (evt) {
+          ShowModelItem("variablesManager");
+        });
+        keyHandler.bindControlKey(75, function (evt) {
+          if (graph.isEnabled()) createSubModel();
+        });
+        keyHandler.bindControlShiftKey(75, function (evt) {
+          if (graph.isEnabled()) ungroupSubModel();
+        });
+        keyHandler.bindControlKey(65, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(65, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(88, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(67, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(86, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlShiftKey(67, function (evt) {
+          alert();
+        });
+        keyHandler.bindKey(46, function (evt) {
+          if (graph.isEnabled()) graph.removeCells();
+        });
+        keyHandler.bindControlKey(90, function (evt) {
+          undoManager.undo();
+        });
+        keyHandler.bindControlShiftKey(90, function (evt) {
+          undoManager.redo();
+        });
+        keyHandler.bindControlKey(107, function (evt) {
+          graph.zoomIn();
+        });
+        keyHandler.bindControlKey(109, function (evt) {
+          graph.zoomOut();
+        });
+        keyHandler.bindControlKey(96, function (evt) {
+          graph.zoomActual();
+        });
+        keyHandler.bindControlShiftKey(96, function (evt) {
+          graph.fit();
+        });
+        keyHandler.bindControlKey(77, function (evt) {
+          foldItems();
+        });
+        keyHandler.bindControlShiftKey(77, function (evt) {
+          foldItems(false);
+        });
+        keyHandler.bindControlKey(82, function (evt) {
+          displayExecutionOrder();
+        });
+        keyHandler.bindControlKey(70, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(71, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(84, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(89, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(66, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(87, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(68, function (evt) {
+          alert();
+        });
+        keyHandler.bindControlKey(72, function (evt) {
+          alert();
+        });
+        keyHandler.bindKey(38, function (evt) {
+          moveGraph("up");
+        });
+        keyHandler.bindKey(40, function (evt) {
+          moveGraph("down");
+        });
+        keyHandler.bindKey(39, function (evt) {
+          moveGraph("right");
+        });
+        keyHandler.bindKey(37, function (evt) {
+          moveGraph("left");
+        });
+        keyHandler.bindControlKey(48, function (evt) {
+          graph.zoomActual();
+        });
+        keyHandler.bindControlShiftKey(48, function (evt) {
+          graph.fit();
+        });
 
         var parent = graph.getDefaultParent();
         outln = new mxOutline(graph, outline);
@@ -1459,7 +1584,7 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
         <div class="w3-dropdown-content w3-bar-block w3-card-4" v-bind:style="'width: ' + (topTool.width) + 'px;'">
           <template v-for="(tool, index) in topTool.items">
             <hr v-if="tool.value === 'hl'" style="margin:0; border-color: #ddd;" />
-            <div v-else class="w3-bar-item w3-button" style="padding: 0px; vertical-align: middle;"
+            <div v-else class="w3-bar-item w3-button" style="padding: 0px; vertical-align: middle;" v-bind:onclick = "(tool.function)"
               @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)">
               <div class="w3-display-container" style="height: 30px; margin: 0 4px;">
                 <div class="w3-display-left">
@@ -1849,20 +1974,24 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
       }).observe(modelContainer);
     }
 
-    function hideSidesOnMainSplit(isLeft = true) {
+    function hideSidesOnMainSplit(isLeft = true, isHide = true) {
       var presentSplit = mainSplit.getSizes();
-      if (isLeft) {
-        mainSplit.setSizes([
-          0,
-          presentSplit[0] + presentSplit[1],
-          presentSplit[2]
-        ]);
+      if (isHide) {
+        if (isLeft) {
+          mainSplit.setSizes([
+            0,
+            presentSplit[0] + presentSplit[1],
+            presentSplit[2]
+          ]);
+        } else {
+          mainSplit.setSizes([
+            presentSplit[0],
+            presentSplit[1] + presentSplit[2],
+            0
+          ]);
+        }
       } else {
-        mainSplit.setSizes([
-          presentSplit[0],
-          presentSplit[1] + presentSplit[2],
-          0
-        ]);
+        mainSplit.setSizes([15, 60,  25]);
       }
     }
     var mainSplit = Split(["#flex-1", "#flex-2", "#flex-3"], {
@@ -1938,7 +2067,8 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
                 </thead>
                 <tbody>
                   <template v-for="(varItem, index) in vars">
-                    <tr :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent @dragstart = "dragSource = index">
+                    <tr :id="'vManLVars_'+index" draggable="true" @drop="changeIndex" @dragover.prevent
+                      @dragstart="dragSource = index">
                       <td :key="'table_'+index+'_'+updatingCounter">
                         {{ genVarView(varItem) }}
                       </td>
@@ -2175,28 +2305,35 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
   </script>
   <script>
     convertAllTheParamsforAModel = function (model) {
-      var a =5;
+      var a = 5;
       var outModel = {};
       var outPrams = {};
-      modifyFor = ["Integer", "Real", "Complex"]
+      modifyFor = ["Integer", "Real", "Complex"];
       for (let param in model.Parameters) {
         var tempParam = {};
-        if (modifyFor.indexOf(model.Parameters[param].Type) >=0) {
-          tempParam["Value"] = getTheParameterValueFromEntry(model.Parameters[param].Value);
+        if (modifyFor.indexOf(model.Parameters[param].Type) >= 0) {
+          tempParam["Value"] = getTheParameterValueFromEntry(
+            model.Parameters[param].Value
+          );
         }
         //console.log(model.Parameters[param]);
-        outPrams[param] = Object.assign({}, model.Parameters[param], tempParam);
+        outPrams[param] = Object.assign({},
+          model.Parameters[param],
+          tempParam
+        );
       }
-      outModel = Object.assign({}, model, {Parameters: outPrams});
+      outModel = Object.assign({}, model, {
+        Parameters: outPrams
+      });
       return outModel;
-    }
+    };
     getTheParameterValueFromEntry = function (inVar) {
       var outArray = new Array();
       //console.log(outArray);
       for (var i = 0; i < inVar.length; i++) {
         var tempRows = new Array(new Array());
         for (var j = 0; j < inVar[0].length; j++) {
-          var evalValue
+          var evalValue;
           try {
             evalValue = parser.evaluate(inVar[i][j]);
           } catch (e) {
@@ -2209,7 +2346,7 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
           if (math.isMatrix(evalValue)) {
             var subMatrix;
             //if (evalValue)
-            subMatrix = getTheParameterValueFromEntry(evalValue.toArray());//evalValue.toArray();
+            subMatrix = getTheParameterValueFromEntry(evalValue.toArray()); //evalValue.toArray();
             //console.log(subMatrix);
             for (var k = 0; k < subMatrix.length; k++) {
               if (k === tempRows.length) tempRows.push(new Array());
@@ -2225,7 +2362,7 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
       }
       //console.log(outArray);
       return outArray;
-    }
+    };
   </script>
   <script>
     const parser = math.parser();
@@ -2318,7 +2455,7 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
           }
         ]
       },
-      mounted: function() {
+      mounted: function () {
         this.updateParser();
       },
       updated: function () {
@@ -2338,26 +2475,26 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
             }
           }
         },
-        changeIndex: function (e){
-          var startID = this.dragSource, endID;
+        changeIndex: function (e) {
+          var startID = this.dragSource,
+            endID;
           var trg = e.toElement;
-          for(var i=0; i<100; i++) {
-            if ((startID !== undefined) && (endID !== undefined)) {
+          for (var i = 0; i < 100; i++) {
+            if (startID !== undefined && endID !== undefined) {
               var tempRow = this.vars[endID];
               this.vars[endID] = this.vars[startID];
               this.vars[startID] = tempRow;
-              console.log (e);
+              console.log(e);
               this.updatingCounter++;
               break;
             }
             if (endID === undefined) {
-              if (trg.getAttribute('draggable') === "true") {
+              if (trg.getAttribute("draggable") === "true") {
                 endID = parseInt(trg.id.split("_")[1]);
               } else trg = trg.parentElement;
             }
           }
           tempGlobal = e;
-          
         },
         getUVarItem: function (uVarItem) {
           return (
@@ -2370,11 +2507,15 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
         },
         saveItem: function () {
           if (this.isValidVarID(this.editItem, this.selVar)) {
-            this.editItem
-            if (this.selVar < 0){
+            this.editItem;
+            if (this.selVar < 0) {
               this.vars.push(this.editItem);
-            } else  {
-              this.vars.splice(this.selVar, 1, JSON.parse2(JSON.stringify2(this.editItem)));
+            } else {
+              this.vars.splice(
+                this.selVar,
+                1,
+                JSON.parse2(JSON.stringify2(this.editItem))
+              );
             }
             this.selVar = NaN;
           }
@@ -2462,15 +2603,24 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
                 "$" +
                 math
                 .parse(
-                  item.id + "=" + math.parse(math.matrix(this.global.getTheParameterValueFromEntry(item.value))
-                    .toString())
+                  item.id +
+                  "=" +
+                  math.parse(
+                    math
+                    .matrix(
+                      this.global.getTheParameterValueFromEntry(
+                        item.value
+                      )
+                    )
+                    .toString()
+                  )
                 )
                 .toTex(4) +
                 "$"
               );
             } catch (e) {
               console.log(e);
-              return "Possible input error!"
+              return "Possible input error!";
             }
             /*
             var inArray = item.value;
@@ -2620,7 +2770,11 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
                 });
                 //Obtaining execution order
                 modelsForExec.push({
-                  m: JSON.parse2(JSON.stringify2(convertAllTheParamsforAModel(order.eo[i].value))),
+                  m: JSON.parse2(
+                    JSON.stringify2(
+                      convertAllTheParamsforAModel(order.eo[i].value)
+                    )
+                  ),
                   s: tempSources
                 });
                 //Obtaining inputs array
@@ -3220,9 +3374,8 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
             .map(function (currentValue, index, arr) {
               return (
                 "<tr><td>" +
-                editBlocksApp.$data.uyamakModel.Parameters[
-                  currentValue
-                ].Name +
+                editBlocksApp.$data.uyamakModel.Parameters[currentValue]
+                .Name +
                 /*" at [" +
                 (parseInt(currentValue.split(",")[1]) + 1) +
                 ", " +
@@ -3322,16 +3475,18 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
           var tempValidateItem = index;
           var outValue;
           var tempValue1;
-          
+
           try {
             if (
-              (this.uyamakModel.Parameters[index].Type === "Integer")
-              || (this.uyamakModel.Parameters[index].Type === "Real")
-              || (this.uyamakModel.Parameters[index].Type === "Complex")
+              this.uyamakModel.Parameters[index].Type === "Integer" ||
+              this.uyamakModel.Parameters[index].Type === "Real" ||
+              this.uyamakModel.Parameters[index].Type === "Complex"
             ) {
-              tempValue1 = getTheParameterValueFromEntry (this.uyamakModel.Parameters[index].Value);
-              for (var i=0; i<tempValue1.length; i++) {
-                for (var j=0; j<tempValue1[0].length; j++) {
+              tempValue1 = getTheParameterValueFromEntry(
+                this.uyamakModel.Parameters[index].Value
+              );
+              for (var i = 0; i < tempValue1.length; i++) {
+                for (var j = 0; j < tempValue1[0].length; j++) {
                   var tempValue = tempValue1[0][0];
                   switch (this.uyamakModel.Parameters[index].Type) {
                     case "Integer":
@@ -3342,13 +3497,12 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
                       break;
                     case "Complex":
                       outValue =
-                        math.isComplex(tempValue) ||
-                        math.isNumber(tempValue);
+                        math.isComplex(tempValue) || math.isNumber(tempValue);
                       break;
                     case "Text":
                     case "Color":
                     case "Options":
-                      outValue = ((tempValue !== "") && (tempValue !== null));
+                      outValue = tempValue !== "" && tempValue !== null;
                       break;
                   }
                 }
@@ -3356,7 +3510,7 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
             } else {
               outValue = true;
             }
-            console.log(tempValue1);
+            //console.log(tempValue1);
           } catch (e) {
             console.log(e);
             outValue = false;
@@ -4379,9 +4533,9 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
     umk_plotItem.prototype.initialize = function () {
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].resetPlotView(
+        listOfCharts[this.data.value.chartID].window.resetPlotView(
           this.data.value.Parameters
         );
       }
@@ -4390,9 +4544,9 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
       //console.log(val);
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].addRow({
+        listOfCharts[this.data.value.chartID].window.addRow({
           t: simulation.$data.t,
           val: val
         });
@@ -4401,16 +4555,16 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
           this.data.value.Parameters["refreshRate"].Value[0][0] * 1000
         ) {
           this.lastUpdate = Date.now();
-          listOfCharts[this.data.value.chartID].refreshPlotView();
+          listOfCharts[this.data.value.chartID].window.refreshPlotView();
         }
       }
     };
     umk_plotItem.prototype.refresh = function () {
       if (
         !!listOfCharts[this.data.value.chartID] &&
-        !listOfCharts[this.data.value.chartID].closed
+        !listOfCharts[this.data.value.chartID].window.closed
       ) {
-        listOfCharts[this.data.value.chartID].refreshPlotView();
+        listOfCharts[this.data.value.chartID].window.refreshPlotView();
       }
     };
 
@@ -4421,19 +4575,26 @@ keyHandler.bindControlKey(79, function (evt){alert()});keyHandler.bindControlKey
         evt.clientX - document.getElementById("flex-1").clientWidth,
         evt.clientY - 25
       );
-      if (!graphCell.value.chartID) graphCell.value.chartID = Date.now();
+
+      graphCell.value.chartID = getAChartID(graphCell);
       if (
         !listOfCharts[graphCell.value.chartID] ||
-        listOfCharts[graphCell.value.chartID].closed
+        listOfCharts[graphCell.value.chartID].window.closed
       ) {
-        listOfCharts[graphCell.value.chartID] = window.open(
+        listOfCharts[graphCell.value.chartID] = {cell: graphCell, window: window.open(
           "chart?date=" + Date.now(),
           "",
           "menubar=0, height=400, width=700, titlebar=no"
-        );
-        listOfCharts[graphCell.value.chartID].inParams =
+        )};
+        listOfCharts[graphCell.value.chartID].window.inParams =
           graphCell.value.Parameters;
-      } else listOfCharts[graphCell.value.chartID].focus();
+      } else listOfCharts[graphCell.value.chartID].window.focus();
+    }
+    function getAChartID(cell) {
+      for (let chartID in listOfCharts) {
+        if (listOfCharts[chartID].cell === cell) return chartID;
+      }
+      return Date.now();
     }
   </script>
 </body>
