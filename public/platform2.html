@@ -1571,18 +1571,6 @@
 </head>
 
 <body>
-  <div id="app">
-    <div id="waitForProcessToFinish" class="w3-modal w3-display-container" style="display: block; background-color: #ffffff">
-      <div class="w3-display-middle w3-center w3-padding" style="background-color: #e1e1e1ff;">
-        <p id="DOMWaitingHead" class="w3-large"></p>
-        <div class="fa-3x">
-          <i class="fas fa-spinner fa-pulse"></i>
-        </div>
-        <p id="DOMWaitingDesc" class="w3-large"></p>
-      </div>
-    </div>
-  </div>
-    
   <div id="mainToobar" class="w3-bar w3-blue-gray" style="padding: 0px 0px">
     <div class="w3-bar-item w3-button tool-item single-tool-item">
       <i class="fa-fw fas fa-home"></i>
@@ -2045,6 +2033,7 @@
       <span><i class="fas fa-ellipsis-v"></i></span>
     </div>
   </div>
+
   <div id="varEditor" class="w3-modal" style="padding: 0px; height:100%;overflow: hidden;background-color: #fffffff8">
     <div class="w3-modal-content w3-card-4" style="height: calc(100% - 50px); margin-top: 25px;">
       <header class="w3-teal" style=" height: 22px;">
@@ -2215,6 +2204,17 @@
     }
   </script>
 
+  <div id="app">
+    <div id="waitForProcessToFinish" class="w3-modal w3-display-container">
+      <div class="w3-display-middle w3-center w3-padding" style="background-color: #e1e1e180;">
+        <p id="DOMWaitingHead" class="w3-large"></p>
+        <div class="fa-3x">
+          <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+        <p id="DOMWaitingDesc" class="w3-large"></p>
+      </div>
+    </div>
+  </div>
   <div id="tempSideForAlwaysHidden" style="width:0px;"></div>
   <script>
     function selectTabItem(
