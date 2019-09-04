@@ -4,30 +4,24 @@
 <head>
   <meta charset="UTF-8" />
   <title>UYAMAK platform</title>
-  <link rel="manifest" href="manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--Third party libraries-->
   <script src="https://www.gstatic.com/firebasejs/5.5/firebase.js"></script>
   <script src="js/config.js"></script>
-  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-  <!--link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-w3schools.css"-->
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
-    integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="libs-others/w3css-v4/w3.css" />
+  <link rel="stylesheet" href="libs-others/w3css-v4/w3-theme-teal.css" />
+  <link rel="stylesheet" href="libs-others/fa/css/all.min.css" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.0.min.js"
-    integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.3/math.min.js"
-    integrity="sha256-TNeqgLgUT/0XFsg+YaC13WI8OyU2S9E5/5P79536W6A=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script src="libs-others/math-js/math.min.js"></script>
+  <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   <script src="/js/augmented-json-serialization-functions.js"></script>
-  <link rel="stylesheet" href="/css/notyf.min.css" />
-  <script src="/js/notyf.min.js"></script>
-  <script src="/js/vue.min.js"></script>
+  <link rel="stylesheet" href="libs-others/notyf/notyf.min.css" />
+  <script src="libs-others/notyf/notyf.min.js"></script>
+  <script src="libs-others/vue/vue.min.js"></script>
+
+  <!--Uyamak libraries-->
+  <script src="libs/umk-block-categories.js"></script>
   <script>
     Vue.prototype.global = window;
   </script>
@@ -38,7 +32,7 @@
   </script>
 
   <!-- Loads and initializes the library -->
-  <script type="text/javascript" src="/javascript/src/js/mxClient.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/js/mxClient.js"></script>
 
   <script type="text/javascript">
     var graph;
@@ -1567,18 +1561,18 @@
       cursor: col-resize;
     }
   </style>
-  <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+  <script src="libs-others/split-js/split.min.js"></script>
 </head>
 
 <body>
   <div id="app">
-    <div id="waitForProcessToFinish" class="w3-modal w3-display-container" style="display: block; background-color: #ffffff">
-      <div class="w3-display-middle w3-center w3-padding" style="background-color: #e1e1e1ff;">
-        <p id="DOMWaitingHead" class="w3-large"></p>
+    <div id="waitForProcessToFinish" class="w3-modal w3-display-container" style="padding-top: 00px; display: block; background-color: #ffffff">
+      <div class=" w3-center" style="margin: auto; width: 300px; background-color: #ffffff;">
+        <p id="DOMWaitingHead" class=""></p>
         <div class="fa-3x">
           <i class="fas fa-spinner fa-pulse"></i>
         </div>
-        <p id="DOMWaitingDesc" class="w3-large"></p>
+        <p id="DOMWaitingDesc" class="w3-small"></p>
       </div>
     </div>
   </div>
@@ -3331,7 +3325,7 @@
           preview.writePostfix = function (doc) {
             defaultWriteHead.apply(this, arguments);
             doc.writeln(
-              '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"><\/script>'
+              '<script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"><\/script>'
             );
             doc.writeln("<script>");
             doc.writeln(
