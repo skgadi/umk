@@ -56,75 +56,80 @@
 		// Default resources are included in grapheditor resources
 		mxLoadResources = false;
 	</script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Init.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/pako.min.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/base64.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/jscolor/jscolor.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/EditorUi.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Editor.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Sidebar.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Graph.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Format.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Shapes.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Actions.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Menus.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Toolbar.js"></script>
-	<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Dialogs.js"></script>
 </head>
 
 <body class="geEditor">
-    <script type="text/javascript">
-      // Extends EditorUi to update I/O action states based on availability of backend
-      (function()
+<div style="width: 200px; margin: auto; text-align: center;"><p>Loading ...</p><p>If it takes longer than 2 minutes. Check you internet connection and try again.</p></div>
+
+
+
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Init.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/pako.min.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/base64.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/jscolor/jscolor.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/EditorUi.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Editor.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Sidebar.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Graph.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Format.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Shapes.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Actions.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Menus.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Toolbar.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Dialogs.js"></script>
+
+  <script type="text/javascript">
+    // Extends EditorUi to update I/O action states based on availability of backend
+    (function()
+    {
+      var editorUiInit = EditorUi.prototype.init;
+      
+      EditorUi.prototype.init = function()
       {
-        var editorUiInit = EditorUi.prototype.init;
-        
-        EditorUi.prototype.init = function()
+        editorUiInit.apply(this, arguments);
+        this.actions.get('export').setEnabled(false);
+
+        // Updates action states which require a backend
+        if (!Editor.useLocalStorage)
         {
-          editorUiInit.apply(this, arguments);
-          this.actions.get('export').setEnabled(false);
-  
-          // Updates action states which require a backend
-          if (!Editor.useLocalStorage)
+          mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
           {
-            mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
-            {
-              var enabled = req.getStatus() != 404;
-              this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
-              this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
-              this.actions.get('save').setEnabled(enabled);
-              this.actions.get('saveAs').setEnabled(enabled);
-              this.actions.get('export').setEnabled(enabled);
-            }));
-          }
-        };
+            var enabled = req.getStatus() != 404;
+            this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
+            this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
+            this.actions.get('save').setEnabled(enabled);
+            this.actions.get('saveAs').setEnabled(enabled);
+            this.actions.get('export').setEnabled(enabled);
+          }));
+        }
+      };
+      
+      // Adds required resources (disables loading of fallback properties, this can only
+      // be used if we know that all keys are defined in the language specific file)
+      mxResources.loadDefaultBundle = false;
+      var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
+        mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+
+      // Fixes possible asynchronous requests
+      mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
+      {
+        // Adds bundle text to resources
+        mxResources.parse(xhr[0].getText());
         
-        // Adds required resources (disables loading of fallback properties, this can only
-        // be used if we know that all keys are defined in the language specific file)
-        mxResources.loadDefaultBundle = false;
-        var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
-          mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
-  
-        // Fixes possible asynchronous requests
-        mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
-        {
-          // Adds bundle text to resources
-          mxResources.parse(xhr[0].getText());
-          
-          // Configures the default graph theme
-          var themes = new Object();
-          themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
-          
-          // Main
-          new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
-        }, function()
-        {
-          document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
-        });
-      })();
-    </script>
+        // Configures the default graph theme
+        var themes = new Object();
+        themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
+        
+        // Main
+        new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+      }, function()
+      {
+        document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+      });
+    })();
+  </script>
 
   <!--Uyamak libraries-->
   <script src="libs/umk-block-categories.js"></script>
