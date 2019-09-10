@@ -16,16 +16,14 @@
   mxBasePath = "/libs-others/mxgraph-4.0.4/javascript/src";
   </script>
 
-  <!--Copied from grapheditor code-->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/styles/grapheditor.css">
   <link rel="stylesheet" href="libs-others/notyf/notyf.min.css" />
 
 
 	<script type="text/javascript">
 		
-		// Default resources are included in grapheditor resources
+		//Default resources are included in grapheditor resources
     mxLoadResources = false;
     
     window.urlParams = window.urlParams || {};
@@ -35,9 +33,9 @@
 <body>
 <div id="waitForProcessToFinish" class="w3-modal w3-display-container" style="padding-top: 00px; display: block; background-color: #ffffff">
   <div class=" w3-center" style="margin: auto; width: 300px; background-color: #ffffff;">
-    <p id="DOMWaitingHead" class="">Loading ...</p>
-    <p><i class="fas fa-spinner fa-pulse"></i></p>
-    <p id="DOMWaitingDesc" class="">If it takes longer than 2 minutes. Check you internet connection and try again.</p>
+    <div id="DOMWaitingHead" class="">Loading ...</div>
+    <div><i class="fas fa-cog fa-spin fa-2x"></i></div>
+    <div id="DOMWaitingDesc" class="">If it takes longer than 2 minutes. Check you internet connection and try again.</div>
   </div>
 </div>
 <div id="mainToobar" class="w3-bar w3-blue-gray" style="padding: 0px 0px">
@@ -461,9 +459,19 @@
 <script src="libs-others/vue/vue.min.js"></script>
 <script src="libs-others/split-js/split.min.js"></script>
 
-
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/pako.min.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/deflate/base64.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/jscolor/jscolor.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
 <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
 <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Graph.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Editor.js"></script>
+<!--script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/EditorUi.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Sidebar.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Actions.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Menus.js"></script>
+<script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/examples/grapheditor/www/js/Toolbar.js"></script-->
+
 
 <!--Uyamak libraries-->
 <script src="libs/umk-block-categories.js"></script>
@@ -480,7 +488,6 @@
       if (description)
         document.getElementById("DOMWaitingDesc").innerText = description;
     }
-    holdToFinishAProcess(false);
 </script>
 <script>
     //not universally used
@@ -532,7 +539,33 @@
       }
     });
   </script>
-  
+  <script>
+    //MathJax setup
+    MathJax.Hub.Config({
+      showMathMenu: false,
+      messageStyle: "none",
+      menuSettings: {
+        inTabOrder: false
+      },
+      extensions: ["tex2jax.js"],
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        preview: "none",
+        inlineMath: [
+          ["$", "$"],
+          ["\\(", "\\)"]
+        ],
+        displayMath: [
+          ["$$", "$$"],
+          ["\\[", "\\]"]
+        ]
+      }
+    });
+  </script>
+  <script>
+    var eui = new EditorUi(null, document.getElementById("modelContainer"), null);
+  </script>
+  <script>holdToFinishAProcess(false);</script>
 </body>
 
 </html>
