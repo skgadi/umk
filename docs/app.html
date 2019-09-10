@@ -553,6 +553,209 @@
     });
   </script>
   <script>holdToFinishAProcess(false);</script>
+  <script>
+  Graph = function (container) {
+    mxGraph.call(this, container);
+    this.setBackgroundColor = function (val) {
+      container.style.backgroundColor = val;
+    }
+    //Draws grid
+    this.plot = function () {
+      try {
+      this.gridColor = "#000000";
+      this.getGridColor = function() {
+        return this.gridColor;
+      }
+      this.setGridColor = function(val) {
+        this.gridColor = val;
+      }
+      this.canvas = document.createElement("canvas");
+      this.canvas.style.position = "absolute";
+      this.canvas.style.top = "0px";
+      this.canvas.style.left = "0px";
+      this.canvas.style.zIndex = -1;
+      container.appendChild(this.canvas);
+      
+      this.hideGrid = function () {
+        this.canvas.style.display = "none";
+      }
+      
+      this.showGrid = function () {
+        this.canvas.style.display = "block";
+      }
+      this.repaintGrid = function () {
+          var s = 0;
+          var gs = 0;
+          var tr = new mxPoint();
+          var w = 0;
+          var h = 0;
+          var ctx = this.canvas.getContext("2d");
+          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          if (ctx != null) {
+            console.log(ctx)
+                var bounds = graph.getGraphBounds();
+                var width = Math.max(
+                  bounds.x + bounds.width,
+                  graph.container.clientWidth
+                );
+                var height = Math.max(
+                  bounds.y + bounds.height,
+                  graph.container.clientHeight
+                );
+                var sizeChanged = width != w || height != h;
+                if (
+                  graph.view.scale != s ||
+                  graph.view.translate.x != tr.x ||
+                  graph.view.translate.y != tr.y ||
+                  gs != graph.gridSize ||
+                  sizeChanged
+                ) {
+                  tr = graph.view.translate.clone();
+                  s = graph.view.scale;
+                  gs = graph.gridSize;
+                  w = width;
+                  h = height;
+                  if (!sizeChanged) {
+                    ctx.clearRect(0, 0, w, h);
+                  } else {
+                    this.canvas.setAttribute("width", w);
+                    this.canvas.setAttribute("height", h);
+                  }
+                  var tx = tr.x * s;
+                  var ty = tr.y * s;
+                  var minStepping = graph.gridSize;
+                  var stepping = minStepping * s;
+                  if (stepping < minStepping) {
+                    var count =
+                      Math.round(Math.ceil(minStepping / stepping) / 2) * 2;
+                    stepping = count * stepping;
+                  }
+                  var xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  var xe = Math.ceil(w / stepping) * stepping;
+                  var ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  var ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  var ixs = Math.round(xs);
+                  var ixe = Math.round(xe);
+                  var iys = Math.round(ys);
+                  var iye = Math.round(ye);
+                  ctx.strokeStyle = "#808080";
+                  ctx.beginPath();
+                  ctx.lineWidth = 0.5;
+                  for (var x = xs; x <= xe; x += stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                  ctx.strokeStyle = "#808080";
+                  stepping = stepping * 5;
+                  xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  xe = Math.ceil(w / stepping) * stepping;
+                  ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  ixs = Math.round(xs);
+                  ixe = Math.round(xe);
+                  iys = Math.round(ys);
+                  iye = Math.round(ye);
+                  ctx.beginPath();
+                  ctx.lineWidth = 0.5;
+                  for (var x = xs; x <= xe; x += stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                  ctx.strokeStyle = "#404040";
+                  stepping = stepping * 2;
+                  xs = Math.floor((0 - tx) / stepping) * stepping + tx;
+                  xe = Math.ceil(w / stepping) * stepping;
+                  ys = Math.floor((0 - ty) / stepping) * stepping + ty;
+                  ye = Math.ceil(h / stepping) * stepping;
+                  xe += Math.ceil(stepping);
+                  ye += Math.ceil(stepping);
+                  ixs = Math.round(xs);
+                  ixe = Math.round(xe);
+                  iys = Math.round(ys);
+                  iye = Math.round(ye);
+                  ctx.beginPath();
+                  ctx.lineWidth = 0.5;
+                  for (var x = xs; x <= xe; x += stepping) {
+                    x = Math.round((x - tx) / stepping) * stepping + tx;
+                    var ix = Math.round(x);
+                    ctx.moveTo(ix + 0.5, iys + 0.5);
+                    ctx.lineTo(ix + 0.5, iye + 0.5);
+                  }
+                  for (var y = ys; y <= ye; y += stepping) {
+                    y = Math.round((y - ty) / stepping) * stepping + ty;
+                    var iy = Math.round(y);
+                    ctx.moveTo(ixs + 0.5, iy + 0.5);
+                    ctx.lineTo(ixe + 0.5, iy + 0.5);
+                  }
+                  ctx.closePath();
+                  ctx.stroke();
+                }
+              }
+            }
+          } catch (e) {
+            /* mxLog.show();
+             mxLog.debug("Using background image");*/
+             console.log(e);
+            container.style.backgroundImage = "url('/images/grid.gif')";
+          }
+          /*outln.mouseDown = function (sender, me) {
+            hideGrid();
+            return mxOutline.prototype.mouseDown.apply(this, arguments);
+          };
+          outln.mouseUp = function (sender, me) {
+            showGrid();
+            return mxOutline.prototype.mouseUp.apply(this, arguments);
+          };*/
+          /*outln.mouseMove = function(sender, me) {
+            repaintGrid();
+            console.log("sdf");
+            ctx.restore
+            return mxOutline.prototype.mouseMove.apply(this, arguments);
+          }*/
+
+          graph.umkGridsRefresh = function () {
+            repaintGrid();
+          };
+
+          var mxGraphViewValidateBackground =
+            mxGraphView.prototype.validateBackground;
+          mxGraphView.prototype.validateBackground = function () {
+            try {
+              repaintGrid();
+            } catch (e) {}
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            return mxGraphViewValidateBackground.apply(this, arguments);
+          };
+    }
+  }
+  mxUtils.extend(Graph, mxGraph);
+  graph = new Graph(document.getElementById("modelContainer"));
+  
+  </script>
 </body>
 
 </html>
