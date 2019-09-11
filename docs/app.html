@@ -102,49 +102,22 @@
           Hide
         </div>
       </div>
-      <div class="w3-row w3-gray" style="height:29px;">
-        <div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
-          onclick="selectTabItem(event,'folder')">
-          <i class="far fa-folder"></i>
+      <div class="w3-light-gray" style="width: 100%; overflow: hidden;">
+        <div style="float: left; width:22px; text-align: center;"><i class="fa-fw fas fa-search"></i></div>
+        <div style="float: left; width: calc(100% - 44px);">
+            <input type="text" class="w3-input w3-border-0 w3-light-gray" style="padding: 0px; outline:none;" placeholder="Search blocks">
         </div>
-        <div class="w3-col s6 w3-button tablink w3-large zeroPadding w3-border w3-border-black w3-blue"
-          onclick="selectTabItem(event,'library')" style="padding: 0;">
-          <i class="fas fa-puzzle-piece"></i>
-        </div>
-        <!--div class="w3-col s3 w3-button tablink w3-large zeroPadding w3-border w3-border-black"
-        onclick="selectTabItem(event,'printingTheModel')">
-        <i class="fas fa-print"></i>
-      </div-->
+        <div style="float: right; width:22px; text-align: center;"><i class="fa-fw fas fa-times"></i></div>
       </div>
-      <div style="overflow:auto; height:calc(100% - 51px);">
-        <div class="tabContent" style="display: block;" id="library">
-          <div id="blocksBar"></div>
-        </div>
-        <div class="tabContent" style="display: none;" id="printingTheModel">
-          <select class="w3-select w3-border w3-border-theme" name="option" v-model="pageSize.value">
-            <option v-for="(value, index) in pageSize.options" v-bind:value="index">{{ value }}</option>
-          </select>
-          <select class="w3-select w3-border w3-border-theme" name="option" v-model="orientation.value">
-            <option v-for="(value, index) in orientation.options" v-bind:value="index">{{ value }}</option>
-          </select>
-          <label>Page title</label>
-          <input class="w3-input w3-border w3-border-theme" v-model="title" type="text" />
-          <input id="forcePages" class="w3-check" type="checkbox" checked="checked" v-model="fit.force" />
-          <label for="forcePages">Scale the graph to fit in
-            <input class="w3-input w3-border-theme w3-border-0" type="number" min="1" step="1"
-              v-model.number="fit.numberOfPages" style="display:inline-flex; width:50px;" />
-            page(s).</label>
-          <div class="w3-block w3-theme w3-hover-red w3-button w3-large" @click="prepareMPDoc()">
-            <div class="w3-right">
-              <i class="fas fa-file-import"></i>
+      <div style="overflow-y: auto;height: calc(100% - 45px)">
+        <div id="allTheBlocks" >
+          <template v-for="(category, cIndex) in categories">
+            <div style="width: 100%; cursor: pointer; background-color: aqua;">
+              <div style="float: left; width: 22px; text-align: center;"><i class="fas fa-caret-right"></i></div>
+              <div style="float: left; width: calc(100% - 22px);">{{category.name}}</div>
             </div>
-            <div class="w3-left">
-              Prepare document
-            </div>
-          </div>
-        </div>
-        <div class="tabContent" style="display: none;" id="folder">
-          To do part of code
+          </template>
+
         </div>
       </div>
     </div>
@@ -463,6 +436,8 @@
   <!--Uyamak libraries-->
   <script src="libs/umk-block-categories.js"></script>
   <script src="libs/umk-block-summary.js"></script>
+
+  
   <script>
     function holdToFinishAProcess(title = null, description = null) {
       if (title)
@@ -476,13 +451,17 @@
         document.getElementById("DOMWaitingDesc").innerText = description;
     }
   </script>
+
+
   <script>
+
+    //Split related code
     //not universally used
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(function () {
-        if (typeof graph1 !== "undefined"){ graph1.grid.repaintGrid();
+        /*if (typeof graph1 !== "undefined"){ graph1.grid.repaintGrid();
         }
-        if (typeof outln !== "undefined") outln.refresh();
+        if (typeof outln !== "undefined") outln.refresh();*/
       }).observe(modelContainer);
     }
 
@@ -512,9 +491,9 @@
       sizes: [15, 60, 25],
       gutterSize: 4,
       onDrag: function () {
-        if (typeof graph1 !== "undefined"){ graph1.grid.repaintGrid();
+        /*if (typeof graph1 !== "undefined"){ graph1.grid.repaintGrid();
         }
-        if (typeof outln !== "undefined") outln.refresh();
+        if (typeof outln !== "undefined") outln.refresh();*/
       },
       elementStyle: function (dimension, size, gutterSize) {
         return {
@@ -552,9 +531,6 @@
     });
   </script>
   <script>
-    holdToFinishAProcess(false);
-  </script>
-  <script>
     Graph = function (container) {
       mxGraph.call(this, container);
       this.setBackgroundColor = function (val) {
@@ -565,7 +541,7 @@
       Canvas.style.position = "absolute";
       Canvas.style.top = "0px";
       Canvas.style.left = "0px";
-      Canvas.style.zIndex = -1;
+      //Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
       container.appendChild(Canvas);
       this.grid = {
         gridColor: "#000000",
@@ -599,7 +575,6 @@
           var ctx = this.canvas.getContext("2d");
           ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           if (ctx != null) {
-            console.log(ctx);
             var bounds = graph.getGraphBounds();
             var width = Math.max(
               bounds.x + bounds.width,
@@ -727,19 +702,33 @@
           }
         }
       };
-
-      var mxGraphViewValidateBackground =
-        mxGraphView.prototype.validateBackground;
-      mxGraphView.prototype.validateBackground = function () {
-        try {
-          this.grid.repaintGrid();
-        } catch (e) {}
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        return mxGraphViewValidateBackground.apply(this, arguments);
-      };
     };
     mxUtils.extend(Graph, mxGraph);
     graph1 = new Graph(document.getElementById("modelContainer"));
+    var mxGraphViewValidateBackground =
+        mxGraphView.prototype.validateBackground;
+      mxGraphView.prototype.validateBackground = function () {
+        try {
+          graph1.grid.repaintGrid();
+        } catch (e) {console.log(e)}
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        return mxGraphViewValidateBackground.apply(this, arguments);
+      };
+  </script>
+
+  <script>
+//Code for handling blocks display
+var allTheBlocks = new Vue ({
+  el: "#allTheBlocks",
+  data: {
+    categories: umkBlockCategories
+  }
+});
+  </script>
+
+
+  <script>
+    holdToFinishAProcess(false);
   </script>
 </body>
 
