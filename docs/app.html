@@ -112,9 +112,21 @@
       <div style="overflow-y: auto;height: calc(100% - 45px)">
         <div id="allTheBlocks" >
           <template v-for="(category, cIndex) in categories">
-            <div style="width: 100%; cursor: pointer; background-color: aqua;">
-              <div style="float: left; width: 22px; text-align: center;"><i class="fas fa-caret-right"></i></div>
-              <div style="float: left; width: calc(100% - 22px);">{{category.name}}</div>
+            <div :key= "updateCounter+'_'+category.name+'_'+dispCategories[cIndex]" class="w3-theme w3-hover-blue w3-border w3-border-blue" style="width: 100%; cursor: pointer; padding: 0;" @click="toggleCategoryDisplay(cIndex)">
+              <span>
+                <i v-if="dispCategories[cIndex]" class="fa-fw fas fa-caret-down"></i>
+                <i v-if="!dispCategories[cIndex]" class="fa-fw fas fa-caret-right"></i>
+              </span>
+              <span>{{category.name}}</span>
+            </div>
+            <div :key= "updateCounter+'_'+category.name+'_blocksCont'" v-if="dispCategories[cIndex]" class="w3-border w3-border-theme">
+              Hello<br/>
+              Hello<br/>
+              Hello<br/>
+              Hello<br/>
+              Hello<br/>
+              Hello<br/>
+              Hello<br/>
             </div>
           </template>
 
@@ -434,8 +446,10 @@
   <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
 
   <!--Uyamak libraries-->
-  <script src="libs/umk-block-categories.js"></script>
-  <script src="libs/umk-block-summary.js"></script>
+  <script src="libs/umk-block-categories.js?v=0.1"></script>
+  <script src="libs/umk-block-summary.js?v=0.2"></script>
+  <script>
+  </script>
 
   
   <script>
@@ -721,7 +735,25 @@
 var allTheBlocks = new Vue ({
   el: "#allTheBlocks",
   data: {
-    categories: umkBlockCategories
+    categories: umkBlockCategories,
+    bSummary: umkBlockSummary,
+    dispCategories: new Array(umkBlockCategories.length).fill(false),
+    updateCounter: 0
+  },
+  mounted: function () {
+    this.dispCategories[0] = true;
+    this.updateCounter++;
+  },
+  methods: {
+    toggleCategoryDisplay: function (idx) {
+      this.dispCategories[idx] = !this.dispCategories[idx];
+      this.updateCounter++;
+    }
+  },
+  computed: {
+    blocksPerCategory: function() {
+      return this.bSummary;
+    }
   }
 });
   </script>
