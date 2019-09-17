@@ -106,17 +106,22 @@
         <div class="w3-light-gray" style="width: 100%; overflow: hidden; height: 23px;">
           <div class="w3-hover-text-theme" onclick="document.getElementById('blockSearchBar').focus();document.getElementById('blockSearchBar').select()" style="float: left; width:22px; text-align: center;"><i class="fa-fw fas fa-search"></i></div>
           <div style="float: left; width: calc(100% - 44px);">
-              <input id="blockSearchBar" v-model="searchText" type="text" class="w3-input w3-border-0 w3-light-gray" style="padding: 0px; outline:none;" placeholder="Search blocks">
+              <input id="blockSearchBar" v-model="searchText" type="text" class="w3-input w3-border-0 w3-light-gray" style="padding: 0px; outline:none;" placeholder="Search blocks" @keydown.esc="searchText=''">
           </div>
-          <div class="w3-hover-text-red" @click="searchText=''" style="float: right; width:22px; text-align: center;"><i class="fa-fw fas fa-times"></i></div>
+          <div v-if="!!searchText" class="w3-hover-text-red" @click="searchText=''" style="float: right; width:22px; text-align: center;"><i class="fa-fw fas fa-times"></i></div>
         </div>
         <div style="overflow-y: auto; height: calc(100% - 23px)">
           <div v-if="!!searchText">
             <div class="w3-theme-d1 w3-hover-theme w3-border w3-border-theme" style="width: 100%; padding: 0;"><span>Search results</span></div>
-            <div class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
-              <template v-for="(bDetails, bIndex) in searchResults">
-                  <img :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_color="bDetails.bg">
-              </template>
+            <div v-if="searchResults.length>0">
+              <div class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
+                <template v-for="(bDetails, bIndex) in searchResults">
+                    <img :key="'block_'+bDetails.id+updateCounter" :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_color="bDetails.bg">
+                </template>
+              </div>
+            </div>
+            <div v-else class="w3-pale-yellow w3-border w3-border-theme">
+              No matches found.
             </div>
           </div>
           <template v-for="(category, cIndex) in categories">
@@ -788,11 +793,22 @@ var allTheBlocks = new Vue ({
         encodeURIComponent( iconText.icon1 + block.bg + iconText.icon2 + block.fg + iconText.icon3 + block.icon + iconText.icon4));
     }
   },
+  watch: {
+    searchText: function () {
+      this.updateCounter++;
+    }
+  },
   updated: function (){
+    var tempDOMSToRemove = document.getElementsByClassName("tempAllLibraryBlocks");
+    while(tempDOMSToRemove[0]) {
+      console.log(tempDOMSToRemove[0]);
+      tempDOMSToRemove[0].parentNode.removeChild(tempDOMSToRemove[0]);
+    }
     var AllLibraryBlocks = document.getElementsByClassName("libraryBlock");
-    var dragElt = document.createElement("div");
     for (var i=0; i<AllLibraryBlocks.length; i++) {
       var img = AllLibraryBlocks[i];
+      var dragElt = document.createElement("div");
+      dragElt.classList.add("tempAllLibraryBlocks");
       dragElt.style.border = "dashed "+ img.getAttribute("umk_color") +" 1px";
       dragElt.style.width = img.getAttribute("umk_width") + "px";
       dragElt.style.height = img.getAttribute("umk_height") + "px";
@@ -802,7 +818,9 @@ var allTheBlocks = new Vue ({
   },
   computed: {
     searchResults: function () {
-      return this.bSummary;
+      return this.bSummary.filter(function(item) {
+        return ((item.name.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0) || (item.keywords.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0) || (item.description.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0));
+      });
     }
   }
 });
