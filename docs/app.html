@@ -162,10 +162,12 @@
       <div style="height: calc(100% - 22px); overflow-y: auto;">
         <div class="editorDivs" id="editorForGraph" style="display: block;">
           <div class="w3-xlarge">Grid</div>
+          <label>Background color</label>
+          <input class="w3-input" style="min-height: 50px" type="color" v-model="graph.container.style.backgroundColor">
           <label>Minimum grid size</label>
-          <input class="w3-input w3-border" v-model.number="mainGraph.gridSize" min="0" type="number">
+          <input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.gridSize" min="0" type="number">
           <div class="w3-responsive">
-            <table class="w3-table-all">
+            <table class="w3-table w3-bordered">
               <thead>
                 <tr class="w3-light-grey">
                   <th>Size</th>
@@ -176,31 +178,37 @@
                 </tr>
               </thead>
               <tr>
-                <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px" :value= "graph.gridSize * 5" disabled></td>
-                <td style="padding: 0;"><input class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.megaStroke.show"></td>
-                <td style="padding: 0;"><input class="w3-input w3-border-0"
+                <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize" disabled></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.minorStroke.show"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
+                  style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
+                  type="color"
+                  v-model="graph.grid.minorStroke.color"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.minorStroke.thickness" type="number" min="0" max="10"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.minorStroke.pattern"></td>
+              </tr>
+  
+              <tr>
+                <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize * 5" disabled></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.majorStroke.show"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
+                  style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
+                  type="color"
+                  v-model="graph.grid.majorStroke.color"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.majorStroke.thickness" type="number" min="0" max="10"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.majorStroke.pattern"></td>
+              </tr>
+              <tr>
+              <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize * 10" disabled></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.megaStroke.show"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
                   style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
                   type="color"
                   v-model="graph.grid.megaStroke.color"></td>
-                <td style="padding: 0;"><input class="w3-input w3-border" v-model="graph.grid.megaStroke.thickness" type="number" min="0" max="10"></td>
-                <td style="padding: 0;"><input class="w3-input w3-border" v-model="graph.grid.megaStroke.pattern"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.megaStroke.thickness" type="number" min="0" max="10"></td>
+                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.megaStroke.pattern"></td>
               </tr>
             </table>
-          </div>
-          <div class="w3-row">
-            <div class="w3-col s2">
-
-              {{graph.grid.minorStroke.show}}
-            </div>
-            <div class="w3-col s4">
-              a
-            </div>
-            <div class="w3-col s3">
-              a
-            </div>
-            <div class="w3-col s3">
-              a
-            </div>           
           </div>
         </div>
         <div class="editorDivs" id="editorForBlock" style="display: none;">b</div>
@@ -351,25 +359,24 @@
       //Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
       container.appendChild(Canvas);
       this.grid = {
-        gridColor: "#000000",
         canvas: Canvas,
         sGraph: this,
         minorStroke: {
-          color: "#f08080",
+          color: "#808080",
           thickness: 0.5,
-          pattern: [10,2],
+          pattern: 1,
           show: true
         },
         majorStroke: {
-          color: "#f08080",
+          color: "#808080",
           thickness: 1,
-          pattern: [5,2],
+          pattern: 1,
           show: true
         },
         megaStroke: {
-          color: "#f08080",
+          color: "#808080",
           thickness: 2,
-          pattern: [7,2],
+          pattern: 1,
           show: true
         },
         repaintGrid: function () {
@@ -433,7 +440,9 @@
               if (this.minorStroke.show) {
                 ctx.strokeStyle = this.minorStroke.color;
                 ctx.beginPath();
-                ctx.setLineDash(this.minorStroke.pattern);
+                try{
+                ctx.setLineDash(JSON.parse("["+this.minorStroke.pattern+"]"));
+                } catch(e){}
                 ctx.lineWidth = this.minorStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -451,9 +460,9 @@
                 ctx.stroke();
               }
 
+              stepping = stepping * 5;
               if (this.majorStroke.show) {
                 ctx.strokeStyle = this.majorStroke.color;
-                stepping = stepping * 5;
                 xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                 xe = Math.ceil(w / stepping) * stepping;
                 ys = Math.floor((0 - ty) / stepping) * stepping + ty;
@@ -465,7 +474,9 @@
                 iys = Math.round(ys);
                 iye = Math.round(ye);
                 ctx.beginPath();
-                ctx.setLineDash(this.majorStroke.pattern);
+                try{
+                ctx.setLineDash(JSON.parse("["+this.majorStroke.pattern+"]"));
+                } catch(e){}
                 ctx.lineWidth = this.majorStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -484,9 +495,9 @@
               }
 
 
+              stepping = stepping * 2;
               if (this.megaStroke.show) {
                 ctx.strokeStyle = this.megaStroke.color;
-                stepping = stepping * 2;
                 xs = Math.floor((0 - tx) / stepping) * stepping + tx;
                 xe = Math.ceil(w / stepping) * stepping;
                 ys = Math.floor((0 - ty) / stepping) * stepping + ty;
@@ -498,7 +509,9 @@
                 iys = Math.round(ys);
                 iye = Math.round(ye);
                 ctx.beginPath();
-                ctx.setLineDash(this.megaStroke.pattern);
+                try{
+                ctx.setLineDash(JSON.parse("["+this.megaStroke.pattern+"]"));
+                } catch(e){}
                 ctx.lineWidth = this.megaStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -526,12 +539,11 @@
         mxGraphView.prototype.validateBackground;
       mxGraphView.prototype.validateBackground = function () {
         try {
-          if (mainGraph.showGrid) mainGraph.grid.repaintGrid();
+          mainGraph.grid.repaintGrid();
         } catch (e) {console.log(e)}
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         return mxGraphViewValidateBackground.apply(this, arguments);
       };
-      mainGraph.refresh();
       mainGraph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
         selectionChanged();
       });
@@ -632,9 +644,12 @@ var allTheBlocks = new Vue ({
     data: {
       graph: mainGraph
     },
-    watch: {
-      showGrid: function (val) {
-        mainGraph.showGrid = this.showGrid;
+    mounted: function () {
+      this.graph.container.style.backgroundColor = "#ee0000";
+      this.refreshGraph();
+    },
+    methods: {
+      refreshGraph: function () {
         mainGraph.refresh();
       }
     }
