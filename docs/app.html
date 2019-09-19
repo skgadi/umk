@@ -276,33 +276,33 @@
           <label>Navigate</label>
           <div class="w3-row">
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-minus"></i></button>
+              <button @click="mainSystem.graph.zoomOut()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-minus"></i></button>
             </div>
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-up"></i></button>
+              <button @click="mainSystem.graph.navigate.move('up')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-up"></i></button>
             </div>
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-plus"></i></button>
-            </div>
-
-            <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-left"></i></button>
-            </div>
-            <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-arrows-alt"></i></button>
-            </div>
-            <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-right"></i></button>
+              <button @click="mainSystem.graph.zoomIn()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-plus"></i></button>
             </div>
 
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-expand"></i></button>
+              <button @click="mainSystem.graph.navigate.move('left')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-left"></i></button>
             </div>
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-down"></i></button>
+              <button @click="mainSystem.graph.navigate.move('0')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-arrows-alt"></i></button>
             </div>
             <div class="w3-col s4">
-              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-compress"></i></button>
+              <button @click="mainSystem.graph.navigate.move('right')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-right"></i></button>
+            </div>
+
+            <div class="w3-col s4">
+              <button @click="mainSystem.graph.fit()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-expand"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button @click="mainSystem.graph.navigate.move('down')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-down"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button @click="mainSystem.graph.zoomActual()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-compress"></i></button>
             </div>
   
 
@@ -352,8 +352,8 @@
   <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
 
   <!--Uyamak libraries-->
-  <script src="libs/umk-block-categories.js?v=0.1"></script>
-  <script src="libs/umk-block-summary.js?v=0.2"></script>
+  <script src="library.min.js?v=0.1"></script>
+  <script src="js.min.js?v=0.3"></script>
   <script></script>
 
   <script>
@@ -368,60 +368,6 @@
       if (description)
         document.getElementById("DOMWaitingDesc").innerText = description;
     }
-  </script>
-
-  <script>
-    //Split related code
-    //not universally used
-    if (typeof ResizeObserver !== "undefined") {
-      new ResizeObserver(function () {
-        /*if (typeof mainGraph !== "undefined"){ mainGraph.grid.repaintGrid();
-        }
-        if (typeof outln !== "undefined") outln.refresh();*/
-      }).observe(modelContainer);
-    }
-
-    function hideSidesOnMainSplit(isLeft = true, isHide = true) {
-      var presentSplit = mainSplit.getSizes();
-      if (isHide) {
-        if (isLeft) {
-          mainSplit.setSizes([
-            0,
-            presentSplit[0] + presentSplit[1],
-            presentSplit[2]
-          ]);
-        } else {
-          mainSplit.setSizes([
-            presentSplit[0],
-            presentSplit[1] + presentSplit[2],
-            0
-          ]);
-        }
-      } else {
-        mainSplit.setSizes([15, 60, 25]);
-      }
-    }
-    var mainSplit = Split(["#flex-1", "#flex-2", "#flex-3"], {
-      minSize: 0,
-      snapOffset: 200,
-      sizes: [15, 60, 25],
-      gutterSize: 4,
-      onDrag: function () {
-        /*if (typeof mainGraph !== "undefined"){ mainGraph.grid.repaintGrid();
-        }
-        if (typeof outln !== "undefined") outln.refresh();*/
-      },
-      elementStyle: function (dimension, size, gutterSize) {
-        return {
-          "flex-basis": "calc(" + size + "% - " + gutterSize + "px)"
-        };
-      },
-      gutterStyle: function (dimension, gutterSize) {
-        return {
-          "flex-basis": gutterSize + "px"
-        };
-      }
-    });
   </script>
   <script>
     //MathJax setup
@@ -446,221 +392,6 @@
       }
     });
   </script>
-  <script>
-    Graph = function (container) {
-      this.guidesEnabled = true;
-      this.backgroundColor = "#f8f8f8";
-      mxGraph.call(this, container);
-      this.setBackgroundColor = function (val) {
-        if (!val) val = this.backgroundColor;
-        container.style.backgroundColor = val;
-      };
-      //Draws grid
-      var Canvas = document.createElement("canvas");
-      Canvas.style.position = "absolute";
-      Canvas.style.top = "0px";
-      Canvas.style.left = "0px";
-      //Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
-      container.appendChild(Canvas);
-      this.grid = {
-        canvas: Canvas,
-        sGraph: this,
-        minorStroke: {
-          color: "#808080",
-          thickness: 0.5,
-          pattern: "1, 1",
-          show: true
-        },
-        majorStroke: {
-          color: "#808080",
-          thickness: 1,
-          pattern: "2, 2",
-          show: true
-        },
-        megaStroke: {
-          color: "#808080",
-          thickness: 2,
-          pattern: "20, 5, 5, 5",
-          show: false
-        },
-        repaintGrid: function () {
-          var graph = this.sGraph;
-          var s = 0;
-          var gs = 0;
-          var tr = new mxPoint();
-          var w = 0;
-          var h = 0;
-          var ctx = this.canvas.getContext("2d");
-          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          if (ctx != null) {
-            var bounds = graph.getGraphBounds();
-            var width = Math.max(
-              bounds.x + bounds.width,
-              graph.container.clientWidth
-            );
-            var height = Math.max(
-              bounds.y + bounds.height,
-              graph.container.clientHeight
-            );
-            var sizeChanged = width != w || height != h;
-            if (
-              graph.view.scale != s ||
-              graph.view.translate.x != tr.x ||
-              graph.view.translate.y != tr.y ||
-              gs != graph.gridSize ||
-              sizeChanged
-            ) {
-              tr = graph.view.translate.clone();
-              s = graph.view.scale;
-              gs = graph.gridSize;
-              w = width;
-              h = height;
-              if (!sizeChanged) {
-                ctx.clearRect(0, 0, w, h);
-              } else {
-                this.canvas.setAttribute("width", w);
-                this.canvas.setAttribute("height", h);
-              }
-              var tx = tr.x * s;
-              var ty = tr.y * s;
-              var minStepping = graph.gridSize;
-              var stepping = minStepping * s;
-              if (stepping < minStepping) {
-                var count =
-                  Math.round(Math.ceil(minStepping / stepping) / 2) * 2;
-                stepping = count * stepping;
-              }
-              var xs = Math.floor((0 - tx) / stepping) * stepping + tx;
-              var xe = Math.ceil(w / stepping) * stepping;
-              var ys = Math.floor((0 - ty) / stepping) * stepping + ty;
-              var ye = Math.ceil(h / stepping) * stepping;
-              xe += Math.ceil(stepping);
-              ye += Math.ceil(stepping);
-              var ixs = Math.round(xs);
-              var ixe = Math.round(xe);
-              var iys = Math.round(ys);
-              var iye = Math.round(ye);
-
-              if (this.minorStroke.show) {
-                ctx.strokeStyle = this.minorStroke.color;
-                ctx.beginPath();
-                try {
-                  ctx.setLineDash(
-                    JSON.parse("[" + this.minorStroke.pattern + "]")
-                  );
-                } catch (e) {}
-                ctx.lineWidth = this.minorStroke.thickness;
-                for (var x = xs; x <= xe; x += stepping) {
-                  x = Math.round((x - tx) / stepping) * stepping + tx;
-                  var ix = Math.round(x);
-                  ctx.moveTo(ix + 0.5, iys + 0.5);
-                  ctx.lineTo(ix + 0.5, iye + 0.5);
-                }
-                for (var y = ys; y <= ye; y += stepping) {
-                  y = Math.round((y - ty) / stepping) * stepping + ty;
-                  var iy = Math.round(y);
-                  ctx.moveTo(ixs + 0.5, iy + 0.5);
-                  ctx.lineTo(ixe + 0.5, iy + 0.5);
-                }
-                ctx.closePath();
-                ctx.stroke();
-              }
-
-              stepping = stepping * 5;
-              if (this.majorStroke.show) {
-                ctx.strokeStyle = this.majorStroke.color;
-                xs = Math.floor((0 - tx) / stepping) * stepping + tx;
-                xe = Math.ceil(w / stepping) * stepping;
-                ys = Math.floor((0 - ty) / stepping) * stepping + ty;
-                ye = Math.ceil(h / stepping) * stepping;
-                xe += Math.ceil(stepping);
-                ye += Math.ceil(stepping);
-                ixs = Math.round(xs);
-                ixe = Math.round(xe);
-                iys = Math.round(ys);
-                iye = Math.round(ye);
-                ctx.beginPath();
-                try {
-                  ctx.setLineDash(
-                    JSON.parse("[" + this.majorStroke.pattern + "]")
-                  );
-                } catch (e) {}
-                ctx.lineWidth = this.majorStroke.thickness;
-                for (var x = xs; x <= xe; x += stepping) {
-                  x = Math.round((x - tx) / stepping) * stepping + tx;
-                  var ix = Math.round(x);
-                  ctx.moveTo(ix + 0.5, iys + 0.5);
-                  ctx.lineTo(ix + 0.5, iye + 0.5);
-                }
-                for (var y = ys; y <= ye; y += stepping) {
-                  y = Math.round((y - ty) / stepping) * stepping + ty;
-                  var iy = Math.round(y);
-                  ctx.moveTo(ixs + 0.5, iy + 0.5);
-                  ctx.lineTo(ixe + 0.5, iy + 0.5);
-                }
-                ctx.closePath();
-                ctx.stroke();
-              }
-
-              stepping = stepping * 2;
-              if (this.megaStroke.show) {
-                ctx.strokeStyle = this.megaStroke.color;
-                xs = Math.floor((0 - tx) / stepping) * stepping + tx;
-                xe = Math.ceil(w / stepping) * stepping;
-                ys = Math.floor((0 - ty) / stepping) * stepping + ty;
-                ye = Math.ceil(h / stepping) * stepping;
-                xe += Math.ceil(stepping);
-                ye += Math.ceil(stepping);
-                ixs = Math.round(xs);
-                ixe = Math.round(xe);
-                iys = Math.round(ys);
-                iye = Math.round(ye);
-                ctx.beginPath();
-                try {
-                  ctx.setLineDash(
-                    JSON.parse("[" + this.megaStroke.pattern + "]")
-                  );
-                } catch (e) {}
-                ctx.lineWidth = this.megaStroke.thickness;
-                for (var x = xs; x <= xe; x += stepping) {
-                  x = Math.round((x - tx) / stepping) * stepping + tx;
-                  var ix = Math.round(x);
-                  ctx.moveTo(ix + 0.5, iys + 0.5);
-                  ctx.lineTo(ix + 0.5, iye + 0.5);
-                }
-                for (var y = ys; y <= ye; y += stepping) {
-                  y = Math.round((y - ty) / stepping) * stepping + ty;
-                  var iy = Math.round(y);
-                  ctx.moveTo(ixs + 0.5, iy + 0.5);
-                  ctx.lineTo(ixe + 0.5, iy + 0.5);
-                }
-                ctx.closePath();
-                ctx.stroke();
-              }
-            }
-          }
-        }
-      };
-    };
-    mxUtils.extend(Graph, mxGraph);
-    mainGraph = new Graph(document.getElementById("modelContainer"));
-    var mxGraphViewValidateBackground =
-      mxGraphView.prototype.validateBackground;
-    mxGraphView.prototype.validateBackground = function () {
-      try {
-        mainGraph.grid.repaintGrid();
-      } catch (e) {
-        console.log(e);
-      }
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-      return mxGraphViewValidateBackground.apply(this, arguments);
-    };
-    mainGraph
-      .getSelectionModel()
-      .addListener(mxEvent.CHANGE, function (sender, evt) {
-        selectionChanged();
-      });
-  </script>
 
   <script>
     function selectionChanged() {
@@ -668,146 +399,15 @@
       for (var i = 0; i < editorDivs.length; editorDivs++) {
         editorDivs[i].style.display = "none";
       }
-      if (mainGraph.getSelectionCells().length === 0)
+      if (mainSystem.graph.getSelectionCells().length === 0)
         document.getElementById("editorForGraph").style.display = "block";
     }
   </script>
 
   <script>
-    var iconText = {
-      icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='0' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
-      icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
-      icon3: "' stroke-width='10' fill='none'>",
-      icon4: "</g></svg>"
-    };
-    //Code for handling blocks display
-    var allTheBlocks = new Vue({
-      el: "#allTheBlocks",
-      data: {
-        categories: umkBlockCategories,
-        bSummary: umkBlockSummary,
-        dispCategories: new Array(umkBlockCategories.length).fill(false),
-        updateCounter: 0,
-        blocksPerCategory: {},
-        searchText: ""
-      },
-      mounted: function () {
-        this.dispCategories[0] = true;
-        this.updateCounter++;
-
-        //Obtaining blocksPerCategory var
-        for (var i = 0; i < this.bSummary.length; i++) {
-          for (var j = 0; j < this.bSummary[i].category.length; j++) {
-            if (this.bSummary[i].category[j] !== "") {
-              if (
-                typeof this.blocksPerCategory[
-                  this.bSummary[i].category[j]
-                ] === "undefined"
-              ) {
-                this.blocksPerCategory[
-                  this.bSummary[i].category[j]
-                ] = new Array();
-              }
-              this.blocksPerCategory[this.bSummary[i].category[j]].push(
-                this.bSummary[i]
-              );
-            }
-          }
-        }
-      },
-      methods: {
-        toggleCategoryDisplay: function (idx) {
-          this.dispCategories[idx] = !this.dispCategories[idx];
-          this.updateCounter++;
-        },
-        getBlockImage: function (block) {
-          return (
-            "data:image/svg+xml;charset=utf-8," +
-            encodeURIComponent(
-              iconText.icon1 +
-              block.bg +
-              iconText.icon2 +
-              block.fg +
-              iconText.icon3 +
-              block.icon +
-              iconText.icon4
-            )
-          );
-        }
-      },
-      watch: {
-        searchText: function () {
-          this.updateCounter++;
-        }
-      },
-      updated: function () {
-        var tempDOMSToRemove = document.getElementsByClassName(
-          "tempAllLibraryBlocks"
-        );
-        while (tempDOMSToRemove[0]) {
-          console.log(tempDOMSToRemove[0]);
-          tempDOMSToRemove[0].parentNode.removeChild(tempDOMSToRemove[0]);
-        }
-        var AllLibraryBlocks = document.getElementsByClassName(
-          "libraryBlock"
-        );
-        for (var i = 0; i < AllLibraryBlocks.length; i++) {
-          var img = AllLibraryBlocks[i];
-          var dragElt = document.createElement("div");
-          dragElt.classList.add("tempAllLibraryBlocks");
-          dragElt.style.border =
-            "dashed " + img.getAttribute("umk_color") + " 1px";
-          dragElt.style.width = img.getAttribute("umk_width") + "px";
-          dragElt.style.height = img.getAttribute("umk_height") + "px";
-          var ds = mxUtils.makeDraggable(
-            img,
-            mainGraph,
-            function () {},
-            dragElt,
-            0,
-            0,
-            true,
-            true
-          );
-          ds.setGuidesEnabled(mainGraph.guidesEnabled);
-        }
-      },
-      computed: {
-        searchResults: function () {
-          return this.bSummary.filter(function (item) {
-            return (
-              item.name
-              .toLowerCase()
-              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0 ||
-              item.keywords
-              .toLowerCase()
-              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0 ||
-              item.description
-              .toLowerCase()
-              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0
-            );
-          });
-        }
-      }
-    });
   </script>
 
   <script>
-    var editorForGraph = new Vue({
-      el: "#editorForGraph",
-      data: {
-        graph: mainGraph
-      },
-      mounted: function () {
-        this.refreshGraph();
-      },
-      methods: {
-        refreshGraph: function () {
-          mainGraph.setBackgroundColor();
-          mainGraph.refresh();
-        }
-      }
-    });
   </script>
 
   <script>
