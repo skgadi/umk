@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>UYAMAK platform</title>
+  <title>Uyamak Editor</title>
 
   <link rel="stylesheet" href="libs-others/w3css-v4/w3.css" />
   <link rel="stylesheet" href="libs-others/w3css-v4/w3-theme-teal.css" />
@@ -102,21 +102,34 @@
           Hide
         </div>
       </div>
-      <div id="allTheBlocks" style="height: calc(100% - 22px)">
+      <div id="allTheBlocks" style="height: calc(100% - 22px);">
         <div class="w3-light-gray" style="width: 100%; overflow: hidden; height: 23px;">
-          <div class="w3-hover-text-theme" onclick="document.getElementById('blockSearchBar').focus();document.getElementById('blockSearchBar').select()" style="float: left; width:22px; text-align: center;"><i class="fa-fw fas fa-search"></i></div>
-          <div style="float: left; width: calc(100% - 44px);">
-              <input id="blockSearchBar" v-model="searchText" type="text" class="w3-input w3-border-0 w3-light-gray" style="padding: 0px; outline:none;" placeholder="Search blocks" @keydown.esc="searchText=''">
+          <div class="w3-hover-text-theme"
+            onclick="document.getElementById('blockSearchBar').focus();document.getElementById('blockSearchBar').select()"
+            style="float: left; width:22px; text-align: center;">
+            <i class="fa-fw fas fa-search"></i>
           </div>
-          <div v-if="!!searchText" class="w3-hover-text-red" @click="searchText=''" style="float: right; width:22px; text-align: center;"><i class="fa-fw fas fa-times"></i></div>
+          <div style="float: left; width: calc(100% - 44px);">
+            <input id="blockSearchBar" v-model="searchText" type="text" class="w3-input w3-border-0 w3-light-gray"
+              style="padding: 0px; outline:none;" placeholder="Search blocks" @keydown.esc="searchText=''" />
+          </div>
+          <div v-if="!!searchText" class="w3-hover-text-red" @click="searchText=''"
+            style="float: right; width:22px; text-align: center;">
+            <i class="fa-fw fas fa-times"></i>
+          </div>
         </div>
-        <div style="overflow-y: auto; height: calc(100% - 23px)">
+        <div style="overflow-y: auto; height: calc(100% - 23px); touch-action: none;">
           <div v-if="!!searchText">
-            <div class="w3-theme-d1 w3-hover-theme w3-border w3-border-theme" style="width: 100%; padding: 0;"><span>Search results</span></div>
+            <div class="w3-theme-d1 w3-hover-theme w3-border w3-border-theme" style="width: 100%; padding: 0;">
+              <span>Search results</span>
+            </div>
             <div v-if="searchResults.length>0">
               <div class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
                 <template v-for="(bDetails, bIndex) in searchResults">
-                    <img :key="'block_'+bDetails.id+updateCounter" :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_color="bDetails.bg">
+                  <img :key="'block_'+bDetails.id+updateCounter" :src="getBlockImage(bDetails)" width="50px"
+                    height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description"
+                    class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height"
+                    :umk_color="bDetails.bg" />
                 </template>
               </div>
             </div>
@@ -125,16 +138,21 @@
             </div>
           </div>
           <template v-for="(category, cIndex) in categories">
-            <div :key= "updateCounter+'_'+category.name+'_'+dispCategories[cIndex]" class="w3-theme-d1 w3-hover-theme w3-border w3-border-theme" style="width: 100%; cursor: pointer; padding: 0;" @click="toggleCategoryDisplay(cIndex)">
+            <div :key="updateCounter+'_'+category.name+'_'+dispCategories[cIndex]"
+              class="w3-theme-d1 w3-hover-theme w3-border w3-border-theme"
+              style="width: 100%; cursor: pointer; padding: 0;" @click="toggleCategoryDisplay(cIndex)">
               <span>
                 <i v-if="dispCategories[cIndex]" class="fa-fw fas fa-caret-down"></i>
                 <i v-if="!dispCategories[cIndex]" class="fa-fw fas fa-caret-right"></i>
               </span>
-              <span>{{category.name}}</span>
+              <span>{{ category.name }}</span>
             </div>
-            <div :key= "updateCounter+'_'+category.name+'_blocksCont'" v-if="dispCategories[cIndex]" :id="'BlocksOf_'+category.id" class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
+            <div :key="updateCounter+'_'+category.name+'_blocksCont'" v-if="dispCategories[cIndex]"
+              :id="'BlocksOf_'+category.id" class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
               <template v-for="(bDetails, bIndex) in blocksPerCategory[category.id]">
-                <img :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_color="bDetails.bg">
+                <img :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;"
+                  :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width"
+                  :umk_height="bDetails.height" :umk_color="bDetails.bg" />
               </template>
             </div>
           </template>
@@ -161,11 +179,17 @@
       </div>
       <div style="height: calc(100% - 22px); overflow-y: auto;">
         <div class="editorDivs" id="editorForGraph" style="display: block;">
-          <div class="w3-xlarge">Grid</div>
           <label>Background color</label>
-          <input class="w3-input" style="min-height: 50px" type="color" v-model="graph.container.style.backgroundColor">
+          <input @change="refreshGraph()" class="w3-input" style="padding: 0; min-height: 50px" type="color"
+          v-model="graph.backgroundColor" />
+          <input class="w3-check" v-model="graph.guidesEnabled" id="enableGuides" type="checkbox">
+          <label for="enableGuides">Enable guides</label><br/>
+          <input class="w3-check" v-model="graph.gridEnabled" id="snapToGrid" type="checkbox">
+          <label for="snapToGrid">Snap to grid</label><br/>
           <label>Minimum grid size</label>
-          <input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.gridSize" min="0" type="number">
+          <input @change="refreshGraph()" class="w3-input w3-border" v-model.number="graph.gridSize" min="0"
+          type="number" />
+          <label>Grid</label>
           <div class="w3-responsive">
             <table class="w3-table w3-bordered">
               <thead>
@@ -178,43 +202,124 @@
                 </tr>
               </thead>
               <tr>
-                <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize" disabled></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.minorStroke.show"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
-                  style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
-                  type="color"
-                  v-model="graph.grid.minorStroke.color"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.minorStroke.thickness" type="number" min="0" max="10"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.minorStroke.pattern"></td>
+                <td style="padding: 0;">
+                  <input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value="graph.gridSize"
+                    disabled />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox"
+                    v-model="graph.grid.minorStroke.show" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border-0"
+                    style="padding: 0; width: 100%; padding: 0px; min-height: 40px;" type="color"
+                    v-model="graph.grid.minorStroke.color" />
+                </td>
+
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border"
+                    v-model.number="graph.grid.minorStroke.thickness" type="number" min="0" max="10" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border" v-model="graph.grid.minorStroke.pattern" />
+                </td>
               </tr>
-  
+
               <tr>
-                <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize * 5" disabled></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.majorStroke.show"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
-                  style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
-                  type="color"
-                  v-model="graph.grid.majorStroke.color"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.majorStroke.thickness" type="number" min="0" max="10"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.majorStroke.pattern"></td>
+                <td style="padding: 0;">
+                  <input class="w3-input w3-border" style="max-width: 50px; text-align: right;"
+                    :value="graph.gridSize * 5" disabled />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox"
+                    v-model="graph.grid.majorStroke.show" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border-0"
+                    style="padding: 0; width: 100%; padding: 0px; min-height: 40px;" type="color"
+                    v-model="graph.grid.majorStroke.color" />
+                </td>
+
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border"
+                    v-model.number="graph.grid.majorStroke.thickness" type="number" min="0" max="10" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border" v-model="graph.grid.majorStroke.pattern" />
+                </td>
               </tr>
               <tr>
-              <td style="padding: 0;"><input class="w3-input w3-border" style="max-width: 50px; text-align: right;" :value= "graph.gridSize * 10" disabled></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox" v-model="graph.grid.megaStroke.show"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border-0"
-                  style="padding: 0; width: 100%; padding: 0px; min-height: 40px;"
-                  type="color"
-                  v-model="graph.grid.megaStroke.color"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model.number="graph.grid.megaStroke.thickness" type="number" min="0" max="10"></td>
-                <td style="padding: 0;"><input @change= "refreshGraph()" class="w3-input w3-border" v-model="graph.grid.megaStroke.pattern"></td>
+                <td style="padding: 0;">
+                  <input class="w3-input w3-border" style="max-width: 50px; text-align: right;"
+                    :value="graph.gridSize * 10" disabled />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-check" style="width: 100%;" type="checkbox"
+                    v-model="graph.grid.megaStroke.show" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border-0"
+                    style="padding: 0; width: 100%; padding: 0px; min-height: 40px;" type="color"
+                    v-model="graph.grid.megaStroke.color" />
+                </td>
+
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border"
+                    v-model.number="graph.grid.megaStroke.thickness" type="number" min="0" max="10" />
+                </td>
+                <td style="padding: 0;">
+                  <input @change="refreshGraph()" class="w3-input w3-border" v-model="graph.grid.megaStroke.pattern" />
+                </td>
               </tr>
             </table>
           </div>
+          <label>Navigate</label>
+          <div class="w3-row">
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-minus"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-up"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-plus"></i></button>
+            </div>
+
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-left"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-arrows-alt"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-right"></i></button>
+            </div>
+
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-expand"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-down"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-compress"></i></button>
+            </div>
+  
+
+          </div>
         </div>
-        <div class="editorDivs" id="editorForBlock" style="display: none;">b</div>
-        <div class="editorDivs" id="editorForEdge" style="display: none;">c</div>
-        <div class="editorDivs" id="editorForGroup" style="display: none;">d</div>
-        <div class="editorDivs" id="editorForElements" style="display: none;">e</div>
+        <div class="editorDivs" id="editorForBlock" style="display: none;">
+          b
+        </div>
+        <div class="editorDivs" id="editorForEdge" style="display: none;">
+          c
+        </div>
+        <div class="editorDivs" id="editorForGroup" style="display: none;">
+          d
+        </div>
+        <div class="editorDivs" id="editorForElements" style="display: none;">
+          e
+        </div>
       </div>
     </div>
   </div>
@@ -249,10 +354,8 @@
   <!--Uyamak libraries-->
   <script src="libs/umk-block-categories.js?v=0.1"></script>
   <script src="libs/umk-block-summary.js?v=0.2"></script>
-  <script>
-  </script>
+  <script></script>
 
-  
   <script>
     function holdToFinishAProcess(title = null, description = null) {
       if (title)
@@ -267,9 +370,7 @@
     }
   </script>
 
-
   <script>
-
     //Split related code
     //not universally used
     if (typeof ResizeObserver !== "undefined") {
@@ -347,8 +448,11 @@
   </script>
   <script>
     Graph = function (container) {
+      this.guidesEnabled = true;
+      this.backgroundColor = "#f8f8f8";
       mxGraph.call(this, container);
       this.setBackgroundColor = function (val) {
+        if (!val) val = this.backgroundColor;
         container.style.backgroundColor = val;
       };
       //Draws grid
@@ -364,20 +468,20 @@
         minorStroke: {
           color: "#808080",
           thickness: 0.5,
-          pattern: 1,
+          pattern: "1, 1",
           show: true
         },
         majorStroke: {
           color: "#808080",
           thickness: 1,
-          pattern: 1,
+          pattern: "2, 2",
           show: true
         },
         megaStroke: {
           color: "#808080",
           thickness: 2,
-          pattern: 1,
-          show: true
+          pattern: "20, 5, 5, 5",
+          show: false
         },
         repaintGrid: function () {
           var graph = this.sGraph;
@@ -440,9 +544,11 @@
               if (this.minorStroke.show) {
                 ctx.strokeStyle = this.minorStroke.color;
                 ctx.beginPath();
-                try{
-                ctx.setLineDash(JSON.parse("["+this.minorStroke.pattern+"]"));
-                } catch(e){}
+                try {
+                  ctx.setLineDash(
+                    JSON.parse("[" + this.minorStroke.pattern + "]")
+                  );
+                } catch (e) {}
                 ctx.lineWidth = this.minorStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -474,9 +580,11 @@
                 iys = Math.round(ys);
                 iye = Math.round(ye);
                 ctx.beginPath();
-                try{
-                ctx.setLineDash(JSON.parse("["+this.majorStroke.pattern+"]"));
-                } catch(e){}
+                try {
+                  ctx.setLineDash(
+                    JSON.parse("[" + this.majorStroke.pattern + "]")
+                  );
+                } catch (e) {}
                 ctx.lineWidth = this.majorStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -494,7 +602,6 @@
                 ctx.stroke();
               }
 
-
               stepping = stepping * 2;
               if (this.megaStroke.show) {
                 ctx.strokeStyle = this.megaStroke.color;
@@ -509,9 +616,11 @@
                 iys = Math.round(ys);
                 iye = Math.round(ye);
                 ctx.beginPath();
-                try{
-                ctx.setLineDash(JSON.parse("["+this.megaStroke.pattern+"]"));
-                } catch(e){}
+                try {
+                  ctx.setLineDash(
+                    JSON.parse("[" + this.megaStroke.pattern + "]")
+                  );
+                } catch (e) {}
                 ctx.lineWidth = this.megaStroke.thickness;
                 for (var x = xs; x <= xe; x += stepping) {
                   x = Math.round((x - tx) / stepping) * stepping + tx;
@@ -536,125 +645,170 @@
     mxUtils.extend(Graph, mxGraph);
     mainGraph = new Graph(document.getElementById("modelContainer"));
     var mxGraphViewValidateBackground =
-        mxGraphView.prototype.validateBackground;
-      mxGraphView.prototype.validateBackground = function () {
-        try {
-          mainGraph.grid.repaintGrid();
-        } catch (e) {console.log(e)}
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        return mxGraphViewValidateBackground.apply(this, arguments);
-      };
-      mainGraph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
+      mxGraphView.prototype.validateBackground;
+    mxGraphView.prototype.validateBackground = function () {
+      try {
+        mainGraph.grid.repaintGrid();
+      } catch (e) {
+        console.log(e);
+      }
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      return mxGraphViewValidateBackground.apply(this, arguments);
+    };
+    mainGraph
+      .getSelectionModel()
+      .addListener(mxEvent.CHANGE, function (sender, evt) {
         selectionChanged();
       });
   </script>
 
-<script>
-  function selectionChanged() {
-    var editorDivs = document.getElementsByClassName("editorDivs");
-    for (var i=0; i<editorDivs.length; editorDivs++) {
-      editorDivs[i].style.display = "none";
-    }
-    if (mainGraph.getSelectionCells().length === 0) document.getElementById("editorForGraph").style.display = "block";
-  }
-</script>
-
   <script>
-var iconText = {
-  icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='0' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
-  icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
-  icon3: "' stroke-width='10' fill='none'>",
-  icon4: "</g></svg>"
-};
-//Code for handling blocks display
-var allTheBlocks = new Vue ({
-  el: "#allTheBlocks",
-  data: {
-    categories: umkBlockCategories,
-    bSummary: umkBlockSummary,
-    dispCategories: new Array(umkBlockCategories.length).fill(false),
-    updateCounter: 0,
-    blocksPerCategory: {},
-    searchText: ""
-  },
-  mounted: function () {
-    this.dispCategories[0] = true;
-    this.updateCounter++;
-
-    //Obtaining blocksPerCategory var
-      for (var i=0; i<this.bSummary.length; i++) {
-        for (var j=0; j<this.bSummary[i].category.length; j++) {
-          if (this.bSummary[i].category[j] !=="") {
-            if (typeof this.blocksPerCategory[this.bSummary[i].category[j]] === "undefined") {
-              this.blocksPerCategory[this.bSummary[i].category[j]] = new Array();
-            }
-            this.blocksPerCategory[this.bSummary[i].category[j]].push(this.bSummary[i]);
-          }
-        }
+    function selectionChanged() {
+      var editorDivs = document.getElementsByClassName("editorDivs");
+      for (var i = 0; i < editorDivs.length; editorDivs++) {
+        editorDivs[i].style.display = "none";
       }
-
-  },
-  methods: {
-    toggleCategoryDisplay: function (idx) {
-      this.dispCategories[idx] = !this.dispCategories[idx];
-      this.updateCounter++;
-    },
-    getBlockImage: function(block){
-      return (
-        "data:image/svg+xml;charset=utf-8," +
-        encodeURIComponent( iconText.icon1 + block.bg + iconText.icon2 + block.fg + iconText.icon3 + block.icon + iconText.icon4));
+      if (mainGraph.getSelectionCells().length === 0)
+        document.getElementById("editorForGraph").style.display = "block";
     }
-  },
-  watch: {
-    searchText: function () {
-      this.updateCounter++;
-    }
-  },
-  updated: function (){
-    var tempDOMSToRemove = document.getElementsByClassName("tempAllLibraryBlocks");
-    while(tempDOMSToRemove[0]) {
-      console.log(tempDOMSToRemove[0]);
-      tempDOMSToRemove[0].parentNode.removeChild(tempDOMSToRemove[0]);
-    }
-    var AllLibraryBlocks = document.getElementsByClassName("libraryBlock");
-    for (var i=0; i<AllLibraryBlocks.length; i++) {
-      var img = AllLibraryBlocks[i];
-      var dragElt = document.createElement("div");
-      dragElt.classList.add("tempAllLibraryBlocks");
-      dragElt.style.border = "dashed "+ img.getAttribute("umk_color") +" 1px";
-      dragElt.style.width = img.getAttribute("umk_width") + "px";
-      dragElt.style.height = img.getAttribute("umk_height") + "px";
-      var ds = mxUtils.makeDraggable(img, mainGraph, function (){}, dragElt, 0, 0, true, true);
-      ds.setGuidesEnabled(true);
-    }
-  },
-  computed: {
-    searchResults: function () {
-      return this.bSummary.filter(function(item) {
-        return ((item.name.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0) || (item.keywords.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0) || (item.description.toLowerCase().indexOf(allTheBlocks.$data.searchText.toLowerCase())>=0));
-      });
-    }
-  }
-});
   </script>
 
-<script>
-  var editorForGraph = new Vue({
-    el: "#editorForGraph",
-    data: {
-      graph: mainGraph
-    },
-    mounted: function () {
-      this.graph.container.style.backgroundColor = "#ee0000";
-      this.refreshGraph();
-    },
-    methods: {
-      refreshGraph: function () {
-        mainGraph.refresh();
+  <script>
+    var iconText = {
+      icon1: "<svg viewBox='-3 -3 106 106' xmlns='http://www.w3.org/2000/svg'><defs><filter id='f0' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0' dy='0' result='offsetblur'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='f1' x='-50%' y='-50%' width='200%' height='200%'><feOffset result='offOut' in='SourceAlpha' dx='3' dy='3' /><feGaussianBlur result='blurOut' in='offOut' stdDeviation='1' /><feBlend in='SourceGraphic' in2='blurOut' mode='normal' /></filter></defs><g><rect rx='0' height='100' width='100' y='0' x='0' stroke-width='0' fill='",
+      icon2: "' filter='url(#f0)'/></g><g stroke-linecap='round' filter='url(#f1)' width='100' height='100' stroke='",
+      icon3: "' stroke-width='10' fill='none'>",
+      icon4: "</g></svg>"
+    };
+    //Code for handling blocks display
+    var allTheBlocks = new Vue({
+      el: "#allTheBlocks",
+      data: {
+        categories: umkBlockCategories,
+        bSummary: umkBlockSummary,
+        dispCategories: new Array(umkBlockCategories.length).fill(false),
+        updateCounter: 0,
+        blocksPerCategory: {},
+        searchText: ""
+      },
+      mounted: function () {
+        this.dispCategories[0] = true;
+        this.updateCounter++;
+
+        //Obtaining blocksPerCategory var
+        for (var i = 0; i < this.bSummary.length; i++) {
+          for (var j = 0; j < this.bSummary[i].category.length; j++) {
+            if (this.bSummary[i].category[j] !== "") {
+              if (
+                typeof this.blocksPerCategory[
+                  this.bSummary[i].category[j]
+                ] === "undefined"
+              ) {
+                this.blocksPerCategory[
+                  this.bSummary[i].category[j]
+                ] = new Array();
+              }
+              this.blocksPerCategory[this.bSummary[i].category[j]].push(
+                this.bSummary[i]
+              );
+            }
+          }
+        }
+      },
+      methods: {
+        toggleCategoryDisplay: function (idx) {
+          this.dispCategories[idx] = !this.dispCategories[idx];
+          this.updateCounter++;
+        },
+        getBlockImage: function (block) {
+          return (
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(
+              iconText.icon1 +
+              block.bg +
+              iconText.icon2 +
+              block.fg +
+              iconText.icon3 +
+              block.icon +
+              iconText.icon4
+            )
+          );
+        }
+      },
+      watch: {
+        searchText: function () {
+          this.updateCounter++;
+        }
+      },
+      updated: function () {
+        var tempDOMSToRemove = document.getElementsByClassName(
+          "tempAllLibraryBlocks"
+        );
+        while (tempDOMSToRemove[0]) {
+          console.log(tempDOMSToRemove[0]);
+          tempDOMSToRemove[0].parentNode.removeChild(tempDOMSToRemove[0]);
+        }
+        var AllLibraryBlocks = document.getElementsByClassName(
+          "libraryBlock"
+        );
+        for (var i = 0; i < AllLibraryBlocks.length; i++) {
+          var img = AllLibraryBlocks[i];
+          var dragElt = document.createElement("div");
+          dragElt.classList.add("tempAllLibraryBlocks");
+          dragElt.style.border =
+            "dashed " + img.getAttribute("umk_color") + " 1px";
+          dragElt.style.width = img.getAttribute("umk_width") + "px";
+          dragElt.style.height = img.getAttribute("umk_height") + "px";
+          var ds = mxUtils.makeDraggable(
+            img,
+            mainGraph,
+            function () {},
+            dragElt,
+            0,
+            0,
+            true,
+            true
+          );
+          ds.setGuidesEnabled(mainGraph.guidesEnabled);
+        }
+      },
+      computed: {
+        searchResults: function () {
+          return this.bSummary.filter(function (item) {
+            return (
+              item.name
+              .toLowerCase()
+              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0 ||
+              item.keywords
+              .toLowerCase()
+              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0 ||
+              item.description
+              .toLowerCase()
+              .indexOf(allTheBlocks.$data.searchText.toLowerCase()) >= 0
+            );
+          });
+        }
       }
-    }
-  });
-</script>
+    });
+  </script>
+
+  <script>
+    var editorForGraph = new Vue({
+      el: "#editorForGraph",
+      data: {
+        graph: mainGraph
+      },
+      mounted: function () {
+        this.refreshGraph();
+      },
+      methods: {
+        refreshGraph: function () {
+          mainGraph.setBackgroundColor();
+          mainGraph.refresh();
+        }
+      }
+    });
+  </script>
 
   <script>
     holdToFinishAProcess(false);
