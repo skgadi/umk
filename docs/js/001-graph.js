@@ -1,4 +1,4 @@
-
+mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
 var Graph = function (container) {
     mxGraph.call(this, container);
     this.guidesEnabled = true;
@@ -50,7 +50,7 @@ var Graph = function (container) {
             color: "#808080",
             thickness: 0.5,
             pattern: "1, 1",
-            show: true
+            show: false
         },
         majorStroke: {
             color: "#808080",
@@ -231,14 +231,14 @@ var Outline = function (graph, container) {
     mxOutline.call(this, graph, container);
     this.visibility = true;
     this.setVisiblity = function () {
-        container.style.display = (this.visibility)?"block":"none";
+        container.style.display = (this.visibility) ? "block" : "none";
     }
 }
 mxUtils.extend(Outline, mxOutline);
 
 var System = function (gContainer, oContainer) {
     this.graph = new Graph(gContainer);
-    this.outline = new Outline (this.graph, oContainer);
+    this.outline = new Outline(this.graph, oContainer);
     this.refresh = function () {
         this.graph.setBackgroundColor();
         this.graph.refresh();
@@ -246,7 +246,7 @@ var System = function (gContainer, oContainer) {
         this.outline.refresh();
         //this.graph.grid.repaintGrid();
     }
-    this.navigate = function (dir="up") {
+    this.navigate = function (dir = "up") {
         switch (dir) {
             case "up":
             case "down":
@@ -267,7 +267,7 @@ var System = function (gContainer, oContainer) {
             case "fit":
                 this.graph.fit();
                 break;
-                        
+
         }
         this.refresh();
     }
@@ -281,4 +281,13 @@ mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sende
 mainSystem.outline.update = function (rv) {
     mainSystem.graph.grid.repaintGrid();
     return mxOutline.prototype.update.apply(this, arguments);
-  };
+};
+
+function selectionChanged() {
+    var editorDivs = document.getElementsByClassName("editorDivs");
+    for (var i = 0; i < editorDivs.length; editorDivs++) {
+        editorDivs[i].style.display = "none";
+    }
+    if (mainSystem.graph.getSelectionCells().length === 0)
+        document.getElementById("editorForGraph").style.display = "block";
+}

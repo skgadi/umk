@@ -3,27 +3,18 @@
 
 <head>
   <title>Uyamak Editor</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 
   <link rel="stylesheet" href="libs-others/w3css-v4/w3.css" />
   <link rel="stylesheet" href="libs-others/w3css-v4/w3-theme-teal.css" />
   <link rel="stylesheet" href="libs-others/fa/css/all.min.css" />
 
-  <link rel="stylesheet" href="css/app.css" />
-
-  <script type="text/javascript">
-    mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
-  </script>
+  <link rel="stylesheet" href="css/app.min.css" />
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="libs-others/notyf/notyf.min.css" />
 
-  <script type="text/javascript">
-    //Default resources are included in grapheditor resources
-    mxLoadResources = false;
-
-    window.urlParams = window.urlParams || {};
-  </script>
 </head>
 
 <body>
@@ -72,15 +63,6 @@
                 </div>
               </div>
             </div>
-            <!--div v-else class="w3-bar-item w3-button w3-display-container"  style="height: 35px;">
-            <div class="w3-display-left" style="margin-left: 4px;">
-            </div>
-            <div class="w3-display-right" style="margin-right: 4px;">
-              <template v-for="(key, index) in tool.shortcut">
-                <span v-if="index!==0" style="padding:0;">+</span><span class="w3-light-gray w3-round w3-border w3-border-black" style="padding: 0 2px; font-family: 'Courier New', Courier, monospace; font-weight: bold;" v-html="key"></span>
-              </template>
-            </div>
-          </div-->
           </template>
         </div>
       </div>
@@ -180,7 +162,7 @@
       <div style="height: calc(100% - 22px); overflow-y: auto;">
         <div class="editorDivs" id="editorForGraph" style="display: block;">
           <label>Background color</label>
-          <input @change="refreshGraph()" class="w3-input" style="padding: 0; min-height: 50px" type="color"
+          <input @change="refreshGraph()" class="w3-input w3-border" style="padding: 0; min-height: 50px" type="color"
           v-model="graph.backgroundColor" />
           <input @change="refreshGraph()" class="w3-check" v-model="outline.visibility" id="outlineDisplay" type="checkbox">
           <label for="outlineDisplay">Display outline</label><br/>
@@ -344,6 +326,7 @@
     </div>
   </div>
 
+  <script type="text/javascript">var mxBasePath="libs-others/mxgraph-4.0.4/javascript/src",mxLoadResources=!1;window.urlParams = window.urlParams||{};</script>
   <script src="libs-others/math-js/math.min.js"></script>
   <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   <script src="libs-others/augmented-json-serialization-functions.js"></script>
@@ -353,68 +336,11 @@
 
   <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
 
+  
+
   <!--Uyamak libraries-->
   <script src="library.min.js?v=0.1"></script>
   <script src="js.min.js?v=0.3"></script>
-  <script></script>
-
-  <script>
-    function holdToFinishAProcess(title = null, description = null) {
-      if (title)
-        document.getElementById("waitForProcessToFinish").style.display =
-        "block";
-      else
-        document.getElementById("waitForProcessToFinish").style.display =
-        "none";
-      if (title) document.getElementById("DOMWaitingHead").innerText = title;
-      if (description)
-        document.getElementById("DOMWaitingDesc").innerText = description;
-    }
-  </script>
-  <script>
-    //MathJax setup
-    MathJax.Hub.Config({
-      showMathMenu: false,
-      messageStyle: "none",
-      menuSettings: {
-        inTabOrder: false
-      },
-      extensions: ["tex2jax.js"],
-      jax: ["input/TeX", "output/HTML-CSS"],
-      tex2jax: {
-        preview: "none",
-        inlineMath: [
-          ["$", "$"],
-          ["\\(", "\\)"]
-        ],
-        displayMath: [
-          ["$$", "$$"],
-          ["\\[", "\\]"]
-        ]
-      }
-    });
-  </script>
-
-  <script>
-    function selectionChanged() {
-      var editorDivs = document.getElementsByClassName("editorDivs");
-      for (var i = 0; i < editorDivs.length; editorDivs++) {
-        editorDivs[i].style.display = "none";
-      }
-      if (mainSystem.graph.getSelectionCells().length === 0)
-        document.getElementById("editorForGraph").style.display = "block";
-    }
-  </script>
-
-  <script>
-  </script>
-
-  <script>
-  </script>
-
-  <script>
-    holdToFinishAProcess(false);
-  </script>
 </body>
 
 </html>
