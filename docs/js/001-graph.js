@@ -125,6 +125,7 @@ var Graph = function (container) {
                     if (this.minorStroke.show) {
                         ctx.strokeStyle = this.minorStroke.color;
                         ctx.beginPath();
+                        ctx.lineCap = "round";
                         try {
                             ctx.setLineDash(
                                 JSON.parse("[" + this.minorStroke.pattern + "]")
@@ -161,6 +162,7 @@ var Graph = function (container) {
                         iys = Math.round(ys);
                         iye = Math.round(ye);
                         ctx.beginPath();
+                        ctx.lineCap = "round";
                         try {
                             ctx.setLineDash(
                                 JSON.parse("[" + this.majorStroke.pattern + "]")
@@ -197,6 +199,7 @@ var Graph = function (container) {
                         iys = Math.round(ys);
                         iye = Math.round(ye);
                         ctx.beginPath();
+                        ctx.lineCap = "round";
                         try {
                             ctx.setLineDash(
                                 JSON.parse("[" + this.megaStroke.pattern + "]")
@@ -226,28 +229,56 @@ var Graph = function (container) {
 mxUtils.extend(Graph, mxGraph);
 var Outline = function (graph, container) {
     mxOutline.call(this, graph, container);
+    this.visibility = true;
+    this.setVisiblity = function () {
+        container.style.display = (this.visibility)?"block":"none";
+    }
 }
 mxUtils.extend(Outline, mxOutline);
 
 var System = function (gContainer, oContainer) {
     this.graph = new Graph(gContainer);
-    this.outline = new Outline (oContainer);
+    this.outline = new Outline (this.graph, oContainer);
+    this.refresh = function () {
+        this.graph.setBackgroundColor();
+        this.graph.refresh();
+        this.outline.setVisiblity();
+        this.outline.refresh();
+        //this.graph.grid.repaintGrid();
+    }
+    this.navigate = function (dir="up") {
+        switch (dir) {
+            case "up":
+            case "down":
+            case "left":
+            case "right":
+            case "0":
+                this.graph.navigate.move(dir);
+                break;
+            case "zoomIn":
+                this.graph.zoomIn();
+                break;
+            case "zoomOut":
+                this.graph.zoomOut();
+                break;
+            case "zoomActual":
+                this.graph.zoomActual();
+                break;
+            case "fit":
+                this.graph.fit();
+                break;
+                        
+        }
+        this.refresh();
+    }
 }
 
-//var mainGraph = new Graph();
 var mainSystem = new System(document.getElementById("modelContainer"), document.getElementById("outlineContainer"));
-var mxGraphViewValidateBackground =
-    mxGraphView.prototype.validateBackground;
-mxGraphView.prototype.validateBackground = function () {
-    try {
-        mainSystem.graph.grid.repaintGrid();
-    } catch (e) {
-        console.log(e);
-    }
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    return mxGraphViewValidateBackground.apply(this, arguments);
-};
 mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
     selectionChanged();
 });
 
+mainSystem.outline.update = function (rv) {
+    mainSystem.graph.grid.repaintGrid();
+    return mxOutline.prototype.update.apply(this, arguments);
+  };

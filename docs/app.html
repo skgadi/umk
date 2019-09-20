@@ -182,6 +182,8 @@
           <label>Background color</label>
           <input @change="refreshGraph()" class="w3-input" style="padding: 0; min-height: 50px" type="color"
           v-model="graph.backgroundColor" />
+          <input @change="refreshGraph()" class="w3-check" v-model="outline.visibility" id="outlineDisplay" type="checkbox">
+          <label for="outlineDisplay">Display outline</label><br/>
           <input class="w3-check" v-model="graph.guidesEnabled" id="enableGuides" type="checkbox">
           <label for="enableGuides">Enable guides</label><br/>
           <input class="w3-check" v-model="graph.gridEnabled" id="snapToGrid" type="checkbox">
@@ -276,33 +278,33 @@
           <label>Navigate</label>
           <div class="w3-row">
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.zoomOut()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-minus"></i></button>
+              <button @click="mainSystem.navigate('zoomOut')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-minus"></i></button>
             </div>
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.navigate.move('up')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-up"></i></button>
+              <button @click="mainSystem.navigate('up')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-up"></i></button>
             </div>
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.zoomIn()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-plus"></i></button>
-            </div>
-
-            <div class="w3-col s4">
-              <button @click="mainSystem.graph.navigate.move('left')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-left"></i></button>
-            </div>
-            <div class="w3-col s4">
-              <button @click="mainSystem.graph.navigate.move('0')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-arrows-alt"></i></button>
-            </div>
-            <div class="w3-col s4">
-              <button @click="mainSystem.graph.navigate.move('right')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-right"></i></button>
+              <button @click="mainSystem.navigate('zoomIn')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-search-plus"></i></button>
             </div>
 
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.fit()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-expand"></i></button>
+              <button @click="mainSystem.navigate('left')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-left"></i></button>
             </div>
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.navigate.move('down')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-down"></i></button>
+              <button @click="mainSystem.navigate('0')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-arrows-alt"></i></button>
             </div>
             <div class="w3-col s4">
-              <button @click="mainSystem.graph.zoomActual()" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-compress"></i></button>
+              <button @click="mainSystem.navigate('right')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-right"></i></button>
+            </div>
+
+            <div class="w3-col s4">
+              <button @click="mainSystem.navigate('fit')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-expand"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button @click="mainSystem.navigate('down')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas fa-caret-down"></i></button>
+            </div>
+            <div class="w3-col s4">
+              <button @click="mainSystem.navigate('zoomActual')" class="w3-button w3-block w3-ripple w3-border"><i class="fa-fw fas  fa-compress"></i></button>
             </div>
   
 

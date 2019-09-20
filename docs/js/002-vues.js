@@ -111,15 +111,15 @@ var allTheBlocks = new Vue({
 var editorForGraph = new Vue({
     el: "#editorForGraph",
     data: {
-        graph: mainSystem.graph
+        graph: mainSystem.graph,
+        outline: mainSystem.outline
     },
     mounted: function () {
         this.refreshGraph();
     },
     methods: {
         refreshGraph: function () {
-            mainSystem.graph.setBackgroundColor();
-            mainSystem.graph.refresh();
+            mainSystem.refresh();
         }
     }
 });

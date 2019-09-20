@@ -3,9 +3,8 @@
 if (typeof ResizeObserver !== "undefined") {
     new ResizeObserver(function () {
         if (typeof mainSystem.graph !== "undefined") {
-            mainSystem.graph.grid.repaintGrid();
+            mainSystem.refresh();
         }
-        if (typeof outln !== "undefined") outln.refresh();
     }).observe(modelContainer);
 }
 
@@ -36,9 +35,8 @@ var mainSplit = Split(["#flex-1", "#flex-2", "#flex-3"], {
     gutterSize: 4,
     onDrag: function () {
         if (typeof mainSystem.graph !== "undefined") {
-            mainSystem.graph.grid.repaintGrid();
+            mainSystem.refresh();
         }
-        if (typeof outln !== "undefined") outln.refresh();
     },
     elementStyle: function (dimension, size, gutterSize) {
         return {
