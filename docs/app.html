@@ -110,7 +110,7 @@
                 <template v-for="(bDetails, bIndex) in searchResults">
                   <img :key="'block_'+bDetails.id+updateCounter" :src="getBlockImage(bDetails)" width="50px"
                     height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description"
-                    class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height"
+                    class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_model="bDetails.id"
                     :umk_color="bDetails.bg" />
                 </template>
               </div>
@@ -134,7 +134,7 @@
               <template v-for="(bDetails, bIndex) in blocksPerCategory[category.id]">
                 <img :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;"
                   :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width"
-                  :umk_height="bDetails.height" :umk_color="bDetails.bg" />
+                  :umk_height="bDetails.height"  :umk_model="bDetails.id" :umk_color="bDetails.bg" />
               </template>
             </div>
           </template>
@@ -166,7 +166,7 @@
           v-model="graph.backgroundColor" />
           <input @change="refreshGraph()" class="w3-check" v-model="outline.visibility" id="outlineDisplay" type="checkbox">
           <label for="outlineDisplay">Display outline</label><br/>
-          <input class="w3-check" v-model="graph.guidesEnabled" id="enableGuides" type="checkbox">
+          <input @change="graph.graphHandler.guidesEnabled = graph.guidesEnabled; allTheBlocks.updateDOMs()" class="w3-check" v-model="graph.guidesEnabled" id="enableGuides" type="checkbox">
           <label for="enableGuides">Enable guides</label><br/>
           <input class="w3-check" v-model="graph.gridEnabled" id="snapToGrid" type="checkbox">
           <label for="snapToGrid">Snap to grid</label><br/>
@@ -339,8 +339,8 @@
   
 
   <!--Uyamak libraries-->
-  <script src="library.min.js?v=0.1"></script>
   <script src="js.min.js?v=0.3"></script>
+  <script src="library.min.js?v=0.1"></script>
 </body>
 
 </html>

@@ -1,6 +1,66 @@
 mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
 var Graph = function (container) {
     mxGraph.call(this, container);
+    //General settings
+    this.setPanning(true);
+    this.setTooltips(false);
+    this.htmlLabels = true;
+    this.rubberband = new mxRubberband(this);
+    this.graphHandler.guidesEnabled = true;
+    //Stylesheets
+    var style = new Object();
+    style.foldable = 0;
+    style.overflow = "hidden";
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
+    this.getStylesheet().putCellStyle("umk_model", style);
+    var style = new Object();
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+    style.startSize = 25;
+    style.strokeWidth = 2;
+    style.arcSize = 0;
+    this.getStylesheet().putCellStyle("umk_group", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalLabelPosition = "bottom";
+    style.verticalAlign = "top";
+    style.fontColor = "#000";
+    //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+    this.getStylesheet().putCellStyle("umk_caption", style);
+    style = new Object();
+    style.constituent = 1;
+    style.align = "center";
+    style.verticalAlign = "bottom";
+    style.fontColor = "#000";
+    //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+    this.getStylesheet().putCellStyle("umk_EO", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    style.labelPosition = "right";
+    style.labelWidth = 15;
+    style.align = "left";
+    style.shape = "triangle";
+    style.portConstraint = "west";
+    style.overflow = "fit";
+    //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
+    this.getStylesheet().putCellStyle("umk_input", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    style.labelPosition = "left";
+    style.labelWidth = 15;
+    style.align = "right";
+    style.shape = "triangle";
+    style.portConstraint = "east";
+    style.overflow = "fit";
+    //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
+    this.getStylesheet().putCellStyle("umk_output", style);
+
+    //Custom properties
     this.guidesEnabled = true;
     this.backgroundColor = "#f8f8f8";
     this.setBackgroundColor = function (val) {
@@ -41,6 +101,7 @@ var Graph = function (container) {
     Canvas.style.position = "absolute";
     Canvas.style.top = "0px";
     Canvas.style.left = "0px";
+    Canvas.style.pointerEvents = "none";
     //Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
     container.appendChild(Canvas);
     this.grid = {
@@ -48,8 +109,8 @@ var Graph = function (container) {
         sGraph: this,
         minorStroke: {
             color: "#808080",
-            thickness: 0.5,
-            pattern: "1, 1",
+            thickness: 0.1,
+            pattern: "",
             show: false
         },
         majorStroke: {

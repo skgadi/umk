@@ -4,3 +4,5 @@ var iconText = {
     icon3: "' stroke-width='10' fill='none'>",
     icon4: "</g></svg>"
 };
+var umkBlockCategories = new Array;
+var umkBlockSummary = new Array;

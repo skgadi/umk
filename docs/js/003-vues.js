@@ -13,27 +13,32 @@ var allTheBlocks = new Vue({
         this.dispCategories[0] = true;
         this.updateCounter++;
 
-        //Obtaining blocksPerCategory var
-        for (var i = 0; i < this.bSummary.length; i++) {
-            for (var j = 0; j < this.bSummary[i].category.length; j++) {
-                if (this.bSummary[i].category[j] !== "") {
-                    if (
-                        typeof this.blocksPerCategory[
-                            this.bSummary[i].category[j]
-                        ] === "undefined"
-                    ) {
-                        this.blocksPerCategory[
-                            this.bSummary[i].category[j]
-                        ] = new Array();
-                    }
-                    this.blocksPerCategory[this.bSummary[i].category[j]].push(
-                        this.bSummary[i]
-                    );
-                }
-            }
-        }
+        this.obtainBlocksPerCategory();
     },
     methods: {
+        updateDOMs: function () {
+            this.updateCounter++;
+        },
+        obtainBlocksPerCategory: function () {
+            for (var i = 0; i < this.bSummary.length; i++) {
+                for (var j = 0; j < this.bSummary[i].category.length; j++) {
+                    if (this.bSummary[i].category[j] !== "") {
+                        if (
+                            typeof this.blocksPerCategory[
+                                this.bSummary[i].category[j]
+                            ] === "undefined"
+                        ) {
+                            this.blocksPerCategory[
+                                this.bSummary[i].category[j]
+                            ] = new Array();
+                        }
+                        this.blocksPerCategory[this.bSummary[i].category[j]].push(
+                            this.bSummary[i]
+                        );
+                    }
+                }
+            }    
+        },
         toggleCategoryDisplay: function (idx) {
             this.dispCategories[idx] = !this.dispCategories[idx];
             this.updateCounter++;
@@ -56,6 +61,13 @@ var allTheBlocks = new Vue({
     watch: {
         searchText: function () {
             this.updateCounter++;
+        },
+        bSummary: {
+            deep: true,
+            handler: function () {
+                this.obtainBlocksPerCategory();
+                this.updateCounter++;
+            }
         }
     },
     updated: function () {
@@ -70,24 +82,7 @@ var allTheBlocks = new Vue({
             "libraryBlock"
         );
         for (var i = 0; i < AllLibraryBlocks.length; i++) {
-            var img = AllLibraryBlocks[i];
-            var dragElt = document.createElement("div");
-            dragElt.classList.add("tempAllLibraryBlocks");
-            dragElt.style.border =
-                "dashed " + img.getAttribute("umk_color") + " 1px";
-            dragElt.style.width = img.getAttribute("umk_width") + "px";
-            dragElt.style.height = img.getAttribute("umk_height") + "px";
-            var ds = mxUtils.makeDraggable(
-                img,
-                mainSystem.graph,
-                function () {},
-                dragElt,
-                0,
-                0,
-                true,
-                true
-            );
-            ds.setGuidesEnabled(mainSystem.graph.guidesEnabled);
+            new blockOnDOM(AllLibraryBlocks[i]);
         }
     },
     computed: {
