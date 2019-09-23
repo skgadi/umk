@@ -351,6 +351,7 @@ mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sende
 
 mainSystem.outline.update = function (rv) {
     mainSystem.graph.grid.repaintGrid();
+    updateMathJax();
     return mxOutline.prototype.update.apply(this, arguments);
 };
 
@@ -373,3 +374,60 @@ function selectionChanged() {
     if (mainSystem.graph.getSelectionCells().length === 0)
         document.getElementById("editorForGraph").style.display = "block";
 }
+
+/*
+//How Label is handled for a model
+graph.getLabel = function (cell) {
+    //console.log(cell);
+    if (!!cell.value) {
+        if (cell.style.search("umk_model") >= 0) {
+            try {
+                eval(
+                    "var tempModel = new umk_" +
+                    cell.value.bid +
+                    " (cell.value);"
+                );
+                setCaption(cell, tempModel.Name);
+                if (cell.style.search("umk_display") >= 0) {
+                    return cell.value.show || "$[\\cdot]$";
+                }
+                return (
+                    "<p style='margin:0; padding: 0;'>" +
+                    tempModel.Icon().html +
+                    "</p>"
+                );
+            } catch (e) {
+                pullDBAndGenModel(cell.value.bid)
+                    .then(function () {
+                        eval(
+                            "var tempModel = new umk_" +
+                            cell.value.bid +
+                            " (cell.value);"
+                        );
+                        graph.cellLabelChanged(cell, tempModel.Name);
+                    })
+                    .catch(function (e) {
+                        console.log(e);
+                        notyf.error("Error in loading the block");
+                    });
+                return "Loading...";
+            }
+        } else return cell.value; //"$\\text{"+cell.value+"}$";
+    } else return null;
+};
+graph.getEditingValue = function (cell, evt) {
+    if (!!cell.value) {
+        if (typeof cell.value === "object") return cell.value.Name || "";
+        else return cell.value;
+    } else return null;
+};
+graph.labelChanged = function (cell, newValue, trigger) {
+    if (!!cell.value) {
+        if (typeof cell.value === "object") {
+            var value = mxUtils.clone(cell.value);
+            value.Name = newValue;
+            newValue = value;
+        }
+    }
+    mxGraph.prototype.labelChanged.apply(this, arguments);
+};*/

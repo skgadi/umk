@@ -1,28 +1,23 @@
-var splDraggable = function (element, graphF, funct, dragElement, dx, dy, autoscroll, scalePreview, highlightDropTargets, getDropTarget) {
-    
-}
-
-
 function blockOnDOM(img) {
     var model = img.getAttribute("umk_model");
-    console.log(model);
+    var width = umkBlockSummary[model].width;
+    var height = umkBlockSummary[model].height;
+
     var dragElt = document.createElement("div");
     dragElt.style.border = "dashed " + img.getAttribute("umk_color") + " 1px";
-    dragElt.style.width = img.getAttribute("umk_width") + "px";
-    dragElt.style.height = img.getAttribute("umk_height") + "px";
+    dragElt.style.width = width + "px";
+    dragElt.style.height = height + "px";
     var addANewBlock = function (graph, evt, cell, x, y) {
-        this.model = model;
-        console.log(this.model);
-        var newPt = {
-            x: x,
-            y: y
-        };
-        if (cell) {
-            var pt = cell.getGeometry().getPoint();
-            newPt.x -= pt.x;
-            newPt.y -= pt.y;
+        graph.getModel().beginUpdate();
+        try {
+            eval("var modelForVertex = new " + model + "({})");
+            console.log(modelForVertex);
+            v = graph.insertVertex(graph.getDefaultParent(), null, modelForVertex, x, y, width, height, "umk_model;");
+        } catch (e) {
+            notyf.error("Block error: Unable to place this block. Contact the support.")
+            console.log(e);
         }
-        v = graph.insertVertex(graph.getDefaultParent(), null, 'H', x, y, 50, 50);
+        graph.getModel().endUpdate();
     }
     this.ds = mxUtils.makeDraggable(
         img,

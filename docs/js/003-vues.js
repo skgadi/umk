@@ -20,7 +20,7 @@ var allTheBlocks = new Vue({
             this.updateCounter++;
         },
         obtainBlocksPerCategory: function () {
-            for (var i = 0; i < this.bSummary.length; i++) {
+            for (var i in this.bSummary) {
                 for (var j = 0; j < this.bSummary[i].category.length; j++) {
                     if (this.bSummary[i].category[j] !== "") {
                         if (
@@ -61,13 +61,6 @@ var allTheBlocks = new Vue({
     watch: {
         searchText: function () {
             this.updateCounter++;
-        },
-        bSummary: {
-            deep: true,
-            handler: function () {
-                this.obtainBlocksPerCategory();
-                this.updateCounter++;
-            }
         }
     },
     updated: function () {
@@ -80,7 +73,11 @@ var allTheBlocks = new Vue({
     },
     computed: {
         searchResults: function () {
-            return this.bSummary.filter(function (item) {
+            var bSummaryArray = new Array();
+            for (i in this.bSummary) {
+                bSummaryArray.push(this.bSummary[i]);
+            }
+            return bSummaryArray.filter(function (item) {
                 return (
                     item.name
                     .toLowerCase()

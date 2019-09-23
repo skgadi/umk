@@ -18,3 +18,7 @@ MathJax.Hub.Config({
         ]
     }
 });
+
+function updateMathJax() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+}

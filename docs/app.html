@@ -110,7 +110,7 @@
                 <template v-for="(bDetails, bIndex) in searchResults">
                   <img :key="'block_'+bDetails.id+updateCounter" :src="getBlockImage(bDetails)" width="50px"
                     height="50px" style="cursor: move;" :title="bDetails.name + '\n' + bDetails.description"
-                    class="libraryBlock" :umk_width="bDetails.width" :umk_height="bDetails.height" :umk_model="bDetails.id"
+                    class="libraryBlock" :umk_model="bDetails.id"
                     :umk_color="bDetails.bg" />
                 </template>
               </div>
@@ -133,8 +133,7 @@
               :id="'BlocksOf_'+category.id" class="w3-border w3-border-theme" style="line-height: 1px; font-size: 1px;">
               <template v-for="(bDetails, bIndex) in blocksPerCategory[category.id]">
                 <img :src="getBlockImage(bDetails)" width="50px" height="50px" style="cursor: move;"
-                  :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_width="bDetails.width"
-                  :umk_height="bDetails.height"  :umk_model="bDetails.id" :umk_color="bDetails.bg" />
+                  :title="bDetails.name + '\n' + bDetails.description" class="libraryBlock" :umk_model="bDetails.id" :umk_color="bDetails.bg" />
               </template>
             </div>
           </template>
@@ -339,8 +338,8 @@
   
 
   <!--Uyamak libraries-->
-  <script src="js.min.js?v=0.3"></script>
   <script src="library.min.js?v=0.1"></script>
+  <script src="js.min.js?v=0.3"></script>
 </body>
 
 </html>

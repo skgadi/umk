@@ -1,3 +1,5 @@
+var umkBlockSummary = {};
+var umkBlockCategories = new Array();
 umkBlockCategories.push({
     "id": "sources",
     "name": "Sources",
