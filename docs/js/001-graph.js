@@ -6,7 +6,7 @@ var Graph = function (container) {
     this.setTooltips(false);
     this.htmlLabels = true;
     this.rubberband = new mxRubberband(this);
-    this.graphHandler.guidesEnabled = true;
+    //this.graphHandler.guidesEnabled = true;
     //Stylesheets
     var style = new Object();
     style.foldable = 0;
@@ -61,11 +61,11 @@ var Graph = function (container) {
     this.getStylesheet().putCellStyle("umk_output", style);
 
     //Custom properties
-    this.guidesEnabled = true;
     this.backgroundColor = "#f8f8f8";
     this.setBackgroundColor = function (val) {
         if (!val) val = this.backgroundColor;
         container.style.backgroundColor = val;
+        container.style.zIndex = -2;
     };
     //Navigate graph
     this.navigate = {
@@ -102,7 +102,7 @@ var Graph = function (container) {
     Canvas.style.top = "0px";
     Canvas.style.left = "0px";
     Canvas.style.pointerEvents = "none";
-    //Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
+    Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
     container.appendChild(Canvas);
     this.grid = {
         canvas: Canvas,
@@ -134,6 +134,8 @@ var Graph = function (container) {
             var h = 0;
             var ctx = this.canvas.getContext("2d");
             ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            ctx.fillStyle = "#ff0000";
+            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
             if (ctx != null) {
                 var bounds = graph.getGraphBounds();
                 var width = Math.max(

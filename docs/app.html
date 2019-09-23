@@ -17,7 +17,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #f8f8f8;">
   <div id="waitForProcessToFinish" class="w3-modal w3-display-container"
     style="padding-top: 00px; display: block; background-color: #ffffff">
     <div class=" w3-center" style="margin: auto; width: 300px; background-color: #ffffff;">
@@ -166,7 +166,7 @@
           v-model="graph.backgroundColor" />
           <input @change="refreshGraph()" class="w3-check" v-model="outline.visibility" id="outlineDisplay" type="checkbox">
           <label for="outlineDisplay">Display outline</label><br/>
-          <input @change="graph.graphHandler.guidesEnabled = graph.guidesEnabled; allTheBlocks.updateDOMs()" class="w3-check" v-model="graph.guidesEnabled" id="enableGuides" type="checkbox">
+          <input @change="allTheBlocks.updateDOMs()" class="w3-check" v-model="graph.graphHandler.guidesEnabled" id="enableGuides" type="checkbox">
           <label for="enableGuides">Enable guides</label><br/>
           <input class="w3-check" v-model="graph.gridEnabled" id="snapToGrid" type="checkbox">
           <label for="snapToGrid">Snap to grid</label><br/>

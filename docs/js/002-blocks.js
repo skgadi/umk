@@ -34,5 +34,5 @@ function blockOnDOM(img) {
         true,
         true
     );
-    this.ds.setGuidesEnabled(mainSystem.graph.guidesEnabled);
+    this.ds.setGuidesEnabled(mainSystem.graph.graphHandler.guidesEnabled);
 }
