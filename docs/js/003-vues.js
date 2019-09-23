@@ -71,13 +71,6 @@ var allTheBlocks = new Vue({
         }
     },
     updated: function () {
-        var tempDOMSToRemove = document.getElementsByClassName(
-            "tempAllLibraryBlocks"
-        );
-        while (tempDOMSToRemove[0]) {
-            console.log(tempDOMSToRemove[0]);
-            tempDOMSToRemove[0].parentNode.removeChild(tempDOMSToRemove[0]);
-        }
         var AllLibraryBlocks = document.getElementsByClassName(
             "libraryBlock"
         );

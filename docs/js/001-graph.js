@@ -61,11 +61,19 @@ var Graph = function (container) {
     this.getStylesheet().putCellStyle("umk_output", style);
 
     //Custom properties
+    this.backDiv = document.createElement("div");
+    this.backDiv.style.position = "absolute";
+    this.backDiv.style.top = "0px";
+    this.backDiv.style.left = "0px";
+    this.backDiv.style.width = "100%";
+    this.backDiv.style.height = "100%";
+    this.backDiv.style.zIndex = -2;
+    container.appendChild(this.backDiv);
+
     this.backgroundColor = "#f8f8f8";
     this.setBackgroundColor = function (val) {
         if (!val) val = this.backgroundColor;
-        container.style.backgroundColor = val;
-        container.style.zIndex = -2;
+        this.backDiv.style.backgroundColor = val;
     };
     //Navigate graph
     this.navigate = {
@@ -102,7 +110,7 @@ var Graph = function (container) {
     Canvas.style.top = "0px";
     Canvas.style.left = "0px";
     Canvas.style.pointerEvents = "none";
-    Canvas.style.zIndex = -1;//It may effect the blocks and its selection ... todo
+    Canvas.style.zIndex = -1; //It may effect the blocks and its selection ... todo
     container.appendChild(Canvas);
     this.grid = {
         canvas: Canvas,
@@ -292,7 +300,7 @@ var Graph = function (container) {
 mxUtils.extend(Graph, mxGraph);
 var Outline = function (graph, container) {
     mxOutline.call(this, graph, container);
-    this.visibility = true;
+    this.visibility = false;
     this.setVisiblity = function () {
         container.style.display = (this.visibility) ? "block" : "none";
     }
@@ -345,6 +353,17 @@ mainSystem.outline.update = function (rv) {
     mainSystem.graph.grid.repaintGrid();
     return mxOutline.prototype.update.apply(this, arguments);
 };
+
+mainSystem.outline.mouseDown = function (sender, me) {
+    mainSystem.graph.container.style.backgroundColor = mainSystem.graph.backgroundColor;
+    return mxOutline.prototype.mouseDown.apply(this, arguments);
+};
+
+mainSystem.outline.mouseUp = function (sender, me) {
+    mainSystem.graph.container.style.backgroundColor = "";
+    return mxOutline.prototype.mouseUp.apply(this, arguments);
+};
+
 
 function selectionChanged() {
     var editorDivs = document.getElementsByClassName("editorDivs");
