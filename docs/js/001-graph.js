@@ -1,12 +1,33 @@
 mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
 var Graph = function (container) {
     mxGraph.call(this, container);
+    //Pointer to this
+    var GraphPointer = this;
     //General settings
+    this.setAllowDanglingEdges(false);
+    this.constrainChildren = false; // this won't let the the blocks inside the groups to not change size when groups are resized
+    this.setConnectable(true);
     this.setPanning(true);
-    this.setTooltips(false);
+    this.setTooltips(true);
     this.htmlLabels = true;
     this.rubberband = new mxRubberband(this);
-    //this.graphHandler.guidesEnabled = true;
+    this.setConnectableEdges(false);
+    this.vStyle = this.getStylesheet().getDefaultVertexStyle();
+    this.eStyle = this.getStylesheet().getDefaultEdgeStyle();
+    this.vStyle["shadow"] = false;
+    this.vStyle["whiteSpace"] = "wrap";
+    this.vStyle["arcSize"] = 0;
+    this.vStyle["absoluteArcSize"] = 1;
+    this.vStyle["rounded"] = 1;
+    this.eStyle["edgeStyle"] = "orthogonalEdgeStyle";
+    this.eStyle["strokeWidth"] = 1;
+    this.eStyle["targetJettySize"] = 25;
+    this.eStyle["shadow"] = false;
+    //this.eStyle["endArrow"] = "none";
+    this.eStyle["fontColor"] = "#000";
+    this.eStyle["verticalAlign"] = "top";
+    this.eStyle["overflow"] = "width";
+    this.eStyle["align"] = "right";
     //Stylesheets
     var style = new Object();
     style.foldable = 0;
@@ -39,7 +60,7 @@ var Graph = function (container) {
     style.constituent = 1;
     style.verticalAlign = "middle";
     style.fontColor = "#fff";
-    style.labelPosition = "right";
+    style.labelPosition = "center";
     style.labelWidth = 15;
     style.align = "left";
     style.shape = "triangle";
@@ -296,8 +317,176 @@ var Graph = function (container) {
             }
         }
     };
+    //Handling labels
+    this.getLabel = function (cell) {
+        //console.log(cell);
+        if (!!cell.value) {
+            if (cell.style.search("umk_model") >= 0) {
+                try {
+                    eval(
+                        "var tempModel = new " +
+                        cell.value.id +
+                        "(cell.value);"
+                    );
+                    this.setCaption(cell, tempModel.Name);
+                    if (cell.style.search("umk_display") >= 0) {
+                        return cell.value.show || "$[\\cdot]$";
+                    }
+                    return (
+                        "<p style='margin:0; padding: 0;'>" +
+                        tempModel.Icon().html +
+                        "</p>"
+                    );
+                } catch (e) {
+                    console.log(e);
+                    return "ERROR";
+                }
+            } else return cell.value; //"$\\text{"+cell.value+"}$";
+        } else return null;
+    };
+    this.getEditingValue = function (cell, evt) {
+        if (!!cell.value) {
+            if (typeof cell.value === "object") return cell.value.Name || "";
+            else return cell.value;
+        } else return null;
+    };
+    this.labelChanged = function (cell, newValue, trigger) {
+        if (!!cell.value) {
+            if (typeof cell.value === "object") {
+                var value = mxUtils.clone(cell.value);
+                value.Name = newValue;
+                newValue = value;
+            }
+        }
+        mxGraph.prototype.labelChanged.apply(this, arguments);
+    };
+    this.setCaption = function (Cell, value) {
+        var children = Cell.children;
+        if (!!children) {
+            for (var i = 0; i < children.length; i++) {
+                if (children[i].style.search("umk_caption") >= 0) {
+                    children[i].setValue(value);
+                    this.refresh(children[i]);
+                }
+            }
+        }
+    }
+    //Lines before connecting edges
+    this.view.updateFixedTerminalPoint = function (
+        edge,
+        terminal,
+        source,
+        constraint
+    ) {
+        mxGraphView.prototype.updateFixedTerminalPoint.apply(
+            this,
+            arguments
+        );
+        var pts = edge.absolutePoints;
+        var pt = pts[source ? 0 : pts.length - 1];
+        if (
+            terminal != null &&
+            pt == null &&
+            this.getPerimeterFunction(terminal) == null
+        ) {
+            edge.setAbsoluteTerminalPoint(
+                new mxPoint(
+                    this.getRoutingCenterX(terminal),
+                    this.getRoutingCenterY(terminal)
+                ),
+                source
+            );
+        }
+    };
+    this.connectionHandler.createEdgeState = function (me) {
+        var edge = this.createEdge(null, null, null, null, null);
+        return new mxCellState(
+            this.graph.view,
+            edge,
+            this.graph.getCellStyle(edge)
+        );
+    };
+    // Redirects selection to parent
+    this.selectCellForEvent = function (cell) {
+        if (this.isPart(cell)) {
+            cell = this.model.getParent(cell);
+        }
+
+        mxGraph.prototype.selectCellForEvent.apply(this, arguments);
+    };
+    // Helper method to mark parts with constituent=1 in the style
+    this.isPart = function (cell) {
+        console.log(cell);
+        var style = this.getCellStyle(cell);
+
+        return style["constituent"] == "1";
+    };
+
+    //Connection switching source traget, when required
+    this.connectionHandler.addListener(mxEvent.CONNECT, function (
+        sender,
+        evt
+    ) {
+        this.graph = GraphPointer;
+        console.log(this);
+        var edge = evt.getProperty("cell");
+        var source = this.graph.getModel().getTerminal(edge, true);
+        var target = this.graph.getModel().getTerminal(edge, false);
+        if (
+            source.style.search("umk_input") >= 0 &&
+            target.style.search("umk_output") >= 0
+        ) {
+            this.graph.getModel().setTerminal(edge, source, false);
+            this.graph.getModel().setTerminal(edge, target, true);
+        }
+    });
+    //Connection validation
+    this.customValidationError = true;
+    this.getEdgeValidationError = function (
+        edge,
+        source,
+        target
+    ) {
+        //console.log(source.edges);
+        var defaultOut = mxGraph.prototype.getEdgeValidationError.apply(
+            this,
+            arguments
+        );
+        if (this.customValidationError) {
+            var outError;
+            try {
+                if (source.parent === target.parent)
+                    outError = "Cannot connect to the same block.";
+                if (
+                    source.style.search("umk_input") >= 0 &&
+                    target.style.search("umk_input") >= 0
+                )
+                    outError = "Cannot connect both the inputs.";
+                if (
+                    source.style.search("umk_output") >= 0 &&
+                    target.style.search("umk_output") >= 0
+                )
+                    outError = "Cannot connect both the outputs.";
+                if (
+                    (target.style.search("umk_input") >= 0 &&
+                        target.getEdgeCount() > 0) ||
+                    (source.style.search("umk_input") >= 0 &&
+                        source.getEdgeCount() > 0)
+                )
+                    outError = "Only one input is allowed per port.";
+            } catch (e) {} finally {
+                return outError || defaultOut;
+            }
+        } else return defaultOut;
+    };
+    this.validationAlert = function (message) {
+        notyf.error(message);
+    };
 };
 mxUtils.extend(Graph, mxGraph);
+
+
+
 var Outline = function (graph, container) {
     mxOutline.call(this, graph, container);
     this.visibility = false;
@@ -375,59 +564,14 @@ function selectionChanged() {
         document.getElementById("editorForGraph").style.display = "block";
 }
 
-/*
-//How Label is handled for a model
-graph.getLabel = function (cell) {
-    //console.log(cell);
-    if (!!cell.value) {
-        if (cell.style.search("umk_model") >= 0) {
-            try {
-                eval(
-                    "var tempModel = new umk_" +
-                    cell.value.bid +
-                    " (cell.value);"
-                );
-                setCaption(cell, tempModel.Name);
-                if (cell.style.search("umk_display") >= 0) {
-                    return cell.value.show || "$[\\cdot]$";
-                }
-                return (
-                    "<p style='margin:0; padding: 0;'>" +
-                    tempModel.Icon().html +
-                    "</p>"
-                );
-            } catch (e) {
-                pullDBAndGenModel(cell.value.bid)
-                    .then(function () {
-                        eval(
-                            "var tempModel = new umk_" +
-                            cell.value.bid +
-                            " (cell.value);"
-                        );
-                        graph.cellLabelChanged(cell, tempModel.Name);
-                    })
-                    .catch(function (e) {
-                        console.log(e);
-                        notyf.error("Error in loading the block");
-                    });
-                return "Loading...";
-            }
-        } else return cell.value; //"$\\text{"+cell.value+"}$";
-    } else return null;
-};
-graph.getEditingValue = function (cell, evt) {
-    if (!!cell.value) {
-        if (typeof cell.value === "object") return cell.value.Name || "";
-        else return cell.value;
-    } else return null;
-};
-graph.labelChanged = function (cell, newValue, trigger) {
-    if (!!cell.value) {
-        if (typeof cell.value === "object") {
-            var value = mxUtils.clone(cell.value);
-            value.Name = newValue;
-            newValue = value;
+
+//Change caption
+function setCaption(Cell, value) {
+    var children = Cell.children;
+    for (var i = 0; i < children.length; i++) {
+        if (children[i].style.search("umk_caption") >= 0) {
+            children[i].setValue(value);
+            graph.refresh(children[i]);
         }
     }
-    mxGraph.prototype.labelChanged.apply(this, arguments);
-};*/
+}

@@ -31,13 +31,13 @@ var umk_20190921113111 = function (obj = {}) {
     this.TerminalsIn = {
         min: 2,
         max: 100,
-        val: 2,
+        value: 2,
         editable: true
     };
     this.TerminalsOut = {
         min: 1,
         max: 1,
-        val: 1,
+        value: 1,
         editable: false
     };
     for (var prop in obj) {
