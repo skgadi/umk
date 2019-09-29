@@ -13,7 +13,7 @@ function blockOnDOM(img) {
     var addANewBlock = function (graph, evt, cell, x, y) {
         graph.getModel().beginUpdate();
         try {
-            eval("var modelForVertex = new " + model + "({'Name': '"+Name+"'})");
+            eval("var modelForVertex = new " + model + "({'Name': '" + Name + "'})");
             var IconDetails = modelForVertex.Icon();
             var inLabels = IconDetails.inLabels || [];
             var outLabels = IconDetails.outLabels || [];
@@ -67,7 +67,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
                     height: 8
                 },
                 offset: {
-                    x: 0,//-4,
+                    x: -5.2,
                     y: -4
                 }
             };
@@ -116,7 +116,15 @@ function setTermianls(graph, Cell, type = "umk_input") {
                 position.size.width,
                 position.size.height,
                 type +
-                ";fillColor=none;strokeColor=none;",
+                ";fillColor=" +
+                (type === "umk_input" ?
+                    umkBlockSummary[Cell.value.id].bg :
+                    "none") +
+                ";strokeColor=" +
+                (type === "umk_input" ?
+                    umkBlockSummary[Cell.value.id].bg :
+                    "none") +
+                ";",
                 true
             );
             port.geometry.offset = new mxPoint(

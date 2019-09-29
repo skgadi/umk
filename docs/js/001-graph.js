@@ -60,7 +60,7 @@ var Graph = function (container) {
     style.constituent = 1;
     style.verticalAlign = "middle";
     style.fontColor = "#fff";
-    style.labelPosition = "center";
+    style.labelPosition = "right";
     style.labelWidth = 15;
     style.align = "left";
     style.shape = "triangle";
@@ -482,6 +482,29 @@ var Graph = function (container) {
     this.validationAlert = function (message) {
         notyf.error(message);
     };
+
+    //selection of a vertix
+    this.isCellSelectable = function (cell) {
+        var state = this.view.getState(cell);
+        var style = state != null ? state.style : this.getCellStyle(cell);
+
+        return (
+            this.isCellsSelectable() &&
+            !this.isCellLocked(cell) &&
+            style["selectable"] != 0
+        );
+    };
+
+    //Change tooltip string
+    this.getTooltipForCell = function (cell) {
+        var label = this.convertValueToString(cell);
+        return label;
+    }
+    this.convertValueToString = function (cell) {
+        if (cell.style.search("umk_model") >= 0) return null;
+        else return cell.value;
+    }
+
 };
 mxUtils.extend(Graph, mxGraph);
 
