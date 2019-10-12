@@ -37,7 +37,7 @@ var allTheBlocks = new Vue({
                         );
                     }
                 }
-            }    
+            }
         },
         toggleCategoryDisplay: function (idx) {
             this.dispCategories[idx] = !this.dispCategories[idx];
@@ -105,6 +105,33 @@ var editorForGraph = new Vue({
     methods: {
         refreshGraph: function () {
             mainSystem.refresh();
+        }
+    }
+});
+
+
+var mainToobar = new Vue({
+    el: "#mainToobar",
+    data: {
+        visibleItem: "library",
+        toolBar: toolBar
+    },
+    methods: {
+        clickCallback: function(toEval) {
+            var toHideDivs = document.getElementsByClassName('closeOnClick');
+            for (var i=0; i<toHideDivs.length; i++) {
+                toHideDivs[i].style.visibility = "collapse";
+            }
+            for (var i=0; i<toHideDivs.length; i++) {
+                setTimeout((a)=>{a.style.visibility = "visible";}, 10, toHideDivs[i]);
+            }
+            eval(toEval);
+        },
+        showInfo: function (text) {
+            document.getElementById("infoInStatus").innerText = text;
+        },
+        hideInfo: function () {
+            document.getElementById("infoInStatus").innerText = "";
         }
     }
 });

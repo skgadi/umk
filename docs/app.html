@@ -39,11 +39,11 @@
           <span><i v-if="!!topTool.icon" v-bind:class="topTool.icon"></i></span>
           <span v-html="topTool.value"></span>
         </div>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4" v-bind:style="'width: ' + (topTool.width) + 'px;'">
+        <div class="w3-dropdown-content w3-bar-block w3-card-4 closeOnClick" style="visibility: visible;" v-bind:style="'width: ' + (topTool.width) + 'px;'">
           <template v-for="(tool, index) in topTool.items">
             <hr v-if="tool.value === 'hl'" style="margin:0; border-color: #ddd;" />
             <div v-else class="w3-bar-item w3-button" style="padding: 0px; vertical-align: middle;"
-              v-bind:onclick="(tool.function)" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)">
+              @click="clickCallback(tool.function)" @mouseleave="hideInfo()" @mouseover="showInfo(tool.text)">
               <div class="w3-display-container" style="height: 30px; margin: 0 4px;">
                 <div class="w3-display-left">
                   <span class="w3-xlarge" style="display:inline-block; vertical-align:middle"><i v-if="!!tool.icon"

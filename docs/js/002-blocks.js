@@ -67,7 +67,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
                     height: 8
                 },
                 offset: {
-                    x: -5.2,
+                    x: -4,
                     y: -4
                 }
             };
