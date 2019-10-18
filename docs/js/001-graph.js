@@ -1,86 +1,86 @@
 mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
 var Graph = function (container) {
-  mxGraph.call(this, container);
-  //Pointer to this
-  var GraphPointer = this;
-  //General settings
-  this.setAllowDanglingEdges(false);
-  this.constrainChildren = false; // this won't let the the blocks inside the groups to not change size when groups are resized
-  this.setConnectable(true);
-  this.setPanning(true);
-  this.setTooltips(true);
-  this.htmlLabels = true;
-  this.rubberband = new mxRubberband(this);
-  this.setConnectableEdges(false);
-  this.vStyle = this.getStylesheet().getDefaultVertexStyle();
-  this.eStyle = this.getStylesheet().getDefaultEdgeStyle();
-  this.vStyle["shadow"] = false;
-  this.vStyle["whiteSpace"] = "wrap";
-  this.vStyle["arcSize"] = 0;
-  this.vStyle["absoluteArcSize"] = 1;
-  this.vStyle["rounded"] = 1;
-  this.vStyle["strokeWidth"] = 0;
-  this.eStyle["edgeStyle"] = "orthogonalEdgeStyle";
-  this.eStyle["strokeWidth"] = 1;
-  this.eStyle["targetJettySize"] = 25;
-  this.eStyle["shadow"] = false;
-  //this.eStyle["endArrow"] = "none";
-  this.eStyle["fontColor"] = "#000";
-  this.eStyle["verticalAlign"] = "top";
-  this.eStyle["overflow"] = "width";
-  this.eStyle["align"] = "right";
-  //Stylesheets
-  var style = new Object();
-  style.foldable = 0;
-  style.overflow = "hidden";
-  style.verticalAlign = "middle";
-  style.fontColor = "#fff";
-  //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
-  this.getStylesheet().putCellStyle("umk_model", style);
-  var style = new Object();
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-  style.startSize = 25;
-  style.strokeWidth = 2;
-  style.arcSize = 0;
-  this.getStylesheet().putCellStyle("umk_group", style);
-  style = new Object();
-  style.constituent = 1;
-  style.verticalLabelPosition = "bottom";
-  style.verticalAlign = "top";
-  style.fontColor = "#000";
-  //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
-  this.getStylesheet().putCellStyle("umk_caption", style);
-  style = new Object();
-  style.constituent = 1;
-  style.align = "center";
-  style.verticalAlign = "bottom";
-  style.fontColor = "#000";
-  //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
-  this.getStylesheet().putCellStyle("umk_EO", style);
-  style = new Object();
-  style.constituent = 1;
-  style.verticalAlign = "middle";
-  style.fontColor = "#fff";
-  style.labelPosition = "right";
-  style.labelWidth = 15;
-  style.align = "left";
-  style.shape = "triangle";
-  style.portConstraint = "west";
-  style.overflow = "fit";
-  //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
-  this.getStylesheet().putCellStyle("umk_input", style);
-  style = new Object();
-  style.constituent = 1;
-  style.verticalAlign = "middle";
-  style.fontColor = "#fff";
-  style.labelPosition = "left";
-  style.labelWidth = 15;
-  style.align = "right";
-  style.shape = "triangle";
-  style.portConstraint = "east";
-  style.overflow = "fit";
-  //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
-  this.getStylesheet().putCellStyle("umk_output", style);
+    mxGraph.call(this, container);
+    //Pointer to this
+    var GraphPointer = this;
+    //General settings
+    this.setAllowDanglingEdges(false);
+    this.constrainChildren = false; // this won't let the the blocks inside the groups to not change size when groups are resized
+    this.setConnectable(true);
+    this.setPanning(true);
+    this.setTooltips(true);
+    this.htmlLabels = true;
+    this.rubberband = new mxRubberband(this);
+    this.setConnectableEdges(false);
+    this.vStyle = this.getStylesheet().getDefaultVertexStyle();
+    this.eStyle = this.getStylesheet().getDefaultEdgeStyle();
+    this.vStyle["shadow"] = false;
+    this.vStyle["whiteSpace"] = "wrap";
+    this.vStyle["arcSize"] = 0;
+    this.vStyle["absoluteArcSize"] = 1;
+    this.vStyle["rounded"] = 1;
+    this.vStyle["strokeWidth"] = 0;
+    this.eStyle["edgeStyle"] = "orthogonalEdgeStyle";
+    this.eStyle["strokeWidth"] = 1;
+    this.eStyle["targetJettySize"] = 25;
+    this.eStyle["shadow"] = false;
+    this.eStyle["endArrow"] = "none";
+    this.eStyle["fontColor"] = "#000";
+    this.eStyle["verticalAlign"] = "top";
+    this.eStyle["overflow"] = "width";
+    this.eStyle["align"] = "right";
+    //Stylesheets
+    var style = new Object();
+    style.foldable = 0;
+    style.overflow = "hidden";
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
+    this.getStylesheet().putCellStyle("umk_model", style);
+    var style = new Object();
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+    style.startSize = 25;
+    style.strokeWidth = 2;
+    style.arcSize = 0;
+    this.getStylesheet().putCellStyle("umk_group", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalLabelPosition = "bottom";
+    style.verticalAlign = "top";
+    style.fontColor = "#000";
+    //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+    this.getStylesheet().putCellStyle("umk_caption", style);
+    style = new Object();
+    style.constituent = 1;
+    style.align = "center";
+    style.verticalAlign = "bottom";
+    style.fontColor = "#000";
+    //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+    this.getStylesheet().putCellStyle("umk_EO", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    style.labelPosition = "right";
+    style.labelWidth = 15;
+    style.align = "left";
+    style.shape = "triangle";
+    style.portConstraint = "west";
+    style.overflow = "fit";
+    //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
+    this.getStylesheet().putCellStyle("umk_input", style);
+    style = new Object();
+    style.constituent = 1;
+    style.verticalAlign = "middle";
+    style.fontColor = "#fff";
+    style.labelPosition = "left";
+    style.labelWidth = 15;
+    style.align = "right";
+    style.shape = "triangle";
+    style.portConstraint = "east";
+    style.overflow = "fit";
+    //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
+    this.getStylesheet().putCellStyle("umk_output", style);
 
   //Custom properties
   this.backDiv = document.createElement("div");
@@ -506,6 +506,15 @@ var Graph = function (container) {
     else return cell.value;
   }
 
+    //Handling context icons
+    this.createHandler = function (state) {
+        if (state != null &&
+            this.model.isVertex(state.cell)) {
+            return new mxVertexToolHandler(state);
+        }
+
+        return mxGraph.prototype.createHandler.apply(this, arguments);
+    };
 };
 mxUtils.extend(Graph, mxGraph);
 
@@ -611,3 +620,140 @@ function setCaption(Cell, value) {
 }
 
 mainSystem.keyHandler.bindControlKey(79, function (evt){alert()});mainSystem.keyHandler.bindControlKey(83, function (evt){alert()});mainSystem.keyHandler.bindControlKey(76, function (evt){alert()});mainSystem.keyHandler.bindControlKey(74, function (evt){alert()});mainSystem.keyHandler.bindControlShiftKey(74, function (evt){alert()});mainSystem.keyHandler.bindControlKey(80, function (evt){alert()});mainSystem.keyHandler.bindControlKey(85, function (evt){alert()});mainSystem.keyHandler.bindControlKey(69, function (evt){alert()});mainSystem.keyHandler.bindControlShiftKey(83, function (evt){alert()});mainSystem.keyHandler.bindControlShiftKey(86, function (evt){ShowModelItem('variablesManager')});mainSystem.keyHandler.bindControlKey(75, function (evt){if (mainSystem.graph.isEnabled()) createSubModel();});mainSystem.keyHandler.bindControlShiftKey(75, function (evt){if (mainSystem.graph.isEnabled()) ungroupSubModel();});mainSystem.keyHandler.bindControlKey(65, function (evt){alert()});mainSystem.keyHandler.bindControlShiftKey(65, function (evt){alert()});mainSystem.keyHandler.bindControlKey(88, function (evt){alert()});mainSystem.keyHandler.bindControlKey(67, function (evt){alert()});mainSystem.keyHandler.bindControlKey(86, function (evt){alert()});mainSystem.keyHandler.bindControlShiftKey(67, function (evt){alert()});mainSystem.keyHandler.bindKey(46, function (evt){if (mainSystem.graph.isEnabled()) mainSystem.graph.removeCells();});mainSystem.keyHandler.bindControlKey(90, function (evt){mainSystem.undoManager.undo();});mainSystem.keyHandler.bindControlShiftKey(90, function (evt){mainSystem.undoManager.redo();});mainSystem.keyHandler.bindControlKey(107, function (evt){mainSystem.graph.zoomIn();});mainSystem.keyHandler.bindControlKey(109, function (evt){mainSystem.graph.zoomOut();});mainSystem.keyHandler.bindControlKey(96, function (evt){mainSystem.graph.zoomActual();});mainSystem.keyHandler.bindControlShiftKey(96, function (evt){mainSystem.graph.fit();});mainSystem.keyHandler.bindControlKey(77, function (evt){foldItems();});mainSystem.keyHandler.bindControlShiftKey(77, function (evt){foldItems(false);});mainSystem.keyHandler.bindControlKey(82, function (evt){displayExecutionOrder()});mainSystem.keyHandler.bindControlKey(70, function (evt){alert()});mainSystem.keyHandler.bindControlKey(71, function (evt){alert()});mainSystem.keyHandler.bindControlKey(84, function (evt){alert()});mainSystem.keyHandler.bindControlKey(89, function (evt){alert()});mainSystem.keyHandler.bindControlKey(66, function (evt){alert()});mainSystem.keyHandler.bindControlKey(87, function (evt){alert()});mainSystem.keyHandler.bindControlKey(68, function (evt){alert()});mainSystem.keyHandler.bindControlKey(72, function (evt){alert()});mainSystem.keyHandler.bindKey(38, function (evt){movemainSystem.graph("up");});mainSystem.keyHandler.bindKey(40, function (evt){movemainSystem.graph("down");});mainSystem.keyHandler.bindKey(39, function (evt){movemainSystem.graph("right");});mainSystem.keyHandler.bindKey(37, function (evt){movemainSystem.graph("left");});mainSystem.keyHandler.bindControlKey(48, function (evt){mainSystem.graph.zoomActual();});mainSystem.keyHandler.bindControlShiftKey(48, function (evt){mainSystem.graph.fit();});
+
+
+//Context icons
+// Defines a subclass for mxVertexHandler that adds a set of clickable
+// icons to every selected vertex.
+function mxVertexToolHandler(state) {
+    mxVertexHandler.apply(this, arguments);
+};
+
+mxVertexToolHandler.prototype = new mxVertexHandler();
+mxVertexToolHandler.prototype.constructor = mxVertexToolHandler;
+
+mxVertexToolHandler.prototype.domNode = null;
+
+mxVertexToolHandler.prototype.init = function () {
+    mxVertexHandler.prototype.init.apply(this, arguments);
+
+    // In this example we force the use of DIVs for images in IE. This
+    // handles transparency in PNG images properly in IE and fixes the
+    // problem that IE routes all mouse events for a gesture via the
+    // initial IMG node, which means the target vertices 
+    this.domNode = document.createElement('div');
+    this.domNode.style.position = 'absolute';
+    this.domNode.style.whiteSpace = 'nowrap';
+
+    // Workaround for event redirection via image tag in quirks and IE8
+    function createImage(src) {
+        if (mxClient.IS_IE && !mxClient.IS_SVG) {
+            var img = document.createElement('div');
+            img.style.backgroundImage = 'url(' + src + ')';
+            img.style.backgroundPosition = 'center';
+            img.style.backgroundRepeat = 'no-repeat';
+            img.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
+
+            return img;
+        } else {
+            return mxUtils.createImage(src);
+        }
+    };
+
+    // Delete
+    var img = createImage('images/delete2.png');
+    img.setAttribute('title', 'Delete');
+    img.style.cursor = 'pointer';
+    img.style.width = '16px';
+    img.style.height = '16px';
+    mxEvent.addGestureListeners(img,
+        mxUtils.bind(this, function (evt) {
+            // Disables dragging the image
+            mxEvent.consume(evt);
+        })
+    );
+    mxEvent.addListener(img, 'click',
+        mxUtils.bind(this, function (evt) {
+            this.graph.removeCells([this.state.cell]);
+            mxEvent.consume(evt);
+        })
+    );
+    this.domNode.appendChild(img);
+
+    // Size
+    var img = createImage('images/fit_to_size.png');
+    img.setAttribute('title', 'Resize');
+    img.style.cursor = 'se-resize';
+    img.style.width = '16px';
+    img.style.height = '16px';
+    mxEvent.addGestureListeners(img,
+        mxUtils.bind(this, function (evt) {
+            this.start(mxEvent.getClientX(evt), mxEvent.getClientY(evt), 7);
+            this.graph.isMouseDown = true;
+            this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+            mxEvent.consume(evt);
+        })
+    );
+    this.domNode.appendChild(img);
+
+    // Move
+    var img = createImage('images/plus.png');
+    img.setAttribute('title', 'Move');
+    img.style.cursor = 'move';
+    img.style.width = '16px';
+    img.style.height = '16px';
+    mxEvent.addGestureListeners(img,
+        mxUtils.bind(this, function (evt) {
+            this.graph.graphHandler.start(this.state.cell,
+                mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+            this.graph.graphHandler.cellWasClicked = true;
+            this.graph.isMouseDown = true;
+            this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+            mxEvent.consume(evt);
+        })
+    );
+    this.domNode.appendChild(img);
+
+    // Connect
+    var img = createImage('images/check.png');
+    img.setAttribute('title', 'Connect');
+    img.style.cursor = 'pointer';
+    img.style.width = '16px';
+    img.style.height = '16px';
+    mxEvent.addGestureListeners(img,
+        mxUtils.bind(this, function (evt) {
+            var pt = mxUtils.convertPoint(this.graph.container,
+                mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+            this.graph.connectionHandler.start(this.state, pt.x, pt.y);
+            this.graph.isMouseDown = true;
+            this.graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+            mxEvent.consume(evt);
+        })
+    );
+    this.domNode.appendChild(img);
+
+    this.graph.container.appendChild(this.domNode);
+    this.redrawTools();
+};
+
+mxVertexToolHandler.prototype.redraw = function () {
+    mxVertexHandler.prototype.redraw.apply(this);
+    this.redrawTools();
+};
+
+mxVertexToolHandler.prototype.redrawTools = function () {
+    if (this.state != null && this.domNode != null) {
+        var dy = (mxClient.IS_VML && document.compatMode == 'CSS1Compat') ? 20 : 4;
+        this.domNode.style.left = (this.state.x + this.state.width - 56) + 'px';
+        this.domNode.style.top = (this.state.y + this.state.height + dy) + 'px';
+    }
+};
+
+mxVertexToolHandler.prototype.destroy = function (sender, me) {
+    mxVertexHandler.prototype.destroy.apply(this, arguments);
+
+    if (this.domNode != null) {
+        this.domNode.parentNode.removeChild(this.domNode);
+        this.domNode = null;
+    }
+};
