@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="theme-dark">
+
+<head>
+  <title>Uyamak Editor</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
+  <!--link rel="stylesheet" href="libs-others/w3css-v4/w3.css" />
+  <link rel="stylesheet" href="libs-others/w3css-v4/w3-theme-teal.css" /-->
+  <link rel="stylesheet" href="css/fonts/u57c.min.css" />
+  <link rel="stylesheet" href="libs-others/fa/css/all.min.css" />
+
+  <link rel="stylesheet" href="css/themes.min.css" />
+  <link rel="stylesheet" href="css/style.min.css" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="libs-others/notyf/notyf.min.css" />
+
+</head>
+
+<body style="background-color: #f8f8f8;">
+  <div id="waitForProcessToFinish">
+    <div>
+      <div id="DOMWaitingAnimation">
+        <i class="fas fa-cog fa-spin fa-2x"></i>
+      </div>
+      <div id="DOMWaitingHead">
+        Loading ...
+      </div>
+      <div id="DOMWaitingDesc">
+        <i>
+          If it takes longer than 2 minutes. Check you internet connection and try again.
+        </i>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="tool-bar">
+      <ul class="menu">
+        <template v-for="(item, idx) in tools">
+          <li  class="dropdown">
+            <a class="dropbtn">
+              <span><i :class="item.icon"></i></span>
+              <span class="gap-left hide-small">{{item.value}}</span>
+            </a>
+            <div class="dropdown-content">
+              <template v-for="(item0, idx0) in item.items">
+                <div class="compress menu-hl" v-if= "item0.value ==='hl'" ></div>
+                <a v-else>
+                  <span><i class="fa-fw" :class="item0.icon"></i></span>
+                  <span class="gap-left hide-small" v-text="item0.value"></span>
+                  <span v-if="Array.isArray(item0.shortcut) && !!item0.shortcut.length" class="hide-medium-small menu-shortcut">
+                    <template v-for="(item1, idx1) in item0.shortcut" >
+                      <span v-if="!!idx1" v-text="'+'"></span>
+                      <span class="menu-shortcut-key" v-text="item1"></span>
+                    </template>
+                  </span>
+                </a>
+              </template>
+            </div>
+          </li>
+        </template>
+      </ul>
+    </div>
+    <div id="left-pane">
+      <div id="hide-button-left" class="hide-btn">
+        <div>Hide</div>
+        <div>
+          <i class="fas fa-angle-double-left"></i>
+        </div>
+      </div>
+      <div>
+
+      </div>
+    </div>
+    <div id="graph">graph</div>
+    <div id="right-pane">
+      <div id="hide-button-right" class="hide-btn">
+        <div>
+          <i class="fas fa-angle-double-right"></i>
+        </div>
+        <div>Hide</div>
+      </div>
+    </div>
+    <div id="footer">
+      <div>Hint</div>
+      <div>Status</div>
+      <div>Time</div>
+    </div>
+    <div id="btn-blocks" class="pull-btn">
+      <span style="padding-right: 10px;">
+        <i class="fas fa-chevron-right"></i>
+      </span>
+    </div>
+    <div id="btn-edit" class="pull-btn">
+      <span style="padding-left: 10px;">
+        <i class="fas fa-chevron-left"></i>
+      </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src",
+      mxLoadResources = !1;
+    window.urlParams = window.urlParams || {};
+  </script>
+  <script src="libs-others/math-js/math.min.js"></script>
+  <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script src="libs-others/augmented-json-serialization-functions.js"></script>
+  <script src="libs-others/notyf/notyf.min.js"></script>
+  <script src="libs-others/vue/vue.min.js"></script>
+  <script src="libs-others/split-js/split.min.js"></script>
+
+  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
+
+
+
+  <!--Uyamak libraries-->
+  <script src="library.min.js?v=0.1"></script>
+  <script src="script.min.js"></script>
+</body>
+
+</html>
