@@ -39,9 +39,14 @@
     });
     document.getElementById('btn-blocks').addEventListener('click', (event) => {
         setPaneVisible('left', true);
+        if (window.innerWidth < 940)
+            setPaneVisible('right', false);
+
     });
     document.getElementById('btn-edit').addEventListener('click', (event) => {
         setPaneVisible('right', true);
+        if (window.innerWidth < 940)
+            setPaneVisible('left', false);
     });
     document.getElementById('hide-button-left').addEventListener('click', (event) => {
         setPaneVisible('left', false);

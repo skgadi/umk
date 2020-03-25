@@ -100,10 +100,15 @@ body {
     background-color: var(--background-secondary-alt);
     cursor: pointer;
 }
-
+.pull-btn:hover {
+    transition: width var(--animation-time) !important;
+    background-color: var(--background-tertiary);
+    color: var(--text-normal);
+}
 .pull-btn>span>i {
     line-height: unset !important;
 }
+
 
 #btn-blocks {
     grid-area: lClose;
@@ -114,12 +119,8 @@ body {
     border-radius: 0 calc(var(--button-size)/2) calc(var(--button-size)/2) 0;
     /*transition-delay: var(--animation-time);*/
 }
-
-.pull-btn:hover {
-    width: calc(var(--button-size)*1.5) !important;
-    transition: width var(--animation-time) !important;
-    background-color: var(--background-tertiary);
-    color: var(--text-normal);
+#btn-blocks:hover {
+    width: calc((1 - var(--left-bar-size))*var(--button-size)*1.5);
 }
 
 #btn-edit {
@@ -129,6 +130,9 @@ body {
     grid-column: 4;
     grid-row: 3;
     border-radius: calc(var(--button-size)/2) 0 0 calc(var(--button-size)/2);
+}
+#btn-edit:hover {
+    width: calc((1 - var(--right-bar-size))*var(--button-size)*1.5);
 }
 
 
