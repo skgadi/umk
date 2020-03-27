@@ -26,7 +26,7 @@
         <i class="fas fa-cog fa-spin fa-2x"></i>
       </div>
       <div id="DOMWaitingHead">
-        Loading ...
+        Please wait ...
       </div>
       <div id="DOMWaitingDesc">
         <i>
@@ -39,24 +39,27 @@
     <div id="tool-bar">
       <ul class="menu">
         <template v-for="(item, idx) in tools">
-          <li  class="dropdown">
+          <li class="dropdown">
             <a class="dropbtn">
               <span><i :class="item.icon"></i></span>
-              <span class="gap-left hide-small">{{item.value}}</span>
+              <span class="gap-left hide-small">{{item.text[lang]}}</span>
             </a>
             <div class="dropdown-content">
-              <template v-for="(item0, idx0) in item.items">
-                <div class="compress menu-hl" v-if= "item0.value ==='hl'" ></div>
-                <a v-else>
+              <template v-for="(item0, idx0) in item.subMenu">
+                <a>
                   <span><i class="fa-fw" :class="item0.icon"></i></span>
-                  <span class="gap-left hide-small" v-text="item0.value"></span>
-                  <span v-if="Array.isArray(item0.shortcut) && !!item0.shortcut.length" class="hide-medium-small menu-shortcut">
-                    <template v-for="(item1, idx1) in item0.shortcut" >
-                      <span v-if="!!idx1" v-text="'+'"></span>
-                      <span class="menu-shortcut-key" v-text="item1"></span>
-                    </template>
+                  <span class="gap-left hide-small" v-text="item0.text[lang]"></span>
+                  <span v-if="!!item0.kbShort.key" class="menuShortcut hide-medium-small">
+                    <template v-if="!!item0.kbShort.ctrl">
+                      <span v-text="GUIText[lang]['key_ctrl']"></span><span>+</span>
+                    </template><template v-if="!!item0.kbShort.alt">
+                      <span v-text="GUIText[lang]['key_alt']"></span><span>+</span>
+                    </template><template v-if="!!item0.kbShort.shift">
+                      <span v-text="GUIText[lang]['key_shift']"></span><span>+</span>
+                    </template><span v-text="GUIText[lang][item0.kbShort.langCode]"></span>
                   </span>
                 </a>
+                <div v-if="item0.prtBelow" class="menu-hl"></div>
               </template>
             </div>
           </li>
