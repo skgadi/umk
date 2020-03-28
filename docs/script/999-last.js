@@ -1,7 +1,6 @@
-launchFullscreen(document.documentElement);
 suspendUserInterface.suspendInterface();
 
-function launchFullscreen(element) {
+function launchFullscreen(element = document.documentElement) {
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {

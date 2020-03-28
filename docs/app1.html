@@ -40,16 +40,17 @@
       <ul class="menu">
         <template v-for="(item, idx) in tools">
           <li class="dropdown">
-            <a class="dropbtn">
+            <a class="dropbtn" @mouseover="showStatus(item.moreInfo[lang])" @mouseleave="removeStatus()">
               <span><i :class="item.icon"></i></span>
               <span class="gap-left hide-small">{{item.text[lang]}}</span>
             </a>
             <div class="dropdown-content">
               <template v-for="(item0, idx0) in item.subMenu">
                 <a :style="item0.prtBelow?'border-bottom: 1px var(--text-muted) solid':''"
-                @mouseover="showStatus(item0.moreInfo[lang])"
-                @mouseleave="removeStatus()">
-                  <span><span><i class="fa-fw" :class="item0.icon"></i></span><span class="gap-left hide-small" v-text="item0.text[lang]"></span></span>
+                  @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()"
+                  @click="eval(item0.func)">
+                  <span><span><i class="fa-fw" :class="item0.icon"></i></span><span class="gap-left hide-small"
+                      v-text="item0.text[lang]"></span></span>
                   <span v-if="!!item0.kbShort.key" class="menuShortcut hide-medium-small">
                     <template v-if="!!item0.kbShort.ctrl">
                       <span v-text="GUIText[lang]['key_ctrl']"></span><span>+</span>

@@ -1,7 +1,7 @@
 const menuVue = new Vue({
     el: "#tool-bar",
     data: {
-        tools: menuText,
+        tools: menu,
         statusVisible: 0 
     },
     methods: {
