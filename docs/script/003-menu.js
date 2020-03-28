@@ -6,17 +6,17 @@ const menuVue = new Vue({
     },
     methods: {
         showStatus: function(txt) {
-            /*if (!!this.statusVisible) {
+            if (!!this.statusVisible) {
                 this.removeStatus(this.statusVisible);
             }
-            this.statusVisible = hintDisplay.addHint("<span><i class='fas fa-info-circle'></i>&nbsp;</span><span>"+txt+"</span>");
-            */
+            this.statusVisible = footerVue.addHint("<span><i class='fas fa-info-circle'></i>&nbsp;</span><span>"+txt+"</span>");
+            
         },
         removeStatus: function(){
-            /*
-            hintDisplay.removeHint(this.statusVisible);
+            
+            footerVue.removeHint(this.statusVisible);
             this.statusVisible=0;
-            */
+            
         }
     }
 });
