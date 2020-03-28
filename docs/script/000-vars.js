@@ -19,5 +19,5 @@ const suspendUserInterface = {
         document.getElementById("waitForProcessToFinish").style.display = ((!!Object.keys(this.suspendOrders).length) ? 'block' : 'none');
         document.getElementById("DOMWaitingDesc").innerHTML = "<ol><li>" + Object.values(this.suspendOrders).join("</li><li>") + "</li></ol>";
     }
-}
+};
 let toolBarVue;

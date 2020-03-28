@@ -2,6 +2,11 @@
     const minHeight = 360;
     const minWidth = 400;
     const panes = ['left', 'right'];
+    let tooSmallHeight = 0;
+    let tooSmallWidth = 0;
+
+    resizePanesAutomatically(window.innerWidth, window.innerHeight);
+
 
     function setPaneVisible(pane = "left", visible = true) {
         let val = !!visible ? 1 : 0;
@@ -17,12 +22,20 @@
     function resizePanesAutomatically(presWidth, presHeight) {
         let pVisibility = [];
         if (presHeight < minHeight) {
-            //holdToFinishAProcess("tooSmallHeight");
-            return;
+            if (!tooSmallHeight) tooSmallHeight = suspendUserInterface.addOrder(GUIText[lang].errorShortHeight)
+        } else {
+            if (!!tooSmallHeight) {
+                suspendUserInterface.removeOrder(tooSmallHeight);
+                tooSmallHeight = 0;
+            }
         }
         if (presWidth < minWidth) {
-            //holdToFinishAProcess("tooSmallWidth");
-            return;
+            if (!tooSmallWidth) tooSmallWidth = suspendUserInterface.addOrder(GUIText[lang].errorShortWidth)
+        } else {
+            if (!!tooSmallWidth) {
+                suspendUserInterface.removeOrder(tooSmallWidth);
+                tooSmallWidth = 0;
+            }
         }
         if (presWidth < 640) {
             pVisibility = [false, false];
@@ -32,7 +45,7 @@
             pVisibility = [true, true];
         }
         setAllPanesVisibility(pVisibility);
-        console.log(presWidth);
+        //console.log(presWidth);
     }
     windResizeCallbacks.push((event) => {
         resizePanesAutomatically(event.currentTarget.innerWidth, event.currentTarget.innerHeight);
