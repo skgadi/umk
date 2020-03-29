@@ -35,6 +35,26 @@
       </div>
     </div>
   </div>
+  <div id="settings" v-show="display">
+    <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
+    <h1 v-text="GUIText[settings.lang].settings"></h1>
+    <div>
+      <div>
+        <label v-text="GUIText[settings.lang].language"></label>
+        <select v-model="settings.lang">
+          <option value="en-us" v-text="GUIText[settings.lang]['en-us']"></option>
+          <option value="es-mx" v-text="GUIText[settings.lang]['es-mx']"></option>
+        </select>
+      </div>
+      <div>
+        <label v-text="GUIText[settings.lang].theme"></label>
+        <select v-model="settings.theme">
+          <option value="theme-dark" v-text="GUIText[settings.lang]['theme-dark']"></option>
+          <option value="theme-light" v-text="GUIText[settings.lang]['theme-light']"></option>
+        </select>
+      </div>
+    </div>
+  </div>
   <div id="main">
     <div id="tool-bar">
       <ul class="menu">
@@ -47,8 +67,7 @@
             <div class="dropdown-content">
               <template v-for="(item0, idx0) in item.subMenu">
                 <a :style="item0.prtBelow?'border-bottom: 1px var(--text-muted) solid':''"
-                  @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()"
-                  @click="eval(item0.func)">
+                  @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()" @click="eval(item0.func)">
                   <span><span><i class="fa-fw" :class="item0.icon"></i></span><span class="gap-left hide-small"
                       v-text="item0.text[lang]"></span></span>
                   <span v-if="!!item0.kbShort.key" class="menuShortcut hide-medium-small">
@@ -78,7 +97,12 @@
 
       </div>
     </div>
-    <div id="graph">graph</div>
+    <div id="graph">
+      <div id="modelContainer" class="umk_main" style="height:100%;width:100%;"></div>
+      <div id="outlineContainer" class="w3-hide-small w3-hide-medium"
+        style="position: absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;"></div>
+
+    </div>
     <div id="right-pane">
       <div id="hide-button-right" class="hide-btn">
         <div>
@@ -120,7 +144,7 @@
 
 
   <!--Uyamak libraries-->
-  <script src="library.min.js?v=0.1"></script>
+  <script src="lib.min.js?v=0.1"></script>
   <script src="script.min.js"></script>
 </body>
 

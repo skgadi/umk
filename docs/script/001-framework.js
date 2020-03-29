@@ -4,11 +4,3 @@ window.addEventListener('resize', (event) => {
         cBack(event);
     });
 });
-//Handles the keyboard shortcuts
-(() => {
-    menu.forEach((ele) => {
-        ele.subMenu.forEach((ele2) => {
-            
-        });
-    })
-})();

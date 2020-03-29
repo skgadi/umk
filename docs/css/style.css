@@ -13,15 +13,66 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    font-family: "Univers 57 Condensed";
     background-color: var(--background-primary);
     color: var(--text-muted);
 }
 
-#waitForProcessToFinish {
-    display: table-cell;
+html,
+body,
+select {
+    font-family: "Univers 57 Condensed";
+}
+
+
+#settings {
     background-color: var(--background-secondary);
     z-index: 3;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+#settings>div{
+    column-rule: 2px var(--background-secondary-alt) inset;
+}
+
+#settings>div>h1 {
+    column-span: all;
+}
+
+#settings>div>div {
+    width: 100%;
+    -webkit-column-break-inside: avoid;
+    /* Chrome, Safari */
+    page-break-inside: avoid;
+    /* Theoretically FF 20+ */
+    break-inside: avoid-column;
+    /* IE 11 */
+    display: table;
+    /* Actually FF 20+ */
+}
+
+#settings>div>div>label {
+    display: block;
+    font-size: 1.5em;
+}
+
+#settings>div>div>select {
+    width: 100%;
+    font-size: 2em;
+    background-color: var(--background-primary);
+    color: var(--text-muted);
+    border-width: 0;
+}
+
+#waitForProcessToFinish {
+    display: block;
+    background-color: var(--background-secondary);
+    z-index: 4;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -50,6 +101,7 @@ body {
 
 #DOMWaitingDesc {
     color: var(--header-secondary);
+    text-align: justify;
 }
 
 
@@ -90,7 +142,7 @@ body {
 }
 
 .pull-btn {
-    z-index: 2;
+    z-index: 1;
     height: var(--button-size);
     line-height: var(--button-size);
     transition: width var(--animation-time) var(--animation-time), color var(--animation-time), background var(--animation-time), border-radius var(--animation-time);
@@ -188,6 +240,9 @@ body {
         --right-bar-size: 1;
     }
 
+    #settings>div {
+        column-count: 3;
+    }
 }
 
 @media only screen and (min-width: 640px) and (max-width: 960px) {
@@ -202,6 +257,10 @@ body {
     :root {
         --left-bar-size: 1;
         --right-bar-size: 0;
+    }
+
+    #settings>div {
+        column-count: 2;
     }
 
     .hide-medium-small {
@@ -221,6 +280,10 @@ body {
     :root {
         --left-bar-size: 0;
         --right-bar-size: 0;
+    }
+
+    #settings>div {
+        column-count: 1;
     }
 
     .hide-small,
@@ -291,7 +354,7 @@ ul.menu {
 .menu>li a:hover,
 .dropdown:hover .dropbtn {
     color: var(--text-normal);
-    background-color: var(--interactive-normal);
+    background-color: var(--channels-default);
 }
 
 .menu>li.dropdown {
@@ -299,7 +362,7 @@ ul.menu {
 }
 
 .dropdown-content {
-    z-index: 4 !important;
+    z-index: 2 !important;
     display: none !important;
     position: absolute !important;
     background-color: var(--interactive-muted) !important;
@@ -320,7 +383,7 @@ ul.menu {
 
 .dropdown-content a:hover {
     color: var(--text-normal) !important;
-    background-color: var(--interactive-normal) !important;
+    background-color: var(--channels-default) !important;
 }
 
 .dropdown:hover .dropdown-content {
@@ -388,4 +451,21 @@ ul.menu-kbs>li {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--interactive-hover);
     opacity: 0.25;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.close-btn {
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 2em;
+    margin: 0.25em;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: var(--text-normal);
 }
