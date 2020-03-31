@@ -19,10 +19,21 @@ body {
 
 html,
 body,
-select {
+select,
+input {
     font-family: "Univers 57 Condensed";
 }
 
+input,
+select,
+button {
+    outline: none;
+}
+
+::placeholder {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
 
 #settings {
     background-color: var(--background-secondary);
@@ -36,7 +47,7 @@ select {
     padding: 16px;
 }
 
-#settings>div{
+#settings>div {
     column-rule: 2px var(--background-secondary-alt) inset;
 }
 
@@ -122,12 +133,19 @@ select {
     width: calc(var(--left-bar-size)*320px);
     background-color: var(--background-secondary);
     border: 1px var(--background-secondary-alt) solid;
+    display: grid;
+    grid-template-rows: var(--button-size) auto;
+}
+
+#left-pane>div:nth-child(2) {
+    overflow-y: auto;
 }
 
 #graph {
     grid-area: center;
     background-color: var(--background-secondary);
     border: 1px var(--background-secondary-alt) solid;
+    position: relative;
 }
 
 #right-pane {
@@ -310,12 +328,11 @@ select {
 }
 
 .hide-btn:hover {
-    color: var(--text-normal);
     background-color: var(--background-modifier-hover);
 }
 
 .hide-btn:hover>div>i {
-    animation: widen 2s linear infinite;
+    animation: widen 4s linear infinite;
 }
 
 @keyframes widen {
@@ -326,7 +343,7 @@ select {
 
     100% {
         animation-timing-function: linear;
-        padding: 0 50px;
+        padding: 0 100px;
     }
 }
 
@@ -468,4 +485,42 @@ ul.menu-kbs>li {
 
 .close-btn:hover {
     color: var(--text-normal);
+}
+
+.blocks-search-bar {
+    display: grid;
+    grid-template-columns: min-content auto;
+    column-gap: 4px;
+    border-top: 1px var(--background-secondary-alt) solid;
+    border-bottom: 1px var(--background-secondary-alt) solid;
+    background-color: var(--background-primary);
+    padding: 0.25em;
+}
+
+.blocks-search-bar>span,
+.blocks-search-bar>span>input {
+    width: 100%;
+    font-size: 1em;
+    background-color: var(--background-primary);
+    color: var(--text-muted);
+    border-width: 0;
+}
+
+.blocks-search-bar>span:nth-child(2) {
+    display: grid;
+    grid-template-columns: auto min-content;
+}
+
+.blocks-search-bar>span>input:focus {
+    color: var(--text-link);
+}
+
+.category-head {
+    height: var(--button-size);
+    line-height: var(--button-size);
+    cursor: pointer;
+}
+
+.category-content {
+    border-bottom: 1px var(--background-secondary-alt) solid;
 }

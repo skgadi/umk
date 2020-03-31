@@ -4,7 +4,6 @@ function setCookie(cname, cvalue, exdays=31) {
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');

@@ -26,13 +26,10 @@ const menuVue = new Vue({
                 this.removeStatus(this.statusVisible);
             }
             this.statusVisible = footerVue.addHint("<span><i class='fas fa-info-circle'></i>&nbsp;</span><span>"+txt+"</span>");
-            
         },
         removeStatus: function(){
-            
             footerVue.removeHint(this.statusVisible);
             this.statusVisible=0;
-            
         }
     }
 });

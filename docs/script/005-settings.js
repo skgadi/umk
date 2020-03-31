@@ -5,6 +5,13 @@ const settingsVue = new Vue({
         display: false
     },
     watch: {
+        "display": function () {
+            kbshort.suspend(this.display, function(evt){
+                if (evt.keyCode === 27) {
+                    settingsVue.showGUI(false);   
+                }
+            });
+        },
         "settings":{
             deep: true,
             handler: function () {

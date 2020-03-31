@@ -88,19 +88,42 @@
     </div>
     <div id="left-pane">
       <div id="hide-button-left" class="hide-btn">
-        <div>Hide</div>
+        <div><span><i class="fas fa-angle-double-left"></i></span></div>
         <div>
           <i class="fas fa-angle-double-left"></i>
         </div>
       </div>
-      <div>
-
+      <div id="lp-content" :key="'lp_content_'+updateCounter">
+        <div class="blocks-search-bar">
+          <span><i class="fas fa-fw fa-search"></i></span>
+          <span>
+            <input @focus="searchbarText(true)" @blur="searchbarText(false)"
+              :placeholder="GUIText[settings.lang].sblocks" v-model="searchText" type="text">
+            <span v-show="!!searchText" @click="searchText=''">
+              <i class="fas fa-fw fa-times"></i>
+            </span>
+          </span>
+        </div>
+        <template v-for="(item, idx) in categories">
+          <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head">
+            <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
+              </i></span><span v-text="item.name[settings.lang]"></span>
+          </div>
+          <div class="category-content">
+            <template v-for="(item0, idx0) in blksPerCategories[item.id]">
+              <div v-show="disp[item.id]">
+                {{blksSummary[item0].name[settings.lang]}}
+              </div>
+            </template>
+          </div>
+        </template>
       </div>
     </div>
     <div id="graph">
       <div id="modelContainer" class="umk_main" style="height:100%;width:100%;"></div>
       <div id="outlineContainer" class="w3-hide-small w3-hide-medium"
-        style="position: absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;"></div>
+        style="position: absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
+      </div>
 
     </div>
     <div id="right-pane">
@@ -108,7 +131,7 @@
         <div>
           <i class="fas fa-angle-double-right"></i>
         </div>
-        <div>Hide</div>
+        <div><span><i class="fas fa-angle-double-right"></i></span></div>
       </div>
     </div>
     <div id="footer">
