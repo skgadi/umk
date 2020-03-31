@@ -524,3 +524,15 @@ ul.menu-kbs>li {
 .category-content {
     border-bottom: 1px var(--background-secondary-alt) solid;
 }
+
+.category-content>div {
+    display: grid;
+    grid-template-columns: repeat(5, 19.2%);
+    column-gap: 1%;
+    row-gap: 1%;
+    padding: 0 0.5em 0.5em 0.5em;
+}
+
+.move-cursor {
+    cursor: move;
+}

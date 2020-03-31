@@ -104,7 +104,19 @@
             </span>
           </span>
         </div>
-        <template v-for="(item, idx) in categories">
+        <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++" class="category-head">
+          <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
+            </i></span><span v-text="GUIText[settings.lang].sResults"></span>
+        </div>
+        <div v-show="!!searchText" class="category-content">
+          <template v-for="(item0, idx0) in searchResults">
+            <div v-show="disp['search']">
+              <img class="move-cursor" :src="getBlockImage(blksSummary[item0])"
+                @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
+            </div>
+          </template>
+        </div>
+      <template v-for="(item, idx) in categories">
           <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head">
             <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
               </i></span><span v-text="item.name[settings.lang]"></span>
@@ -112,7 +124,8 @@
           <div class="category-content">
             <template v-for="(item0, idx0) in blksPerCategories[item.id]">
               <div v-show="disp[item.id]">
-                {{blksSummary[item0].name[settings.lang]}}
+                <img class="move-cursor" :src="getBlockImage(blksSummary[item0])"
+                  @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
               </div>
             </template>
           </div>
