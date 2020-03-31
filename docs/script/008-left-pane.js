@@ -7,12 +7,22 @@ const blocksVue = new Vue({
         categories: bSummary.categories,
         blksSummary: bSummary.blocks,
         blksPerCategories: bSummary.getBlocksForCategories(),
-        disp: {"search": true},
+        disp: {
+            "search": true
+        },
         iconText: {
             icon1: "<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g><rect rx='10' height='100' width='100' fill-opacity='0.15' fill='",
             icon2: "'/></g><g stroke-linecap='round' width='100' height='100' stroke='",
             icon3: "' stroke-width='10' fill='none'>",
             icon4: "</g></svg>"
+        }
+    },
+    updated: function () {
+        let AllLibraryBlocks = document.getElementsByClassName(
+            "libraryBlock"
+        );
+        for (let i = 0; i < AllLibraryBlocks.length; i++) {
+            new blockOnDOM(AllLibraryBlocks[i]);
         }
     },
     computed: {
@@ -24,6 +34,9 @@ const blocksVue = new Vue({
                 if (searchableText.toLocaleLowerCase().indexOf(this.searchText.toLocaleLowerCase()) > 0) results.push(key);
             }
             return results;
+        },
+        defaultColor: function () {
+            return getComputedStyle(document.body).getPropertyValue('--text-muted');
         }
     },
     mounted: function () {
@@ -53,9 +66,9 @@ const blocksVue = new Vue({
                 "data:image/svg+xml;charset=utf-8," +
                 encodeURIComponent(
                     this.iconText.icon1 +
-                    getComputedStyle(document.body).getPropertyValue('--text-muted') +
+                    this.defaultColor +
                     this.iconText.icon2 +
-                    getComputedStyle(document.body).getPropertyValue('--text-muted') +
+                    this.defaultColor +
                     this.iconText.icon3 +
                     block.icon +
                     this.iconText.icon4

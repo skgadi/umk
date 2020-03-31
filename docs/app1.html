@@ -111,7 +111,7 @@
         <div v-show="!!searchText" class="category-content">
           <template v-for="(item0, idx0) in searchResults">
             <div v-show="disp['search']">
-              <img class="move-cursor" :src="getBlockImage(blksSummary[item0])"
+              <img class="libraryBlock" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
                 @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
             </div>
           </template>
@@ -124,7 +124,7 @@
           <div class="category-content">
             <template v-for="(item0, idx0) in blksPerCategories[item.id]">
               <div v-show="disp[item.id]">
-                <img class="move-cursor" :src="getBlockImage(blksSummary[item0])"
+                <img class="libraryBlock" :umk_color="defaultColor" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
                   @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
               </div>
             </template>
@@ -164,9 +164,7 @@
     </div>
   </div>
   <script type="text/javascript">
-    var mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src",
-      mxLoadResources = !1;
-    window.urlParams = window.urlParams || {};
+    let mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";let mxLoadResources = !1;window.urlParams = window.urlParams || {};
   </script>
   <script src="libs-others/math-js/math.min.js"></script>
   <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -175,7 +173,7 @@
   <script src="libs-others/vue/vue.min.js"></script>
   <script src="libs-others/split-js/split.min.js"></script>
 
-  <script type="text/javascript" src="libs-others/mxgraph-4.0.4/javascript/src/js/mxClient.js"></script>
+  <script type="text/javascript" src="libs-others/mxgraph-4.1.1/javascript/src/js/mxClient.js"></script>
 
 
 

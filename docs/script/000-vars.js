@@ -21,7 +21,7 @@ const suspendUserInterface = {
     }
 };
 let toolBarVue;
-
+var modelForVertex;
 /*used in other files
 menuVue
 footerVue
@@ -32,4 +32,6 @@ kbshortcut
 setCookie
 getCookie
 blocksVue
+blockOnDOM
+setTermianls
 */

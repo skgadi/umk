@@ -533,6 +533,11 @@ ul.menu-kbs>li {
     padding: 0 0.5em 0.5em 0.5em;
 }
 
-.move-cursor {
+.libraryBlock {
     cursor: move;
+    opacity: 0.8;
+}
+
+.libraryBlock:hover {
+    opacity: 1;
 }
