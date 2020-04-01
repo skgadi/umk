@@ -7,7 +7,7 @@ function blockOnDOM(img) {
     let Name = bSummary.blocks[model].name;
 
     let dragElt = document.createElement("div");
-    dragElt.style.border = "dashed " + blocksVue.defaultColor + " 1px";
+    dragElt.style.border = "dashed var(--text-link) 1px";
     dragElt.style.width = width + "px";
     dragElt.style.height = height + "px";
     let addANewBlock = function (graph, evt, cell, x, y) {

@@ -1,5 +1,8 @@
 let Graph = function (container) {
   mxGraph.call(this, container);
+  mxConstants.OUTLINE_COLOR = 'var(--text-muted)';
+  mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--text-muted)';
+  mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--text-muted)';
   //Pointer to this
   let GraphPointer = this;
   //General settings
@@ -24,7 +27,7 @@ let Graph = function (container) {
   this.eStyle["targetJettySize"] = 25;
   this.eStyle["shadow"] = false;
   this.eStyle["endArrow"] = "none";
-  this.eStyle["fontColor"] = "#000";
+  this.eStyle["fontColor"] = "var(--text-muted)";
   this.eStyle["verticalAlign"] = "top";
   this.eStyle["overflow"] = "width";
   this.eStyle["align"] = "right";
@@ -33,7 +36,7 @@ let Graph = function (container) {
   style.foldable = 0;
   style.overflow = "hidden";
   style.verticalAlign = "middle";
-  style.fontColor = "#fff";
+  style.fontColor = "var(--text-muted)";
   //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
   this.getStylesheet().putCellStyle("umk_model", style);
   style = new Object();
@@ -46,20 +49,20 @@ let Graph = function (container) {
   style.constituent = 1;
   style.verticalLabelPosition = "bottom";
   style.verticalAlign = "top";
-  style.fontColor = "#000";
+  style.fontColor = "var(--text-muted)";
   //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
   this.getStylesheet().putCellStyle("umk_caption", style);
   style = new Object();
   style.constituent = 1;
   style.align = "center";
   style.verticalAlign = "bottom";
-  style.fontColor = "#000";
+  style.fontColor = "var(--text-muted)";
   //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
   this.getStylesheet().putCellStyle("umk_EO", style);
   style = new Object();
   style.constituent = 1;
   style.verticalAlign = "middle";
-  style.fontColor = "#fff";
+  style.fontColor = "var(--text-muted)";
   style.labelPosition = "right";
   style.labelWidth = 15;
   style.align = "left";
@@ -71,7 +74,7 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.verticalAlign = "middle";
-  style.fontColor = "#fff";
+  style.fontColor = "var(--text-muted)";
   style.labelPosition = "left";
   style.labelWidth = 15;
   style.align = "right";
@@ -81,21 +84,7 @@ let Graph = function (container) {
   //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
   this.getStylesheet().putCellStyle("umk_output", style);
 
-  //Custom properties
-  this.backDiv = document.createElement("div");
-  this.backDiv.style.position = "absolute";
-  this.backDiv.style.top = "0px";
-  this.backDiv.style.left = "0px";
-  this.backDiv.style.width = "100%";
-  this.backDiv.style.height = "100%";
-  this.backDiv.style.zIndex = -2;
-  container.appendChild(this.backDiv);
 
-  this.backgroundColor = "#f8f8f8";
-  this.setBackgroundColor = function (val) {
-    if (!val) val = this.backgroundColor;
-    this.backDiv.style.backgroundColor = val;
-  };
   //Navigate graph
   this.navigate = {
     sGraph: this,
@@ -137,20 +126,20 @@ let Graph = function (container) {
     canvas: Canvas,
     sGraph: this,
     minorStroke: {
-      color: "#808080",
+      color: "var(--background-primary)",
       thickness: 0.1,
       pattern: "",
       show: false
     },
     majorStroke: {
-      color: "#808080",
-      thickness: 1,
+      color: "var(--background-primary)",
+      thickness: 0.2,
       pattern: "2, 2",
       show: true
     },
     megaStroke: {
-      color: "#808080",
-      thickness: 2,
+      color: "var(--background-primary)",
+      thickness: 0.3,
       pattern: "20, 5, 5, 5",
       show: false
     },
@@ -324,7 +313,7 @@ let Graph = function (container) {
       if (cell.style.search("umk_model") >= 0) {
         try {
           eval(
-            "let tempModel = new " +
+            "tempModel = new " +
             cell.value.id +
             "(cell.value);"
           );
@@ -505,6 +494,7 @@ let Graph = function (container) {
     else return cell.value;
   }
 
+  /*
   //Handling context icons
   this.createHandler = function (state) {
     if (state != null &&
@@ -513,7 +503,7 @@ let Graph = function (container) {
     }
 
     return mxGraph.prototype.createHandler.apply(this, arguments);
-  };
+  };*/
 };
 mxUtils.extend(Graph, mxGraph);
 
@@ -542,7 +532,6 @@ let System = function (gContainer, oContainer) {
   this.graph.getView().addListener(mxEvent.UNDO, umListener);
 
   this.refresh = function () {
-    this.graph.setBackgroundColor();
     this.graph.refresh();
     this.outline.setVisiblity();
     this.outline.refresh();
@@ -583,13 +572,18 @@ mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sende
 });
 
 mainSystem.outline.update = function (rv) {
-  console.log('f');
   mainSystem.graph.grid.repaintGrid();
   updateMathJax();
   return mxOutline.prototype.update.apply(this, arguments);
 };
 
 
+mainSystem.outline.mouseMove = function (sender, me) {
+  console.log('f');
+  mainSystem.graph.grid.repaintGrid();
+  //mainSystem.graph.container.style.backgroundColor = mainSystem.graph.backgroundColor;
+  return mxOutline.prototype.mouseMove.apply(this, arguments);
+};
 mainSystem.outline.mouseDown = function (sender, me) {
   //mainSystem.graph.container.style.backgroundColor = mainSystem.graph.backgroundColor;
   return mxOutline.prototype.mouseDown.apply(this, arguments);
@@ -602,12 +596,16 @@ mainSystem.outline.mouseUp = function (sender, me) {
 
 
 function selectionChanged() {
+  if (mainSystem.graph.getSelectionCells().length === 0) editorVue.$set(editorVue.$data, 'disp', 'graph');
+  else  editorVue.$set(editorVue.$data, 'disp', '');
+  /*
   let editorDivs = document.getElementsByClassName("editorDivs");
   for (let i = 0; i < editorDivs.length; editorDivs++) {
     editorDivs[i].style.display = "none";
   }
   if (mainSystem.graph.getSelectionCells().length === 0)
     document.getElementById("editorForGraph").style.display = "block";
+    */
 }
 
 
@@ -623,7 +621,7 @@ function setCaption(Cell, value) {
 }
 
 
-
+/*
 //Context icons
 // Defines a subclass for mxVertexHandler that adds a set of clickable
 // icons to every selected vertex.
@@ -759,3 +757,5 @@ mxVertexToolHandler.prototype.destroy = function (sender, me) {
     this.domNode = null;
   }
 };
+
+*/

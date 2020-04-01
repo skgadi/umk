@@ -4,3 +4,4 @@ window.addEventListener('resize', (event) => {
         cBack(event);
     });
 });
+

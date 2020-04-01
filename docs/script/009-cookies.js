@@ -18,14 +18,3 @@ function getCookie(cname) {
     }
     return "";
 }
-//Check settings cookies
-(()=>{
-    try{
-        let cSettings = JSON.parse2(getCookie("settings"));
-        Object.keys(cSettings).forEach(function(key){
-            if (!!settings[key]) settings[key] = cSettings[key];
-        });        
-    } catch (e) {
-
-    }
-})();

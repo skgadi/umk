@@ -34,9 +34,6 @@ const blocksVue = new Vue({
                 if (searchableText.toLocaleLowerCase().indexOf(this.searchText.toLocaleLowerCase()) > 0) results.push(key);
             }
             return results;
-        },
-        defaultColor: function () {
-            return getComputedStyle(document.body).getPropertyValue('--text-muted');
         }
     },
     mounted: function () {
@@ -63,12 +60,12 @@ const blocksVue = new Vue({
         },
         getBlockImage: function (block) {
             return (
-                "data:image/svg+xml;charset=utf-8," +
-                encodeURIComponent(
+                "data:image/svg+xml;base64," +
+                window.btoa(
                     this.iconText.icon1 +
-                    this.defaultColor +
+                    block.bg +
                     this.iconText.icon2 +
-                    this.defaultColor +
+                    block.bg +
                     this.iconText.icon3 +
                     block.icon +
                     this.iconText.icon4

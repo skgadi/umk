@@ -1,8 +1,11 @@
 const settingsVue = new Vue({
     el: "#settings",
     data: {
-        settings: settings,
+        stings: settings,
         display: false
+    },
+    updated: function () {
+        this.updateHideBtnText();
     },
     watch: {
         "display": function () {
@@ -12,21 +15,26 @@ const settingsVue = new Vue({
                 }
             });
         },
-        "settings":{
+        "stings":{
             deep: true,
             handler: function () {
-                setCookie("settings", JSON.stringify2(this.settings));
+                setCookie("settings", JSON.stringify2(this.stings));
             }
         },
-        "settings.theme": {
+        "stings.theme": {
             handler: function () {
-                document.getElementsByTagName('html')[0].className = settings.theme;
+                document.getElementsByTagName('html')[0].className = this.stings.theme;
             }
         }
     },
     methods: {
         showGUI: function (show=true) {
             this.display = show;
+        },
+        updateHideBtnText: function () {
+            document.getElementById ("hide-left-text").innerText = GUIText[this.stings.lang].hide;
+            document.getElementById ("hide-right-text").innerText = GUIText[this.stings.lang].hide;    
         }
     }
 });
+

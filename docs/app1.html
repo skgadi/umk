@@ -86,9 +86,9 @@
         </template>
       </ul>
     </div>
-    <div id="left-pane">
+    <div id="left-pane" class="pane">
       <div id="hide-button-left" class="hide-btn">
-        <div><span><i class="fas fa-angle-double-left"></i></span></div>
+        <div><span id="hide-left-text"></span></div>
         <div>
           <i class="fas fa-angle-double-left"></i>
         </div>
@@ -111,12 +111,18 @@
         <div v-show="!!searchText" class="category-content">
           <template v-for="(item0, idx0) in searchResults">
             <div v-show="disp['search']">
-              <img class="libraryBlock" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
-                @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
+              <svg class="libraryBlock" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
+                  @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
+                  <g>
+                    <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--text-muted)' />
+                  </g>
+                  <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10' fill='none'
+                    v-html="blksSummary[item0].icon"></g>
+                </svg>
             </div>
           </template>
         </div>
-      <template v-for="(item, idx) in categories">
+        <template v-for="(item, idx) in categories">
           <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head">
             <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
               </i></span><span v-text="item.name[settings.lang]"></span>
@@ -124,8 +130,16 @@
           <div class="category-content">
             <template v-for="(item0, idx0) in blksPerCategories[item.id]">
               <div v-show="disp[item.id]">
-                <img class="libraryBlock" :umk_color="defaultColor" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
-                  @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()">
+                <svg class="libraryBlock" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
+                  @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
+                  <g>
+                    <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--text-muted)' />
+                  </g>
+                  <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10' fill='none'
+                    v-html="blksSummary[item0].icon"></g>
+                </svg>
+                <!--img class="libraryBlock" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
+                  @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()"-->
               </div>
             </template>
           </div>
@@ -133,18 +147,31 @@
       </div>
     </div>
     <div id="graph">
-      <div id="modelContainer" class="umk_main" style="height:100%;width:100%;"></div>
-      <div id="outlineContainer" class="w3-hide-small w3-hide-medium"
-        style="position: absolute;overflow:hidden;top:5px;right:5px;width:200px;height:140px;background:transparent;border-style:solid;border-color:black;">
+      <div id="modelContainer"></div>
+      <div id="outlineContainer" class="hide-medium-small">
       </div>
 
     </div>
-    <div id="right-pane">
+    <div id="right-pane" class="pane">
       <div id="hide-button-right" class="hide-btn">
         <div>
           <i class="fas fa-angle-double-right"></i>
         </div>
-        <div><span><i class="fas fa-angle-double-right"></i></span></div>
+        <div><span id="hide-right-text"></span></div>
+      </div>
+      <div id="rp-content">
+        <div v-if="disp === 'graph'">
+          <div class="category-head"><i class="fas fa-fw fa-border-all"></i><span v-text="GUIText[settings.lang].gridLines"></span></div>
+          <div class="checkboxItem">
+            <input type="checkbox" id="minorGridLines" v-model="rpSettings.gLinesMinor"><label for="minorGridLines" v-text="GUIText[settings.lang].gLinesMinor"></label>
+          </div>
+          <div class="checkboxItem">
+            <input type="checkbox" id="majorGridLines" v-model="rpSettings.gLinesMajor"><label for="majorGridLines" v-text="GUIText[settings.lang].gLinesMajor"></label>
+          </div>
+          <div class="checkboxItem">
+            <input type="checkbox" id="megaGridLines" v-model="rpSettings.gLinesMega"><label for="megaGridLines" v-text="GUIText[settings.lang].gLinesMega"></label>
+          </div>
+        </div>
       </div>
     </div>
     <div id="footer">
@@ -164,7 +191,9 @@
     </div>
   </div>
   <script type="text/javascript">
-    let mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";let mxLoadResources = !1;window.urlParams = window.urlParams || {};
+    let mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
+    let mxLoadResources = !1;
+    window.urlParams = window.urlParams || {};
   </script>
   <script src="libs-others/math-js/math.min.js"></script>
   <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
