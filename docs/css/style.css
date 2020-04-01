@@ -556,6 +556,8 @@ ul.menu-kbs>li {
 #modelContainer {
     height: 100%;
     width: 100%;
+    cursor:default;
+    z-index: 0;
 }
 
 /*Checkbox*/
@@ -575,4 +577,24 @@ input[type='checkbox'] {
     height: var(--button-size);
     line-height: var(--button-size);
     width: 100%;
+}
+
+#graph-nav {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    grid-column-gap: 5%;
+    grid-row-gap: 0.5em;
+    padding: 0 1em;
+}
+#graph-nav>div {
+    height: var(--button-size);
+    line-height: var(--button-size);
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--background-primary);
+    opacity: 0.75;
+}
+#graph-nav>div:hover {
+    opacity: 1;
 }

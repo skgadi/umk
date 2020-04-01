@@ -3,6 +3,16 @@ let Graph = function (container) {
   mxConstants.OUTLINE_COLOR = 'var(--text-muted)';
   mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--text-muted)';
   mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--text-muted)';
+  mxConstants.HIGHLIGHT_COLOR = 'var(--text-normal)';
+  mxConstants.GUIDE_COLOR = 'var(--text-link)';
+  mxConstants.GUIDE_STROKEWIDTH = 3;
+  mxConstants.HANDLE_STROKECOLOR = 'var(--text-link)';
+  mxConstants.HANDLE_FILLCOLOR = 'var(--text-link)';
+  mxConstants.EDGE_SELECTION_COLOR = 'var(--text-link)';
+  mxConstants.VERTEX_SELECTION_COLOR = 'var(--text-link)';
+  
+  mxGraphHandler.prototype.guidesEnabled = true; //enables guides
+  mxEdgeHandler.prototype.snapToTerminals = true; //Enables snapping waypoints to terminals
   //Pointer to this
   let GraphPointer = this;
   //General settings
@@ -36,7 +46,9 @@ let Graph = function (container) {
   style.foldable = 0;
   style.overflow = "hidden";
   style.verticalAlign = "middle";
-  style.fontColor = "var(--text-muted)";
+  style.fontColor = "var(--text-normal)";
+  style.fillColor = "var(--interactive-muted)";
+  style.strokeColor = "var(--interactive-muted)";
   //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
   this.getStylesheet().putCellStyle("umk_model", style);
   style = new Object();
@@ -62,13 +74,15 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.verticalAlign = "middle";
-  style.fontColor = "var(--text-muted)";
+  style.fontColor = "var(--text-normal)";
   style.labelPosition = "right";
   style.labelWidth = 15;
   style.align = "left";
   style.shape = "triangle";
   style.portConstraint = "west";
   style.overflow = "fit";
+  style.fillColor = "var(--interactive-muted)";
+  style.strokeColor = "var(--interactive-muted)";
   //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
   this.getStylesheet().putCellStyle("umk_input", style);
   style = new Object();
@@ -81,6 +95,8 @@ let Graph = function (container) {
   style.shape = "triangle";
   style.portConstraint = "east";
   style.overflow = "fit";
+  style.fillColor = "none";
+  style.strokeColor = "none";
   //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
   this.getStylesheet().putCellStyle("umk_output", style);
 
@@ -115,30 +131,30 @@ let Graph = function (container) {
     }
   };
   //Draws grid
-  let Canvas = document.createElement("canvas");
+  const Canvas = document.createElement("canvas");
   Canvas.style.position = "absolute";
   Canvas.style.top = "0px";
   Canvas.style.left = "0px";
   Canvas.style.pointerEvents = "none";
-  //Canvas.style.zIndex = -1; //It may effect the blocks and its selection ... todo
+  Canvas.style.zIndex = -1; //It may effect the blocks and its selection ... todo
   container.appendChild(Canvas);
   this.grid = {
     canvas: Canvas,
     sGraph: this,
     minorStroke: {
-      color: "var(--background-primary)",
+      color: "#808080",
       thickness: 0.1,
       pattern: "",
       show: false
     },
     majorStroke: {
-      color: "var(--background-primary)",
+      color: "#808080",
       thickness: 0.2,
       pattern: "2, 2",
       show: true
     },
     megaStroke: {
-      color: "var(--background-primary)",
+      color: "#808080",
       thickness: 0.3,
       pattern: "20, 5, 5, 5",
       show: false
@@ -308,7 +324,7 @@ let Graph = function (container) {
   };
   //Handling labels
   this.getLabel = function (cell) {
-    //console.log(cell);
+    console.log(cell.value);
     if (!!cell.value) {
       if (cell.style.search("umk_model") >= 0) {
         try {

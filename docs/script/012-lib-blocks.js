@@ -20,7 +20,7 @@ function blockOnDOM(img) {
             let splStyle = "";
             if (!!IconDetails.splStyle) splStyle = IconDetails.splStyle;
             console.log(modelForVertex);
-            v = graph.insertVertex(graph.getDefaultParent(), null, modelForVertex, x, y, width, height, "umk_model;fillColor=" + bg + ";strokeColor=" + bg + ";" + splStyle);
+            v = graph.insertVertex(graph.getDefaultParent(), null, modelForVertex, x, y, width, height, "umk_model;" + splStyle);
             v.setConnectable(false);
             setTermianls(graph, v, "umk_input");
             setTermianls(graph, v, "umk_output");
@@ -115,16 +115,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
                 (availableCount + i + 1) / (RequiredCount + 1),
                 position.size.width,
                 position.size.height,
-                type +
-                ";fillColor=" +
-                (type === "umk_input" ?
-                    bSummary.blocks[Cell.value.id].bg :
-                    "none") +
-                ";strokeColor=" +
-                (type === "umk_input" ?
-                    bSummary.blocks[Cell.value.id].bg :
-                    "none") +
-                ";",
+                type,
                 true
             );
             port.geometry.offset = new mxPoint(

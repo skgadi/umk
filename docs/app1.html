@@ -171,6 +171,18 @@
           <div class="checkboxItem">
             <input type="checkbox" id="megaGridLines" v-model="rpSettings.gLinesMega"><label for="megaGridLines" v-text="GUIText[settings.lang].gLinesMega"></label>
           </div>
+          <div class="category-head"><i class="fas fa-fw fa-location-arrow"></i><span v-text="GUIText[settings.lang].navi"></span></div>
+          <div id="graph-nav">
+            <div @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
+            <div @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
+            <div @click="mainSystem.navigate('zoomIn')"><i class="fa-fw fas fa-search-plus"></i></div>
+            <div @click="mainSystem.navigate('left')"><i class="fa-fw fas fa-caret-left"></i></div>
+            <div @click="mainSystem.navigate('0')"><i class="fa-fw fas fa-arrows-alt"></i></div>
+            <div @click="mainSystem.navigate('right')"><i class="fa-fw fas fa-caret-right"></i></div>
+            <div @click="mainSystem.navigate('fit')"><i class="fa-fw fas  fa-expand"></i></div>
+            <div @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
+            <div @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
+          </div>
         </div>
       </div>
     </div>
