@@ -21,6 +21,11 @@ const settingsVue = new Vue({
                 setCookie("settings", JSON.stringify2(this.stings));
             }
         },
+        "stings.lang": {
+            handler: function () {
+                menuVue.update();
+            }
+        },
         "stings.theme": {
             handler: function () {
                 document.getElementsByTagName('html')[0].className = this.stings.theme;

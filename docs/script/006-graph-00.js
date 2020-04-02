@@ -470,31 +470,31 @@ let Graph = function (container) {
       let outError;
       try {
         if (source.parent === target.parent)
-          outError = "Cannot connect to the same block.";
+          outError = GUIText[settings.lang].errSameBlkConn;
         if (
           source.style.search("umk_input") >= 0 &&
           target.style.search("umk_input") >= 0
         )
-          outError = "Cannot connect both the inputs.";
+          outError = GUIText[settings.lang].errInpInpConn;
         if (
           source.style.search("umk_output") >= 0 &&
           target.style.search("umk_output") >= 0
         )
-          outError = "Cannot connect both the outputs.";
+          outError = GUIText[settings.lang].errOutOutConn;
         if (
           (target.style.search("umk_input") >= 0 &&
             target.getEdgeCount() > 0) ||
           (source.style.search("umk_input") >= 0 &&
             source.getEdgeCount() > 0)
         )
-          outError = "Only one input is allowed per port.";
+          outError = GUIText[settings.lang].errOnlyOneInp;
       } catch (e) {} finally {
         return outError || defaultOut;
       }
     } else return defaultOut;
   };
   this.validationAlert = function (message) {
-    notyf.error(message);
+    new Noty({text: message, timeout: 5000, theme: "nest",type: 'warning'}).show();
   };
 
   //selection of a vertix

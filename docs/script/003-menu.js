@@ -3,7 +3,6 @@ const menuVue = new Vue({
     data: {
         tools: menu,
         statusVisible: 0,
-        settings: settings,
         updateCounter: 0
     },
     /*watch: {
@@ -16,20 +15,23 @@ const menuVue = new Vue({
     },*/
     computed: {
         lang: function () {
-            //this.updateCounter;
-            return this.settings.lang;
+            this.updateCounter;
+            return settings.lang;
         }
     },
     methods: {
-        showStatus: function(txt) {
+        update: function () {
+            this.updateCounter++;
+        },
+        showStatus: function (txt) {
             if (!!this.statusVisible) {
                 this.removeStatus(this.statusVisible);
             }
-            this.statusVisible = footerVue.addHint("<span><i class='fas fa-info-circle'></i>&nbsp;</span><span>"+txt+"</span>");
+            this.statusVisible = footerVue.addHint("<span><i class='fas fa-info-circle'></i>&nbsp;</span><span>" + txt + "</span>");
         },
-        removeStatus: function(){
+        removeStatus: function () {
             footerVue.removeHint(this.statusVisible);
-            this.statusVisible=0;
+            this.statusVisible = 0;
         }
     }
 });

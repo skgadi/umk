@@ -35,7 +35,7 @@ button {
     opacity: 0.5;
 }
 
-#settings {
+.modal {
     background-color: var(--background-secondary);
     z-index: 3;
     width: 100%;
@@ -55,7 +55,7 @@ button {
     column-span: all;
 }
 
-#settings>div>div {
+.no-col-break {
     width: 100%;
     -webkit-column-break-inside: avoid;
     /* Chrome, Safari */
@@ -259,7 +259,7 @@ button {
         --right-bar-size: 1;
     }
 
-    #settings>div {
+    .splitShort {
         column-count: 3;
     }
 }
@@ -278,7 +278,7 @@ button {
         --right-bar-size: 0;
     }
 
-    #settings>div {
+    .splitShort {
         column-count: 2;
     }
 
@@ -301,7 +301,7 @@ button {
         --right-bar-size: 0;
     }
 
-    #settings>div {
+    .splitShort {
         column-count: 1;
     }
 

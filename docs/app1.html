@@ -15,7 +15,8 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="libs-others/notyf/notyf.min.css" />
+  <link rel="stylesheet" href="node_modules/noty/lib/noty.css" />
+  <link rel="stylesheet" href="node_modules/noty/lib/themes/nest.css"/>
 
 </head>
 
@@ -35,18 +36,18 @@
       </div>
     </div>
   </div>
-  <div id="settings" v-show="display">
+  <div id="settings" class="modal" v-show="display">
     <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
     <h1 v-text="GUIText[settings.lang].settings"></h1>
-    <div>
-      <div>
+    <div class="splitShort">
+      <div class="no-col-break">
         <label v-text="GUIText[settings.lang].language"></label>
         <select v-model="settings.lang">
           <option value="en-us" v-text="GUIText[settings.lang]['en-us']"></option>
           <option value="es-mx" v-text="GUIText[settings.lang]['es-mx']"></option>
         </select>
       </div>
-      <div>
+      <div class="no-col-break">
         <label v-text="GUIText[settings.lang].theme"></label>
         <select v-model="settings.theme">
           <option value="theme-dark" v-text="GUIText[settings.lang]['theme-dark']"></option>
@@ -54,6 +55,12 @@
         </select>
       </div>
     </div>
+  </div>
+  <div id="varManager" class="modal" v-show="display">
+    <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
+    <h1 v-text="GUIText[settings.lang].vManager"></h1>
+    <h2 v-text="GUIText[settings.lang].dVariables"></h2>
+    <h2 v-text="GUIText[settings.lang].uVariables"></h2>
   </div>
   <div id="main">
     <div id="tool-bar">
@@ -222,18 +229,18 @@
     </div>
   </div>
   <script type="text/javascript">
-    let mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
+    const __mxOutput = {};
+    const mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
     let mxLoadResources = !1;
     window.urlParams = window.urlParams || {};
   </script>
-  <script src="libs-others/math-js/math.min.js"></script>
+  <script src="node_modules/mathjs/dist/math.min.js"></script>
   <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   <script src="libs-others/augmented-json-serialization-functions.js"></script>
-  <script src="libs-others/notyf/notyf.min.js"></script>
-  <script src="libs-others/vue/vue.min.js"></script>
-  <script src="libs-others/split-js/split.min.js"></script>
-
-  <script type="text/javascript" src="libs-others/mxgraph-4.1.1/javascript/src/js/mxClient.js"></script>
+  <script src="node_modules/noty/lib/noty.min.js"></script>
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  
+  <script type="text/javascript" src="node_modules/mxgraph/javascript/dist/js/mxClient.js"></script>
 
 
 
