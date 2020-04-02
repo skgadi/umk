@@ -10,6 +10,10 @@ let Graph = function (container) {
   mxConstants.HANDLE_FILLCOLOR = 'var(--text-link)';
   mxConstants.EDGE_SELECTION_COLOR = 'var(--text-link)';
   mxConstants.VERTEX_SELECTION_COLOR = 'var(--text-link)';
+  mxConstants.DROP_TARGET_COLOR = 'var(--text-link)';
+  mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
+  mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
+  mxConstants.DEFAULT_FONTSIZE = "16";
   
   mxGraphHandler.prototype.guidesEnabled = true; //enables guides
   mxEdgeHandler.prototype.snapToTerminals = true; //Enables snapping waypoints to terminals
@@ -41,6 +45,8 @@ let Graph = function (container) {
   this.eStyle["verticalAlign"] = "top";
   this.eStyle["overflow"] = "width";
   this.eStyle["align"] = "right";
+  this.eStyle["strokeColor"] = "var(--text-muted)";
+
   //Stylesheets
   let style = new Object();
   style.foldable = 0;
@@ -138,6 +144,7 @@ let Graph = function (container) {
   Canvas.style.pointerEvents = "none";
   Canvas.style.zIndex = -1; //It may effect the blocks and its selection ... todo
   container.appendChild(Canvas);
+  this.gridCanvas = Canvas;
   this.grid = {
     canvas: Canvas,
     sGraph: this,
@@ -168,7 +175,7 @@ let Graph = function (container) {
       let h = 0;
       let ctx = this.canvas.getContext("2d");
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      ctx.fillStyle = "#ff0000";
+      ctx.fillStyle = "#ff000000";
       ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       if (ctx != null) {
         let bounds = graph.getGraphBounds();
@@ -324,17 +331,17 @@ let Graph = function (container) {
   };
   //Handling labels
   this.getLabel = function (cell) {
-    console.log(cell.value);
     if (!!cell.value) {
-      if (cell.style.search("umk_model") >= 0) {
+      if (!!cell.style && cell.style.search("umk_model") >= 0) {
         try {
           eval(
             "tempModel = new " +
             cell.value.id +
             "(cell.value);"
           );
+          //console.log(cell.value);
           this.setCaption(cell, tempModel.Name);
-          if (cell.style.search("umk_display") >= 0) {
+          if (!!cell.style && cell.style.search("umk_display") >= 0) {
             return cell.value.show || "$[\\cdot]$";
           }
           return (
@@ -346,7 +353,9 @@ let Graph = function (container) {
           console.log(e);
           return "ERROR";
         }
-      } else return cell.value; //"$\\text{"+cell.value+"}$";
+      } else {
+        return cell.value; //"$\\text{"+cell.value+"}$";
+      }
     } else return null;
   };
   this.getEditingValue = function (cell, evt) {
@@ -421,7 +430,7 @@ let Graph = function (container) {
   };
   // Helper method to mark parts with constituent=1 in the style
   this.isPart = function (cell) {
-    console.log(cell);
+    //console.log(cell);
     let style = this.getCellStyle(cell);
 
     return style["constituent"] == "1";
@@ -433,7 +442,7 @@ let Graph = function (container) {
     evt
   ) {
     this.graph = GraphPointer;
-    console.log(this);
+    //console.log(this);
     let edge = evt.getProperty("cell");
     let source = this.graph.getModel().getTerminal(edge, true);
     let target = this.graph.getModel().getTerminal(edge, false);
@@ -506,7 +515,7 @@ let Graph = function (container) {
     return label;
   }
   this.convertValueToString = function (cell) {
-    if (cell.style.search("umk_model") >= 0) return null;
+    if (!!cell.style && cell.style.search("umk_model") >= 0) return null;
     else return cell.value;
   }
 
@@ -593,19 +602,21 @@ mainSystem.outline.update = function (rv) {
   return mxOutline.prototype.update.apply(this, arguments);
 };
 
-
+/*
 mainSystem.outline.mouseMove = function (sender, me) {
-  console.log('f');
+  //console.log('f');
   mainSystem.graph.grid.repaintGrid();
   //mainSystem.graph.container.style.backgroundColor = mainSystem.graph.backgroundColor;
   return mxOutline.prototype.mouseMove.apply(this, arguments);
-};
+};*/
 mainSystem.outline.mouseDown = function (sender, me) {
+  mainSystem.graph.gridCanvas.style.display = "none";
   //mainSystem.graph.container.style.backgroundColor = mainSystem.graph.backgroundColor;
   return mxOutline.prototype.mouseDown.apply(this, arguments);
 };
 
 mainSystem.outline.mouseUp = function (sender, me) {
+  mainSystem.graph.gridCanvas.style.display = "block";
   //mainSystem.graph.container.style.backgroundColor = "";
   return mxOutline.prototype.mouseUp.apply(this, arguments);
 };
@@ -624,7 +635,7 @@ function selectionChanged() {
     */
 }
 
-
+/*
 //Change caption
 function setCaption(Cell, value) {
   let children = Cell.children;
@@ -636,7 +647,7 @@ function setCaption(Cell, value) {
   }
 }
 
-
+*/
 /*
 //Context icons
 // Defines a subclass for mxVertexHandler that adds a set of clickable

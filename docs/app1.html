@@ -104,7 +104,8 @@
             </span>
           </span>
         </div>
-        <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++" class="category-head">
+        <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++"
+          class="category-head pointer">
           <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
             </i></span><span v-text="GUIText[settings.lang].sResults"></span>
         </div>
@@ -112,18 +113,18 @@
           <template v-for="(item0, idx0) in searchResults">
             <div v-show="disp['search']">
               <svg class="libraryBlock" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
-                  @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
-                  <g>
-                    <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--text-muted)' />
-                  </g>
-                  <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10' fill='none'
-                    v-html="blksSummary[item0].icon"></g>
-                </svg>
+                @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
+                <g>
+                  <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--text-muted)' />
+                </g>
+                <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10'
+                  fill='none' v-html="blksSummary[item0].icon"></g>
+              </svg>
             </div>
           </template>
         </div>
         <template v-for="(item, idx) in categories">
-          <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head">
+          <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head pointer">
             <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
               </i></span><span v-text="item.name[settings.lang]"></span>
           </div>
@@ -135,8 +136,8 @@
                   <g>
                     <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--text-muted)' />
                   </g>
-                  <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10' fill='none'
-                    v-html="blksSummary[item0].icon"></g>
+                  <g stroke-linecap='round' width='100' height='100' stroke='var(--text-muted)' stroke-width='10'
+                    fill='none' v-html="blksSummary[item0].icon"></g>
                 </svg>
                 <!--img class="libraryBlock" :umk_model="item0" :src="getBlockImage(blksSummary[item0])"
                   @mouseover="showStatus(blksSummary[item0])" @mouseleave="removeStatus()"-->
@@ -161,17 +162,25 @@
       </div>
       <div id="rp-content">
         <div v-if="disp === 'graph'">
-          <div class="category-head"><i class="fas fa-fw fa-border-all"></i><span v-text="GUIText[settings.lang].gridLines"></span></div>
+          <div class="category-head"><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].gridLines"></span></div>
           <div class="checkboxItem">
-            <input type="checkbox" id="minorGridLines" v-model="rpSettings.gLinesMinor"><label for="minorGridLines" v-text="GUIText[settings.lang].gLinesMinor"></label>
+            <input type="checkbox" id="minorGridLines" v-model="rpSettings.gLinesMinor"><label for="minorGridLines"
+              v-text="GUIText[settings.lang].gLinesMinor"></label>
           </div>
           <div class="checkboxItem">
-            <input type="checkbox" id="majorGridLines" v-model="rpSettings.gLinesMajor"><label for="majorGridLines" v-text="GUIText[settings.lang].gLinesMajor"></label>
+            <input type="checkbox" id="majorGridLines" v-model="rpSettings.gLinesMajor"><label for="majorGridLines"
+              v-text="GUIText[settings.lang].gLinesMajor"></label>
           </div>
           <div class="checkboxItem">
-            <input type="checkbox" id="megaGridLines" v-model="rpSettings.gLinesMega"><label for="megaGridLines" v-text="GUIText[settings.lang].gLinesMega"></label>
+            <input type="checkbox" id="megaGridLines" v-model="rpSettings.gLinesMega"><label for="megaGridLines"
+              v-text="GUIText[settings.lang].gLinesMega"></label>
           </div>
-          <div class="category-head"><i class="fas fa-fw fa-location-arrow"></i><span v-text="GUIText[settings.lang].navi"></span></div>
+          <div class="category-head"><i class="fas fa-fw fa-ruler-combined"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].gridSize"></span></div>
+          <input type="number" v-model.number="rpSettings.gridSize">
+          <div class="category-head"><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].navi"></span></div>
           <div id="graph-nav">
             <div @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
             <div @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
@@ -182,6 +191,16 @@
             <div @click="mainSystem.navigate('fit')"><i class="fa-fw fas  fa-expand"></i></div>
             <div @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
             <div @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
+          </div>
+          <div class="category-head"><i class="fas fa-fw fa-cogs"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].oSettings"></span></div>
+          <div class="checkboxItem">
+            <input type="checkbox" id="showOutline" v-model="rpSettings.showOutline"><label for="showOutline"
+              v-text="GUIText[settings.lang].showOutline"></label>
+          </div>
+          <div class="checkboxItem">
+            <input type="checkbox" id="guidesEnabled" v-model="rpSettings.guidesEnabled"><label for="guidesEnabled"
+              v-text="GUIText[settings.lang].guidesEnabled"></label>
           </div>
         </div>
       </div>

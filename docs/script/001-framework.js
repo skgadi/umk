@@ -2,6 +2,8 @@
 window.addEventListener('resize', (event) => {
     windResizeCallbacks.forEach(cBack => {
         cBack(event);
+        try {
+            mainSystem.refresh();
+        } catch (e) {}
     });
 });
-

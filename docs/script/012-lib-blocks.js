@@ -4,7 +4,7 @@ function blockOnDOM(img) {
     let height = bSummary.blocks[model].height;
     let fg = bSummary.blocks[model].fg;
     let bg = bSummary.blocks[model].bg;
-    let Name = bSummary.blocks[model].name;
+    let Name = bSummary.blocks[model].name[settings.lang];
 
     let dragElt = document.createElement("div");
     dragElt.style.border = "dashed var(--text-link) 1px";
@@ -19,7 +19,6 @@ function blockOnDOM(img) {
             let outLabels = IconDetails.outLabels || [];
             let splStyle = "";
             if (!!IconDetails.splStyle) splStyle = IconDetails.splStyle;
-            console.log(modelForVertex);
             v = graph.insertVertex(graph.getDefaultParent(), null, modelForVertex, x, y, width, height, "umk_model;" + splStyle);
             v.setConnectable(false);
             setTermianls(graph, v, "umk_input");
@@ -59,7 +58,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
         if (type === "umk_input") {
             Labels = IconDetails.inLabels || [];
             RequiredCount = Cell.value.TerminalsIn.value;
-            console.log(RequiredCount);
+            //console.log(RequiredCount);
             position = {
                 x: 0,
                 size: {

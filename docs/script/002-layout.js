@@ -11,6 +11,11 @@
     function setPaneVisible(pane = "left", visible = true) {
         let val = !!visible ? 1 : 0;
         document.documentElement.style.setProperty('--' + pane + '-bar-size', val);
+        setTimeout(() => {
+            try {
+                mainSystem.refresh();
+            } catch (e) {}
+        }, 250);
     }
 
     function setAllPanesVisibility(visibility = [true, true]) {

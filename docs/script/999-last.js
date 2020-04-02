@@ -3,7 +3,7 @@
 //Check settings cookies
 (()=>{
     try{
-        const rpSettingsKeys = ["gLinesMinor", "gLinesMajor", "gLinesMega"];
+        const rpSettingsKeys = ["gLinesMinor", "gLinesMajor", "gLinesMega", "showOutline", "gridSize", "guidesEnabled"];
         const cSettings = JSON.parse2(getCookie("settings"));
         Object.keys(cSettings).forEach(function(key){
             if (!!settings[key]) settings[key] = cSettings[key];
