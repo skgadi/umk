@@ -59,8 +59,8 @@
   <div id="varManager" class="modal" v-show="display">
     <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
     <h1 v-text="GUIText[settings.lang].vManager"></h1>
-    <h2 v-text="GUIText[settings.lang].dVariables"></h2>
-    <h2 v-text="GUIText[settings.lang].uVariables"></h2>
+    <h2 v-text="GUIText[settings.lang].variables"></h2>
+    <h2 v-text="GUIText[settings.lang].constants"></h2>
   </div>
   <div id="main">
     <div id="tool-bar">
@@ -228,17 +228,13 @@
       </span>
     </div>
   </div>
-  <script type="text/javascript">
-    const __mxOutput = {};
-    const mxBasePath = "libs-others/mxgraph-4.0.4/javascript/src";
-    let mxLoadResources = !1;
-    window.urlParams = window.urlParams || {};
-  </script>
-  <script src="node_modules/mathjs/dist/math.min.js"></script>
-  <script src="libs-others/MathJax-2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-  <script src="libs-others/augmented-json-serialization-functions.js"></script>
-  <script src="node_modules/noty/lib/noty.min.js"></script>
-  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script type="text/javascript" src="pre-scripts.min.js"></script>
+  <script type="text/javascript" src="node_modules/mathjs/dist/math.min.js"></script>
+  <script type="text/javascript" src="node_modules/js-polyfills/es6.js"></script>
+  <script type="text/javascript" src="node_modules/mathjax-full/es5/tex-mml-chtml.js"></script>
+  <script type="text/javascript" src="libs-others/augmented-json-serialization-functions.js"></script>
+  <script type="text/javascript" src="node_modules/noty/lib/noty.min.js"></script>
+  <script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
   
   <script type="text/javascript" src="node_modules/mxgraph/javascript/dist/js/mxClient.js"></script>
 

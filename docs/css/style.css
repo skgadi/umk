@@ -126,6 +126,7 @@ button {
     grid-area: header;
     background-color: var(--background-secondary-alt);
     color: var(--header-primary);
+    /*border-bottom: 1px var(--text-muted) solid;*/
 }
 
 .pane {

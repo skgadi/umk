@@ -1,3 +1,5 @@
+/*
+
 MathJax.Hub.Config({
     showMathMenu: false,
     messageStyle: "none",
@@ -17,8 +19,11 @@ MathJax.Hub.Config({
             ["\\[", "\\]"]
         ]
     }
-});
+});*/
 
 function updateMathJax() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    MathJax.typesetPromise();
+    //MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
+
+/**/
