@@ -18,6 +18,7 @@ const settingsVue = new Vue({
         "stings":{
             deep: true,
             handler: function () {
+                //console.log(this.stings);
                 setCookie("settings", JSON.stringify2(this.stings));
             }
         },
