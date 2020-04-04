@@ -592,7 +592,7 @@ input[type='checkbox'] {
     padding: 0 1em;
 }
 
-#graph-nav>div {
+.gen-btn {
     height: var(--button-size);
     line-height: var(--button-size);
     width: 100%;
@@ -602,7 +602,7 @@ input[type='checkbox'] {
     opacity: 0.75;
 }
 
-#graph-nav>div:hover {
+.gen-btn:hover {
     opacity: 1;
 }
 
@@ -613,4 +613,14 @@ input[type='number'] {
     color: var(--text-muted);
     border-width: 0;
     text-align: right;
+}
+
+
+#cookies-policy>div {
+    max-width: 500px;
+    margin: 4px auto;
+}
+
+.center{
+    text-align: center;
 }

@@ -34,6 +34,11 @@
       </div>
     </div>
   </div>
+  <div id="cookies-policy" class="modal" v-show="display">
+    <div v-html="GUIText[settings.lang].cPolicyText"></div>
+    <div class="center gen-btn" v-html="GUIText[settings.lang].cPolicyLink"></div>
+    <div class="center gen-btn" v-html="GUIText[settings.lang].accept" @click="acceptBtn"></div>
+  </div>
   <div id="settings" class="modal" v-show="display">
     <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
     <h1 v-text="GUIText[settings.lang].settings"></h1>
@@ -185,15 +190,15 @@
           <div class="category-head"><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
               v-text="GUIText[settings.lang].navi"></span></div>
           <div id="graph-nav">
-            <div @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
-            <div @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
-            <div @click="mainSystem.navigate('zoomIn')"><i class="fa-fw fas fa-search-plus"></i></div>
-            <div @click="mainSystem.navigate('left')"><i class="fa-fw fas fa-caret-left"></i></div>
-            <div @click="mainSystem.navigate('0')"><i class="fa-fw fas fa-arrows-alt"></i></div>
-            <div @click="mainSystem.navigate('right')"><i class="fa-fw fas fa-caret-right"></i></div>
-            <div @click="mainSystem.navigate('fit')"><i class="fa-fw fas  fa-expand"></i></div>
-            <div @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
-            <div @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomIn')"><i class="fa-fw fas fa-search-plus"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('left')"><i class="fa-fw fas fa-caret-left"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('0')"><i class="fa-fw fas fa-arrows-alt"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('right')"><i class="fa-fw fas fa-caret-right"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('fit')"><i class="fa-fw fas  fa-expand"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
           </div>
           <div class="category-head"><i class="fas fa-fw fa-cogs"></i><span class="gap-left"
               v-text="GUIText[settings.lang].oSettings"></span></div>
