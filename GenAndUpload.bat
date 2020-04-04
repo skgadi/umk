@@ -5,6 +5,7 @@ copy /y .\docs-dev\css\style.min.css .\docs\css\style.min.css
 copy /y .\docs-dev\css\themes.min.css .\docs\css\themes.min.css
 copy /y .\docs-dev\script.min.js .\docs\script.min.js
 copy /y .\docs-dev\pre-scripts.min.js .\docs\pre-scripts.min.js
+copy /y .\docs-dev\lib.min.js .\docs\lib.min.js
 copy /y .\docs-dev\app1.min.html .\docs\index.html
 
 git add .
