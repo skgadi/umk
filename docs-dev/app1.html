@@ -64,6 +64,15 @@
     <h1 v-text="GUIText[settings.lang].vManager"></h1>
     <h2 v-text="GUIText[settings.lang].variables"></h2>
     <h2 v-text="GUIText[settings.lang].constants"></h2>
+    <div class="splitShort">
+      <template v-for="(item, idx) in constants">
+        <div class="no-col-break">
+          <span v-text="(idx+1)+'.'" class="gap-right"></span>
+          <pre class="inline font-oneNhalf" v-text="item">asdf</pre>
+          <span v-text="'$ = ' + getConst(item) +'$'"></span>
+        </div>
+      </template>
+    </div>
   </div>
   <div id="main">
     <div id="tool-bar">

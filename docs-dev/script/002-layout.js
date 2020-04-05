@@ -27,7 +27,7 @@
     function resizePanesAutomatically(presWidth, presHeight) {
         let pVisibility = [];
         if (presHeight < minHeight) {
-            if (!tooSmallHeight) tooSmallHeight = suspendUserInterface.addOrder(GUIText[lang].errorShortHeight)
+            if (!tooSmallHeight) tooSmallHeight = suspendUserInterface.addOrder(GUIText[settings.lang].errorShortHeight)
         } else {
             if (!!tooSmallHeight) {
                 suspendUserInterface.removeOrder(tooSmallHeight);
@@ -35,7 +35,7 @@
             }
         }
         if (presWidth < minWidth) {
-            if (!tooSmallWidth) tooSmallWidth = suspendUserInterface.addOrder(GUIText[lang].errorShortWidth)
+            if (!tooSmallWidth) tooSmallWidth = suspendUserInterface.addOrder(GUIText[settings.lang].errorShortWidth)
         } else {
             if (!!tooSmallWidth) {
                 suspendUserInterface.removeOrder(tooSmallWidth);

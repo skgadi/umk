@@ -7,6 +7,7 @@ copy /y .\docs-dev\script.min.js .\docs\script.min.js
 copy /y .\docs-dev\pre-scripts.min.js .\docs\pre-scripts.min.js
 copy /y .\docs-dev\lib.min.js .\docs\lib.min.js
 copy /y .\docs-dev\app1.min.html .\docs\index.html
+copy /y .\docs-dev\favicon.ico .\docs\favicon.ico
 
 git add .
 git commit -am "Generating and pushing into server. Also deploys functions"

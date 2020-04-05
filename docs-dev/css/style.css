@@ -621,6 +621,14 @@ input[type='number'] {
     margin: 4px auto;
 }
 
-.center{
+.center {
     text-align: center;
+}
+
+.inline {
+    display: inline;
+}
+
+.font-oneNhalf {
+    font-size: 1.5em;
 }

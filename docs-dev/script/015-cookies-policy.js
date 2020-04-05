@@ -3,6 +3,11 @@ cPolicyVue = new Vue({
     data: {
         display: false
     },
+    watch: {
+        "display": function () {
+            kbshort.suspend(this.display, function (evt) {});
+        }
+    },
     mounted: function () {
         this.checkAcceptance();
     },
