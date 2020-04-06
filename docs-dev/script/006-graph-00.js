@@ -14,7 +14,7 @@ let Graph = function (container) {
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTSIZE = "16";
-  
+
   mxGraphHandler.prototype.guidesEnabled = true; //enables guides
   mxEdgeHandler.prototype.snapToTerminals = true; //Enables snapping waypoints to terminals
   //Pointer to this
@@ -345,9 +345,9 @@ let Graph = function (container) {
             return cell.value.show || "$[\\cdot]$";
           }
           return (
-            "<p style='margin:0; padding: 0;'>" +
+            "<div>" +
             tempModel.Icon().html +
-            "</p>"
+            "</div>"
           );
         } catch (e) {
           console.log(e);
@@ -494,7 +494,12 @@ let Graph = function (container) {
     } else return defaultOut;
   };
   this.validationAlert = function (message) {
-    new Noty({text: message, timeout: 5000, theme: "nest",type: 'warning'}).show();
+    new Noty({
+      text: message,
+      timeout: 5000,
+      theme: "nest",
+      type: 'warning'
+    }).show();
   };
 
   //selection of a vertix
@@ -622,17 +627,47 @@ mainSystem.outline.mouseUp = function (sender, me) {
 };
 
 
+
 function selectionChanged() {
-  if (mainSystem.graph.getSelectionCells().length === 0) editorVue.$set(editorVue.$data, 'disp', 'graph');
-  else  editorVue.$set(editorVue.$data, 'disp', '');
-  /*
-  let editorDivs = document.getElementsByClassName("editorDivs");
-  for (let i = 0; i < editorDivs.length; editorDivs++) {
-    editorDivs[i].style.display = "none";
+  if (
+    mainSystem.graph.getSelectionCell() &&
+    mainSystem.graph.getSelectionCell().isVertex() &&
+    typeof mainSystem.graph.getSelectionCell().value === "object"
+  ) {
+    changeEditModelWithSelectedBlock();
+  } else {
+    editorVue.$set(editorVue.$data, "uyamakModel", null);
+    if (
+      mainSystem.graph.getSelectionCell() &&
+      (mainSystem.graph.getSelectionCell().isEdge() ||
+      mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0)
+    ) {
+      editorVue.$set(editorVue.$data, "cellModel", {
+        model: true,
+        value: mainSystem.graph.getSelectionCell().value || ""
+      });
+    } else {
+      editorVue.$set(editorVue.$data, "cellModel", {
+        model: false,
+        value: null
+      });
+    }
   }
-  if (mainSystem.graph.getSelectionCells().length === 0)
-    document.getElementById("editorForGraph").style.display = "block";
-    */
+}
+
+function changeEditModelWithSelectedBlock() {
+  eval(
+    "editModel = new " +
+    mainSystem.graph.getSelectionCell().value.id +
+    "(mainSystem.graph.getSelectionCell().value);"
+  );
+  editorVue.$set(editorVue.$data, "uyamakModel", editModel);
+  editorVue.$set(editorVue.$data, "parametersDisplay", {});
+  editorVue.$set(editorVue.$data, "cellModel", {
+    model: false,
+    value: null
+  });
+  editorVue.$set(editorVue.$data, "invalidInputs", []);
 }
 
 /*

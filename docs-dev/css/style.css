@@ -44,14 +44,15 @@ button {
     left: 0;
     position: fixed;
     overflow-y: auto;
-    padding: 16px;
 }
-
-#settings>div {
+.modal>div {
+    padding: 5%;
+}
+#settings>div>div {
     column-rule: 2px var(--background-secondary-alt) inset;
 }
 
-#settings>div>h1 {
+#settings>div>div>h1 {
     column-span: all;
 }
 
@@ -67,12 +68,12 @@ button {
     /* Actually FF 20+ */
 }
 
-#settings>div>div>label {
+#settings>div>div>div>label {
     display: block;
     font-size: 1.5em;
 }
 
-#settings>div>div>select {
+#settings>div>div>div>select {
     width: 100%;
     font-size: 2em;
     background-color: var(--background-primary);
@@ -606,15 +607,19 @@ input[type='checkbox'] {
     opacity: 1;
 }
 
-input[type='number'] {
+input[type='number'], input[type='text'] {
     width: 100%;
     font-size: 2em;
     background-color: var(--background-primary);
     color: var(--text-muted);
     border-width: 0;
+}
+input[type='number'] {
     text-align: right;
 }
-
+input[type='text'] {
+    text-align: left;
+}
 
 #cookies-policy>div {
     max-width: 500px;
@@ -631,4 +636,33 @@ input[type='number'] {
 
 .font-oneNhalf {
     font-size: 1.5em;
+}
+
+pre, .monospace {
+    font-family: "Courier New", Courier, monospace;
+}
+
+.splitToTwo {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    column-gap: 2%;
+}
+
+.row-col-btns {
+    display: grid;
+    grid-template-columns: 3em 3em 3em 3em;
+    column-gap: 1em;
+    height: 2em;
+    line-height: 1em;
+    position: absolute;
+}
+.row-col-btns>div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+}
+
+mjx-container {
+    margin: 0 !important;
 }

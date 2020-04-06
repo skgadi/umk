@@ -4,7 +4,8 @@ const varManagerVue = new Vue({
         constants: ["e", "E", "i", "Infinity", "LN2", "LN10", "LOG2E", "LOG10E", "phi", "pi", "PI", "SQRT1_2", "SQRT2", "tau"],
         keywords: ["NaN", "null", "undefined", "mod", "to", "in", "and", "xor", "or", "not", "end"],
         display: false,
-        uVariables: {},
+        variables: {},
+        showAddVar: false
     },
     watch: {
         "display": function () {

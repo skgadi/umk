@@ -30,7 +30,7 @@ function blockOnDOM(img) {
             Details.setConnectable(false);
             graph.setSelectionCell(v);
         } catch (e) {
-            notyf.error("Block error: Unable to place this block. Contact the support.")
+            new Noty({text: GUIText[settings.lang].errUblPlcBlock, timeout: 5000, theme: "nest",type: 'error'}).show();
             console.log(e);
         }
         graph.getModel().endUpdate();

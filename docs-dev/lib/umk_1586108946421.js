@@ -1,12 +1,21 @@
-const umk_1585601356516 = function (obj = {}) {
-    this.Parameters = {};
+const umk_1586108946421 = function (obj = {}) {
+    this.Parameters = {
+        "constant": {
+            "Name": {"en-us":"Constant $(C)$","es-mx":"Constante $(C)$"},
+            "Dimension": "Matrix",
+            "Type": "Complex",
+            "Value": [
+                [1]
+            ]
+        }
+    };
     this.Label = function () {};
     this.Icon = function () {
         return {
-            html: "$+$",
-            inLabels: new Array(this.TerminalsIn.value).fill("+"),
+            html: TeXTools.makeMatrix(this.Parameters.constant.Value),
+            inLabels: null,
             outLabels: null,
-            splStyle: "shape=triangle;"
+            splStyle: ""
         };
     };
     this.Init = function () {};
@@ -26,19 +35,19 @@ const umk_1585601356516 = function (obj = {}) {
     this.ValidateParams = function () {
         return "OK";
     };
-    this.id = "umk_1585601356516";
+    this.id = "umk_1586108946421";
     this.Colors = {};
     this.TerminalsIn = {
-        min: 2,
-        max: 100,
-        value: 2,
-        editable: true
+        "editable": false,
+        "max": 0,
+        "min": 0,
+        "value": 0
     };
     this.TerminalsOut = {
-        min: 1,
-        max: 1,
-        value: 1,
-        editable: false
+        "editable": false,
+        "max": 1,
+        "min": 1,
+        "value": 1
     };
     for (let prop in obj) {
         if (typeof obj[prop] !== 'function') this[prop] = JSON.parse2(JSON.stringify2(obj[prop]));
