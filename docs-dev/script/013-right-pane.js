@@ -80,11 +80,11 @@ const editorVue = new Vue({
             geos[90] = {
                 "umk_caption": {
                     x: 0.5,
-                    y: 1
+                    y: 0
                 },
                 "umk_EO": {
                     x: 0.5,
-                    y: 0
+                    y: 1
                 },
             };
             geos[180] = {
@@ -100,11 +100,11 @@ const editorVue = new Vue({
             geos[270] = {
                 "umk_caption": {
                     x: 0.5,
-                    y: 0
+                    y: 1
                 },
                 "umk_EO": {
                     x: 0.5,
-                    y: 1
+                    y: 0
                 },
             };
             mainSystem.graph.setCellStyles(

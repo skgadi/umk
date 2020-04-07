@@ -74,8 +74,8 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.labelPosition = "left";
-  style.verticalLabelPosition = "top";
-  style.verticalAlign = "bottom";
+  style.verticalLabelPosition = "bottom";
+  style.verticalAlign = "top";
   style.fontColor = "var(--text-muted)";
   style.rotation = 270;
   //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
@@ -91,8 +91,8 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.labelPosition = "right";
-  style.verticalLabelPosition = "top";
-  style.verticalAlign = "bottom";
+  style.verticalLabelPosition = "bottom";
+  style.verticalAlign = "top";
   style.fontColor = "var(--text-muted)";
   style.rotation = 270;
   //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
@@ -107,7 +107,7 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.align = "center";
-  style.verticalAlign = "top";
+  style.verticalAlign = "bottom";
   style.fontColor = "var(--text-muted)";
   style.rotation = 270;
   //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
@@ -122,7 +122,7 @@ let Graph = function (container) {
   style = new Object();
   style.constituent = 1;
   style.align = "center";
-  style.verticalAlign = "top";
+  style.verticalAlign = "bottom";
   style.fontColor = "var(--text-muted)";
   style.rotation = 270;
   //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
