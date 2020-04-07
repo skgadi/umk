@@ -12,7 +12,7 @@ const umk_1586108946421 = function (obj = {}) {
     this.Label = function () {};
     this.Icon = function () {
         return {
-            html: TeXTools.makeMatrix(this.Parameters.constant.Value),
+            html: TeXTools.getTeXInline(this.Parameters.constant.Value),
             inLabels: null,
             outLabels: null,
             splStyle: ""

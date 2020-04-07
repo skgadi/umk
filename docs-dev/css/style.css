@@ -45,9 +45,11 @@ button {
     position: fixed;
     overflow-y: auto;
 }
+
 .modal>div {
     padding: 5%;
 }
+
 #settings>div>div {
     column-rule: 2px var(--background-secondary-alt) inset;
 }
@@ -607,16 +609,19 @@ input[type='checkbox'] {
     opacity: 1;
 }
 
-input[type='number'], input[type='text'] {
+input[type='number'],
+input[type='text'] {
     width: 100%;
     font-size: 2em;
     background-color: var(--background-primary);
     color: var(--text-muted);
     border-width: 0;
 }
+
 input[type='number'] {
     text-align: right;
 }
+
 input[type='text'] {
     text-align: left;
 }
@@ -638,7 +643,8 @@ input[type='text'] {
     font-size: 1.5em;
 }
 
-pre, .monospace {
+pre,
+.monospace {
     font-family: "Courier New", Courier, monospace;
 }
 
@@ -656,6 +662,7 @@ pre, .monospace {
     line-height: 1em;
     position: absolute;
 }
+
 .row-col-btns>div {
     position: fixed;
     top: 50%;
@@ -666,3 +673,50 @@ pre, .monospace {
 mjx-container {
     margin: 0 !important;
 }
+
+.matrix-builder-buttons {
+    text-align: center;
+    margin: 16px;
+}
+
+.matrix-builder-buttons>span {
+    margin: 0px;
+    padding: 0px;
+    opacity: 0.75;
+    border-radius: 50%;
+    height: 3em;
+    width: 3em;
+    line-height: 3em;
+    border: 1px var(--text-muted) solid;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.matrix-builder-buttons>span:hover {
+    opacity: 1;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+
+.expandable-x {
+    display: block;
+    overflow-x: auto;
+}
+
+blink, .blink {
+    -webkit-animation: blink 1s step-end infinite;
+    -moz-animation: blink 1s step-end infinite;
+    -o-animation: blink 1s step-end infinite;
+    animation: blink 1s step-end infinite;
+}
+@-webkit-keyframes blink { 67% { opacity: 0 }}
+@-moz-keyframes blink {  67% { opacity: 0 }}
+@-o-keyframes blink {  67% { opacity: 0 }}
+@keyframes blink {  67% { opacity: 0 }}

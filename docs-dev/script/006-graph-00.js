@@ -65,18 +65,68 @@ let Graph = function (container) {
   this.getStylesheet().putCellStyle("umk_group", style);
   style = new Object();
   style.constituent = 1;
+  style.labelPosition = "center";
   style.verticalLabelPosition = "bottom";
   style.verticalAlign = "top";
   style.fontColor = "var(--text-muted)";
   //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
-  this.getStylesheet().putCellStyle("umk_caption", style);
+  this.getStylesheet().putCellStyle("umk_caption_0", style);
+  style = new Object();
+  style.constituent = 1;
+  style.labelPosition = "left";
+  style.verticalLabelPosition = "top";
+  style.verticalAlign = "bottom";
+  style.fontColor = "var(--text-muted)";
+  style.rotation = 270;
+  //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+  this.getStylesheet().putCellStyle("umk_caption_90", style);
+  style = new Object();
+  style.constituent = 1;
+  style.labelPosition = "center";
+  style.verticalLabelPosition = "bottom";
+  style.verticalAlign = "top";
+  style.fontColor = "var(--text-muted)";
+  //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+  this.getStylesheet().putCellStyle("umk_caption_180", style);
+  style = new Object();
+  style.constituent = 1;
+  style.labelPosition = "right";
+  style.verticalLabelPosition = "top";
+  style.verticalAlign = "bottom";
+  style.fontColor = "var(--text-muted)";
+  style.rotation = 270;
+  //constituent=1;verticalLabelPosition=bottom;verticalAlign=top;
+  this.getStylesheet().putCellStyle("umk_caption_270", style);
   style = new Object();
   style.constituent = 1;
   style.align = "center";
   style.verticalAlign = "bottom";
   style.fontColor = "var(--text-muted)";
   //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
-  this.getStylesheet().putCellStyle("umk_EO", style);
+  this.getStylesheet().putCellStyle("umk_EO_0", style);
+  style = new Object();
+  style.constituent = 1;
+  style.align = "center";
+  style.verticalAlign = "top";
+  style.fontColor = "var(--text-muted)";
+  style.rotation = 270;
+  //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+  this.getStylesheet().putCellStyle("umk_EO_90", style);
+  style = new Object();
+  style.constituent = 1;
+  style.align = "center";
+  style.verticalAlign = "bottom";
+  style.fontColor = "var(--text-muted)";
+  //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+  this.getStylesheet().putCellStyle("umk_EO_180", style);
+  style = new Object();
+  style.constituent = 1;
+  style.align = "center";
+  style.verticalAlign = "top";
+  style.fontColor = "var(--text-muted)";
+  style.rotation = 270;
+  //constituent=1;align=center;verticalAlign=bottom;fontColor=#000000;
+  this.getStylesheet().putCellStyle("umk_EO_270", style);
   style = new Object();
   style.constituent = 1;
   style.verticalAlign = "middle";
@@ -345,7 +395,7 @@ let Graph = function (container) {
             return cell.value.show || "$[\\cdot]$";
           }
           return (
-            "<div>" +
+            "<div class='rotate-"+tempModel.rotateHTML+"'>" +
             tempModel.Icon().html +
             "</div>"
           );
@@ -374,12 +424,17 @@ let Graph = function (container) {
     }
     mxGraph.prototype.labelChanged.apply(this, arguments);
   };
+  this.showCaptions = true;
   this.setCaption = function (Cell, value) {
     let children = Cell.children;
     if (!!children) {
       for (let i = 0; i < children.length; i++) {
         if (children[i].style.search("umk_caption") >= 0) {
-          children[i].setValue(value);
+          if (this.showCaptions) {
+            children[i].setValue(value);
+          } else {
+            children[i].setValue("");
+          }
           this.refresh(children[i]);
         }
       }
@@ -640,7 +695,7 @@ function selectionChanged() {
     if (
       mainSystem.graph.getSelectionCell() &&
       (mainSystem.graph.getSelectionCell().isEdge() ||
-      mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0)
+        mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0)
     ) {
       editorVue.$set(editorVue.$data, "cellModel", {
         model: true,

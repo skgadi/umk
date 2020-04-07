@@ -14,8 +14,12 @@ const TeXTools = {
   getTeXInline: function (val, dec = 4) {
     return "$" + this.makeMatrix(val, dec) + "$";
   },
-  makeMatrix: function (val, dec = 4) {
-    return this.removeAvoidedItems(math.parse((math.squeeze(math.matrix(val)).toString())).toTex(dec));
+  makeMatrix: function (inArray, dec = 4) {
+    if (inArray.length === 1 && inArray[0].length === 1) {
+      return inArray[0][0];
+    }
+    return math.parse(math.matrix(inArray).toString()).toTex(dec).replace(/"/g, "");
+    //return this.removeAvoidedItems(math.parse((math.squeeze(math.matrix(val)).toString())).toTex(dec));
   },
   removeAvoidedItems: function (inString) {
     outString = inString;

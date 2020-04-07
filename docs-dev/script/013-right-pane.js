@@ -7,37 +7,8 @@ const editorVue = new Vue({
             model: false,
             value: null
         },
-        invalidInputs: [],
         parametersDisplay: null,
         updatingCounter: 0
-    },
-    computed: {
-        parametersValidationComments: function () {
-            if (!!this.uyamakModel && !!this.uyamakModel.ValidateParams)
-                return this.uyamakModel.ValidateParams();
-            return "OK";
-        },
-        inputErrors: function () {
-            return (
-                "<table class='w3-table'>" +
-                this.invalidInputs
-                .map(function (currentValue, index, arr) {
-                    return (
-                        "<tr><td>" +
-                        editorVue.$data.uyamakModel.Parameters[currentValue]
-                        .Name +
-                        /*" at [" +
-                        (parseInt(currentValue.split(",")[1]) + 1) +
-                        ", " +
-                        (parseInt(currentValue.split(",")[2]) + 1) +
-                        "]" +*/
-                        "</td></tr>"
-                    );
-                })
-                .join("") +
-                "</table>"
-            );
-        }
     },
     mounted: function () {
         this.refreshGraph();
@@ -56,6 +27,7 @@ const editorVue = new Vue({
                 settingsVue.$set(settingsVue.$data.stings, 'showOutline', a.showOutline);
                 settingsVue.$set(settingsVue.$data.stings, 'gridSize', a.gridSize);
                 settingsVue.$set(settingsVue.$data.stings, 'guidesEnabled', a.guidesEnabled);
+                settingsVue.$set(settingsVue.$data.stings, 'showLabels', a.showLabels);
                 this.refreshGraph();
             }
         }
@@ -68,9 +40,15 @@ const editorVue = new Vue({
             mainSystem.outline.visibility = this.rpSettings.showOutline;
             mainSystem.graph.graphHandler.guidesEnabled = this.rpSettings.guidesEnabled;
             mainSystem.graph.gridSize = this.rpSettings.gridSize;
+            mainSystem.graph.showCaptions = this.rpSettings.showLabels;
             mainSystem.refresh();
         },
         rotate: function (ang) {
+            if (ang === 180 || ang === 90) {
+                mainSystem.graph.getSelectionCell().value.rotateHTML = 180;
+            } else {
+                mainSystem.graph.getSelectionCell().value.rotateHTML = 0;
+            }
             const pConstarins = [];
             pConstarins[0] = {
                 in: "west",
@@ -88,6 +66,47 @@ const editorVue = new Vue({
                 in: "south",
                 out: "north"
             };
+            const geos = [];
+            geos[0] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 1
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 0
+                },
+            };
+            geos[90] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 1
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 0
+                },
+            };
+            geos[180] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 0
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 1
+                },
+            };
+            geos[270] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 0
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 1
+                },
+            };
             mainSystem.graph.setCellStyles(
                 "rotation",
                 ang,
@@ -100,19 +119,39 @@ const editorVue = new Vue({
                     mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_input") >= 0
-                )
+                ) {
                     mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].in, [
                         mainSystem.graph.getSelectionCell().children[i]
                     ]);
-                if (
+                } else if (
                     mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_output") >= 0
-                )
+                ) {
                     mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].out, [
                         mainSystem.graph.getSelectionCell().children[i]
                     ]);
+                } else if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_caption") >= 0
+                ) {
+                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_caption_"+ang);
+                    let tempGeo = new mxGeometry(geos[ang]["umk_caption"].x, geos[ang]["umk_caption"].y,0,0);
+                    tempGeo.relative = true;
+                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                } else if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_EO") >= 0
+                ) {
+                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_EO_"+ang);
+                    let tempGeo = new mxGeometry(geos[ang]["umk_EO"].x, geos[ang]["umk_EO"].y,0,0);
+                    tempGeo.relative = true;
+                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                }
             }
+            mainSystem.refresh();
         },
         applyCellValue: function () {
             if (
@@ -133,7 +172,8 @@ const editorVue = new Vue({
             mainSystem.graph.getSelectionCell().setValue(tempModel);
             setTermianls(mainSystem.graph.getSelectionCell(), "umk_input");
             setTermianls(mainSystem.graph.getSelectionCell(), "umk_output");
-            mainSystem.graph.refresh(mainSystem.graph.getSelectionCell());
+            //mainSystem.graph.refresh(mainSystem.graph.getSelectionCell());
+            mainSystem.refresh();
         },
         getBlockDetails: function () {
             try {
@@ -201,6 +241,7 @@ const editorVue = new Vue({
             } else {
                 if (tempIndex < 0) this.invalidInputs.push(tempValidateItem);
             }
+            console.log(outValue);
             return outValue;
         },
         valueDimensionsModify: function (func, index) {

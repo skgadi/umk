@@ -23,9 +23,9 @@ function blockOnDOM(img) {
             v.setConnectable(false);
             setTermianls(graph, v, "umk_input");
             setTermianls(graph, v, "umk_output");
-            let EO = graph.insertVertex(v, null, "", 0.5, 0, 0, 0, "umk_EO", true);
+            let EO = graph.insertVertex(v, null, "", 0.5, 0, 0, 0, "umk_EO_0", true);
             EO.setConnectable(false);
-            let Details = graph.insertVertex(v, null, modelForVertex.Name, 0.5, 1, 0, 0, "umk_caption", true);
+            let Details = graph.insertVertex(v, null, modelForVertex.Name, 0.5, 1, 0, 0, "umk_caption_0", true);
             Details.geometry.offset = new mxPoint(0, 0);
             Details.setConnectable(false);
             graph.setSelectionCell(v);
