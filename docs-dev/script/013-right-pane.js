@@ -51,12 +51,29 @@ const editorVue = new Vue({
             mainSystem.graph.showCaptions = this.rpSettings.showLabels;
             mainSystem.refresh();
         },
-        getAngle: function () {
-            for (let i = 0; i < mainSystem.graph.getSelectionCell().children.length; i++) {
+        rotateAll: function (cw=true) {
+            let selectedCells = mainSystem.graph.getSelectionCells();
+            for (let i=0; i<selectedCells.length; i++) {
+                let angle = this.getAngle(selectedCells[i]);
+                if (cw) {
+                    angle += 90;
+                    angle = angle%360;
+                } else {
+                    angle -= 90;
+                    if (angle<0) angle += 360;
+                }
+                this.rotate(angle,selectedCells[i]);
+            }
+        },
+        getAngle: function (cell = null) {
+            if (cell === null) {
+                cell = mainSystem.graph.getSelectionCell();
+            }
+            for (let i = 0; i < cell.children.length; i++) {
                 if (mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_caption") >= 0) {
-                    let styleSplit = mainSystem.graph.getSelectionCell().children[i].style.split("_");
+                    let styleSplit = cell.children[i].style.split("_");
                     try {
                         return parseInt(styleSplit[styleSplit.length - 1])
                     } catch (e) {
@@ -65,14 +82,17 @@ const editorVue = new Vue({
                 }
             }
         },
-        rotate: function (ang) {
+        rotate: function (ang, cell = null) {
+            if (cell === null) {
+                cell = mainSystem.graph.getSelectionCell();
+            }
             let model = mainSystem.graph.getModel();
             model.beginUpdate();
 
             if (ang === 180 || ang === 90) {
-                mainSystem.graph.getSelectionCell().value.rotateHTML = 180;
+                cell.value.rotateHTML = 180;
             } else {
-                mainSystem.graph.getSelectionCell().value.rotateHTML = 0;
+                cell.value.rotateHTML = 0;
             }
             const pConstarins = [];
             pConstarins[0] = {
@@ -135,18 +155,18 @@ const editorVue = new Vue({
             mainSystem.graph.setCellStyles(
                 "rotation",
                 ang,
-                [mainSystem.graph.getSelectionCell()].concat(
-                    mainSystem.graph.getSelectionCell().children
+                [cell].concat(
+                    cell.children
                 )
             );
-            for (let i = 0; i < mainSystem.graph.getSelectionCell().children.length; i++) {
+            for (let i = 0; i < cell.children.length; i++) {
                 if (
                     mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_input") >= 0
                 ) {
                     mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].in, [
-                        mainSystem.graph.getSelectionCell().children[i]
+                        cell.children[i]
                     ]);
                 } else if (
                     mainSystem.graph
@@ -154,26 +174,26 @@ const editorVue = new Vue({
                     .children[i].style.search("umk_output") >= 0
                 ) {
                     mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].out, [
-                        mainSystem.graph.getSelectionCell().children[i]
+                        cell.children[i]
                     ]);
                 } else if (
                     mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_caption") >= 0
                 ) {
-                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_caption_" + ang);
+                    cell.children[i].setStyle("umk_caption_" + ang);
                     let tempGeo = new mxGeometry(geos[ang]["umk_caption"].x, geos[ang]["umk_caption"].y, 0, 0);
                     tempGeo.relative = true;
-                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                    cell.children[i].setGeometry(tempGeo);
                 } else if (
                     mainSystem.graph
                     .getSelectionCell()
                     .children[i].style.search("umk_EO") >= 0
                 ) {
-                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_EO_" + ang);
+                    cell.children[i].setStyle("umk_EO_" + ang);
                     let tempGeo = new mxGeometry(geos[ang]["umk_EO"].x, geos[ang]["umk_EO"].y, 0, 0);
                     tempGeo.relative = true;
-                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                    cell.children[i].setGeometry(tempGeo);
                 }
             }
             model.endUpdate();
@@ -182,11 +202,17 @@ const editorVue = new Vue({
             mainSystem.undoManager.indexOfNextAdd--;
 
         },
-        applyModelValue: function () {
-            mainSystem.graph.getSelectionCell().value = this.modelValue;
+        applyModelValue: function (cell = null) {
+            if (cell === null) {
+                cell = mainSystem.graph.getSelectionCell();
+            }
+            cell.value = this.modelValue;
             mainSystem.refresh();
         },
-        saveModel: function () {
+        saveModel: function (cell = null) {
+            if (cell === null) {
+                cell = mainSystem.graph.getSelectionCell();
+            }
             mainSystem.graph.getModel().beginUpdate();
             //Adding model to the Block
             eval(
@@ -194,9 +220,9 @@ const editorVue = new Vue({
                 this.uyamakModel.id +
                 "(this.uyamakModel);"
             );
-            mainSystem.graph.getSelectionCell().setValue(tempModel);
-            setTermianls(mainSystem.graph, mainSystem.graph.getSelectionCell(), "umk_input");
-            setTermianls(mainSystem.graph, mainSystem.graph.getSelectionCell(), "umk_output");
+            cell.setValue(tempModel);
+            setTermianls(mainSystem.graph, cell, "umk_input");
+            setTermianls(mainSystem.graph, cell, "umk_output");
             //mainSystem.graph.refresh(mainSystem.graph.getSelectionCell());
             mainSystem.graph.getModel().endUpdate();
             mainSystem.refresh();
