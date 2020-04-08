@@ -389,6 +389,9 @@ let Graph = function (container) {
             cell.value.id +
             "(cell.value);"
           );
+          /*//Set input and output terminals
+          setTermianls(this, cell, "umk_input");
+          setTermianls(this, cell, "umk_output");*/
           //console.log(tempModel.Icon());
           this.setCaption(cell, tempModel.Name);
           if (!!cell.style && cell.style.search("umk_display") >= 0) {

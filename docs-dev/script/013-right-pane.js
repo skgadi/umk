@@ -66,129 +66,128 @@ const editorVue = new Vue({
             }
         },
         rotate: function (ang) {
-            if (this.getAngle !== ang) {
-                let model = mainSystem.graph.getModel();
-                model.beginUpdate();
-            
-                if (ang === 180 || ang === 90) {
-                    mainSystem.graph.getSelectionCell().value.rotateHTML = 180;
-                } else {
-                    mainSystem.graph.getSelectionCell().value.rotateHTML = 0;
-                }
-                const pConstarins = [];
-                pConstarins[0] = {
-                    in: "west",
-                    out: "east"
-                };
-                pConstarins[90] = {
-                    in: "north",
-                    out: "south"
-                };
-                pConstarins[180] = {
-                    in: "east",
-                    out: "west"
-                };
-                pConstarins[270] = {
-                    in: "south",
-                    out: "north"
-                };
-                const geos = [];
-                geos[0] = {
-                    "umk_caption": {
-                        x: 0.5,
-                        y: 1
-                    },
-                    "umk_EO": {
-                        x: 0.5,
-                        y: 0
-                    },
-                };
-                geos[90] = {
-                    "umk_caption": {
-                        x: 0.5,
-                        y: 0
-                    },
-                    "umk_EO": {
-                        x: 0.5,
-                        y: 1
-                    },
-                };
-                geos[180] = {
-                    "umk_caption": {
-                        x: 0.5,
-                        y: 0
-                    },
-                    "umk_EO": {
-                        x: 0.5,
-                        y: 1
-                    },
-                };
-                geos[270] = {
-                    "umk_caption": {
-                        x: 0.5,
-                        y: 1
-                    },
-                    "umk_EO": {
-                        x: 0.5,
-                        y: 0
-                    },
-                };
-                mainSystem.graph.setCellStyles(
-                    "rotation",
-                    ang,
-                    [mainSystem.graph.getSelectionCell()].concat(
-                        mainSystem.graph.getSelectionCell().children
-                    )
-                );
-                for (let i = 0; i < mainSystem.graph.getSelectionCell().children.length; i++) {
-                    if (
-                        mainSystem.graph
-                        .getSelectionCell()
-                        .children[i].style.search("umk_input") >= 0
-                    ) {
-                        mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].in, [
-                            mainSystem.graph.getSelectionCell().children[i]
-                        ]);
-                    } else if (
-                        mainSystem.graph
-                        .getSelectionCell()
-                        .children[i].style.search("umk_output") >= 0
-                    ) {
-                        mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].out, [
-                            mainSystem.graph.getSelectionCell().children[i]
-                        ]);
-                    } else if (
-                        mainSystem.graph
-                        .getSelectionCell()
-                        .children[i].style.search("umk_caption") >= 0
-                    ) {
-                        mainSystem.graph.getSelectionCell().children[i].setStyle("umk_caption_" + ang);
-                        let tempGeo = new mxGeometry(geos[ang]["umk_caption"].x, geos[ang]["umk_caption"].y, 0, 0);
-                        tempGeo.relative = true;
-                        mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
-                    } else if (
-                        mainSystem.graph
-                        .getSelectionCell()
-                        .children[i].style.search("umk_EO") >= 0
-                    ) {
-                        mainSystem.graph.getSelectionCell().children[i].setStyle("umk_EO_" + ang);
-                        let tempGeo = new mxGeometry(geos[ang]["umk_EO"].x, geos[ang]["umk_EO"].y, 0, 0);
-                        tempGeo.relative = true;
-                        mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
-                    }
-                }
-                model.endUpdate();
-                mainSystem.refresh();
+            let model = mainSystem.graph.getModel();
+            model.beginUpdate();
+
+            if (ang === 180 || ang === 90) {
+                mainSystem.graph.getSelectionCell().value.rotateHTML = 180;
+            } else {
+                mainSystem.graph.getSelectionCell().value.rotateHTML = 0;
             }
+            const pConstarins = [];
+            pConstarins[0] = {
+                in: "west",
+                out: "east"
+            };
+            pConstarins[90] = {
+                in: "north",
+                out: "south"
+            };
+            pConstarins[180] = {
+                in: "east",
+                out: "west"
+            };
+            pConstarins[270] = {
+                in: "south",
+                out: "north"
+            };
+            const geos = [];
+            geos[0] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 1
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 0
+                },
+            };
+            geos[90] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 0
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 1
+                },
+            };
+            geos[180] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 0
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 1
+                },
+            };
+            geos[270] = {
+                "umk_caption": {
+                    x: 0.5,
+                    y: 1
+                },
+                "umk_EO": {
+                    x: 0.5,
+                    y: 0
+                },
+            };
+            mainSystem.graph.setCellStyles(
+                "rotation",
+                ang,
+                [mainSystem.graph.getSelectionCell()].concat(
+                    mainSystem.graph.getSelectionCell().children
+                )
+            );
+            for (let i = 0; i < mainSystem.graph.getSelectionCell().children.length; i++) {
+                if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_input") >= 0
+                ) {
+                    mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].in, [
+                        mainSystem.graph.getSelectionCell().children[i]
+                    ]);
+                } else if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_output") >= 0
+                ) {
+                    mainSystem.graph.setCellStyles("portConstraint", pConstarins[ang].out, [
+                        mainSystem.graph.getSelectionCell().children[i]
+                    ]);
+                } else if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_caption") >= 0
+                ) {
+                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_caption_" + ang);
+                    let tempGeo = new mxGeometry(geos[ang]["umk_caption"].x, geos[ang]["umk_caption"].y, 0, 0);
+                    tempGeo.relative = true;
+                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                } else if (
+                    mainSystem.graph
+                    .getSelectionCell()
+                    .children[i].style.search("umk_EO") >= 0
+                ) {
+                    mainSystem.graph.getSelectionCell().children[i].setStyle("umk_EO_" + ang);
+                    let tempGeo = new mxGeometry(geos[ang]["umk_EO"].x, geos[ang]["umk_EO"].y, 0, 0);
+                    tempGeo.relative = true;
+                    mainSystem.graph.getSelectionCell().children[i].setGeometry(tempGeo);
+                }
+            }
+            model.endUpdate();
+            mainSystem.refresh();
+            mainSystem.undoManager.history.pop();
+            mainSystem.undoManager.indexOfNextAdd--;
+
         },
         applyModelValue: function () {
             mainSystem.graph.getSelectionCell().value = this.modelValue;
             mainSystem.refresh();
         },
         saveModel: function () {
-            let model = mainSystem.graph.getModel();
-            model.beginUpdate();
-
+            mainSystem.graph.getModel().beginUpdate();
             //Adding model to the Block
             eval(
                 "var tempModel = new " +
@@ -199,8 +198,11 @@ const editorVue = new Vue({
             setTermianls(mainSystem.graph, mainSystem.graph.getSelectionCell(), "umk_input");
             setTermianls(mainSystem.graph, mainSystem.graph.getSelectionCell(), "umk_output");
             //mainSystem.graph.refresh(mainSystem.graph.getSelectionCell());
-            model.endUpdate();
+            mainSystem.graph.getModel().endUpdate();
             mainSystem.refresh();
+            mainSystem.undoManager.history.pop();
+            mainSystem.undoManager.indexOfNextAdd--;
+            this.rotate(this.getAngle());
         },
         toggleParamDisplay: function (index) {
             //console.log(this.parametersDisplay);
