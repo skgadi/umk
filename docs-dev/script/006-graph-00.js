@@ -14,6 +14,8 @@ let Graph = function (container) {
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTSIZE = "16";
+  this.dropEnabled = true;
+  this.setRecursiveResize(false);
 
   mxGraphHandler.prototype.guidesEnabled = true; //enables guides
   mxEdgeHandler.prototype.snapToTerminals = true; //Enables snapping waypoints to terminals
@@ -62,6 +64,12 @@ let Graph = function (container) {
   style.startSize = 25;
   style.strokeWidth = 2;
   style.arcSize = 0;
+  style.foldable = 1;
+  style.fontColor = "var(--text-muted)";
+  //style.verticalLabelPosition = "top";
+  style.verticalAlign = "top";
+  style.strokeColor = "var(--interactive-muted)";
+  style.resizable = 1;
   this.getStylesheet().putCellStyle("umk_group", style);
   style = new Object();
   style.constituent = 1;
@@ -592,7 +600,7 @@ let Graph = function (container) {
       this.setSelectionCell(subModel);
     } catch (e) {
       console.log(e);
-      this.validationAlert (GUIText[settings.lang].errUnablGrping);
+      this.validationAlert(GUIText[settings.lang].errUnablGrping);
     } finally {
       model.endUpdate();
     }
@@ -621,12 +629,20 @@ let Graph = function (container) {
   }
   // fold and unfold
   this.foldItems = function (fold = true) {
+    let cells;
     if (this.getSelectionCells().length > 0) {
-      this.foldCells(fold, false, this.getSelectionCells());
-    } else this.foldCells(fold, false, this.getDefaultParent().children);
+      cells = this.getSelectionCells();
+    } else {
+      cells = this.getDefaultParent().children;
+    }
+    for (let i=0; i<cells.length; i++) {
+      if (cells[i].style.search("umk_group")>=0){
+        this.foldCells(fold, false, [cells[i]]);
+      }
+    }
   }
 
-  
+
 
   /*
   //Handling context icons

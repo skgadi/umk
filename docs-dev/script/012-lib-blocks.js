@@ -19,7 +19,13 @@ function blockOnDOM(img) {
             let outLabels = IconDetails.outLabels || [];
             let splStyle = "";
             if (!!IconDetails.splStyle) splStyle = IconDetails.splStyle;
-            v = graph.insertVertex(graph.getDefaultParent(), null, modelForVertex, x, y, width, height, "umk_model;" + splStyle);
+            let parent = mainSystem.graph.getSwimlaneAt(x, y);
+            if (!parent) {
+                parent = graph.getDefaultParent();
+            }
+            let xx = x - ((parent.geometry && parent.geometry.x) ? parent.geometry.x : 0);
+            let yy = y - ((parent.geometry && parent.geometry.y) ? parent.geometry.y : 0);
+            v = graph.insertVertex(parent, null, modelForVertex, xx, yy, width, height, "umk_model;" + splStyle);
             v.setConnectable(false);
             setTermianls(graph, v, "umk_input");
             setTermianls(graph, v, "umk_output");

@@ -51,18 +51,20 @@ const editorVue = new Vue({
             mainSystem.graph.showCaptions = this.rpSettings.showLabels;
             mainSystem.refresh();
         },
-        rotateAll: function (cw=true) {
+        rotateAll: function (cw = true) {
             let selectedCells = mainSystem.graph.getSelectionCells();
-            for (let i=0; i<selectedCells.length; i++) {
-                let angle = this.getAngle(selectedCells[i]);
-                if (cw) {
-                    angle += 90;
-                    angle = angle%360;
-                } else {
-                    angle -= 90;
-                    if (angle<0) angle += 360;
+            for (let i = 0; i < selectedCells.length; i++) {
+                if (selectedCells[i].style.search("umk_model") >= 0) {
+                    let angle = this.getAngle(selectedCells[i]);
+                    if (cw) {
+                        angle += 90;
+                        angle = angle % 360;
+                    } else {
+                        angle -= 90;
+                        if (angle < 0) angle += 360;
+                    }
+                    this.rotate(angle, selectedCells[i]);
                 }
-                this.rotate(angle,selectedCells[i]);
             }
         },
         getAngle: function (cell = null) {
