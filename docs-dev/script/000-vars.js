@@ -21,9 +21,9 @@ const suspendUserInterface = {
     }
 };
 let toolBarVue;
-let modelForVertex;
-let tempModel;
-let editModel;
+//let modelForVertex;
+//let tempModel;
+//let editModel;
 /*used in other files
 menuVue
 footerVue

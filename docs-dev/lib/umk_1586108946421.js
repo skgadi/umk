@@ -30,7 +30,7 @@ const umk_1586108946421 = function (obj = {}) {
         }
     };
     this.Details = function () {
-        return "$$y(t) = \\sum_{i=1\}^{" + this.TerminalsIn.value + "}{u_i(t)}$$";
+        return "$$y(t) = "+TeXTools.makeMatrix(this.Parameters.constant.Value)+"$$";
     };
     this.ValidateParams = function () {
         return "OK";

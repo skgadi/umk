@@ -13,7 +13,7 @@ function blockOnDOM(img) {
     let addANewBlock = function (graph, evt, cell, x, y) {
         graph.getModel().beginUpdate();
         try {
-            eval("modelForVertex = new " + model + "({'Name': '" + Name + "'})");
+            eval("var modelForVertex = new " + model + "({'Name': '" + Name + "'})");
             let IconDetails = modelForVertex.Icon();
             let inLabels = IconDetails.inLabels || [];
             let outLabels = IconDetails.outLabels || [];

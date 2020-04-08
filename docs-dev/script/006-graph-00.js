@@ -385,11 +385,11 @@ let Graph = function (container) {
       if (!!cell.style && cell.style.search("umk_model") >= 0) {
         try {
           eval(
-            "tempModel = new " +
+            "var tempModel = new " +
             cell.value.id +
             "(cell.value);"
           );
-          //console.log(cell.value);
+          //console.log(tempModel.Icon());
           this.setCaption(cell, tempModel.Name);
           if (!!cell.style && cell.style.search("umk_display") >= 0) {
             return cell.value.show || "$[\\cdot]$";
@@ -712,7 +712,7 @@ function selectionChanged() {
 
 function changeEditModelWithSelectedBlock() {
   eval(
-    "editModel = new " +
+    "var editModel = new " +
     mainSystem.graph.getSelectionCell().value.id +
     "(mainSystem.graph.getSelectionCell().value);"
   );
