@@ -43,7 +43,7 @@ let Graph = function (container) {
   this.eStyle["endArrow"] = "none";
   this.eStyle["fontColor"] = "var(--text-muted)";
   this.eStyle["verticalAlign"] = "top";
-  this.eStyle["overflow"] = "width";
+  //this.eStyle["overflow"] = "width";
   this.eStyle["align"] = "right";
   this.eStyle["strokeColor"] = "var(--text-muted)";
 
@@ -395,7 +395,7 @@ let Graph = function (container) {
             return cell.value.show || "$[\\cdot]$";
           }
           return (
-            "<div class='rotate-"+tempModel.rotateHTML+"'>" +
+            "<div class='rotate-" + tempModel.rotateHTML + "'>" +
             tempModel.Icon().html +
             "</div>"
           );
@@ -579,6 +579,52 @@ let Graph = function (container) {
     else return cell.value;
   }
 
+  //Group blocks
+  this.createSubModel = function () {
+    let model = this.getModel();
+    model.beginUpdate();
+    try {
+      let subModel = this.groupCells(null, 50, this.getSelectionCells());
+      subModel.geometry.alternateBounds = new mxRectangle(0, 0, 200, 25);
+      this.setSelectionCell(subModel);
+    } catch (e) {
+      console.log(e);
+      this.validationAlert (GUIText[settings.lang].errUnablGrping);
+    } finally {
+      model.endUpdate();
+    }
+  }
+
+  this.ungroupSubModel = function () {
+    let model = this.getModel();
+    model.beginUpdate();
+    try {
+      let cells = this.getSelectionCells();
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].getStyle().search("umk_group") >= 0) {
+          let sCells = this.getSelectionCells();
+          sCells = sCells.concat(cells[i].children);
+          //console.log(sCells);
+          this.ungroupCells([cells[i]]);
+          this.setSelectionCells(sCells);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      notyf.error("Unable to un-group the selected items");
+    } finally {
+      model.endUpdate();
+    }
+  }
+  // fold and unfold
+  this.foldItems = function (fold = true) {
+    if (this.getSelectionCells().length > 0) {
+      this.foldCells(fold, false, this.getSelectionCells());
+    } else this.foldCells(fold, false, this.getDefaultParent().children);
+  }
+
+  
+
   /*
   //Handling context icons
   this.createHandler = function (state) {
@@ -606,7 +652,7 @@ mxUtils.extend(Outline, mxOutline);
 let System = function (gContainer, oContainer) {
   this.graph = new Graph(gContainer);
   this.outline = new Outline(this.graph, oContainer);
-  this.keyHandler = new mxKeyHandler(this.graph);
+  //this.keyHandler = new mxKeyHandler(this.graph);
 
   this.undoManager = new mxUndoManager();
   let undoManager = this.undoManager;
@@ -684,29 +730,26 @@ mainSystem.outline.mouseUp = function (sender, me) {
 
 
 function selectionChanged() {
+  clearAllTheGraphSelections();
   if (
+    mainSystem.graph.getSelectionCells().length === 1 &&
     mainSystem.graph.getSelectionCell() &&
     mainSystem.graph.getSelectionCell().isVertex() &&
     typeof mainSystem.graph.getSelectionCell().value === "object"
   ) {
     changeEditModelWithSelectedBlock();
-  } else {
-    editorVue.$set(editorVue.$data, "uyamakModel", null);
-    if (
-      mainSystem.graph.getSelectionCell() &&
-      (mainSystem.graph.getSelectionCell().isEdge() ||
-        mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0)
-    ) {
-      editorVue.$set(editorVue.$data, "cellModel", {
-        model: true,
-        value: mainSystem.graph.getSelectionCell().value || ""
-      });
-    } else {
-      editorVue.$set(editorVue.$data, "cellModel", {
-        model: false,
-        value: null
-      });
-    }
+  } else if (
+    mainSystem.graph.getSelectionCells().length === 1 &&
+    mainSystem.graph.getSelectionCell() &&
+    mainSystem.graph.getSelectionCell().isEdge()
+  ) {
+    editorVue.$set(editorVue.$data, "modelValue", mainSystem.graph.getSelectionCell().value);
+  } else if (
+    mainSystem.graph.getSelectionCells().length === 1 &&
+    mainSystem.graph.getSelectionCell() &&
+    mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0
+  ) {
+    editorVue.$set(editorVue.$data, "modelValue", mainSystem.graph.getSelectionCell().value);
   }
 }
 
@@ -718,12 +761,35 @@ function changeEditModelWithSelectedBlock() {
   );
   editorVue.$set(editorVue.$data, "uyamakModel", editModel);
   editorVue.$set(editorVue.$data, "parametersDisplay", {});
-  editorVue.$set(editorVue.$data, "cellModel", {
-    model: false,
-    value: null
-  });
-  editorVue.$set(editorVue.$data, "invalidInputs", []);
 }
+
+function clearAllTheGraphSelections() {
+  editorVue.$set(editorVue.$data, "uyamakModel", null);
+  editorVue.$set(editorVue.$data, "modelValue", null);
+  editorVue.$set(editorVue.$data, "bunchOfItems", null);
+}
+
+
+
+/*Group cells */
+/*graph.autoSizeCellsOnAdd = true;
+				graph.autoSizeCells = true;/**/
+//Adjust vertices when new group is formed
+var graphCreateGroupCell = mainSystem.graph.createGroupCell;
+mainSystem.graph.createGroupCell = function (cells) {
+  var group = graphCreateGroupCell.apply(this, arguments);
+  group.setStyle("umk_group;");
+  group.setValue(GUIText[settings.lang].subModel);
+  return group;
+};
+
+//resize children with parents
+mainSystem.graph.getModel().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
+mainSystem.graph.getView().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
+var resizeChildren = function (sender, evt) {
+  console.log(sender);
+  console.log(evt);
+};
 
 /*
 //Change caption

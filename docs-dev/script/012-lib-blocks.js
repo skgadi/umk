@@ -30,7 +30,12 @@ function blockOnDOM(img) {
             Details.setConnectable(false);
             graph.setSelectionCell(v);
         } catch (e) {
-            new Noty({text: GUIText[settings.lang].errUblPlcBlock, timeout: 5000, theme: "nest",type: 'error'}).show();
+            new Noty({
+                text: GUIText[settings.lang].errUblPlcBlock,
+                timeout: 5000,
+                theme: "nest",
+                type: 'error'
+            }).show();
             console.log(e);
         }
         graph.getModel().endUpdate();
@@ -50,8 +55,10 @@ function blockOnDOM(img) {
 
 //Prepare input and output terminals
 function setTermianls(graph, Cell, type = "umk_input") {
+    //console.log(Cell);
     if (!!Cell && typeof Cell === "object") {
-            IconDetails = Cell.value.Icon();
+        IconDetails = Cell.value.Icon();
+        //console.log(IconDetails);
         let Labels;
         let RequiredCount;
         let position;

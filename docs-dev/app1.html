@@ -210,11 +210,19 @@
         <div><span id="hide-right-text"></span></div>
       </div>
       <div id="rp-content">
-        <div v-if="!!cellModel.model">Top one</div>
+        <div v-if="modelValue !== null">
+          <div>
+            <h2 class="compress" v-text="GUIText[settings.lang].name"></h2>
+            <input v-model.trim="modelValue" type="text" :placeholder="GUIText[settings.lang].name+'...'" />
+            <div v-html="GUIText[settings.lang].preview+': '+modelValue"></div>
+          </div>
+          <br>
+          <div class="gen-btn" @click="applyModelValue" v-text="GUIText[settings.lang].aChanges"></div>
+        </div>
         <div v-else-if="!!uyamakModel">
           <h2 class="compress" v-text="GUIText[settings.lang].label"></h2>
           <input v-model.trim="uyamakModel.Name" type="text" />
-          <label v-html="GUIText[settings.lang].preview+': '+uyamakModel.Name"></label>
+          <div v-html="GUIText[settings.lang].preview+': '+uyamakModel.Name"></div>
           <br />&shy;
           <div v-if="uyamakModel.TerminalsIn.editable">
             <h2 class="compress" v-text="GUIText[settings.lang].noOfIns"></h2>
@@ -294,12 +302,13 @@
           <div>
             <h2 class="compress" v-text="GUIText[settings.lang].functionality"></h2>
             <div style="overflow-x: auto; overflow-y: hidden;">
-              <div v-html="getBlockDetails()"></div>
+              <div v-html="getBlockDetails"></div>
             </div>
             <br />&shy;
-            <div class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()"></div>
-            <br />
-            <div class="gen-btn" v-html="GUIText[settings.lang].rChanges" onclick="changeEditModelWithSelectedBlock()">
+            <div class="splitToTwo">
+              <div class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()"></div>
+              <div class="gen-btn" v-html="GUIText[settings.lang].rChanges"
+                onclick="changeEditModelWithSelectedBlock()"></div>
             </div>
             <h2 class="compress" v-text="GUIText[settings.lang].orientation"></h2>
             <div class="matrix-builder-buttons">
@@ -319,8 +328,8 @@
           </div>
         </div>
         <div v-else>
-          <h2 ><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
-            v-text="GUIText[settings.lang].gridLines"></span></h2>
+          <h2><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].gridLines"></span></h2>
           <div class="checkboxItem">
             <input type="checkbox" id="minorGridLines" v-model="rpSettings.gLinesMinor"><label for="minorGridLines"
               v-text="GUIText[settings.lang].gLinesMinor"></label>
@@ -349,8 +358,8 @@
             <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
             <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
           </div>
-          <h2><i class="fas fa-fw fa-cogs"></i><span class="gap-left"
-              v-text="GUIText[settings.lang].oSettings"></span></h2>
+          <h2><i class="fas fa-fw fa-cogs"></i><span class="gap-left" v-text="GUIText[settings.lang].oSettings"></span>
+          </h2>
           <div class="checkboxItem">
             <input type="checkbox" id="showOutline" v-model="rpSettings.showOutline"><label for="showOutline"
               v-text="GUIText[settings.lang].showOutline"></label>
