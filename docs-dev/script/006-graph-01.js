@@ -30,7 +30,6 @@ mxDragSource.prototype.getDropTarget = function (graph, x, y) {
 
 
 // Handles how to resize works with sub-system
-
 mainSystem.graph.addListener(mxEvent.CELLS_RESIZED, function (sender, evt) {
   var cells = evt.getProperty('cells');
   if (cells != null) {
@@ -58,3 +57,5 @@ mainSystem.graph.addListener(mxEvent.CELLS_RESIZED, function (sender, evt) {
     }
   }
 });
+
+
