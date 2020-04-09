@@ -62,13 +62,14 @@ let Graph = function (container) {
   style = new Object();
   style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
   style.startSize = 25;
-  style.strokeWidth = 2;
+  style.strokeWidth = 1;
   style.arcSize = 0;
   style.foldable = 1;
   style.fontColor = "var(--text-muted)";
   //style.verticalLabelPosition = "top";
   style.verticalAlign = "top";
   style.strokeColor = "var(--interactive-muted)";
+  style.fillColor = "var(--interactive-muted)";
   style.resizable = 1;
   this.getStylesheet().putCellStyle("umk_group", style);
   style = new Object();
@@ -595,7 +596,7 @@ let Graph = function (container) {
     let model = this.getModel();
     model.beginUpdate();
     try {
-      let subModel = this.groupCells(null, 50, this.getSelectionCells());
+      let subModel = this.groupCells(null, 25, this.getSelectionCells());
       subModel.geometry.alternateBounds = new mxRectangle(0, 0, 200, 25);
       this.setSelectionCell(subModel);
     } catch (e) {
