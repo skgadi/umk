@@ -1,7 +1,7 @@
 //set valid drop targets required for groups
-var isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
+const isValidDropTargetDefault = mxGraph.prototype.isValidDropTarget;
 mainSystem.graph.isValidDropTarget = function (cell, cells, evt) {
-  var defaultRetValue = isValidDropTargetDefault.apply(
+  let defaultRetValue = isValidDropTargetDefault.apply(
     this,
     arguments
   );
@@ -21,7 +21,7 @@ mainSystem.graph.isValidDropTarget = function (cell, cells, evt) {
 };
 // Matches DnD inside the graph
 mxDragSource.prototype.getDropTarget = function (graph, x, y) {
-  var cell = graph.getCellAt(x, y);
+  let cell = graph.getCellAt(x, y);
   if (!graph.isValidDropTarget(cell)) {
     cell = null;
   }
@@ -31,17 +31,17 @@ mxDragSource.prototype.getDropTarget = function (graph, x, y) {
 
 // Handles how to resize works with sub-system
 mainSystem.graph.addListener(mxEvent.CELLS_RESIZED, function (sender, evt) {
-  var cells = evt.getProperty('cells');
+  let cells = evt.getProperty('cells');
   if (cells != null) {
-    for (var i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i++) {
       if (cells[i].style.search('umk_group') >= 0) {
-        console.log(evt);
+        //console.log(evt);
         if (mainSystem.graph.getModel().getChildCount(cells[i]) > 0) {
-          var geo = mainSystem.graph.getCellGeometry(cells[i]);
+          let geo = mainSystem.graph.getCellGeometry(cells[i]);
 
           if (geo != null) {
-            var children = mainSystem.graph.getChildCells(cells[i], true, true);
-            var bounds = mainSystem.graph.getBoundingBoxFromGeometry(children, true);
+            let children = mainSystem.graph.getChildCells(cells[i], true, true);
+            let bounds = mainSystem.graph.getBoundingBoxFromGeometry(children, true);
 
             geo = geo.clone();
             if (cells[i].collapsed) {

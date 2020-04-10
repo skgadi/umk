@@ -56,7 +56,7 @@ let Graph = function (container) {
   style.verticalAlign = "middle";
   style.fontColor = "var(--text-normal)";
   style.fillColor = "var(--interactive-muted)";
-  style.strokeColor = "var(--interactive-muted)";
+  style.strokeColor = "var(--text-normal)";
   //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
   this.getStylesheet().putCellStyle("umk_model", style);
   style = new Object();
@@ -393,22 +393,25 @@ let Graph = function (container) {
     if (!!cell.value) {
       if (!!cell.style && cell.style.search("umk_model") >= 0) {
         try {
-          eval(
-            "var tempModel = new " +
-            cell.value.id +
-            "(cell.value);"
-          );
+          if ((typeof cell.value === "string")
+          || ((typeof cell.value === "Object") && (cell.value.constructor.name.search(/umk_\d{13}/g) >= 0))) {
+            if (typeof cell.value !== "Object") {
+              cell.value = JSON.parse2(cell.value);
+            }
+            eval("var tempModel = new " + cell.value.id + "(cell.value);");
+            cell.value = tempModel;
+          }
           /*//Set input and output terminals
           setTermianls(this, cell, "umk_input");
           setTermianls(this, cell, "umk_output");*/
-          //console.log(tempModel.Icon());
-          this.setCaption(cell, tempModel.Name);
+          //console.log(cell.value.Icon());
+          this.setCaption(cell, cell.value.Name);
           if (!!cell.style && cell.style.search("umk_display") >= 0) {
             return cell.value.show || "$[\\cdot]$";
           }
           return (
-            "<div class='rotate-" + tempModel.rotateHTML + "'>" +
-            tempModel.Icon().html +
+            "<div class='rotate-" + cell.value.rotateHTML + "'>" +
+            cell.value.Icon().html +
             "</div>"
           );
         } catch (e) {
@@ -805,13 +808,14 @@ mainSystem.graph.createGroupCell = function (cells) {
   return group;
 };
 
-//resize children with parents
+/*//resize children with parents
 mainSystem.graph.getModel().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
 mainSystem.graph.getView().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
 var resizeChildren = function (sender, evt) {
-  console.log(sender);
-  console.log(evt);
+  //console.log(sender);
+  //console.log(evt);
 };
+*/
 
 /*
 //Change caption
