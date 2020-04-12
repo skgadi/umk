@@ -34,7 +34,7 @@ mainSystem.graph.addListener(mxEvent.CELLS_RESIZED, function (sender, evt) {
   let cells = evt.getProperty('cells');
   if (cells != null) {
     for (let i = 0; i < cells.length; i++) {
-      if (cells[i].style.search('umk_group') >= 0) {
+      if (!!cells[i].style && cells[i].style.search('umk_group') >= 0) {
         //console.log(evt);
         if (mainSystem.graph.getModel().getChildCount(cells[i]) > 0) {
           let geo = mainSystem.graph.getCellGeometry(cells[i]);

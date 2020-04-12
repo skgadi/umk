@@ -1,17 +1,14 @@
 // save and load the uymak models
 const uyamakFileManager = {
   fileName: null,
-  xml: function () {
+  xml: function (graph=mainSystem.graph) {
     let encoder = new mxCodec();
-    return mxUtils.getXml(encoder.encode(mainSystem.graph.getModel()));
-  },
-  js2: function () {
-    return JSON.stringify2(mainSystem.graph.getModel());
+    return mxUtils.getXml(encoder.encode(graph.getModel()));
   },
   download: function (filename, text) {
     let element = document.createElement('a');
     let blob = new Blob([text], {
-      type: "text/plain;charset=utf-8"
+      type: "application/uyamak;charset=utf-8"
     });
     let url = window.URL.createObjectURL(blob);
 
@@ -26,13 +23,45 @@ const uyamakFileManager = {
   saveLocal: function () {
     this.fileName = prompt(GUIText[settings.lang].enterFileName, GUIText[settings.lang].myUmkModel);
     if (!!this.fileName) {
-      this.download(this.fileName + ".umk", this.ab2str(pako.deflate(this.xml())));
+      let deflated16bit = this.deflated16bit(this.xml());
+      let escapeZeroArray = this.escZero(deflated16bit);
+      this.download(this.fileName + ".umk", this.ab2str(escapeZeroArray));
     }
   },
-  openLocal: function () {
+  importFlag: false,
+  openLocal: function (isImport = false) {
+    this.importFlag = isImport;
     this.fileInp.click();
   },
   fileInp: null,
+  encoder: new mxCodec(),
+  compressModel: function (graph) {
+    //let encoder = new mxCodec();
+    let model = graph.getModel();
+    let xmlCellArray = this.encoder.encode(model);
+    let xmlString = mxUtils.getXml(xmlCellArray);
+    //console.log(xmlString);
+    let deflated16Bit = this.deflated16bit(xmlString);
+    deflated16Bit = this.escZero(deflated16Bit);
+    return this.ab2str(deflated16Bit);
+  },
+  decompressModel: function (codedText) {
+    let deflated16Bit = new Uint16Array(this.str2ab(codedText));
+    deflated16Bit = this.escZero(deflated16Bit, false);
+    let inflated8Bit = pako.inflate(deflated16Bit);
+    let xmlText = this.ab2str(inflated8Bit);
+    let xml = mxUtils.parseXml(xmlText);
+    return this.encoder.decode(xml.documentElement);
+  },
+  deflated16bit: function (text) {
+    let deflated8Bit = pako.deflate(text);
+    return new Uint16Array(deflated8Bit);
+  },
+  escZero: function (in16BitArray, enc = true) {
+    return in16BitArray.map((ele) => {
+      return ele + (enc?0x0C05:-0x0C05);
+    });
+  },
   ab2str: function (buf) {
     return String.fromCharCode.apply(null, new Uint16Array(buf));
   },
@@ -52,11 +81,12 @@ const uyamakFileManager = {
     let file = e.target.files[0];
     let reader = new FileReader();
     reader.onload = function (x) {
-      let xmlString = uyamakFileManager.ab2str(pako.inflate(x.target.result));
-      let doc = mxUtils.parseXml(xmlString);
-      let codec = new mxCodec(doc);
-      //console.log(doc);
-      codec.decode(doc.documentElement, mainSystem.graph.getModel());
+      if (uyamakFileManager.importFlag) {
+        uyamakCbManager.prepareAltAndCopy(x.target.result);
+        uyamakCbManager.bringModelToMain();
+      } else {
+        uyamakCbManager.inmportToGraph(x.target.result, mainSystem.graph);
+      }
     };
     reader.readAsText(file);
     //console.log(file);
@@ -76,7 +106,7 @@ mxCodec.prototype.encode = function (obj) {
     return;
   } else {
     let xmlOut = oldEncode.apply(this, arguments);
-    if (xmlOut.getAttribute('style') && xmlOut.getAttribute('style').search('umk_model') >= 0) {
+    if (!!xmlOut && !!xmlOut.getAttribute('style') && xmlOut.getAttribute('style').search('umk_model') >= 0) {
       xmlOut.setAttribute("value", JSON.stringify2(obj.value));
     }
     return xmlOut;

@@ -57,8 +57,8 @@ const kbshortcut = function (menuItem) {
                 if (event.shiftKey) key += "SHIFT_";
                 key += event.keyCode;
                 if (!!kbsRegistered[key]) {
-                    if (!event.repeat) eval(kbsRegistered[key]);
                     event.preventDefault();
+                    if (!event.repeat) eval(kbsRegistered[key]);
                 }
             }
         } else {

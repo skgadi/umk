@@ -47,7 +47,7 @@ let Graph = function (container) {
   this.eStyle["verticalAlign"] = "top";
   //this.eStyle["overflow"] = "width";
   this.eStyle["align"] = "right";
-  this.eStyle["strokeColor"] = "var(--text-muted)";
+  this.eStyle["strokeColor"] = "var(--text-normal)";
 
   //Stylesheets
   let style = new Object();
@@ -146,8 +146,8 @@ let Graph = function (container) {
   style.shape = "triangle";
   style.portConstraint = "west";
   style.overflow = "fit";
-  style.fillColor = "var(--interactive-muted)";
-  style.strokeColor = "var(--interactive-muted)";
+  style.fillColor = "var(--text-normal)";
+  style.strokeColor = "var(--text-normal)";
   //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
   this.getStylesheet().putCellStyle("umk_input", style);
   style = new Object();
@@ -444,7 +444,7 @@ let Graph = function (container) {
     let children = Cell.children;
     if (!!children) {
       for (let i = 0; i < children.length; i++) {
-        if (children[i].style.search("umk_caption") >= 0) {
+        if (!!children[i].style && children[i].style.search("umk_caption") >= 0) {
           if (this.showCaptions) {
             children[i].setValue(value);
           } else {
@@ -516,7 +516,7 @@ let Graph = function (container) {
     let edge = evt.getProperty("cell");
     let source = this.graph.getModel().getTerminal(edge, true);
     let target = this.graph.getModel().getTerminal(edge, false);
-    if (
+    if (!!source.style &&
       source.style.search("umk_input") >= 0 &&
       target.style.search("umk_output") >= 0
     ) {
@@ -598,15 +598,18 @@ let Graph = function (container) {
   this.createSubModel = function () {
     let model = this.getModel();
     model.beginUpdate();
+    let subModel;
     try {
-      let subModel = this.groupCells(null, 25, this.getSelectionCells());
+      subModel = this.groupCells(null, 25, this.getSelectionCells());
       subModel.geometry.alternateBounds = new mxRectangle(0, 0, 200, 25);
       this.setSelectionCell(subModel);
     } catch (e) {
       console.log(e);
       this.validationAlert(GUIText[settings.lang].errUnablGrping);
+      return;
     } finally {
       model.endUpdate();
+      return subModel;
     }
   }
 
@@ -616,7 +619,7 @@ let Graph = function (container) {
     try {
       let cells = this.getSelectionCells();
       for (let i = 0; i < cells.length; i++) {
-        if (cells[i].getStyle().search("umk_group") >= 0) {
+        if (!!cells[i].getStyle() && cells[i].getStyle().search("umk_group") >= 0) {
           let sCells = this.getSelectionCells();
           sCells = sCells.concat(cells[i].children);
           //console.log(sCells);
@@ -642,7 +645,7 @@ let Graph = function (container) {
       cells = this.getDefaultParent().children;
     }
     for (let i=0; i<cells.length; i++) {
-      if (cells[i].style.search("umk_group")>=0){
+      if (!!cells[i].style && cells[i].style.search("umk_group")>=0){
         this.foldCells(fold, false, [cells[i]]);
       }
     }
@@ -772,6 +775,7 @@ function selectionChanged() {
   } else if (
     mainSystem.graph.getSelectionCells().length === 1 &&
     mainSystem.graph.getSelectionCell() &&
+    !!mainSystem.graph.getSelectionCell().style &&
     mainSystem.graph.getSelectionCell().style.search("umk_group") >= 0
   ) {
     editorVue.$set(editorVue.$data, "modelValue", mainSystem.graph.getSelectionCell().value);
@@ -800,8 +804,8 @@ function clearAllTheGraphSelections() {
 /*graph.autoSizeCellsOnAdd = true;
 				graph.autoSizeCells = true;/**/
 //Adjust vertices when new group is formed
-var graphCreateGroupCell = mainSystem.graph.createGroupCell;
-mainSystem.graph.createGroupCell = function (cells) {
+var graphCreateGroupCell = mxGraph.prototype.createGroupCell;
+mxGraph.prototype.createGroupCell = function (cells) {
   var group = graphCreateGroupCell.apply(this, arguments);
   group.setStyle("umk_group;");
   group.setValue(GUIText[settings.lang].subModel);
