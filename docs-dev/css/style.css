@@ -13,8 +13,8 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    background-color: var(--background-primary);
-    color: var(--text-muted);
+    background-color: var(--col-background-0);
+    color: var(--col-text-0);
 }
 
 html,
@@ -31,12 +31,12 @@ button {
 }
 
 ::placeholder {
-    color: var(--text-muted);
+    color: var(--col-text-0);
     opacity: 0.5;
 }
 
 .modal {
-    background-color: var(--background-secondary);
+    background-color: var(--col-background-0);
     z-index: 3;
     width: 100%;
     height: 100%;
@@ -51,7 +51,7 @@ button {
 }
 
 #settings>div>div {
-    column-rule: 2px var(--background-secondary-alt) inset;
+    column-rule: 2px var(--col-text-0) inset;
 }
 
 #settings>div>div>h1 {
@@ -78,14 +78,14 @@ button {
 #settings>div>div>div>select {
     width: 100%;
     font-size: 2em;
-    background-color: var(--background-primary);
-    color: var(--text-muted);
+    background-color: var(--col-background-1);
+    color: var(--text-0);
     border-width: 0;
 }
 
 #waitForProcessToFinish {
     display: block;
-    background-color: var(--background-secondary);
+    background-color: var(--col-background-0);
     z-index: 4;
     position: fixed;
     top: 0;
@@ -109,12 +109,12 @@ button {
 
 #DOMWaitingHead,
 #DOMWaitingAnimation {
-    color: var(--header-primary);
+    color: var(--col-text-0);
     font-size: 2em;
 }
 
 #DOMWaitingDesc {
-    color: var(--header-secondary);
+    color: var(--col-text-1);
     text-align: justify;
 }
 
@@ -127,16 +127,16 @@ button {
 
 #tool-bar {
     grid-area: header;
-    background-color: var(--background-secondary-alt);
-    color: var(--header-primary);
+    background-color: var(--col-background-0);
+    color: var(--col-text-0);
     /*border-bottom: 1px var(--text-muted) solid;*/
 }
 
 .pane {
     grid-area: left;
     width: calc(var(--left-bar-size)*320px);
-    background-color: var(--background-secondary);
-    border: 1px var(--background-secondary-alt) solid;
+    background-color: var(--col-background-0);
+    border: 1px var(--col-border) solid;
     display: grid;
     grid-template-rows: var(--button-size) auto;
 }
@@ -147,8 +147,8 @@ button {
 
 #graph {
     grid-area: center;
-    background-color: var(--background-secondary);
-    border: 1px var(--background-secondary-alt) solid;
+    background-color: var(--col-background-0);
+    border: 1px var(--col-border) solid;
     position: relative;
     overflow: auto !important;
 }
@@ -156,8 +156,6 @@ button {
 #right-pane {
     grid-area: right;
     width: calc(var(--right-bar-size)*320px);
-    background-color: var(--background-secondary);
-    border: 1px var(--background-secondary-alt) solid;
 }
 
 #footer {
@@ -169,14 +167,15 @@ button {
     height: var(--button-size);
     line-height: var(--button-size);
     transition: width var(--animation-time) var(--animation-time), color var(--animation-time), background var(--animation-time), border-radius var(--animation-time);
-    background-color: var(--background-secondary-alt);
+    background-color: var(--col-background-1);
+    opacity: 0.8;
     cursor: pointer;
 }
 
 .pull-btn:hover {
     transition: width var(--animation-time) !important;
-    background-color: var(--background-tertiary);
-    color: var(--text-normal);
+    opacity: 1;
+    color: var(--col-text-1);
 }
 
 .pull-btn>span>i {
@@ -212,20 +211,19 @@ button {
 }
 
 
-
+#footer>div{
+    background-color: var(--col-background-0);
+}
 #footer>div:nth-child(1) {
     grid-area: hint;
-    background-color: var(--background-secondary-alt);
 }
 
 #footer>div:nth-child(2) {
     grid-area: state;
-    background-color: var(--background-secondary-alt);
 }
 
 #footer>div:nth-child(3) {
     grid-area: time;
-    background-color: var(--background-secondary-alt);
 }
 
 #main {
@@ -318,7 +316,8 @@ button {
 .hide-btn {
     height: var(--button-size);
     line-height: var(--button-size);
-    background-color: var(--background-secondary-alt);
+    background-color: var(--col-background-1);
+    opacity: 0.8;
     cursor: pointer;
 }
 
@@ -333,7 +332,8 @@ button {
 }
 
 .hide-btn:hover {
-    background-color: var(--background-modifier-hover);
+    color: var(--col-text-1);
+    opacity: 1;
 }
 
 .hide-btn:hover>div>i {
@@ -366,7 +366,7 @@ ul.menu {
 .menu>li a,
 .dropbtn {
     display: inline-block;
-    color: var(--text-muted);
+    color: var(--col-text-0);
     text-align: center;
     padding: .25em .75em;
     text-decoration: none;
@@ -375,8 +375,8 @@ ul.menu {
 
 .menu>li a:hover,
 .dropdown:hover .dropbtn {
-    color: var(--text-normal);
-    background-color: var(--channels-default);
+    color: var(--col-text-1);
+    background-color: var(--col-background-1);
 }
 
 .menu>li.dropdown {
@@ -384,10 +384,12 @@ ul.menu {
 }
 
 .dropdown-content {
+    padding: 0.2em;
+    font-size: 0.85em;
     z-index: 2 !important;
     display: none !important;
     position: absolute !important;
-    background-color: var(--interactive-muted) !important;
+    background-color: var(--col-background-1) !important;
     /*min-width: 160px !important;*/
     /*box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2) !important;*/
     overflow-y: auto;
@@ -395,7 +397,7 @@ ul.menu {
 }
 
 .dropdown-content a {
-    color: var(--text-muted) !important;
+    color: var(--col-text-0) !important;
     padding: 8px 8px !important;
     text-decoration: none !important;
     display: grid !important;
@@ -404,13 +406,17 @@ ul.menu {
 }
 
 .dropdown-content a:hover {
-    color: var(--text-normal) !important;
-    background-color: var(--channels-default) !important;
+    background-color: var(--col-background-0) !important;
+    color: var(--col-text-1) !important;
 }
 
+/**/
 .dropdown:hover .dropdown-content {
     display: block !important;
 }
+/**/
+
+/*End of the menu css*/
 
 .gap-left {
     padding-left: 4px;
@@ -436,9 +442,9 @@ ul.menu {
     margin: 0;
     padding: 0 4px;
     border-radius: 4px;
-    border: 1px black solid;
-    background-color: var(--interactive-muted);
-    color: var(--text-muted);
+    border: 1px var(--col-border) solid;
+    background-color: var(--col-background-1);
+    color: var(--col-text-0);
 
 }
 
@@ -460,19 +466,19 @@ ul.menu-kbs>li {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: var(--interactive-muted);
+    background: var(--col-background-1);
     opacity: 0.25;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: var(--interactive-normal);
+    background: var(--col-text-0);
     opacity: 0.25;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--interactive-hover);
+    background: var(--col-text-1);
     opacity: 0.25;
 }
 
@@ -491,16 +497,16 @@ ul.menu-kbs>li {
 }
 
 .close-btn:hover {
-    color: var(--text-normal);
+    color: var(--text-1);
 }
 
 .blocks-search-bar {
     display: grid;
     grid-template-columns: min-content auto;
     column-gap: 4px;
-    border-top: 1px var(--background-secondary-alt) solid;
-    border-bottom: 1px var(--background-secondary-alt) solid;
-    background-color: var(--background-primary);
+    border-top: 1px var(--col-border) solid;
+    border-bottom: 1px var(--col-border) solid;
+    background-color: var(--col-background-0)!important;
     padding: 0.25em;
 }
 
@@ -508,8 +514,8 @@ ul.menu-kbs>li {
 .blocks-search-bar>span>input {
     width: 100%;
     font-size: 1em;
-    background-color: var(--background-primary);
-    color: var(--text-muted);
+    background-color: var(--col-background-0);
+    color: var(--col-text-0);
     border-width: 0;
 }
 
@@ -519,7 +525,7 @@ ul.menu-kbs>li {
 }
 
 .blocks-search-bar>span>input:focus {
-    color: var(--text-link);
+    color: var(--col-text-1);
 }
 
 .category-head {
@@ -528,7 +534,7 @@ ul.menu-kbs>li {
 }
 
 .category-content {
-    border-bottom: 1px var(--background-secondary-alt) solid;
+    border-bottom: 1px var(--col-border) solid;
 }
 
 .category-content>div {
@@ -556,7 +562,7 @@ ul.menu-kbs>li {
     width: 200px;
     height: 150px;
     background: transparent;
-    border: 5px var(--channels-default) solid;
+    border: 5px var(--col-border) solid;
 }
 
 #modelContainer {
@@ -601,8 +607,8 @@ input[type='checkbox'] {
     width: 100%;
     text-align: center;
     cursor: pointer;
-    background-color: var(--background-primary);
-    opacity: 0.75;
+    background-color: var(--col-background-1);
+    opacity: 0.8;
 }
 
 .gen-btn:hover {
@@ -614,8 +620,8 @@ input[type='text'] {
     min-width: 75px;
     width: 100%;
     font-size: 2em;
-    background-color: var(--background-primary);
-    color: var(--text-muted);
+    background-color: var(--col-background-1);
+    color: var(--col-text-1);
     border-width: 0;
 }
 
@@ -683,12 +689,12 @@ mjx-container {
 .matrix-builder-buttons>span {
     margin: 0px;
     padding: 0px;
-    opacity: 0.75;
+    opacity: 0.8;
     border-radius: 50%;
     height: 3em;
     width: 3em;
     line-height: 3em;
-    border: 1px var(--text-muted) solid;
+    border: 1px var(--col-border) solid;
     cursor: pointer;
     display: inline-block;
 }

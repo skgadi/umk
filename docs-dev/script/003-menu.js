@@ -32,6 +32,16 @@ const menuVue = new Vue({
         removeStatus: function () {
             footerVue.removeHint(this.statusVisible);
             this.statusVisible = 0;
+        },
+        evalFunc: function (funToExe) {
+            eval(funToExe);
+            let classes = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < classes.length; i++) {
+                classes[i].style.visibility = "hidden";
+                setTimeout((ele = classes[i]) => {
+                    ele.style.visibility = "unset";
+                }, 500);
+            }
         }
     }
 });

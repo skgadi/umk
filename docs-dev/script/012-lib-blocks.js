@@ -7,7 +7,7 @@ function blockOnDOM(img) {
     let Name = bSummary.blocks[model].name[settings.lang];
 
     let dragElt = document.createElement("div");
-    dragElt.style.border = "dashed var(--text-link) 1px";
+    dragElt.style.border = "dashed var(--col-border) 1px";
     dragElt.style.width = width + "px";
     dragElt.style.height = height + "px";
     let addANewBlock = function (graph, evt, cell, x, y) {
@@ -35,6 +35,10 @@ function blockOnDOM(img) {
             Details.geometry.offset = new mxPoint(0, 0);
             Details.setConnectable(false);
             graph.setSelectionCell(v);
+            graph.orderCells(false);
+            setTimeout(() => {
+                mainSystem.refresh();
+            }, 50);
         } catch (e) {
             new Noty({
                 text: GUIText[settings.lang].errUblPlcBlock,
