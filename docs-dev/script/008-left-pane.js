@@ -41,6 +41,9 @@ const blocksVue = new Vue({
         this.updateCounter++;
     },
     methods: {
+        focusBar: function () {
+            document.getElementById("search-input").focus();
+        },
         showStatus: function (block) {
             if (!!this.statusVisible) {
                 this.removeStatus(this.statusVisible);

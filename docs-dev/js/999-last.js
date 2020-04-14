@@ -10,3 +10,5 @@ function holdToFinishAProcess(title = null, description = null) {
         document.getElementById("DOMWaitingDesc").innerText = description;
 }
 holdToFinishAProcess(false);
+
+

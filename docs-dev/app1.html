@@ -109,17 +109,18 @@
   </div>
   <div id="main">
     <div id="tool-bar">
-      <ul class="menu">
+      <ul class="menu f-left" id="main-menu">
         <template v-for="(item, idx) in tools">
           <li class="dropdown">
             <a class="dropbtn" @mouseover="showStatus(item.moreInfo[lang])" @mouseleave="removeStatus()">
               <span><i :class="item.icon"></i></span>
-              <span class="gap-left hide-small">{{item.text[lang]}}</span>
+              <span class="gap-left hide-medium-small">{{item.text[lang]}}</span>
             </a>
             <div class="dropdown-content">
               <template v-for="(item0, idx0) in item.subMenu">
                 <a :style="item0.prtBelow?'border-bottom: 1px var(--col-border) solid':''"
-                  @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()" @click="evalFunc(item0.func)">
+                  @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()"
+                  @click="evalFunc(item0.func)">
                   <span><span><i class="fa-fw" :class="item0.icon"></i></span><span class="gap-left hide-small"
                       v-text="item0.text[lang]"></span></span>
                   <span v-if="!!item0.kbShort.key" class="menuShortcut hide-medium-small">
@@ -137,6 +138,27 @@
           </li>
         </template>
       </ul>
+      <ul class="menu f-right" id="sim-menu">
+        <li class="dropdown" v-if="disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
+        <li class="dropdown" v-if="disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
+        <li class="dropdown" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
+        <li class="dropdown" v-if="disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
+        <li class="dropdown">
+          <a class="dropbtn"><i class="fas fa-fw fa-cogs"></i></a>
+          <div class="dropdown-content settings-drop-dn">
+            <p class="compress" v-html="GUIText[settings.lang].endTime"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.T">
+            <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
+            <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
+            <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
+              <i class="far" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
+              <span v-text="GUIText[settings.lang].rRealTime"></span>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
     <div id="left-pane" class="pane">
       <div id="hide-button-left" class="hide-btn">
@@ -146,43 +168,25 @@
         </div>
       </div>
       <div id="lp-content" :key="'lp_content_'+updateCounter">
-        <div class="blocks-search-bar">
-          <span><i class="fas fa-fw fa-search"></i></span>
-          <span>
-            <input @focus="searchbarText(true)" @blur="searchbarText(false)"
-              :placeholder="GUIText[settings.lang].sblocks" v-model="searchText" type="text">
-            <span v-show="!!searchText" @click="searchText=''">
-              <i class="fas fa-fw fa-times"></i>
+        <div id="blocks-library">
+          <div class="blocks-search-bar">
+            <span @click="focusBar"><i class="fas fa-fw fa-search"></i></span>
+            <span>
+              <input id="search-input" @focus="searchbarText(true)" @blur="searchbarText(false)"
+                :placeholder="GUIText[settings.lang].sblocks" v-model="searchText" type="text">
+              <span v-show="!!searchText" @click="searchText=''">
+                <i class="fas fa-fw fa-times"></i>
+              </span>
             </span>
-          </span>
-        </div>
-        <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++"
-          class="category-head pointer">
-          <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
-            </i></span><span v-text="GUIText[settings.lang].sResults"></span>
-        </div>
-        <div v-show="!!searchText" class="category-content">
-          <div v-show="disp['search']">
-            <template v-for="(item0, idx0) in searchResults">
-              <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
-                @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
-                <g>
-                  <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--col-text-0)' />
-                </g>
-                <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='10'
-                  fill='none' v-html="blksSummary[item0].icon"></g>
-              </svg>
-            </template>
           </div>
-        </div>
-        <template v-for="(item, idx) in categories">
-          <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head pointer">
-            <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
-              </i></span><span v-text="item.name[settings.lang]"></span>
+          <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++"
+            class="category-head pointer">
+            <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
+              </i></span><span v-text="GUIText[settings.lang].sResults"></span>
           </div>
-          <div class="category-content">
-            <template v-for="(item0, idx0) in blksPerCategories[item.id]">
-              <div v-show="disp[item.id]">
+          <div v-show="!!searchText" class="category-content">
+            <div v-show="disp['search']">
+              <template v-for="(item0, idx0) in searchResults">
                 <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                   @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                   <g>
@@ -191,10 +195,30 @@
                   <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='10'
                     fill='none' v-html="blksSummary[item0].icon"></g>
                 </svg>
-              </div>
-            </template>
+              </template>
+            </div>
           </div>
-        </template>
+          <template v-for="(item, idx) in categories">
+            <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head pointer">
+              <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
+                </i></span><span v-text="item.name[settings.lang]"></span>
+            </div>
+            <div class="category-content">
+              <template v-for="(item0, idx0) in blksPerCategories[item.id]">
+                <div v-show="disp[item.id]">
+                  <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
+                    @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
+                    <g>
+                      <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--col-text-0)' />
+                    </g>
+                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='10'
+                      fill='none' v-html="blksSummary[item0].icon"></g>
+                  </svg>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
     <div id="graph">
@@ -331,17 +355,17 @@
         <div v-else>
           <h2><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
               v-text="GUIText[settings.lang].gridLines"></span></h2>
-          <div class="checkboxItem">
-            <input type="checkbox" id="minorGridLines" v-model="rpSettings.gLinesMinor"><label for="minorGridLines"
-              v-text="GUIText[settings.lang].gLinesMinor"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.gLinesMinor = !rpSettings.gLinesMinor">
+            <i class="far" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].gLinesMinor"></span>
           </div>
-          <div class="checkboxItem">
-            <input type="checkbox" id="majorGridLines" v-model="rpSettings.gLinesMajor"><label for="majorGridLines"
-              v-text="GUIText[settings.lang].gLinesMajor"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.gLinesMajor = !rpSettings.gLinesMajor">
+            <i class="far" :class="rpSettings.gLinesMajor?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].gLinesMajor"></span>
           </div>
-          <div class="checkboxItem">
-            <input type="checkbox" id="megaGridLines" v-model="rpSettings.gLinesMega"><label for="megaGridLines"
-              v-text="GUIText[settings.lang].gLinesMega"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.gLinesMega = !rpSettings.gLinesMega">
+            <i class="far" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].gLinesMega"></span>
           </div>
           <h2><i class="fas fa-fw fa-ruler-combined"></i><span class="gap-left"
               v-text="GUIText[settings.lang].gridSize"></span></h2>
@@ -361,17 +385,17 @@
           </div>
           <h2><i class="fas fa-fw fa-cogs"></i><span class="gap-left" v-text="GUIText[settings.lang].oSettings"></span>
           </h2>
-          <div class="checkboxItem">
-            <input type="checkbox" id="showOutline" v-model="rpSettings.showOutline"><label for="showOutline"
-              v-text="GUIText[settings.lang].showOutline"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.showOutline = !rpSettings.showOutline">
+            <i class="far" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].showOutline"></span>
           </div>
-          <div class="checkboxItem">
-            <input type="checkbox" id="guidesEnabled" v-model="rpSettings.guidesEnabled"><label for="guidesEnabled"
-              v-text="GUIText[settings.lang].guidesEnabled"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.guidesEnabled = !rpSettings.guidesEnabled">
+            <i class="far" :class="rpSettings.guidesEnabled?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].guidesEnabled"></span>
           </div>
-          <div class="checkboxItem">
-            <input type="checkbox" id="showLabels" v-model="rpSettings.showLabels"><label for="showLabels"
-              v-text="GUIText[settings.lang].showLabels"></label>
+          <div class="checkboxItem pointer" @click="rpSettings.showLabels = !rpSettings.showLabels">
+            <i class="far" :class="rpSettings.showLabels?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].showLabels"></span>
           </div>
         </div>
       </div>
@@ -403,8 +427,8 @@
   <script type="text/javascript" src="dependencies/mxgraph/js/mxClient.js"></script>
   <script type="text/javascript" src="dependencies/augmented-json-serialization-functions.js"></script>
   <script type="text/javascript" src="dependencies/pako/pako.min.js"></script>
-  
-  
+
+
   <!--Uyamak libraries-->
   <script src="lib.min.js?bv=1"></script>
   <script src="script.min.js?bv=1"></script>

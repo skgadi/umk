@@ -1,5 +1,5 @@
 const menuVue = new Vue({
-    el: "#tool-bar",
+    el: "#main-menu",
     data: {
         tools: menu,
         statusVisible: 0,

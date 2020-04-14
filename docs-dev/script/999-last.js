@@ -34,3 +34,4 @@ searchBox.forEach((elm) => {
 	});
 });
 
+//window.onbeforeunload = function() { return "Sure?"; };
