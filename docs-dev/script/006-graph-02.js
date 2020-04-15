@@ -23,7 +23,7 @@ const uyamakCbManager = {
     this.graph.ungroupSubModel();
     this.presPasteText = uyamakFileManager.compressModel(this.graph);
     navigator.clipboard.writeText(this.presPasteText).then((e) => {
-      console.log("copied");
+      console.log("Copied");
     });
     mainSystem.graph.ungroupSubModel();
   },
@@ -41,6 +41,12 @@ const uyamakCbManager = {
       } catch (e) {
         console.log(e);
         console.log("unable to paste");
+        new Noty({
+          text: GUIText[settings.lang].errorGen,
+          timeout: 5000,
+          theme: "nest",
+          type: 'error'
+        }).show();
       }
     });
   },
@@ -68,7 +74,7 @@ const uyamakCbManager = {
     //console.log(doc);
     //console.log(xmlString);
     codec.decode(doc.documentElement, graph.getModel());
-  } ,
+  },
   linkToParentCells(cells, parentCells) {
     let pCellsOut = {};
     for (let i = 0; i < parentCells.length; i++) {
@@ -85,15 +91,13 @@ const uyamakCbManager = {
 
 
 
-mxClipboard.copy = function(graph, cells)
-{
+mxClipboard.copy = function (graph, cells) {
   cells = cells || graph.getSelectionCells();
-  var result = graph.getExportableCells(cells);
+  let result = graph.getExportableCells(cells);
 
   mxClipboard.parents = new Object();
 
-  for (var i = 0; i < result.length; i++)
-  {
+  for (let i = 0; i < result.length; i++) {
     mxClipboard.parents[i] = graph.model.getParent(cells[i]);
   }
 
@@ -103,26 +107,20 @@ mxClipboard.copy = function(graph, cells)
   return result;
 };
 
-mxClipboard.paste = function(graph)
-{
-  if (!mxClipboard.isEmpty())
-  {
-    var cells = graph.getImportableCells(mxClipboard.getCells());
-    var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
-    var parent = graph.getDefaultParent();
+mxClipboard.paste = function (graph) {
+  if (!mxClipboard.isEmpty()) {
+    let cells = graph.getImportableCells(mxClipboard.getCells());
+    let delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+    let parent = graph.getDefaultParent();
 
     graph.model.beginUpdate();
-    try
-    {
-      for (var i = 0; i < cells.length; i++)
-      {
-        var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
-             mxClipboard.parents[i] : parent;
+    try {
+      for (let i = 0; i < cells.length; i++) {
+        let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
+          mxClipboard.parents[i] : parent;
         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
       }
-    }
-    finally
-    {
+    } finally {
       graph.model.endUpdate();
     }
 

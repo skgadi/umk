@@ -804,3 +804,7 @@ blink,
 #blocks-library {
     touch-action: none;
 }
+
+.simple-text {
+    font-weight: normal;
+}

@@ -22,17 +22,32 @@ mainSystem.graph.addListener(mxEvent.TAP_AND_HOLD, function (sender, evt) {
 });
 
 // Adds mouse wheel handling for zoom
-mxEvent.addMouseWheelListener(function (evt, up) {
+/*
+document.getElementById("modelContainer").addEventListener("wheel", function (evt, up) {
+    console.log (evt);
     if (up) {
         mainSystem.graph.zoomIn();
     } else {
         mainSystem.graph.zoomOut();
     }
 
-    mxEvent.consume(evt);
 });
+*/
 
-
+/*window.addEventListener('scroll',function(){
+    var scrolled = window.scrollY / ( document.getElementById("Table_01").offsetHeight );
+    console.log("window.scrollY: " + window.scrollY);
+    console.log("scrolled: " + scrolled );
+    var zoomLevels = 1; //change to have a different behavior
+    var scale = Math.pow( 3, scrolled * zoomLevels);
+    var images = document.getElementById("Table_01").getElementsByTagName("img");
+    console.log("scale:" + scale);
+    for(i=0;i<images.length;i++){
+        images[i].width = Math.round(500/scale); //change 500 to your image size
+        images[i].height = Math.round(500/scale); //change 500 to your image size
+    }
+},true);
+*/
 /*
 
 (function()

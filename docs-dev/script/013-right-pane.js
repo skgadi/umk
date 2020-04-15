@@ -36,6 +36,7 @@ const editorVue = new Vue({
                 settingsVue.$set(settingsVue.$data.stings, 'gridSize', a.gridSize);
                 settingsVue.$set(settingsVue.$data.stings, 'guidesEnabled', a.guidesEnabled);
                 settingsVue.$set(settingsVue.$data.stings, 'showLabels', a.showLabels);
+                settingsVue.$set(settingsVue.$data.stings, 'showExeOrder', a.showExeOrder);
                 this.refreshGraph();
             }
         }
@@ -49,6 +50,7 @@ const editorVue = new Vue({
             mainSystem.graph.graphHandler.guidesEnabled = this.rpSettings.guidesEnabled;
             mainSystem.graph.gridSize = this.rpSettings.gridSize;
             mainSystem.graph.showCaptions = this.rpSettings.showLabels;
+            mainSystem.graph.showExeOrder = this.rpSettings.showExeOrder;
             mainSystem.refresh();
         },
         rotateAll: function (cw = true) {

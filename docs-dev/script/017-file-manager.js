@@ -1,9 +1,14 @@
 // save and load the uymak models
 const uyamakFileManager = {
   fileName: null,
-  xml: function (graph=mainSystem.graph) {
+  xml: function (graph = mainSystem.graph) {
     let encoder = new mxCodec();
     return mxUtils.getXml(encoder.encode(graph.getModel()));
+  },
+  newModel: function () {
+    if (confirm(GUIText[settings.lang].confirmLoss)) {
+      mainSystem.graph.getModel().clear();
+    }
   },
   download: function (filename, text) {
     let element = document.createElement('a');
@@ -31,7 +36,9 @@ const uyamakFileManager = {
   importFlag: false,
   openLocal: function (isImport = false) {
     this.importFlag = isImport;
-    this.fileInp.click();
+    if (isImport || confirm(GUIText[settings.lang].confirmLoss)) {
+      this.fileInp.click();
+    }
   },
   fileInp: null,
   encoder: new mxCodec(),
@@ -59,16 +66,16 @@ const uyamakFileManager = {
   },
   escZero: function (in16BitArray, enc = true) {
     return in16BitArray.map((ele) => {
-      return ele + (enc?0x0C05:-0x0C05);
+      return ele + (enc ? 0x0C05 : -0x0C05);
     });
   },
   ab2str: function (buf) {
     return String.fromCharCode.apply(null, new Uint16Array(buf));
   },
   str2ab: function (str) {
-    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    var bufView = new Uint16Array(buf);
-    for (var i = 0, strLen = str.length; i < strLen; i++) {
+    let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+    let bufView = new Uint16Array(buf);
+    for (let i = 0, strLen = str.length; i < strLen; i++) {
       bufView[i] = str.charCodeAt(i);
     }
     return buf;
@@ -81,11 +88,20 @@ const uyamakFileManager = {
     let file = e.target.files[0];
     let reader = new FileReader();
     reader.onload = function (x) {
-      if (uyamakFileManager.importFlag) {
-        uyamakCbManager.prepareAltAndCopy(x.target.result);
-        uyamakCbManager.bringModelToMain();
-      } else {
-        uyamakCbManager.inmportToGraph(x.target.result, mainSystem.graph);
+      try {
+        if (uyamakFileManager.importFlag) {
+          uyamakCbManager.prepareAltAndCopy(x.target.result);
+          uyamakCbManager.bringModelToMain();
+        } else {
+          uyamakCbManager.inmportToGraph(x.target.result, mainSystem.graph);
+        }
+      } catch (e) {
+        new Noty({
+          text: GUIText[settings.lang].errorGen,
+          timeout: 5000,
+          theme: "nest",
+          type: 'error'
+        }).show();
       }
     };
     reader.readAsText(file);
@@ -97,7 +113,7 @@ const uyamakFileManager = {
 
 
 //Handles the umk_model 's value
-var oldEncode = mxCodec.prototype.encode;
+const oldEncode = mxCodec.prototype.encode;
 mxCodec.prototype.encode = function (obj) {
   /*mxLog.show();
   mxLog.debug('mxCodec.encode: obj=' + mxUtils.getFunctionName(obj.constructor));*/

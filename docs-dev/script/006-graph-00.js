@@ -393,8 +393,8 @@ let Graph = function (container) {
     if (!!cell.value) {
       if (!!cell.style && cell.style.search("umk_model") >= 0) {
         try {
-          if ((typeof cell.value === "string")
-          || ((typeof cell.value === "Object") && (cell.value.constructor.name.search(/umk_\d{13}/g) >= 0))) {
+          if ((typeof cell.value === "string") ||
+            ((typeof cell.value === "Object") && (cell.value.constructor.name.search(/umk_\d{13}/g) >= 0))) {
             if (typeof cell.value !== "Object") {
               cell.value = JSON.parse2(cell.value);
             }
@@ -419,7 +419,11 @@ let Graph = function (container) {
           return "ERROR";
         }
       } else {
-        return cell.value; //"$\\text{"+cell.value+"}$";
+        if (!!cell.style && cell.style.search("umk_EO") >= 0 && !this.showExeOrder) {
+          return "";
+        } else {
+          return cell.value; //"$\\text{"+cell.value+"}$";
+        }
       }
     } else return null;
   };
@@ -440,6 +444,7 @@ let Graph = function (container) {
     mxGraph.prototype.labelChanged.apply(this, arguments);
   };
   this.showCaptions = true;
+  this.showExeOrder = true;
   this.setCaption = function (Cell, value) {
     let children = Cell.children;
     if (!!children) {
@@ -644,8 +649,8 @@ let Graph = function (container) {
     } else {
       cells = this.getDefaultParent().children;
     }
-    for (let i=0; i<cells.length; i++) {
-      if (!!cells[i].style && cells[i].style.search("umk_group")>=0){
+    for (let i = 0; i < cells.length; i++) {
+      if (!!cells[i].style && cells[i].style.search("umk_group") >= 0) {
         this.foldCells(fold, false, [cells[i]]);
       }
     }
@@ -735,6 +740,7 @@ mainSystem.outline.update = function (rv) {
   updateMathJax();
   return mxOutline.prototype.update.apply(this, arguments);
 };
+
 
 /*
 mainSystem.outline.mouseMove = function (sender, me) {

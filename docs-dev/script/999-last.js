@@ -3,8 +3,8 @@
 //Check settings cookies
 (()=>{
     try{
-        const rpSettingsKeys = ["gLinesMinor", "gLinesMajor", "gLinesMega", "showOutline", "gridSize", "guidesEnabled", "showLabels"];
-        const cSettings = JSON.parse2(getCookie("settings"));
+        const rpSettingsKeys = ["gLinesMinor", "gLinesMajor", "gLinesMega", "showOutline", "gridSize", "guidesEnabled", "showLabels", "showExeOrder"]; 
+        const cSettings = (!!getCookie("settings"))?JSON.parse2(getCookie("settings")):Object.assign({},settings);
         Object.keys(cSettings).forEach(function(key){
             if (!!settings[key]) settings[key] = cSettings[key];
             if (rpSettingsKeys.indexOf(key)>=0) editorVue.$set(editorVue.$data.rpSettings, key, cSettings[key]);
