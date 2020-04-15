@@ -231,6 +231,7 @@ button {
 
 #footer>div:nth-child(3) {
     grid-area: time;
+    text-align: right;
 }
 
 #main {

@@ -153,8 +153,8 @@
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.T">
             <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
-            <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
-            <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
+            <p class="compress" v-html="GUIText[settings.lang].nSteps"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.steps">
             <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
               <i class="far" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
               <span v-text="GUIText[settings.lang].rRealTime"></span>
@@ -409,8 +409,8 @@
     </div>
     <div id="footer">
       <div v-html="textForHint"></div>
-      <div>Status</div>
-      <div>Time</div>
+      <div v-html="status"></div>
+      <div v-html="progress"></div>
     </div>
     <div id="btn-blocks" class="pull-btn">
       <span style="padding-right: 10px;">

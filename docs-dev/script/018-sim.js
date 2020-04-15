@@ -1,7 +1,7 @@
 const simVue = new Vue({
   el: "#sim-menu",
   data: {
-    mode: "design",
+    mode: "mDesign",
     disp: {
       "run": true,
       "endTime": true,
@@ -15,13 +15,36 @@ const simVue = new Vue({
       h: 100, //Step size
       T: 5, // Total simulation time
       realtime: false,
-      steps: 2
+      steps: 1
+    }
+  },
+  watch: {
+    simSettings: {
+      deep: true,
+      handler: function () {
+        footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
+      }
+    },
+    mode: function () {
+      footerVue.$set(footerVue.$data, "mode", this.mode);
+      switch (this.mode) {
+        case 'mDesign': {
+          console.log("Hey")
+          break;
+        }
+        case 'mSim': {
+          console.log('sim');
+          break;
+        }
+        case 'mSimPause': {
+
+          break;
+        }
+      }
     }
   },
 
   methods: {
-
-
 
 
 
