@@ -2,7 +2,55 @@ const kbshortcut = function (menuItem) {
     let suspendShortcuts = true;
     let callback = null;
     const kbsRegistered = {};
-    const extraKBShortcut =[{"ctrl":true,"alt":false,"shift":false,"keycode":"96","func":"mainSystem.navigate('zoomActual')"},{"ctrl":true,"alt":false,"shift":true,"keycode":"96","func":"mainSystem.navigate('fit')"},{"ctrl":true,"alt":false,"shift":false,"keycode":"189","func":"mainSystem.navigate('zoomOut')"},{"ctrl":true,"alt":false,"shift":false,"keycode":"187","func":"mainSystem.navigate('zoomIn')"},{"ctrl":false,"alt":false,"shift":false,"keycode":"38","func":"mainSystem.navigate('up')"},{"ctrl":false,"alt":false,"shift":false,"keycode":"40","func":"mainSystem.navigate('down')"},{"ctrl":false,"alt":false,"shift":false,"keycode":"39","func":"mainSystem.navigate('right')"},{"ctrl":false,"alt":false,"shift":false,"keycode":"37","func":"mainSystem.navigate('left')"}];
+    const extraKBShortcut = [{
+        "ctrl": true,
+        "alt": false,
+        "shift": false,
+        "keycode": "96",
+        "func": "mainSystem.navigate('zoomActual')"
+    }, {
+        "ctrl": true,
+        "alt": false,
+        "shift": true,
+        "keycode": "96",
+        "func": "mainSystem.navigate('fit')"
+    }, {
+        "ctrl": true,
+        "alt": false,
+        "shift": false,
+        "keycode": "189",
+        "func": "mainSystem.navigate('zoomOut')"
+    }, {
+        "ctrl": true,
+        "alt": false,
+        "shift": false,
+        "keycode": "187",
+        "func": "mainSystem.navigate('zoomIn')"
+    }, {
+        "ctrl": false,
+        "alt": false,
+        "shift": false,
+        "keycode": "38",
+        "func": "mainSystem.navigate('up')"
+    }, {
+        "ctrl": false,
+        "alt": false,
+        "shift": false,
+        "keycode": "40",
+        "func": "mainSystem.navigate('down')"
+    }, {
+        "ctrl": false,
+        "alt": false,
+        "shift": false,
+        "keycode": "39",
+        "func": "mainSystem.navigate('right')"
+    }, {
+        "ctrl": false,
+        "alt": false,
+        "shift": false,
+        "keycode": "37",
+        "func": "mainSystem.navigate('left')"
+    }];
 
     function registerANewKBS(scItem, func) {
         if (!!scItem.keycode) {
@@ -25,8 +73,8 @@ const kbshortcut = function (menuItem) {
     });
 
     document.onkeydown = function (event) {
-        if (!suspendShortcuts) {
-            if ((event.srcElement.className.toLowerCase().indexOf("mxCellEditor".toLowerCase()) < 0) && (event.srcElement.tagName.toLowerCase().indexOf("input".toLowerCase()) < 0)) {
+        if ((event.srcElement.className.toLowerCase().indexOf("mxCellEditor".toLowerCase()) < 0) && (event.srcElement.tagName.toLowerCase().indexOf("input".toLowerCase()) < 0)) {
+            if (!suspendShortcuts) {
                 let key = "";
                 if (event.ctrlKey) key += "CTRL_";
                 if (event.altKey) key += "ALT_";
@@ -36,9 +84,9 @@ const kbshortcut = function (menuItem) {
                     event.preventDefault();
                     if (!event.repeat) eval(kbsRegistered[key]);
                 }
+            } else {
+                callback(event);
             }
-        } else {
-            callback(event);
         }
     };
     this.suspend = function (sus = true, cb = null) {
