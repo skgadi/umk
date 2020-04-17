@@ -605,7 +605,7 @@ let Graph = function (container) {
     model.beginUpdate();
     let subModel;
     try {
-      subModel = this.groupCells(null, 25, this.getSelectionCells());
+      subModel = this.groupCells(null, 35, this.getSelectionCells());
       subModel.geometry.alternateBounds = new mxRectangle(0, 0, 200, 25);
       this.setSelectionCell(subModel);
     } catch (e) {
@@ -634,7 +634,7 @@ let Graph = function (container) {
       }
     } catch (e) {
       console.log(e);
-      notyf.error("Unable to un-group the selected items");
+      validationAlert(GUIText[settings.lang].k171);
     } finally {
       model.endUpdate();
     }

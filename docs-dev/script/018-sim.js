@@ -16,7 +16,10 @@ const simVue = new Vue({
       T: 5, // Total simulation time
       realtime: false,
       steps: 1
-    }
+    },
+    results: null,
+    simWorker: null,
+    exeOrder: []
   },
   watch: {
     simSettings: {
@@ -46,11 +49,98 @@ const simVue = new Vue({
 
   methods: {
 
+    informSim: function (abt, option) {
+      if (window.Worker) {
+        let out = {};
+        switch (abt) {
+          case 'cells':
+            out = {
+              cells: this.exeOrder.map((ele) => {
+                let out = JSON.parse2(JSON.stringify2(ele.value));
+                out.cid = ele.id;
+                return out;
+              })
+            };
+            break;
+          case 'simSettings':
+            out = {
+              simSettings: this.simSettings
+            };
+            break;
+          case 'updateCell':
+            let idx = this.exeOrder.findIndex(function (ele) {
+              return option === ele.id;
+            })
+            if (idx >= 0) {
+              let cellValue = JSON.parse2(JSON.stringify2(this.exeOrder[idx].value));
+              cellValue.cid = this.exeOrder[idx].id;
+              out = {
+                updateCell: {
+                  v: cellValue, //value
+                  i: idx //index
+                }
+              }
+            };
+          default:
+            break;
+        }
+        if (!!Object.keys(out).length) {
+          this.simWorker.postMessage(out);
+        }
+      } else {
+        new Noty({
+          text: GUIText[settings.lang].k169,
+          timeout: 5000,
+          theme: "nest",
+          type: 'warning'
+        }).show();
+      }
+    },
 
+    initSim: function () {
+      if (window.Worker) {
+        this.exeOrder = this.getExecutionOrder().eo;
+        if (this.exeOrder.length > 0) {
+          this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
+          this.results = new Dexie('res_' + Date.now());
+          this.results.version(1).stores({
+            outs: 'cid, time, value'
+          });
+        } else {
+          new Noty({
+            text: GUIText[settings.lang].k170,
+            timeout: 5000,
+            theme: "nest",
+            type: 'warning'
+          }).show();
+        }
+      } else {
+        new Noty({
+          text: GUIText[settings.lang].k169,
+          timeout: 5000,
+          theme: "nest",
+          type: 'warning'
+        }).show();
+
+      }
+    },
+    endSim: function () {
+      if (!!this.simWorker) {
+        this.simWorker.terminate();
+        this.results.delete().then(() => {
+          console.log("Database successfully deleted");
+        }).catch((err) => {
+          console.log(err);
+          console.error("Could not delete database");
+        }).finally(() => {
+          // Do what should be done next...
+        });
+      }
+    },
 
     displayExecutionOrder: function () {
       let allTheModels = this.getAllTheModels();
-      this.showExecutionOrderMessage(allTheModels, "<span class='fa-stack'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>");
+      this.showExecutionOrderMessage(allTheModels, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>");
       let executionOrderAndErros = this.getExecutionOrder();
       let executionOrder = executionOrderAndErros.eo;
       for (let i = 0; i < executionOrder.length; i++) {
@@ -61,8 +151,8 @@ const simVue = new Vue({
         "&times;:&nbsp;&#x21ab;",
         GUIText[settings.lang].aLoop
       );
-      this.showExecutionOrderMessage(executionOrderAndErros.ne, "<i class='fas fa-times fa-2x'></i>");
-      this.showExecutionOrderMessage(executionOrderAndErros.pc, "<span class='fa-stack'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-plug fa-stack-1x'></i></span>");
+      this.showExecutionOrderMessage(executionOrderAndErros.ne, "<i class='fas fa-times'></i>");
+      this.showExecutionOrderMessage(executionOrderAndErros.pc, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-plug fa-stack-1x'></i></span>");
       mainSystem.refresh();
     },
 

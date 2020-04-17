@@ -51,9 +51,11 @@ const uyamakCbManager = {
     });
   },
   bringModelToMain: function () {
+    mainSystem.graph.getModel().beginUpdate();
     mxClipboard.paste(mainSystem.graph);
     mainSystem.graph.ungroupSubModel();
     mainSystem.graph.orderCells(false);
+    mainSystem.graph.getModel().endUpdate();
     mainSystem.refresh();
   },
   prepareAltAndCopy: function (text) {

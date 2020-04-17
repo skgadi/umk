@@ -809,3 +809,11 @@ blink,
 .simple-text {
     font-weight: normal;
 }
+
+.eo_icon {
+    font-size: 0.5em;
+}
+
+.eo_icon>i {
+    vertical-align: middle;
+}

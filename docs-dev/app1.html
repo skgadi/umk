@@ -75,13 +75,45 @@
       </div>
       <div v-show="showAddVar">
         <div v-text="GUIText[settings.lang].var"></div>
-        <input type="text">
+        <input type="text" v-model="newVar.name">
         <div v-text="GUIText[settings.lang].value"></div>
-        <div class="row-col-btns">
-          <div><i class="fas fa-fw fa-ellipsis-v"></i><br /><i class="fas fa-fw fa-plus"></i></div>
-          <div><i class="fas fa-fw fa-ellipsis-v"></i><br /><i class="fas fa-fw fa-minus"></i></div>
-          <div><i class="fas fa-fw fa-ellipsis-h"></i><i class="fas fa-fw fa-plus"></i></div>
-          <div><i class="fas fa-fw fa-ellipsis-h"></i><i class="fas fa-fw fa-minus"></i></div>
+        <div class="matrix-builder-buttons">
+          <span @click="cngVarDim(0)" class="rotate-90">
+            <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-plus-circle fa-fw"></i>
+          </span>
+          <span @click="cngVarDim(1)" class="rotate-90">
+            <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-minus-circle fa-fw  fa-rotate-90"></i>
+          </span>
+          <span @click="cngVarDim(2)">
+            <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-plus-circle fa-fw"></i>
+          </span>
+          <span @click="cngVarDim(3)">
+            <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-minus-circle fa-fw"></i>
+          </span>
+        </div>
+        <div class="expandable-x">
+          <table>
+            <template v-for="(rowValue, index1) in newVar.value">
+              <tr v-if= "index1 === 0" style="padding: 0;">
+                <td></td>
+                <template v-for="(value, index2) in newVar.value[index1]">
+                  <td class="center">
+                    {{ index2 + 1 }}
+                  </td>
+                </template>
+              </tr>
+              <tr>
+                <td>
+                  {{ index1 + 1 }}
+                </td>
+                <template v-for="(value, index2) in newVar.value[index1]">
+                  <td>
+                    <input v-model.trim="newVar.value[index1][index2]" type="text" />
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </table>
         </div>
         <div class="splitToTwo">
           <div class="gen-btn" v-text="GUIText[settings.lang].save"></div>
@@ -245,7 +277,7 @@
             <div v-html="GUIText[settings.lang].preview+': '+modelValue"></div>
           </div>
           <br>
-          <div class="gen-btn" @click="applyModelValue" v-text="GUIText[settings.lang].aChanges"></div>
+          <div class="gen-btn" @click="applyModelValue()" v-text="GUIText[settings.lang].aChanges"></div>
         </div>
         <div v-else-if="!!uyamakModel">
           <h2 class="compress" v-text="GUIText[settings.lang].label"></h2>
@@ -434,6 +466,7 @@
   <script type="text/javascript" src="dependencies/mxgraph/js/mxClient.js"></script>
   <script type="text/javascript" src="dependencies/augmented-json-serialization-functions.js"></script>
   <script type="text/javascript" src="dependencies/pako/pako.min.js"></script>
+  <script type="text/javascript" src="dependencies/dexie/dexie.min.js"></script>
 
 
   <!--Uyamak libraries-->

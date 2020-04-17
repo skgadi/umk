@@ -236,6 +236,7 @@ const editorVue = new Vue({
             mainSystem.undoManager.history.pop();
             mainSystem.undoManager.indexOfNextAdd--;
             this.rotate(this.getAngle());
+            mainSystem.graph.setSelectionCells([]);
         },
         toggleParamDisplay: function (index) {
             //console.log(this.parametersDisplay);
