@@ -71,11 +71,10 @@
     <div>
       <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
       <h1 v-text="GUIText[settings.lang].vManager"></h1>
-      <div v-show="!showAddVar" @click="showAddVar=!showAddVar" class="gen-btn" v-text="GUIText[settings.lang].aNewVar">
-      </div>
-      <div v-show="showAddVar">
+      <div v-show="showEdtVar">
         <div v-text="GUIText[settings.lang].var"></div>
-        <input type="text" v-model="newVar.name">
+        <input type="text" v-model="edtVar.name">
+        <div v-text="checkValidVar(edtVar.name, edtVar.index).msg"></div>
         <div v-text="GUIText[settings.lang].value"></div>
         <div class="matrix-builder-buttons">
           <span @click="cngVarDim(0)" class="rotate-90">
@@ -93,10 +92,10 @@
         </div>
         <div class="expandable-x">
           <table>
-            <template v-for="(rowValue, index1) in newVar.value">
-              <tr v-if= "index1 === 0" style="padding: 0;">
+            <template v-for="(rowValue, index1) in edtVar.value">
+              <tr v-if="index1 === 0" style="padding: 0;">
                 <td></td>
-                <template v-for="(value, index2) in newVar.value[index1]">
+                <template v-for="(value, index2) in edtVar.value[index1]">
                   <td class="center">
                     {{ index2 + 1 }}
                   </td>
@@ -106,9 +105,9 @@
                 <td>
                   {{ index1 + 1 }}
                 </td>
-                <template v-for="(value, index2) in newVar.value[index1]">
+                <template v-for="(value, index2) in edtVar.value[index1]">
                   <td>
-                    <input v-model.trim="newVar.value[index1][index2]" type="text" />
+                    <input v-model.trim="edtVar.value[index1][index2]" type="text" />
                   </td>
                 </template>
               </tr>
@@ -116,19 +115,32 @@
           </table>
         </div>
         <div class="splitToTwo">
-          <div class="gen-btn" v-text="GUIText[settings.lang].save"></div>
-          <div class="gen-btn" v-text="GUIText[settings.lang].cancel"></div>
+          <div @click="saveVar" class="gen-btn" v-text="GUIText[settings.lang].save"></div>
+          <div @click="showEdtVar = false" class="gen-btn" v-text="GUIText[settings.lang].cancel"></div>
         </div>
       </div>
       <h2 v-text="GUIText[settings.lang].variables"></h2>
-      <div class="splitShort">
-        <template v-for="(item, idx, i) in variables">
+      <div class="splitShort" v-if="startParser()">
+        <template v-for="(item, idx) in variables">
           <div class="no-col-break">
-            <span v-text="(i+1)+'.'" class="gap-right"></span>
-            <pre class="inline font-oneNhalf" v-text="idx"></pre>
-            <span v-text="' $='+getVariable(item)+'$'"></span>
+            <span v-text="(idx+1)+'.'" class="gap-right"></span>
+            <pre class="inline font-oneNhalf" v-text="item.name"></pre>
+            <span style="display: inline-flex;" v-text="' $:='+getVariable(item)+'$'"></span>
+            <span class="f-right pointer gap-right gap-left" @click="delVar(idx)">
+              <i class="fa-fw far fa-trash-alt"></i>
+            </span>
+            <span class="f-right pointer gap-right gap-left" @click="editVar(idx)">
+              <i class="fa-fw fas fa-pen"></i>
+            </span>
+            <span class="f-right pointer gap-right gap-left" @click="moveVar(true, idx)">
+              <i class="fa-fw fas fa-arrow-up"></i>
+            </span>
+            <span class="f-right pointer gap-right gap-left" @click="moveVar(false, idx)">
+              <i class="fa-fw fas fa-arrow-down"></i>
+            </span>
           </div>
         </template>
+        <div v-show="!showEdtVar" @click="addVar" class="gen-btn" v-text="GUIText[settings.lang].aNewVar"></div>
       </div>
       <h2 v-text="GUIText[settings.lang].constants"></h2>
       <div class="splitShort">
@@ -136,7 +148,7 @@
           <div class="no-col-break">
             <span v-text="(idx+1)+'.'" class="gap-right"></span>
             <pre class="inline font-oneNhalf" v-text="item"></pre>
-            <span v-text="' $='+getConst(item)+'$'"></span>
+            <span v-text="' $:='+getConst(item)+'$'"></span>
           </div>
         </template>
       </div>
