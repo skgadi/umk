@@ -5,6 +5,7 @@ const varManagerVue = new Vue({
     keywords: ["NaN", "null", "undefined", "mod", "to", "in", "and", "xor", "or", "not", "end"],
     display: false,
     variables: [],
+    varValidValues: [],
     showEdtVar: false,
     edtVar: {
       name: "",
@@ -19,6 +20,12 @@ const varManagerVue = new Vue({
     updateMathJax();
   },
   watch: {
+    /*variables: {
+      deep: true,
+      handler: function () {
+        this.clearAndparseAll();
+      }
+    },*/
     /*    "edtVar": {
           deep: true,
           handler: function () {
@@ -104,6 +111,7 @@ const varManagerVue = new Vue({
         }).show();
 
       }
+      this.clearAndparseAll();
     },
     checkValidVar: function (name, ignore = -1) {
       if (!isNaN(parseInt(name.charAt(0)))) {
@@ -155,6 +163,7 @@ const varManagerVue = new Vue({
         if (to >= 0 && to < this.variables.length) {
           this.variables.splice(to, 0, this.variables.splice(index, 1)[0]);
         }
+        this.clearAndparseAll();
       }
     },
     editVar: function (index) {
@@ -168,19 +177,70 @@ const varManagerVue = new Vue({
       }
     },
     delVar: function (index) {
-      this.variables.splice(index,1);
+      this.variables.splice(index, 1);
     },
     getVariable: function (variable) {
       return TeXTools.makeMatrix(variable.value);
       return JSON.stringify(variable.value);
     },
-    getVarValue: function (variable) {
-      
+    clearAndparseAll: function () {
+      this.startParser();
+      this.processAllVars();
     },
     startParser: function () {
-      this.parser = math.parser();
-      return true;
+      try {
+        this.parser = math.parser();
+      } catch (e) {
+        console.log(e);
+      }
+      //return true;
     },
+    processAllVars: function () {
+      for (let i = 0; i < this.variables.length; i++) {
+        let varVal = this.processVar(this.variables[i]);
+        if (!!varVal) {
+          this.varValidValues[i] = math.parse(varVal.toString()).toTex(4);
+        } else {
+          this.varValidValues[i] = "\\bigotimes"
+        }
+      }
+    },
+    processVar: function (variable) {
+      try {
+        let tempData = this.getVarValue(variable.value)
+        console.log(tempData);
+        return this.parser.evaluate(variable.name + "=" + tempData.toString());
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+    },
+    getVarValue: function (varValue) {
+      let tempData;
+      let tempRow;
+      for (let i = 0; i < varValue.length; i++) {
+        for (let j = 0; j < varValue[0].length; j++) {
+          let tVar = this.parser.evaluate(varValue[i][j]);
+          if (!math.isMatrix(tVar)) {
+            tVar = math.matrix([
+              [tVar]
+            ]);
+          }
+          if (j === 0) {
+            tempRow = tVar;
+          } else {
+            tempRow = math.concat(tempRow, tVar);
+          }
+        }
+        if (i === 0) {
+          tempData = tempRow;
+        } else {
+          tempData = math.transpose(math.concat(math.transpose(tempData), math.transpose(tempRow)));
+        }
+      }
+      return tempData;
+    },
+
     getConst: function (Constant) {
       if (Constant === "Infinity") return "\\infty";
       if (math.typeOf(math.evaluate(Constant)) === "number") return math.evaluate(Constant);

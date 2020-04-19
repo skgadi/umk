@@ -632,6 +632,7 @@ input[type='checkbox'] {
     cursor: pointer;
     background-color: var(--col-background-1);
     opacity: 0.8;
+    padding: 0 !important;
 }
 
 .gen-btn:hover {
@@ -816,4 +817,13 @@ blink,
 
 .eo_icon>i {
     vertical-align: middle;
+}
+
+.var-container {
+    display: grid;
+    row-gap: 0.5em;
+}
+.var-container>div {
+    border: 1px var(--col-border) solid;
+    padding: 0.5em;
 }
