@@ -236,6 +236,7 @@ const editorVue = new Vue({
             mainSystem.undoManager.history.pop();
             mainSystem.undoManager.indexOfNextAdd--;
             this.rotate(this.getAngle());
+            varManagerVue.checkCellParams(cell);
             mainSystem.graph.setSelectionCells([]);
         },
         toggleParamDisplay: function (index) {
@@ -285,6 +286,14 @@ const editorVue = new Vue({
                     break;
             }
             this.updatingCounter++;
+        },
+        getComputedValueText: function (Parameter) {
+            try {
+                return math.parse(varManagerVue.getVarValue(Parameter.Value).toString()).toTex(4);
+            } catch (e) {
+                console.log(e);
+                return '<i class="fas fa-exclamation-triangle fa-fw"></i><span>'+GUIText[settings.lang].k172+'</span>';
+            }
         }
     }
 })

@@ -49,18 +49,38 @@ const simVue = new Vue({
 
   methods: {
 
+    pCell4Exp: function (inCell) { //Prepare cell for export
+      let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
+      cellVal.cid = inCell.id;
+      if (!!cellVal.Parameters) {
+        let params = Object.keys(cellVal.Parameters);
+        for (let i = 0; i < params.length; i++) {
+          if (cellVal.Parameters[params[i]].Type === "Complex" ||
+            cellVal.Parameters[params[i]].Type === "real" ||
+            cellVal.Parameters[params[i]].Type === "Integer") {
+            cellVal.Parameters[params[i]].Value =
+              (varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value)).toString();
+          }
+        }
+      }
+      return cellVal;
+    },
     informSim: function (abt, option) {
       if (window.Worker) {
         let out = {};
         switch (abt) {
           case 'cells':
-            out = {
-              cells: this.exeOrder.map((ele) => {
-                let out = JSON.parse2(JSON.stringify2(ele.value));
-                out.cid = ele.id;
-                return out;
-              })
-            };
+            try {
+              out = {
+                cells: this.exeOrder.map((ele) => {
+                  //console.log(ele);
+                  return this.pCell4Exp(ele);
+                })
+              };
+            } catch (e) {
+              console.log(e);
+              out = {};
+            }
             break;
           case 'simSettings':
             out = {
@@ -68,21 +88,26 @@ const simVue = new Vue({
             };
             break;
           case 'updateCell':
-            let idx = this.exeOrder.findIndex(function (ele) {
-              return option === ele.id;
-            })
-            if (idx >= 0) {
-              let cellValue = JSON.parse2(JSON.stringify2(this.exeOrder[idx].value));
-              cellValue.cid = this.exeOrder[idx].id;
-              out = {
-                updateCell: {
-                  v: cellValue, //value
-                  i: idx //index
+            try {
+              let idx = this.exeOrder.findIndex(function (ele) {
+                return option === ele.id;
+              })
+              if (idx >= 0) {
+                let cellValue = this.pCell4Exp(this.exeOrder[idx]);
+                out = {
+                  updateCell: {
+                    v: cellValue, //value
+                    i: idx //index
+                  }
                 }
-              }
-            };
-          default:
+              };
+            } catch (e) {
+              console.log(e);
+              out = {};
+            }
             break;
+            default:
+              break;
         }
         if (!!Object.keys(out).length) {
           this.simWorker.postMessage(out);
@@ -101,11 +126,20 @@ const simVue = new Vue({
       if (window.Worker) {
         this.exeOrder = this.getExecutionOrder().eo;
         if (this.exeOrder.length > 0) {
-          this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
-          this.results = new Dexie('res_' + Date.now());
-          this.results.version(1).stores({
-            outs: 'cid, time, value'
-          });
+          if (varManagerVue.checkAllCellsParams()) {
+            this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
+            this.results = new Dexie('res_' + Date.now());
+            this.results.version(1).stores({
+              outs: 'cid, time, value'
+            });
+          } else {
+            new Noty({
+              text: GUIText[settings.lang].k173,
+              timeout: 5000,
+              theme: "nest",
+              type: 'warning'
+            }).show();
+          }
         } else {
           new Noty({
             text: GUIText[settings.lang].k170,
@@ -387,7 +421,7 @@ const simVue = new Vue({
             cells[i].children[j].setValue(message);
           }
         }
-        mainSystem.graph.setCellWarning(cells[i], warning);
+        //mainSystem.graph.setCellWarning(cells[i], warning);
       }
     },
 

@@ -417,6 +417,9 @@
                     </template>
                   </table>
                 </div>
+                <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                  v-html="getComputedValueText(Parameter)"></div>
+
               </div>
             </template>
           </div>

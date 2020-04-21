@@ -155,6 +155,8 @@ const varManagerVue = new Vue({
       this.display = show;
       if (!show) {
         this.showEdtVar = false;
+        this.clearAndparseAll();
+        this.checkAllCellsParams();
       }
     },
     moveVar: function (up = true, index = 0) {
@@ -178,6 +180,7 @@ const varManagerVue = new Vue({
     },
     delVar: function (index) {
       this.variables.splice(index, 1);
+      this.clearAndparseAll();
     },
     getVariable: function (variable) {
       return TeXTools.makeMatrix(variable.value);
@@ -215,12 +218,26 @@ const varManagerVue = new Vue({
         return false;
       }
     },
+    isValidMathNum: function (num) {
+      if (math.isNumeric(num) || math.isMatrix(num) || math.isComplex(num)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getVarValue: function (varValue) {
+      if (!this.parser) {
+        this.clearAndparseAll();
+      }
       let tempData;
       let tempRow;
       for (let i = 0; i < varValue.length; i++) {
         for (let j = 0; j < varValue[0].length; j++) {
-          let tVar = this.parser.evaluate(varValue[i][j]);
+          let tVar = this.parser.evaluate(String(varValue[i][j]));
+          if (!this.isValidMathNum(tVar)) {
+            throw ("Found a math item but not a number.");
+          }
+          //console.log(tVar);
           if (!math.isMatrix(tVar)) {
             tVar = math.matrix([
               [tVar]
@@ -245,6 +262,48 @@ const varManagerVue = new Vue({
       if (Constant === "Infinity") return "\\infty";
       if (math.typeOf(math.evaluate(Constant)) === "number") return math.evaluate(Constant);
       else return Constant;
+    },
+
+    checkAllCellsParams: function (allCells = null) {
+      if (!allCells) {
+        allCells = Object.values(mainSystem.graph.getModel().cells);
+      }
+      let allGood = true;
+      for (let i = 0; i < allCells.length; i++) {
+        if (!!allCells[i].style && allCells[i].style.indexOf('umk_model') >= 0) {
+          if (!this.checkCellParams(allCells[i])) {
+            allGood = false;
+          }
+        }
+      }
+      return allGood;
+    },
+    checkCellParams: function (cell) {
+      if (!this.parser) {
+        this.clearAndparseAll();
+      }
+      if (!!cell.value.Parameters) {
+        let params = Object.keys(cell.value.Parameters);
+        for (let i = 0; i < params.length; i++) {
+          if (cell.value.Parameters[params[i]].Type === "Complex" ||
+            cell.value.Parameters[params[i]].Type === "real" ||
+            cell.value.Parameters[params[i]].Type === "Integer") {
+            let pVal = cell.value.Parameters[params[i]].Value;
+            //console.log(pVal);
+            try {
+              this.getVarValue(pVal);
+            } catch (e) {
+              console.log(e);
+              mainSystem.graph.setCellWarning(cell, "warning");
+              return false;
+            }
+          }
+        }
+        mainSystem.graph.setCellWarning(cell);
+        return true;
+      } else {
+        return true;
+      }
     }
   }
 });
