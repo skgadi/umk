@@ -9,6 +9,9 @@ onmessage = function (oEvent) {
                 case "updateCell":
                     exec.updCell(oEvent.data.updateCell.v, oEvent.data.updateCell.i);
                     break;
+                case "simSettings":
+                    exec.setSimSettings(oEvent.data.simSettings);
+                    break;
                 default:
                     break;
             }

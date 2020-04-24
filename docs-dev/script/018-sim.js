@@ -48,7 +48,26 @@ const simVue = new Vue({
   },
 
   methods: {
-
+    updateSources: function (inCells) {
+      for (let i = 0; i < inCells.length; i++) {
+        let sModels = this.getSourcesWithIndexes(mainSystem.graph.getModel().cells[inCells[i].cid]);
+        let Sources = [];
+        let sIndexes = [];
+        /*for (let j = 0; j < sModels.length; j++) {
+          Sources.push(sModels[j].model.id);
+        }*/
+        for (let j = 0; j < sModels.length; j++) {
+          sIndexes.push({
+            cell: inCells.findIndex(function (ele) {
+              return sModels[j].model.id === ele.cid;
+            }),
+            index: sModels[j].index
+          });
+        }
+        inCells[i].sIndexes = sIndexes;
+      }
+      return inCells;
+    },
     pCell4Exp: function (inCell) { //Prepare cell for export
       let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
       cellVal.cid = inCell.id;
@@ -71,11 +90,13 @@ const simVue = new Vue({
         switch (abt) {
           case 'cells':
             try {
+              let tempCells = this.exeOrder.map((ele) => {
+                //console.log(ele);
+                return this.pCell4Exp(ele);
+              });
+              //console.log(tempCells);
               out = {
-                cells: this.exeOrder.map((ele) => {
-                  //console.log(ele);
-                  return this.pCell4Exp(ele);
-                })
+                cells: this.updateSources(tempCells)
               };
             } catch (e) {
               console.log(e);
@@ -106,8 +127,8 @@ const simVue = new Vue({
               out = {};
             }
             break;
-            default:
-              break;
+          default:
+            break;
         }
         if (!!Object.keys(out).length) {
           this.simWorker.postMessage(out);
@@ -288,7 +309,6 @@ const simVue = new Vue({
         pc: allConnectedModels.pc
       };
     },
-
     getSourcesOfAModel: function (inModel) {
       let modelSources = [];
       for (let i = 0; i < inModel.children.length; i++) {
@@ -305,6 +325,32 @@ const simVue = new Vue({
         }
       }
       return modelSources;
+    },
+    getSourcesWithIndexes: function (inModel) {
+      let indexes = [];
+      for (let i = 0; i < inModel.children.length; i++) {
+        if (inModel.children[i].style.search("umk_input") >= 0) {
+          let index = -1;
+          let tempPModel = inModel.children[i].edges[0].source.parent;
+          for (j = 0; j < tempPModel.children.length; j++) {
+            if (tempPModel.children[j].style.search("umk_output") >= 0) {
+              index++;
+              if (
+                !!tempPModel.children[j].edges &&
+                tempPModel.children[j].edges.indexOf(
+                  inModel.children[i].edges[0]
+                ) >= 0
+              ) {
+                indexes.push({
+                  model: inModel.children[i].edges[0].source.parent,
+                  index: index
+                });
+              }
+            }
+          }
+        }
+      }
+      return indexes;
     },
 
     getTargetsOfAModel: function (inModel) {
