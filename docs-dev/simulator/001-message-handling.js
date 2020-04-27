@@ -1,5 +1,6 @@
 onmessage = function (oEvent) {
-  this.console.log(oEvent);
+  //console.log(oEvent);
+  //console.log(self.performance);
   if (typeof oEvent.data === "object") {
     let keys = Object.keys(oEvent.data);
     for (let i = 0; i < keys.length; i++) {

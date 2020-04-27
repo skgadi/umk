@@ -1,17 +1,20 @@
 const exec = {
   cells: [],
   simSettings: {
-    h: 5,
+    hs: 5,
+    h: 5000,
     T: 5,
     realtime: false,
     steps: 1
   },
   t: 0, //Current simulation time
+  prevT: 0, // time in milliseconds
   isCont: true, // Is it set to run continously?
   inPrg: false, // Is simulation in progress? 
   rSteps: 0, // Number of steps remaining to run
   setSimSettings: function (settings) {
-    this.simSettings.h = settings.h/1000;
+    this.simSettings.hs = settings.h / 1000;
+    this.simSettings.h = settings.h;
     this.simSettings.T = (settings.T < 0) ? Infinity : settings.T;
     this.simSettings.realtime = settings.realtime;
     this.simSettings.steps = settings.steps;
@@ -70,13 +73,16 @@ const exec = {
         }
       });
     }*/
-    this.t += this.simSettings.h;
+    this.t += this.simSettings.hs;
   },
   Init: function () {
     this.cells.forEach(function (model) {
       model.Init();
     });
     this.inPrg = true;
+    this.t = 0;
+    this.prevT = performance.now();
+    this.setRemainingSteps();
   },
   End: function () {
     this.cells.forEach(function (model) {
@@ -87,10 +93,16 @@ const exec = {
   },
   loop: function (N = null) {
     if (!N) {
-      let maxStepsPerSecond = 1 / this.simSettings.h;
+      let maxStepsPerSecond = 1 / this.simSettings.hs;
       N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps));
     }
+    console.log("N: " + N);
     for (let i = 0; i < N; i++) {
+      if (this.simSettings.realtime) {
+        while ((performance.now() - this.prevT) < this.simSettings.h) {}
+        this.prevT = performance.now();
+        //console.log(this.prevT);
+      }
       this.simulate();
       this.rSteps--;
     }
@@ -105,15 +117,13 @@ const exec = {
     }
   },
   setRemainingSteps: function () {
-    this.rSteps = Math.ceil((this.simSettings.T - this.t) / this.simSettings.h) + 1;
+    this.rSteps = Math.ceil((this.simSettings.T - this.t) / this.simSettings.hs) + 1;
     console.log(this.simSettings);
     console.log(this.rSteps);
   },
   start: function () {
     if (!this.inPrg) {
       this.Init();
-      this.t = 0;
-      this.setRemainingSteps();
     }
     this.isCont = true;
     this.loop();
@@ -125,6 +135,9 @@ const exec = {
     this.isCont = false;
   },
   steps: function () {
+    if (!this.inPrg) {
+      this.Init();
+    }
     this.isCont = false;
     this.loop(this.simSettings.steps);
   }
