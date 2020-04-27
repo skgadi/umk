@@ -103,11 +103,6 @@ const simVue = new Vue({
               out = {};
             }
             break;
-          case 'simSettings':
-            out = {
-              simSettings: this.simSettings
-            };
-            break;
           case 'updateCell':
             try {
               let idx = this.exeOrder.findIndex(function (ele) {
@@ -126,6 +121,31 @@ const simVue = new Vue({
               console.log(e);
               out = {};
             }
+            break;
+          case 'simSettings':
+            out = {
+              simSettings: this.simSettings
+            };
+            break;
+          case "start":
+            out = {
+              start: 0
+            };
+            break;
+          case "stop":
+            out = {
+              stop: 0
+            };
+            break;
+          case "pause":
+            out = {
+              pause: 0
+            };
+            break;
+          case "steps":
+            out = {
+              steps: 0
+            };
             break;
           default:
             break;
@@ -153,6 +173,9 @@ const simVue = new Vue({
             this.results.version(1).stores({
               outs: 'cid, time, value'
             });
+            this.simWorker.onmessage = function (event) {
+              console.log(event);
+            }
           } else {
             new Noty({
               text: GUIText[settings.lang].k173,
