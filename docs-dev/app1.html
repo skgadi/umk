@@ -235,10 +235,14 @@
         </template>
       </ul>
       <ul class="menu f-right" id="sim-menu">
-        <li class="dropdown" v-if="disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
-        <li class="dropdown" v-if="disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
-        <li class="dropdown" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
-        <li class="dropdown" v-if="disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
+        <li class="dropdown" @click="informSim('start')" v-if="disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
+        <li class="blocked" v-if="!disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
+        <li class="dropdown" @click="informSim('stop')" v-if="disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
+        <li class="blocked" v-if="!disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
+        <li class="dropdown" @click="informSim('pause')" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
+        <li class="blocked" v-if="!disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
+        <li class="dropdown" @click="informSim('steps')" v-if="disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
+        <li class="blocked" v-if="!disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
         <li class="dropdown">
           <a class="dropbtn"><i class="fas fa-fw fa-cogs"></i></a>
           <div class="dropdown-content settings-drop-dn">

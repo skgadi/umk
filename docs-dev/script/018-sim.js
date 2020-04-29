@@ -4,12 +4,12 @@ const simVue = new Vue({
     mode: "mDesign",
     disp: {
       "run": true,
-      "endTime": true,
-      "endTime": true,
-      "stop": true,
-      "pause": true,
-      "forward": true,
-      "noOfSteps": true
+      //"endTime": true,
+      //"endTime": true,
+      "stop": false,
+      "pause": false,
+      //"noOfSteps": true,
+      "forward": true
     },
     simSettings: {
       h: 100, //Step size
@@ -17,7 +17,9 @@ const simVue = new Vue({
       realtime: false,
       steps: 1
     },
-    results: null,
+    db: null,
+    results: [],
+    dbWorker: null,
     simWorker: null,
     exeOrder: []
   },
@@ -26,21 +28,39 @@ const simVue = new Vue({
       deep: true,
       handler: function () {
         footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
+        if (!!this.simWorker) {
+          this.informSim("simSettings");
+        }
       }
     },
     mode: function () {
       footerVue.$set(footerVue.$data, "mode", this.mode);
       switch (this.mode) {
         case 'mDesign': {
-          console.log("Hey")
+          this.disp = {
+            "run": true,
+            "stop": false,
+            "pause": false,
+            "forward": true
+          }
           break;
         }
         case 'mSim': {
-          console.log('sim');
+          this.disp = {
+            "run": false,
+            "stop": true,
+            "pause": true,
+            "forward": false
+          }
           break;
         }
         case 'mSimPause': {
-
+          this.disp = {
+            "run": true,
+            "stop": true,
+            "pause": false,
+            "forward": true
+          }
           break;
         }
       }
@@ -85,97 +105,162 @@ const simVue = new Vue({
       return cellVal;
     },
     informSim: function (abt, option) {
-      if (window.Worker) {
-        let out = {};
-        switch (abt) {
-          case 'cells':
-            try {
-              let tempCells = this.exeOrder.map((ele) => {
-                //console.log(ele);
-                return this.pCell4Exp(ele);
-              });
-              //console.log(tempCells);
-              out = {
-                cells: this.updateSources(tempCells)
-              };
-            } catch (e) {
-              console.log(e);
-              out = {};
-            }
-            break;
-          case 'updateCell':
-            try {
-              let idx = this.exeOrder.findIndex(function (ele) {
-                return option === ele.id;
-              })
-              if (idx >= 0) {
-                let cellValue = this.pCell4Exp(this.exeOrder[idx]);
+      try {
+        if (window.Worker) {
+          let out = {};
+          switch (abt) {
+            case 'cells':
+              try {
+                let tempCells = this.exeOrder.map((ele) => {
+                  //console.log(ele);
+                  return this.pCell4Exp(ele);
+                });
+                //console.log(tempCells);
                 out = {
-                  updateCell: {
-                    v: cellValue, //value
-                    i: idx //index
+                  cells: this.updateSources(tempCells)
+                };
+              } catch (e) {
+                console.log(e);
+                out = {};
+              }
+              break;
+            case 'updateCell':
+              try {
+                let idx = this.exeOrder.findIndex(function (ele) {
+                  return option === ele.id;
+                })
+                if (idx >= 0) {
+                  let cellValue = this.pCell4Exp(this.exeOrder[idx]);
+                  out = {
+                    updateCell: {
+                      v: cellValue, //value
+                      i: idx //index
+                    }
                   }
-                }
+                };
+              } catch (e) {
+                console.log(e);
+                out = {};
+              }
+              break;
+            case 'simSettings':
+              out = {
+                simSettings: this.simSettings
               };
-            } catch (e) {
-              console.log(e);
-              out = {};
+              break;
+            case "start":
+              if (!this.simWorker) {
+                this.initSim();
+              }
+              out = {
+                start: 0
+              };
+              this.mode = "mSim";
+              break;
+            case "stop":
+              if (!!this.simWorker) {
+                out = {
+                  stop: 0
+                };
+              }
+              this.endSim();
+              break;
+            case "pause":
+              if (!!this.simWorker) {
+                out = {
+                  pause: 0
+                };
+              }
+              break;
+            case "steps":
+              if (!this.simWorker) {
+                this.initSim();
+              }
+              out = {
+                steps: 0
+              };
+              break;
+            case "db":
+              if (!!this.db.name) {
+                out = {
+                  db: this.db.name
+                };
+              }
+              break;
+            default:
+              break;
+          }
+          if (!!Object.keys(out).length) {
+            if (!!this.simWorker) {
+              this.simWorker.postMessage(out);
             }
-            break;
-          case 'simSettings':
-            out = {
-              simSettings: this.simSettings
-            };
-            break;
-          case "start":
-            out = {
-              start: 0
-            };
-            break;
-          case "stop":
-            out = {
-              stop: 0
-            };
-            break;
-          case "pause":
-            out = {
-              pause: 0
-            };
-            break;
-          case "steps":
-            out = {
-              steps: 0
-            };
-            break;
-          default:
-            break;
+          }
+        } else {
+          new Noty({
+            text: GUIText[settings.lang].k169,
+            timeout: 5000,
+            theme: "nest",
+            type: 'warning'
+          }).show();
         }
-        if (!!Object.keys(out).length) {
-          this.simWorker.postMessage(out);
-        }
-      } else {
-        new Noty({
-          text: GUIText[settings.lang].k169,
-          timeout: 5000,
-          theme: "nest",
-          type: 'warning'
-        }).show();
+      } catch (e) {
+        console.log(e);
       }
     },
-
     initSim: function () {
       if (window.Worker) {
         this.exeOrder = this.getExecutionOrder().eo;
         if (this.exeOrder.length > 0) {
           if (varManagerVue.checkAllCellsParams()) {
-            this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
-            this.results = new Dexie('res_' + Date.now());
-            this.results.version(1).stores({
-              outs: 'cid, time, value'
-            });
-            this.simWorker.onmessage = function (event) {
-              console.log(event);
+            if (!this.simWorker) {
+              this.simWorker = new Worker('/simulator.min.js?date=' + Date.now());
             }
+            //console.log(this.db);
+            /*if (!!this.db) {
+              //this.delResDb(this.db.name);
+            }
+            this.db = new Dexie('res_' + Date.now());
+            this.db.version(1).stores({
+              outs: '++id, t, b, v'
+            });*/
+            this.simWorker.onmessage = function (event) {
+              console.log(event.data);
+              if (event.data.put) {
+                console.log(event.data.put);
+                simVue.results = simVue.results.concat(event.data.put);
+                var updaeDB = function () {
+                  simVue.dbWorker.postMessage({
+                    put: simVue.results.shift()
+                  });
+                  if (!!simVue.results.length) {
+                    setTimeout(updaeDB);
+                  }
+                }
+                //setTimeout(updaeDB);
+                simVue.dbWorker.postMessage({
+                  results: event.data.put
+                });
+
+                /*console.log(event.data.put);
+                for (let i=0; i<event.data.put.length; i++) {
+                  simVue.db.outs.add(event.data.put[i]);
+                }*/
+              } else if (event.data.ended) {
+                simVue.endSim();
+              } else if (event.data.paused) {
+                simVue.mode = "mSimPause";
+              }
+            }
+            if (!this.dbWorker) {
+              this.dbWorker = new Worker('/db.min.js?date=' + Date.now());
+            }
+            this.dbWorker.postMessage({
+              use: "res_" + Date.now()
+            });
+
+            this.informSim("cells");
+            this.informSim("simSettings");
+            this.informSim("db");
           } else {
             new Noty({
               text: GUIText[settings.lang].k173,
@@ -191,6 +276,7 @@ const simVue = new Vue({
             theme: "nest",
             type: 'warning'
           }).show();
+          throw ("Nothing to execute");
         }
       } else {
         new Noty({
@@ -205,17 +291,23 @@ const simVue = new Vue({
     endSim: function () {
       if (!!this.simWorker) {
         this.simWorker.terminate();
-        this.results.delete().then(() => {
-          console.log("Database successfully deleted");
-        }).catch((err) => {
-          console.log(err);
-          console.error("Could not delete database");
-        }).finally(() => {
-          // Do what should be done next...
-        });
+        this.simWorker = null;
+        this.mode = "mDesign";
+        //this.delResDb(this.db.name);
       }
     },
-
+    delResDb: function (dbName) {
+      let tempdbName = new Dexie(dbName);
+      tempdbName.delete().then(() => {
+        simVue.db = null;
+        console.log("Database successfully deleted");
+      }).catch((err) => {
+        console.log(err);
+        console.error("Could not delete database");
+      }).finally(() => {
+        // Do what should be done next...
+      });
+    },
     displayExecutionOrder: function () {
       let allTheModels = this.getAllTheModels();
       this.showExecutionOrderMessage(allTheModels, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>");

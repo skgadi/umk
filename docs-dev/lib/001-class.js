@@ -28,6 +28,21 @@ class umk_model {
         this[prop] = JSON.parse2(JSON.stringify2(obj[prop]));
       }
     }
+    /* in case of output .... make only one input Outputs cannot have more than one input*/
+    if(this.isOut) {
+      this.TerminalsIn = {
+        min: 1,
+        max: 1,
+        value: 1,
+        editable: false
+      };
+      this.TerminalsOut = {
+        min: 0,
+        max: 0,
+        value: 0,
+        editable: false
+      }; 
+    }
   }
   //This is applied when the model (cell) is created
   Const() {}

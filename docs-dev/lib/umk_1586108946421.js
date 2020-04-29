@@ -7,6 +7,10 @@ class umk_1586108946421 extends umk_model {
       splStyle: ""
     };
   }
+  Evaluate() {
+    //console.log(this.Parameters.constant.Value);
+    this.outputs[0] = this.Parameters.constant.Value;
+  }
   Details() {
     return "$$y(t) = " + TeXTools.makeMatrix(this.Parameters.constant.Value) + "$$";
   }

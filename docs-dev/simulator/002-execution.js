@@ -12,6 +12,9 @@ const exec = {
   isCont: true, // Is it set to run continously?
   inPrg: false, // Is simulation in progress? 
   rSteps: 0, // Number of steps remaining to run
+  db: null,
+  results: [], // results are stored temporarily here
+  //results: null, // This handler is link to db to save the results
   setSimSettings: function (settings) {
     this.simSettings.hs = settings.h / 1000;
     this.simSettings.h = settings.h;
@@ -45,6 +48,7 @@ const exec = {
       this.setParams(tempModel);
       return tempModel;
     });
+    console.log(this.cells);
   },
   updCell: function (value, index) {
     eval("var tempModel = new " + value.id + "(value);");
@@ -52,18 +56,23 @@ const exec = {
     this.cells[index] = tempModel;
   },
   simulate: function () {
-    this.tempVar++;
-    /*try {
-      this.cells.forEach(function (model) {
-        for (let i = 0; i < model.TerminalsIn.value; i++) {
-          model.inputs[i] = this.cells[model.sIndexes[i].cell].outputs[model.sIndexes[i].index];
+    try {
+      for (let i = 0; i < this.cells.length; i++) {
+        let model = this.cells[i];
+        for (let j = 0; j < model.TerminalsIn.value; j++) {
+          //console.log(this.cells);
+          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         model.Evaluate();
-        if (model.saveOut) {
-          // do something to save the output
+        //console.log(this.t);
+        if (model.isOut) {
+          this.results.push({
+            t: this.t,
+            b: model.cid,
+            v: model.inputs[0]._data
+          });
         }
-      });
-
+      }
     } catch (e) {
       console.log(e);
       postMessage({
@@ -72,7 +81,7 @@ const exec = {
           log: e
         }
       });
-    }*/
+    } /**/
     this.t += this.simSettings.hs;
   },
   Init: function () {
@@ -82,6 +91,7 @@ const exec = {
     this.inPrg = true;
     this.t = 0;
     this.prevT = performance.now();
+    console.log("Init");
     this.setRemainingSteps();
   },
   End: function () {
@@ -90,13 +100,18 @@ const exec = {
     });
     this.inPrg = false;
     console.log(this.t);
+    postMessage({
+      ended: true
+    });
   },
   loop: function (N = null) {
     if (!N) {
       let maxStepsPerSecond = 1 / this.simSettings.hs;
-      N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps));
+      N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 1000));
+    } else {
+      N = Math.min(N, this.rSteps);
     }
-    console.log("N: " + N);
+    //console.log("N: " + N);
     for (let i = 0; i < N; i++) {
       if (this.simSettings.realtime) {
         while ((performance.now() - this.prevT) < this.simSettings.h) {}
@@ -105,6 +120,12 @@ const exec = {
       }
       this.simulate();
       this.rSteps--;
+    }
+    if (!!this.results.length) {
+      postMessage({
+        put: this.results
+      });
+      this.results = [];
     }
     if (this.rSteps <= 0) {
       this.End();
@@ -118,28 +139,32 @@ const exec = {
   },
   setRemainingSteps: function () {
     this.rSteps = Math.ceil((this.simSettings.T - this.t) / this.simSettings.hs) + 1;
-    console.log(this.simSettings);
-    console.log(this.rSteps);
+    //console.log(this.simSettings);
+    //console.log(this.rSteps);
   },
   start: function () {
     if (!this.inPrg) {
       this.Init();
     }
     this.isCont = true;
-    this.loop();
+    setTimeout(this.loop(), 1000);
   },
   stop: function () {
     this.rSteps = 0;
   },
   pause: function () {
     this.isCont = false;
+    postMessage({
+      paused: true
+    });
   },
   steps: function () {
     if (!this.inPrg) {
       this.Init();
     }
     this.isCont = false;
-    this.loop(this.simSettings.steps);
+    setTimeout(this.loop(this.simSettings.steps), 1000);
+    //this.loop(this.simSettings.steps);
   }
 };
 

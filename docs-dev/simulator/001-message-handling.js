@@ -26,6 +26,9 @@ onmessage = function (oEvent) {
         case "steps":
           exec.steps();
           break;
+        /*case "results":
+          exec.updResHandler(oEvent.data.results);
+          break;*/
         default:
           break;
       }

@@ -9,12 +9,7 @@ class umk_1586901838454 extends umk_model {
   }
   constructor(obj) {
     super(Object.assign({
-      TerminalsIn: {
-        min: 1,
-        max: 1,
-        value: 1,
-        editable: false
-      }
+      isOut: true //shows that this is a output
     }, obj));
   }
 }
