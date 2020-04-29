@@ -36,10 +36,9 @@ searchBox.forEach((elm) => {
 
 window.onbeforeunload = function () {
   simVue.informSim('stop');
-  if (!!simVue.dbWorker) {
-    simVue.dbWorker.postMessage({use:null});
-  }
-  //return "Sure?";
+  simVue.dbName = null;
+  simVue.createDB();
+  //return "Sure?"; //Enable this for confirming before exiting.
 };
 
 

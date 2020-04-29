@@ -17,7 +17,7 @@ const simVue = new Vue({
       realtime: false,
       steps: 1
     },
-    db: null,
+    dbName: null,
     results: [],
     dbWorker: null,
     simWorker: null,
@@ -180,13 +180,6 @@ const simVue = new Vue({
                 steps: 0
               };
               break;
-            case "db":
-              if (!!this.db.name) {
-                out = {
-                  db: this.db.name
-                };
-              }
-              break;
             default:
               break;
           }
@@ -207,6 +200,14 @@ const simVue = new Vue({
         console.log(e);
       }
     },
+    createDB: function (name = null) {
+      if (!!this.dbWorker) {
+        this.dbName = "res_" + name;
+        this.dbWorker.postMessage({
+          use: this.dbName
+        });
+      }
+    },
     initSim: function () {
       if (window.Worker) {
         this.exeOrder = this.getExecutionOrder().eo;
@@ -215,36 +216,14 @@ const simVue = new Vue({
             if (!this.simWorker) {
               this.simWorker = new Worker('/simulator.min.js?date=' + Date.now());
             }
-            //console.log(this.db);
-            /*if (!!this.db) {
-              //this.delResDb(this.db.name);
-            }
-            this.db = new Dexie('res_' + Date.now());
-            this.db.version(1).stores({
-              outs: '++id, t, b, v'
-            });*/
             this.simWorker.onmessage = function (event) {
               console.log(event.data);
               if (event.data.put) {
                 console.log(event.data.put);
                 simVue.results = simVue.results.concat(event.data.put);
-                var updaeDB = function () {
-                  simVue.dbWorker.postMessage({
-                    put: simVue.results.shift()
-                  });
-                  if (!!simVue.results.length) {
-                    setTimeout(updaeDB);
-                  }
-                }
-                //setTimeout(updaeDB);
                 simVue.dbWorker.postMessage({
                   results: event.data.put
                 });
-
-                /*console.log(event.data.put);
-                for (let i=0; i<event.data.put.length; i++) {
-                  simVue.db.outs.add(event.data.put[i]);
-                }*/
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {
@@ -254,9 +233,7 @@ const simVue = new Vue({
             if (!this.dbWorker) {
               this.dbWorker = new Worker('/db.min.js?date=' + Date.now());
             }
-            this.dbWorker.postMessage({
-              use: "res_" + Date.now()
-            });
+            this.createDB(Date.now());
 
             this.informSim("cells");
             this.informSim("simSettings");
@@ -293,20 +270,7 @@ const simVue = new Vue({
         this.simWorker.terminate();
         this.simWorker = null;
         this.mode = "mDesign";
-        //this.delResDb(this.db.name);
       }
-    },
-    delResDb: function (dbName) {
-      let tempdbName = new Dexie(dbName);
-      tempdbName.delete().then(() => {
-        simVue.db = null;
-        console.log("Database successfully deleted");
-      }).catch((err) => {
-        console.log(err);
-        console.error("Could not delete database");
-      }).finally(() => {
-        // Do what should be done next...
-      });
     },
     displayExecutionOrder: function () {
       let allTheModels = this.getAllTheModels();
