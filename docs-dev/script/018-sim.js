@@ -26,6 +26,9 @@ const simVue = new Vue({
     updScreen: null,
     dispCells: []
   },
+  mounted: function () {
+    this.dbName = "res_" + Date.now();
+  },
   watch: {
     simSettings: {
       deep: true,
@@ -118,6 +121,7 @@ const simVue = new Vue({
           switch (abt) {
             case 'cells':
               try {
+                this.dispCells = [];
                 let tempCells = this.exeOrder.map((ele) => {
                   //console.log(ele);
                   return this.pCell4Exp(ele);
@@ -233,7 +237,9 @@ const simVue = new Vue({
     },
     createDB: function (name = null) {
       if (!!this.dbWorker) {
-        this.dbName = "res_" + name;
+        if (!this.dbName) {
+          this.dbName = "res_" + name;
+        }
         this.dbWorker.postMessage({
           use: this.dbName
         });
@@ -261,11 +267,14 @@ const simVue = new Vue({
                 });
                 setTimeout(function () {
                   simVue.setAllDisplays();
-                }, 20);  
+                }, 20);
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {
                 simVue.mode = "mSimPause";
+              } else if (event.data.error) {
+                //console.log(event.data.error.cid);
+                mainSystem.graph.setCellWarning(mainSystem.graph.getModel().getCell(event.data.error.cid), "<b>" + GUIText[settings.lang][event.data.error.desc] + "</b>\n" + event.data.error.log.message);
               }
             }
             if (!this.dbWorker) {

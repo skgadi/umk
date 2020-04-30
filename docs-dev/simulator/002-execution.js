@@ -56,9 +56,10 @@ const exec = {
     this.cells[index] = tempModel;
   },
   simulate: function () {
+    let model;
     try {
       for (let i = 0; i < this.cells.length; i++) {
-        let model = this.cells[i];
+        model = this.cells[i];
         for (let j = 0; j < model.TerminalsIn.value; j++) {
           //console.log(this.cells);
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
@@ -77,10 +78,12 @@ const exec = {
       console.log(e);
       postMessage({
         error: {
-          desc: "Simulation",
-          log: e
+          desc: "simErr",
+          log: e,
+          cid: model.cid
         }
       });
+      this.End();
     } /**/
     this.t += this.simSettings.hs;
   },
