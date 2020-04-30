@@ -48,7 +48,7 @@ const exec = {
       this.setParams(tempModel);
       return tempModel;
     });
-    console.log(this.cells);
+    //console.log(this.cells);
   },
   updCell: function (value, index) {
     eval("var tempModel = new " + value.id + "(value);");
@@ -69,7 +69,7 @@ const exec = {
           this.results.push({
             t: this.t,
             b: model.cid,
-            v: model.inputs[0]._data
+            v: model.inputs[0].toString()
           });
         }
       }
@@ -91,7 +91,7 @@ const exec = {
     this.inPrg = true;
     this.t = 0;
     this.prevT = performance.now();
-    console.log("Init");
+    //console.log("Init");
     this.setRemainingSteps();
   },
   End: function () {
@@ -99,15 +99,19 @@ const exec = {
       model.End();
     });
     this.inPrg = false;
-    console.log(this.t);
+    //console.log(this.t);
     postMessage({
       ended: true
     });
   },
   loop: function (N = null) {
     if (!N) {
-      let maxStepsPerSecond = 1 / this.simSettings.hs;
-      N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 1000));
+      if (this.t === 0) {
+        N = 1;
+      } else {
+        let maxStepsPerSecond = 1 / this.simSettings.hs;
+        N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 1000));
+      }
     } else {
       N = Math.min(N, this.rSteps);
     }
@@ -133,7 +137,7 @@ const exec = {
       if (this.isCont) {
         setTimeout(() => {
           this.loop();
-        }, 0);
+        });
       }
     }
   },
@@ -147,7 +151,7 @@ const exec = {
       this.Init();
     }
     this.isCont = true;
-    setTimeout(this.loop(), 1000);
+    setTimeout(this.loop());
   },
   stop: function () {
     this.rSteps = 0;
@@ -163,7 +167,10 @@ const exec = {
       this.Init();
     }
     this.isCont = false;
-    setTimeout(this.loop(this.simSettings.steps), 1000);
+    postMessage({
+      paused: true
+    });
+    setTimeout(this.loop(this.simSettings.steps));
     //this.loop(this.simSettings.steps);
   }
 };

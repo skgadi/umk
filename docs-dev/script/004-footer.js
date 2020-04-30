@@ -5,7 +5,7 @@ const footerVue = new Vue({
         Hints: {},
         mode: "mDesign",
         totalTime: 5,
-        presTime: 0 
+        presTime: 0
     },
     /*watch: {
         Hints: {
@@ -35,18 +35,18 @@ const footerVue = new Vue({
         },
         progress: function () {
             let outStr = "";
-            if (this.totalTime<0) {
+            if (this.totalTime < 0) {
                 outStr = "<i class='fas fa-infinity fa-fw'></i>"
             } else {
                 outStr = this.totalTime;
             }
-            if (this.mode ==="mDesign") {
+            if (this.mode === "mDesign") {
                 return "- / " + outStr;
             } else {
-                if (this.totalTime<0) {
-                    return "- / " + outStr;
+                if (this.totalTime < 0) {
+                    return math.round(this.presTime * 1e6) / 1e6 + " / " + outStr;
                 } else {
-                    return this.presTime + " / " + outStr + " = " +  math.round(this.presTime/this.totalTime*100, 2) + "%";
+                    return math.round(this.presTime * 1e6) / 1e6 + " / " + outStr + " = " + math.round(this.presTime / this.totalTime * 100, 2) + "%";
                 }
             }
         }

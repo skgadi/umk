@@ -8,6 +8,9 @@ const TeXTools = {
     js: "Infinity",
     tex: "\\infty"
   }],
+  mathMatToTex: function (val, dec = 4) {
+    return "$$" + this.removeAvoidedItems(math.parse(val).toTex(dec)) + "$$";
+  },
   getTeXDisp: function (val, dec = 4) {
     return "$" + this.getTeXInline(val, dec) + "$";
   },

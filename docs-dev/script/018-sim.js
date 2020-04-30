@@ -17,11 +17,14 @@ const simVue = new Vue({
       realtime: false,
       steps: 1
     },
-    dbName: null,
     results: [],
+    dbName: null,
     dbWorker: null,
+    db: null,
     simWorker: null,
-    exeOrder: []
+    exeOrder: [],
+    updScreen: null,
+    dispCells: []
   },
   watch: {
     simSettings: {
@@ -71,7 +74,7 @@ const simVue = new Vue({
     updateSources: function (inCells) {
       for (let i = 0; i < inCells.length; i++) {
         let sModels = this.getSourcesWithIndexes(mainSystem.graph.getModel().cells[inCells[i].cid]);
-        let Sources = [];
+        //let Sources = [];
         let sIndexes = [];
         /*for (let j = 0; j < sModels.length; j++) {
           Sources.push(sModels[j].model.id);
@@ -101,6 +104,10 @@ const simVue = new Vue({
               (varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value)).toString();
           }
         }
+      }
+      //check if it ia display cell
+      if (cellVal.showInpOnHtml) {
+        this.dispCells.push(cellVal.cid);
       }
       return cellVal;
     },
@@ -166,6 +173,7 @@ const simVue = new Vue({
               this.endSim();
               break;
             case "pause":
+              //this.mode = "mSimPause";
               if (!!this.simWorker) {
                 out = {
                   pause: 0
@@ -200,11 +208,38 @@ const simVue = new Vue({
         console.log(e);
       }
     },
+    setAllDisplays: function () {
+      for (let i = 0; i < this.dispCells.length; i++) {
+        this.setDisplaysWithInput(this.dispCells[i]);
+      }
+      if (this.db) {
+        this.db.outs.orderBy("t").last().then((item) => {
+          footerVue.presTime = item.t;
+        });
+      }
+    },
+    setDisplaysWithInput: function (cid) {
+      if (this.db) {
+        this.db.outs.where("b").equals(cid).reverse().sortBy("t").then((items) => {
+          let latestValue = items[0];
+          mainSystem.graph.getModel().getCell(latestValue.b).value.Icon(TeXTools.mathMatToTex(latestValue.v));
+          //console.log(TeXTools.mathMatToTex(latestValue.v));
+          //console.log(mainSystem.graph.getModel().getCell(latestValue.b).value.Icon());
+          mainSystem.graph.refresh(mainSystem.graph.getModel().getCell(latestValue.b));
+        });
+      } else {
+        return false;
+      }
+    },
     createDB: function (name = null) {
       if (!!this.dbWorker) {
         this.dbName = "res_" + name;
         this.dbWorker.postMessage({
           use: this.dbName
+        });
+        this.db = new Dexie(this.dbName);
+        this.db.version(1).stores({
+          outs: '++, t, b'
         });
       }
     },
@@ -217,13 +252,16 @@ const simVue = new Vue({
               this.simWorker = new Worker('/simulator.min.js?date=' + Date.now());
             }
             this.simWorker.onmessage = function (event) {
-              console.log(event.data);
+              //console.log(event.data);
               if (event.data.put) {
-                console.log(event.data.put);
+                //console.log(event.data.put);
                 simVue.results = simVue.results.concat(event.data.put);
                 simVue.dbWorker.postMessage({
                   results: event.data.put
                 });
+                setTimeout(function () {
+                  simVue.setAllDisplays();
+                }, 20);  
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {
@@ -234,6 +272,10 @@ const simVue = new Vue({
               this.dbWorker = new Worker('/db.min.js?date=' + Date.now());
             }
             this.createDB(Date.now());
+
+            //set time =0
+            footerVue.presTime = "Starting ...";
+
 
             this.informSim("cells");
             this.informSim("simSettings");

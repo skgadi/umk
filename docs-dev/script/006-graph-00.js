@@ -737,10 +737,17 @@ mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sende
 
 mainSystem.outline.update = function (rv) {
   mainSystem.graph.grid.repaintGrid();
-  updateMathJax();
+  //updateMathJax();
   return mxOutline.prototype.update.apply(this, arguments);
 };
 
+
+//refresh cells along and also update latex
+mainSystem.graph.refresh = function  (cell) {
+  let out = mxGraph.prototype.refresh.apply(this, arguments);
+  updateMathJax();
+  return out;
+}
 
 /*
 mainSystem.outline.mouseMove = function (sender, me) {

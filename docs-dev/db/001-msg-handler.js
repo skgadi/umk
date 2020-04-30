@@ -14,7 +14,7 @@ onmessage = function (oEvent) {
           exec.putData(oEvent.data.put);
           break;
         case "results":
-          console.log(oEvent.data.results);
+          //console.log(oEvent.data.results);
           exec.addResults(oEvent.data.results);
           break;
       }

@@ -16,6 +16,9 @@ class umk_model {
       value: 0,
       editable: false
     };
+    this.isOut = false; //shows that this is a output
+    this.showInpOnHtml = false; //update screen while simulating 
+    this.Icon_Temp_Html = null; //This is used internal to the Icon function
     this.TerminalsOut = {
       min: 0,
       max: 0,

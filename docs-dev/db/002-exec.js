@@ -7,7 +7,7 @@ const exec = {
     }
     this.dbHandler = new Dexie(name);
     this.dbHandler.version(1).stores({
-      outs: '++k, t, b, v'
+      outs: '++, t, b'
     });
   },
   putData = function (data) {
@@ -17,14 +17,20 @@ const exec = {
     this.dbHandler.delete();
   },
   addResults = function (newRes) {
-    this.results = this.results.concat(newRes);
-    console.log(this.results[this.results.length - 1]);
-    setTimeout(loop);
+    //This code is may not work as expected
+    this.dbHandler.outs.bulkAdd(newRes);
+
+    /*
+        //Old code .... use this if error in seeing all the simulation results.
+        this.results = this.results.concat(newRes);
+        console.log(this.results[this.results.length - 1]);
+        setTimeout(loop);
+        */
   },
 }
 
 function loop(e) {
-  console.log(e);
+  //console.log(e);
   if (exec.results.length) {
     //console.log(exec.results[0]);
     let item = JSON.parse2(JSON.stringify2(exec.results.shift()));
@@ -32,12 +38,10 @@ function loop(e) {
     exec.dbHandler.outs.add(item).then(loop, function () {
       console.log("sdf");
     });
-    console.log("item ->");
-    console.log(item);
+    //console.log("item ->");
+    //console.log(item);
     //localforage.setItem(item.t + "_" + item.b, item, loop);
     //console.log(exec.results[0]); 
     //setTimeout(loop);
-  } else {
-    exec.dbHandler.outs.get(51).then(function(e){console.log(e)});
   }
 }

@@ -211,6 +211,7 @@ const editorVue = new Vue({
             }
             cell.value = this.modelValue;
             mainSystem.refresh();
+            //mainSystem.graph.refresh(cell);
         },
         saveModel: function (cell = null) {
             if (cell === null) {
