@@ -35,9 +35,10 @@ searchBox.forEach((elm) => {
 });
 
 window.onbeforeunload = function () {
-  simVue.informSim('stop');
+  simVue.informSim('stop'); // Stop the simulation before exiting
   simVue.dbName = null;
-  simVue.createDB();
+  simVue.createDB(); // deletes the exisiting database
+  popup.closeAll();//close all the popups
   //return "Sure?"; //Enable this for confirming before exiting.
 };
 

@@ -1,0 +1,4 @@
+(()=>{
+    urlInfo.getInText();
+    urlInfo.getInfo();
+})()

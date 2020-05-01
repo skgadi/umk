@@ -8,6 +8,7 @@ xcopy .\node_modules\@fortawesome\fontawesome-free\webfonts ..\docs-dev\dependen
 md ..\docs-dev\dependencies\fa\css
 copy .\node_modules\@fortawesome\fontawesome-free\css\all.min.css ..\docs-dev\dependencies\fa\css\all.min.css
 xcopy .\node_modules\dexie\dist ..\docs-dev\dependencies\dexie /y/s/q/i
+xcopy .\node_modules\apexcharts\dist ..\docs-dev\dependencies\apexcharts /y/s/q/i
 
 xcopy .\github\mxgraph\javascript\src ..\docs-dev\dependencies\mxgraph /y/s/q/i
 xcopy .\github\pako\dist ..\docs-dev\dependencies\pako /y/s/q/i

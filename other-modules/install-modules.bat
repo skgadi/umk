@@ -1,7 +1,1 @@
-npm install mathjs
-npm install js-polyfills
-npm install mathjax
-npm install noty
-npm install vue
-npm install @fortawesome/fontawesome-free
-npm install dexie
+npm install mathjs js-polyfills mathjax noty vue @fortawesome/fontawesome-free dexie apexcharts
