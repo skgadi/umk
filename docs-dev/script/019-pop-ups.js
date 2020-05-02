@@ -15,7 +15,7 @@ const popup = {
       let urlQueryString = packer.pack(JSON.stringify2(urlQuery));
       switch (type) {
         case 'chart':
-          this.openUrl(cell.id, "/chart.html?" + urlQueryString, "width=600,height=300");
+          this.openUrl(cell.id, "/chart.html?" + urlQueryString, "width=600,height=300,noreferrer,");//noopener
           break;
         default:
           break;
@@ -25,7 +25,7 @@ const popup = {
   openUrl: function (cid, url, spec) {
     console.log(cid);
     if (!this.rCells[cid] || this.rCells[cid].closed) {
-      this.rCells[cid] = window.open(url, undefined, spec);
+      this.rCells[cid] = window.open(url, "_blank", spec);
     } else {
       console.log(this.rCells[cid]);
       this.rCells[cid].location.assign(url);

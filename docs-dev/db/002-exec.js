@@ -28,10 +28,31 @@ const exec = {
   delDbase = function () {
     this.dbHandler.delete();
   },
+  maxCount: 101,
+  wUDelFin: false, // Wait until delete operation is finished
+  removeAboveLimit: function (max) {
+    if (!this.wUDelFin) {
+      if (max > 0) {
+        this.maxCount = max;
+      }
+      this.dbHandler.outs.count().then(function (val) {
+        console.log(val);
+        let noOfItemsToRemove = val - exec.maxCount;
+        console.log(noOfItemsToRemove);
+        if (noOfItemsToRemove > 0) {
+          exec.wUDelFin = true;
+          exec.dbHandler.outs.orderBy("t").limit(noOfItemsToRemove).delete().then((e) => {
+            exec.wUDelFin = false;
+            console.log(e);
+          });
+        }
+      });
+    }
+  },
   addResults = function (newRes) {
     //This code is may not work as expected
     this.dbHandler.outs.bulkAdd(newRes);
-
+    this.removeAboveLimit()
     /*
         //Old code .... use this if error in seeing all the simulation results.
         this.results = this.results.concat(newRes);
