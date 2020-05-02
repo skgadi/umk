@@ -113,7 +113,7 @@ const exec = {
         N = 1;
       } else {
         let maxStepsPerSecond = 1 / this.simSettings.hs;
-        N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 1000));
+        N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 100));
       }
     } else {
       N = Math.min(N, this.rSteps);

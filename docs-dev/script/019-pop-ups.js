@@ -11,6 +11,7 @@ const popup = {
         cid: cell.id
       }, cell.value);
       urlQuery.db = simVue.dbName;
+      urlQuery.lang = (type === 'chart') ? GUIText[settings.lang].chartLang : settings.lang;
       let urlQueryString = packer.pack(JSON.stringify2(urlQuery));
       switch (type) {
         case 'chart':
@@ -32,8 +33,8 @@ const popup = {
     }
   },
   closeAll: function () {
-    let keys = Object.keys (this.rCells);
-    for (let i=0; i<keys.length; i++) {
+    let keys = Object.keys(this.rCells);
+    for (let i = 0; i < keys.length; i++) {
       this.rCells[keys[i]].close();
     }
   }

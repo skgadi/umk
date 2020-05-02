@@ -1,13 +1,25 @@
 const exec = {
-  dbHandler = null,
-  results = [],
-  setDB = function (name) {
+  dbHandler: null,
+  results: [],
+  dbName: "",
+  setDB: function (name) {
+    this.dbName = name;
     if (!!this.dbHandler) {
-      this.dbHandler.delete();
+      this.dbHandler.close();
+      this.dbHandler.delete().then(() => {
+        exec.createDB();
+      });
+    } else {
+      this.createDB(name);
+    }
+  },
+  createDB = function (name) {
+    if (!name) {
+      name = this.dbName;
     }
     this.dbHandler = new Dexie(name);
     this.dbHandler.version(1).stores({
-      outs: '++, t, b'
+      outs: '++k, t, b' //future edits should be done at 3 places 1. script/018-sim, 2. db/002-exec.js, 3. chart/003-db
     });
   },
   putData = function (data) {

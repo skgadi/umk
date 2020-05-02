@@ -245,7 +245,7 @@ const simVue = new Vue({
         });
         this.db = new Dexie(this.dbName);
         this.db.version(1).stores({
-          outs: '++, t, b'
+          outs: '++k, t, b' //future edits should be done at 3 places 1. script/018-sim, 2. db/002-exec.js, 3. chart/003-db
         });
       }
     },
