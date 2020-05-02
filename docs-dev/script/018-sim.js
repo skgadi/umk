@@ -216,13 +216,23 @@ const simVue = new Vue({
       for (let i = 0; i < this.dispCells.length; i++) {
         this.setDisplaysWithInput(this.dispCells[i]);
       }
+      footerVue.presTime = this.results[this.results.length - 1].t;
+      /*
       if (this.db) {
         this.db.outs.orderBy("t").last().then((item) => {
           footerVue.presTime = item.t;
         });
-      }
+      }*/
     },
     setDisplaysWithInput: function (cid) {
+      for (let i = 0; i < this.dispCells.length; i++) {
+        for (let j = (this.results.length - 1); j > -1; j--) {
+          if (this.results[j].b === this.dispCells[i]) {
+            mainSystem.graph.getModel().getCell(this.results[j].b).value.Icon(TeXTools.mathMatToTex(this.results[j].v));
+          }
+        }
+      }
+      /*
       if (this.db) {
         this.db.outs.where("b").equals(cid).reverse().sortBy("t").then((items) => {
           let latestValue = items[0];
@@ -233,7 +243,7 @@ const simVue = new Vue({
         });
       } else {
         return false;
-      }
+      }*/
     },
     createDB: function (name = null) {
       if (!!this.dbWorker) {
@@ -262,9 +272,10 @@ const simVue = new Vue({
               if (event.data.put) {
                 //console.log(event.data.put);
                 simVue.results = simVue.results.concat(event.data.put);
-                simVue.dbWorker.postMessage({
+                simVue.results = simVue.results.slice(-100);
+                /*simVue.dbWorker.postMessage({
                   results: event.data.put
-                });
+                });*/
                 setTimeout(function () {
                   simVue.setAllDisplays();
                 }, 20);
