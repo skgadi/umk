@@ -1,7 +1,10 @@
 onmessage = function (event) {
-  console.log(event.data);
+  //console.log(event.data);
   if (event.data.d) {
     cItem.updData(event.data.d);
+  }
+  if (!!event.data.r) {
+    cItem.resetChart();  
   }
 };
 

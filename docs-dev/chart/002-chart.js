@@ -77,57 +77,87 @@ const cItem = {
     }
   },
   updData: function (vals) {
-    console.log(vals);
+    //console.log(vals);
     if (vals.length > 0) {
       let series = [];
       for (let i = 0; i < vals.length; i++) {
         let mVal = vals[i].v;
         let eleNum = 0;
-        mVal.forEach(function (rowItem, j) {
-          console.log(rowItem);
+        mVal[0].forEach(function (rowItem, j) {
           rowItem.forEach(function (rNcItem, k) {
             if (!i) {
-              if (cItem.showIm) {
+              series.push({
+                name: (cItem.showIm ? "Re" : "") + "[" + String(j + 1) + ", " + String(k + 1) + "]",
+                data: []
+              });
+            }
+            series[eleNum++].data.push([vals[i].t, rNcItem]);
+          });
+        });
+        if (cItem.showIm) {
+          mVal[1].forEach(function (rowItem, j) {
+            rowItem.forEach(function (rNcItem, k) {
+              if (!i) {
                 series.push({
-                  name: "Re([" + String(j + 1) + " " + String(k + 1) + "])",
+                  name: "Im[" + String(j + 1) + ", " + String(k + 1) + "]",
                   data: []
                 });
+              }
+              series[eleNum++].data.push([vals[i].t, rNcItem]);
+            });
+          });
+        }
+        /*
+        mVal.forEach(function (rowItem, j) {
+          console.log(typeof rowItem[0]);
+          if (typeof rowItem[0] === "number") {
+            console.log("entereted");
+            rowItem = [rowItem];
+          }
+          console.log(rowItem);
+          rowItem[0].forEach(function (rNcItem, k) {
+            if (!i) {
+                series.push({
+                  name: (cItem.showIm?"Re":"")+"([" + String(j + 1) + " " + String(k + 1) + "])",
+                  data: []
+                });
+            }
+            series[eleNum++].data.push([vals[i].t, rNcItem]);
+          });
+          if (cItem.showIm) {
+            rowItem[0].forEach(function (rNcItem, k) {
+              if (!i) {
                 series.push({
                   name: "Im([" + String(j + 1) + " " + String(k + 1) + "])",
                   data: []
                 });
-              } else {
-                series.push({
-                  name: "[" + String(j + 1) + " " + String(k + 1) + "]",
-                  data: []
-                });
+
               }
-            }
-            if (cItem.showIm) {
-              //console.log(rNcItem);
-              series[eleNum++].data.push([vals[i].t, rNcItem[0]]);
-              series[eleNum++].data.push([vals[i].t, rNcItem[1]]);
-            } else {
-              series[eleNum++].data.push([vals[i].t, rNcItem[0]]);
-            }
-          });
+              series[eleNum++].data.push([vals[i].t, rNcItem]);
+            });
+          }
         });
+        */
       }
       //console.log(series);
       if (this.isFirst) {
-        cItem.handle.updateSeries(series);
+        this.handle.updateSeries(series);
         this.isFirst = false;
       } else {
         for (let i = 0; i < series.length; i++) {
           delete series[i].name;
         }
-        cItem.handle.appendData(series);
+        this.handle.appendData(series);
       }
-      console.log(series);
+      //console.log(series);
       //console.log(vals);
     }
 
 
+  },
+  resetChart: function() {
+    this.isFirst = true;
+    this.handle.updateSeries([]);
   },
   prepareChart: function () {
     this.handle = new ApexCharts(document.querySelector("#chart"), this.options);

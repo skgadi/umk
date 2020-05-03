@@ -171,8 +171,16 @@ let Graph = function (container) {
     sGraph: this,
     move: function (direction = "up", step = 10) {
       let graph = this.sGraph;
-      //step = step*graph.view.scale;
-      let value = graph.view.getTranslate();
+      step = step / graph.view.scale;
+      let value;
+      let sCells = graph.getSelectionCells();
+      if (!!sCells.length && direction !== "0") {
+        value = {};
+        value.x = 0;
+        value.y = 0;
+      } else {
+        value = graph.view.getTranslate();
+      }
       switch (direction) {
         case "up":
           value.y += step;
@@ -191,7 +199,11 @@ let Graph = function (container) {
           value.y = 0;
           break;
       }
-      graph.view.setTranslate(value.x, value.y);
+      if (!!sCells.length) {
+        graph.moveCells(sCells, -value.x, -value.y);
+      } else {
+        graph.view.setTranslate(value.x, value.y);
+      }
       graph.view.refresh();
     }
   };
@@ -388,35 +400,41 @@ let Graph = function (container) {
       }
     }
   };
+  this.hideGraphText = false;
   //Handling labels
   this.getLabel = function (cell) {
     if (!!cell.value) {
       if (!!cell.style && cell.style.search("umk_model") >= 0) {
-        try {
-          if ((typeof cell.value === "string") ||
-            ((typeof cell.value === "Object") && (cell.value.constructor.name.search(/umk_\d{13}/g) >= 0))) {
-            if (typeof cell.value !== "Object") {
-              cell.value = JSON.parse2(cell.value);
+        if (this.hideGraphText) {
+          //console.log("hi");
+          return "";
+        } else {
+          try {
+            if ((typeof cell.value === "string") ||
+              ((typeof cell.value === "Object") && (cell.value.constructor.name.search(/umk_\d{13}/g) >= 0))) {
+              if (typeof cell.value !== "Object") {
+                cell.value = JSON.parse2(cell.value);
+              }
+              eval("var tempModel = new " + cell.value.id + "(cell.value);");
+              cell.value = tempModel;
             }
-            eval("var tempModel = new " + cell.value.id + "(cell.value);");
-            cell.value = tempModel;
+            /*//Set input and output terminals
+            setTermianls(this, cell, "umk_input");
+            setTermianls(this, cell, "umk_output");*/
+            //console.log(cell.value.Icon());
+            this.setCaption(cell, cell.value.Name);
+            if (!!cell.style && cell.style.search("umk_display") >= 0) {
+              return cell.value.show || "$[\\cdot]$";
+            }
+            return (
+              "<div class='rotate-" + cell.value.rotateHTML + "'>" +
+              cell.value.Icon().html +
+              "</div>"
+            );
+          } catch (e) {
+            console.log(e);
+            return "ERROR";
           }
-          /*//Set input and output terminals
-          setTermianls(this, cell, "umk_input");
-          setTermianls(this, cell, "umk_output");*/
-          //console.log(cell.value.Icon());
-          this.setCaption(cell, cell.value.Name);
-          if (!!cell.style && cell.style.search("umk_display") >= 0) {
-            return cell.value.show || "$[\\cdot]$";
-          }
-          return (
-            "<div class='rotate-" + cell.value.rotateHTML + "'>" +
-            cell.value.Icon().html +
-            "</div>"
-          );
-        } catch (e) {
-          console.log(e);
-          return "ERROR";
         }
       } else {
         if (!!cell.style && cell.style.search("umk_EO") >= 0 && !this.showExeOrder) {
@@ -743,7 +761,7 @@ mainSystem.outline.update = function (rv) {
 
 
 //refresh cells along and also update latex
-mainSystem.graph.refresh = function  (cell) {
+mainSystem.graph.refresh = function (cell) {
   let out = mxGraph.prototype.refresh.apply(this, arguments);
   updateMathJax();
   return out;

@@ -20,16 +20,10 @@ const simVue = new Vue({
       mHis: 1000
     },
     results: [],
-    dbName: null,
-    dbWorker: null,
-    db: null,
     simWorker: null,
     exeOrder: [],
     updScreen: null,
     dispCells: []
-  },
-  mounted: function () {
-    this.dbName = "res_" + Date.now();
   },
   watch: {
     simSettings: {
@@ -280,20 +274,6 @@ const simVue = new Vue({
         mainSystem.graph.refresh(cell);
       }
     },
-    createDB: function (name = null) {
-      if (!!this.dbWorker) {
-        if (!this.dbName) {
-          this.dbName = "res_" + name;
-        }
-        this.dbWorker.postMessage({
-          use: this.dbName
-        });
-        this.db = new Dexie(this.dbName);
-        this.db.version(1).stores({
-          outs: '++k, t, b' //future edits should be done at 3 places 1. script/018-sim, 2. db/002-exec.js, 3. chart/003-db
-        });
-      }
-    },
     initSim: function () {
       if (window.Worker) {
         this.exeOrder = this.getExecutionOrder().eo;
@@ -322,6 +302,7 @@ const simVue = new Vue({
               }
             }
             this.results = [];
+            popup.resetAll();
 
             //set time =0
             footerVue.presTime = 0;
@@ -329,7 +310,6 @@ const simVue = new Vue({
 
             this.informSim("cells");
             this.informSim("simSettings");
-            this.informSim("db");
           } else {
             new Noty({
               text: GUIText[settings.lang].k173,

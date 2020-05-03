@@ -589,20 +589,22 @@ input[type='checkbox'] {
 }
 
 .checkboxItem {
-  margin: 0 0.5em;
+  margin: 0 0.1em;
   display: grid;
   grid-template-columns: 2em auto;
+  align-items: center;
 }
 
 .checkboxItem>i {
   font-size: 2em;
   height: 1em;
   line-height: 1em;
+  align-items: center;
 }
 
 .checkboxItem>span {
-  height: 2em;
-  line-height: 2em;
+  /*height: 2em;*/
+  line-height: 1em;
 }
 
 .checkboxItem>input[type='checkbox'] {

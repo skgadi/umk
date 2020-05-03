@@ -15,9 +15,7 @@ const exec = {
   isCont: true, // Is it set to run continously?
   inPrg: false, // Is simulation in progress? 
   rSteps: 0, // Number of steps remaining to run
-  db: null,
   results: [], // results are stored temporarily here
-  //results: null, // This handler is link to db to save the results
   setSimSettings: function (settings) {
     this.simSettings.hs = settings.h / 1000;
     this.simSettings.h = settings.h;
@@ -209,36 +207,3 @@ const exec = {
     //this.loop(this.simSettings.steps);
   }
 };
-
-
-
-
-
-
-
-
-/*
-prepareVariableLinks: function () {
-  //sets some array if nothing exists for inputs and outputs
-  this.cells.forEach(function (model) {
-    model.inputs = [];
-    model.outputs = new Array(model.TerminalsOut.value);
-    //displayOut.push(model.outputs);
-  });
-  //prepare inputs
-  for (let i = 0; i < this.cells.length; i++) {
-    for (let j = 0; j < this.cells[i].sIndexes.length; j++) {
-      let sItem = this.cells[i].sIndexes[j];
-      this.cells[i].inputs.push(this.cells[sItem.cell].outputs[sItem.index]);
-    }
-  }
-  //test
-  this.cells.forEach(function (model) {
-    for (let i = 0; i < model.outputs.length; i++) {
-      model.outputs[i] =  math.evaluate("[1+i,2;3+i,4]");
-    }
-  });
-
-
-},
-*/

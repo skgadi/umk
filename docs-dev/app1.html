@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=2" />
-  <link rel="stylesheet" href="css/style.min.css?bv=2" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=3" />
+  <link rel="stylesheet" href="css/style.min.css?bv=3" />
 
 
 </head>
@@ -239,9 +239,11 @@
         <li class="blocked" v-if="!disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
         <li class="dropdown" @click="informSim('stop')" v-if="disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
         <li class="blocked" v-if="!disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
-        <li class="dropdown" @click="informSim('pause')" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
+        <li class="dropdown" @click="informSim('pause')" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a>
+        </li>
         <li class="blocked" v-if="!disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
-        <li class="dropdown" @click="informSim('steps')" v-if="disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
+        <li class="dropdown" @click="informSim('steps')" v-if="disp.forward"><a><i
+              class="fas fa-fw fa-step-forward"></i></a></li>
         <li class="blocked" v-if="!disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
         <li class="dropdown">
           <a class="dropbtn"><i class="fas fa-fw fa-cogs"></i></a>
@@ -508,6 +510,10 @@
             <i class="far" :class="rpSettings.showExeOrder?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showExeOrder"></span>
           </div>
+          <div class="checkboxItem pointer" @click="rpSettings.hideGraphText = !rpSettings.hideGraphText">
+            <i class="far" :class="rpSettings.hideGraphText?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].hideGraphText"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -538,12 +544,12 @@
   <script type="text/javascript" src="dependencies/mxgraph/js/mxClient.js"></script>
   <script type="text/javascript" src="dependencies/augmented-json-serialization-functions.js"></script>
   <script type="text/javascript" src="dependencies/pako/pako.min.js"></script>
-  <script type="text/javascript" src="dependencies/dexie/dexie.min.js"></script>
+  <!--script type="text/javascript" src="dependencies/dexie/dexie.min.js"></script-->
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=2"></script>
-  <script src="script.min.js?bv=2"></script>
+  <script src="lib.min.js?bv=3"></script>
+  <script src="script.min.js?bv=3"></script>
 </body>
 
 </html>

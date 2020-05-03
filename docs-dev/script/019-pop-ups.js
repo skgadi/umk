@@ -11,7 +11,6 @@ const popup = {
       urlQuery.v = Object.assign({
         cid: cell.id
       }, cell.value);
-      urlQuery.db = simVue.dbName;
       urlQuery.lang = (type === 'chart') ? GUIText[settings.lang].chartLang : settings.lang;
       let urlQueryString = packer.pack(JSON.stringify2(urlQuery));
       switch (type) {
@@ -55,6 +54,16 @@ const popup = {
       this.rCells[cid].postMessage({
         d: simVue.results.map(popup.prepareData(cid))
       });
+    }
+  },
+  resetAll: function () {
+    let keys = Object.keys(this.rCells);
+    for (let i = 0; i < keys.length; i++) {
+      if (this.rCells[keys[i]] && !this.rCells[keys[i]].closed) {
+        this.rCells[keys[i]].postMessage({
+          r: true
+        });
+      }
     }
   }
 };
