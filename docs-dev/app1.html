@@ -250,6 +250,10 @@
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.T">
             <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
+            <p class="compress" v-html="GUIText[settings.lang].sOEvery"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.sOEvery">
+            <p class="compress" v-html="GUIText[settings.lang].mHis"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.mHis">
             <p class="compress" v-html="GUIText[settings.lang].nSteps"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.steps">
             <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">

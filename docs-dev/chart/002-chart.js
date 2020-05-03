@@ -51,13 +51,19 @@ const cItem = {
           /*console.log(a);
           console.log(b);
           console.log(c);*/
-          return math.parse(a).toString(4);
+          try {
+            return math.parse(a).toString(4);
+          } catch (e) {
+            console.log(e);
+            return "Waiting ..."
+          }
         }
       }
     }
   },
   showIm: true,
   handle: null,
+  isFirst: true,
   setLocale: function (lang) {
     if (!this.options.chart.locales) {
       this.options.chart.locales = [];
@@ -70,7 +76,55 @@ const cItem = {
       this.handle.updateOptions(this.options);
     }
   },
-  getData: function () {
+  updData: function (vals) {
+    //console.log(vals);
+    if (vals.length > 0) {
+      let series = [];
+      for (let i = 0; i < vals.length; i++) {
+        let mVal = vals[i].v;
+        let eleNum = 0;
+        mVal.forEach(function (rowItem, j) {
+          rowItem.forEach(function (rNcItem, k) {
+            if (!i) {
+              if (this.showIm) {
+                series.push({
+                  name: "Re([" + (j + 1) + ", " + (k + 1) + "])",
+                  data: []
+                });
+                series.push({
+                  name: "Im([" + (j + 1) + ", " + (k + 1) + "])",
+                  data: []
+                });
+              } else {
+                series.push({
+                  name: "[" + (j + 1) + ", " + (k + 1) + "]",
+                  data: []
+                });
+              }
+            }
+            if (this.showIm) {
+              series[eleNum++].data.push([vals[i].t, rNcItem[0]]);
+              series[eleNum++].data.push([vals[i].t, rNcItem[1]]);
+            } else {
+              series[eleNum++].data.push([vals[i].t, rNcItem[0]]);
+            }
+          });
+        });
+      }
+      //console.log(series);
+      if (this.isFirst) {
+        cItem.handle.updateSeries(series);
+        this.isFirst = false;
+      } else {
+        for (let i = 0; i < series.length; i++) {
+          delete series[i].name;
+        }
+        cItem.handle.appendData(series);
+      }
+      console.log(series);
+      //console.log(vals);
+    }
+
 
   },
   prepareChart: function () {

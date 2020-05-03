@@ -15,7 +15,9 @@ const simVue = new Vue({
       h: 100, //Step size
       T: 5, // Total simulation time
       realtime: false,
-      steps: 1
+      steps: 1,
+      sOEvery: 2,
+      mHis: 1000
     },
     results: [],
     dbName: null,
@@ -33,6 +35,39 @@ const simVue = new Vue({
     simSettings: {
       deep: true,
       handler: function () {
+        if (!this.simSettings.T) {
+          this.simSettings.T = 5;
+        }
+        if (this.simSettings.h < 0) {
+          this.simSettings.h = -this.simSettings.h;
+        } else if (!this.simSettings.h) {
+          this.simSettings.h = 100;
+        }
+        if (this.simSettings.steps < 0) {
+          this.simSettings.steps = -this.simSettings.steps;
+        } else if (!this.simSettings.steps) {
+          this.simSettings.steps = 1;
+        }
+        if (this.simSettings.steps === Math.round(this.simSettings.steps)) {
+          this.simSettings.steps = Math.round(this.simSettings.steps);
+        }
+        if (this.simSettings.sOEvery < 0) {
+          this.simSettings.sOEvery = -this.simSettings.sOEvery;
+        } else if (!this.simSettings.sOEvery) {
+          this.simSettings.sOEvery = 2;
+        }
+        if (this.simSettings.sOEvery === Math.round(this.simSettings.sOEvery)) {
+          this.simSettings.sOEvery = Math.round(this.simSettings.sOEvery);
+        }
+        if (this.simSettings.mHis < 0) {
+          this.simSettings.mHis = -this.simSettings.mHis;
+        } else if (!this.simSettings.mHis) {
+          this.simSettings.mHis = 100;
+        }
+        if (this.simSettings.mHis === Math.round(this.simSettings.mHis)) {
+          this.simSettings.mHis = Math.round(this.simSettings.mHis);
+        }
+
         footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
         if (!!this.simWorker) {
           this.informSim("simSettings");
@@ -74,6 +109,23 @@ const simVue = new Vue({
   },
 
   methods: {
+    resStr2Math: function () {
+      for (let i = 0; i < this.results.length; i++) {
+        let keys = Object.keys(this.results[i].o);
+        for (let j = 0; j < keys.length; j++) {
+          if (this.dispCells)
+            try {
+              this.results[i].o[keys[j]] = math.evaluate(this.results[i].o[keys[j]]);
+            } catch (e) {
+              console.log(keys);
+              console.log(i);
+              console.log(j);
+              console.log(this.results[i].o[keys[j]]);
+              console.log(e);
+            }
+        }
+      }
+    },
     updateSources: function (inCells) {
       for (let i = 0; i < inCells.length; i++) {
         let sModels = this.getSourcesWithIndexes(mainSystem.graph.getModel().cells[inCells[i].cid]);
@@ -212,38 +264,21 @@ const simVue = new Vue({
         console.log(e);
       }
     },
-    setAllDisplays: function () {
-      for (let i = 0; i < this.dispCells.length; i++) {
-        this.setDisplaysWithInput(this.dispCells[i]);
+    propOuts: function () { // propagate the outputs
+      this.setAllDisplays();
+      //this.resStr2Math();
+      for (let i = 0; i < Object.keys(popup.rCells).length; i++) {
+        setTimeout(popup.sendData(Object.keys(popup.rCells)[i]));
       }
-      footerVue.presTime = this.results[this.results.length - 1].t;
-      /*
-      if (this.db) {
-        this.db.outs.orderBy("t").last().then((item) => {
-          footerVue.presTime = item.t;
-        });
-      }*/
     },
-    setDisplaysWithInput: function (cid) {
+    setAllDisplays: function () {
+      let lastItem = this.results[this.results.length - 1];
+      footerVue.presTime = lastItem.t;
       for (let i = 0; i < this.dispCells.length; i++) {
-        for (let j = (this.results.length - 1); j > -1; j--) {
-          if (this.results[j].b === this.dispCells[i]) {
-            mainSystem.graph.getModel().getCell(this.results[j].b).value.Icon(TeXTools.mathMatToTex(this.results[j].v));
-          }
-        }
+        let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
+        cell.value.Icon(TeXTools.mathMatToTex(lastItem.o[this.dispCells[i]]));
+        mainSystem.graph.refresh(cell);
       }
-      /*
-      if (this.db) {
-        this.db.outs.where("b").equals(cid).reverse().sortBy("t").then((items) => {
-          let latestValue = items[0];
-          mainSystem.graph.getModel().getCell(latestValue.b).value.Icon(TeXTools.mathMatToTex(latestValue.v));
-          //console.log(TeXTools.mathMatToTex(latestValue.v));
-          //console.log(mainSystem.graph.getModel().getCell(latestValue.b).value.Icon());
-          mainSystem.graph.refresh(mainSystem.graph.getModel().getCell(latestValue.b));
-        });
-      } else {
-        return false;
-      }*/
     },
     createDB: function (name = null) {
       if (!!this.dbWorker) {
@@ -271,14 +306,12 @@ const simVue = new Vue({
               //console.log(event.data);
               if (event.data.put) {
                 //console.log(event.data.put);
-                simVue.results = simVue.results.concat(event.data.put);
-                simVue.results = simVue.results.slice(-100);
-                /*simVue.dbWorker.postMessage({
-                  results: event.data.put
-                });*/
+                //simVue.results = simVue.results.concat(event.data.put);
+                simVue.results = event.data.put;
+                simVue.results = simVue.results.slice(-simVue.simSettings.mHis);
                 setTimeout(function () {
-                  simVue.setAllDisplays();
-                }, 20);
+                  simVue.propOuts();
+                });
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {
@@ -288,13 +321,10 @@ const simVue = new Vue({
                 mainSystem.graph.setCellWarning(mainSystem.graph.getModel().getCell(event.data.error.cid), "<b>" + GUIText[settings.lang][event.data.error.desc] + "</b>\n" + event.data.error.log.message);
               }
             }
-            if (!this.dbWorker) {
-              this.dbWorker = new Worker('/db.min.js?date=' + Date.now());
-            }
-            this.createDB(Date.now());
+            this.results = [];
 
             //set time =0
-            footerVue.presTime = "Starting ...";
+            footerVue.presTime = 0;
 
 
             this.informSim("cells");

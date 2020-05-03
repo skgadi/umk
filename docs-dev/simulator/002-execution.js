@@ -5,9 +5,12 @@ const exec = {
     h: 5000,
     T: 5,
     realtime: false,
-    steps: 1
+    steps: 1,
+    sOEvery: 2,
+    pckSize: 200
   },
   t: 0, //Current simulation time
+  s4Out: 0, //Steps for out
   prevT: 0, // time in milliseconds
   isCont: true, // Is it set to run continously?
   inPrg: false, // Is simulation in progress? 
@@ -21,6 +24,9 @@ const exec = {
     this.simSettings.T = (settings.T < 0) ? Infinity : settings.T;
     this.simSettings.realtime = settings.realtime;
     this.simSettings.steps = settings.steps;
+    this.simSettings.sOEvery = settings.sOEvery - 1;
+    this.pckSize = settings.mHis * settings.sOEvery;
+    this.s4Out = this.simSettings.sOEvery;
     if (this.inPrg) {
       this.setRemainingSteps();
     }
@@ -57,7 +63,13 @@ const exec = {
   },
   simulate: function () {
     let model;
+    let store = false;
+    let tempOut = {};
     try {
+      if (this.s4Out++ >= this.simSettings.sOEvery) {
+        store = true;
+        this.s4Out = 0;
+      }
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
         for (let j = 0; j < model.TerminalsIn.value; j++) {
@@ -66,13 +78,23 @@ const exec = {
         }
         model.Evaluate();
         //console.log(this.t);
-        if (model.isOut) {
+        if (model.isOut && store) {
+          tempOut[model.cid] = model.inputs[0].toString();
+        }
+        /*
+        if (model.isOut && store) {
           this.results.push({
             t: this.t,
             b: model.cid,
             v: model.inputs[0].toString()
           });
-        }
+        }*/
+      }
+      if (model.isOut && store) {
+        this.results.push({
+          t: this.t,
+          o: tempOut
+        });
       }
     } catch (e) {
       console.log(e);
@@ -108,23 +130,32 @@ const exec = {
     });
   },
   loop: function (N = null) {
+    let w = 1; //wait time in milli seconds;
     if (!N) {
       if (this.t === 0) {
         N = 1;
+        w = 1;
       } else {
-        let maxStepsPerSecond = 1 / this.simSettings.hs;
-        N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps, 1000));
+        if (this.simSettings.realtime) {
+          let maxStepsPerSecond = 1 / this.simSettings.hs;
+          N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps));
+          w = this.simSettings.h;
+        } else {
+          N = Math.min(this.simSettings.pckSize, this.rSteps);
+          w = 1000 / N;
+        }
       }
     } else {
       N = Math.min(N, this.rSteps);
+      w = this.simSettings.h;
     }
-    //console.log("N: " + N);
+    console.log("N: " + N);
     for (let i = 0; i < N; i++) {
-      if (this.simSettings.realtime) {
-        while ((performance.now() - this.prevT) < this.simSettings.h) {}
-        this.prevT = performance.now();
-        //console.log(this.prevT);
-      }
+      //if (this.simSettings.realtime) {
+      while ((performance.now() - this.prevT) < w) {}
+      this.prevT = performance.now();
+      //console.log(this.prevT);
+      //}
       this.simulate();
       this.rSteps--;
     }
