@@ -7,7 +7,7 @@ const exec = {
     realtime: false,
     steps: 1,
     sOEvery: 2,
-    pckSize: 200
+    pckSize: 2000
   },
   t: 0, //Current simulation time
   s4Out: 0, //Steps for out
@@ -26,6 +26,7 @@ const exec = {
     this.simSettings.steps = settings.steps;
     this.simSettings.sOEvery = settings.sOEvery - 1;
     this.pckSize = settings.mHis * settings.sOEvery;
+    //console.log(this.pckSize);
     this.s4Out = this.simSettings.sOEvery;
     if (this.inPrg) {
       this.setRemainingSteps();
