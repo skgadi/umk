@@ -26,6 +26,9 @@ const TeXTools = {
     js: "Infinity",
     tex: "\\infty"
   }],
+  strToTex: function (val, dec=4) {
+    return this.removeAvoidedItems(math.parse(val).toTex(dec));
+  },
   mathMatToTex: function (val, dec = 4) {
     return "$$" + this.removeAvoidedItems(math.parse(val).toTex(dec)) + "$$";
   },

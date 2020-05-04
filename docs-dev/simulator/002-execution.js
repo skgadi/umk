@@ -75,7 +75,7 @@ const exec = {
           //console.log(this.cells);
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
-        model.Evaluate();
+        model.Evaluate(this.t);
         //console.log(this.t);
         if (model.isOut && store) {
           tempOut[model.cid] = model.inputs[0].toString();

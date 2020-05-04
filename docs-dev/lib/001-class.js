@@ -57,8 +57,8 @@ class umk_model {
   End() {}
   //Not yet implemented
   RunTimeExec() {}
-  //This is execuated during Simulation
-  Evaluate() {}
+  //This is execuated during Simulation, t is simulation time
+  Evaluate(t) {}
   //Shows this information as a funcionality when the block is selected.
   Details() {
     return "";
