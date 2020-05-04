@@ -9,7 +9,7 @@ const simVue = new Vue({
       "stop": false,
       "pause": false,
       //"noOfSteps": true,
-      "forward": true
+      "forward": true,
     },
     simSettings: {
       h: 100, //Step size
@@ -23,7 +23,8 @@ const simVue = new Vue({
     simWorker: null,
     exeOrder: [],
     updScreen: null,
-    dispCells: []
+    dispCells: [],
+    dispExecOrdInProg: false
   },
   watch: {
     simSettings: {
@@ -345,6 +346,18 @@ const simVue = new Vue({
       }
     },
     displayExecutionOrder: function () {
+      console.log(this.dispExecOrdInProg);
+      if (!this.dispExecOrdInProg) {
+        this.dispExecOrdInProg = true;
+        setTimeout(() => {
+          simVue.dispExecOrdNow();
+        }, 200);
+      } else {
+        console.log("avoided unnecessary EO disp");
+      }
+    },
+    dispExecOrdNow: function () {
+      this.dispExecOrdInProg = false;
       let allTheModels = this.getAllTheModels();
       this.showExecutionOrderMessage(allTheModels, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>");
       let executionOrderAndErros = this.getExecutionOrder();

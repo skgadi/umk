@@ -712,11 +712,30 @@ let System = function (gContainer, oContainer) {
   };
   this.graph.getModel().addListener(mxEvent.UNDO, umListener);
   this.graph.getView().addListener(mxEvent.UNDO, umListener);
+  this.isRefreshing = false;
 
+  this.refreshNow = function (that) {
+    try {
+      that.graph.refresh();
+      if (that.outline.visibility) {
+        that.graph.container.style.overflow = 'hidden';
+      } else {
+        that.graph.container.style.overflow = 'auto';
+      }
+      that.outline.setVisiblity();
+      that.outline.refresh();
+    } catch (e) {
+      console.log(e);
+    }
+    that.isRefreshing = false;
+  }
   this.refresh = function () {
-    this.graph.refresh();
-    this.outline.setVisiblity();
-    this.outline.refresh();
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      setTimeout(this.refreshNow.bind(null, this), 300);
+    } else {
+      console.log("no need to call many times");
+    }
     //this.graph.grid.repaintGrid();
   }
   this.navigate = function (dir = "up") {
@@ -755,7 +774,7 @@ mainSystem.graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sende
 
 mainSystem.outline.update = function (rv) {
   mainSystem.graph.grid.repaintGrid();
-  //updateMathJax();
+  //mathEqn.update();
   return mxOutline.prototype.update.apply(this, arguments);
 };
 
@@ -763,7 +782,7 @@ mainSystem.outline.update = function (rv) {
 //refresh cells along and also update latex
 mainSystem.graph.refresh = function (cell) {
   let out = mxGraph.prototype.refresh.apply(this, arguments);
-  updateMathJax();
+  mathEqn.update();
   return out;
 }
 

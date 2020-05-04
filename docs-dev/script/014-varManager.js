@@ -17,7 +17,7 @@ const varManagerVue = new Vue({
     parser: null
   },
   updated: function () {
-    updateMathJax();
+    mathEqn.update();
   },
   watch: {
     /*variables: {
@@ -294,7 +294,7 @@ const varManagerVue = new Vue({
               this.getVarValue(pVal);
             } catch (e) {
               console.log(e);
-              mainSystem.graph.setCellWarning(cell, "warning");
+              mainSystem.graph.setCellWarning(cell, "<b>" + GUIText[settings.lang].errParamEntry + "</b><br/>" + GUIText[settings.lang].errorParsing);
               return false;
             }
           }

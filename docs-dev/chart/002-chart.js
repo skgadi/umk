@@ -44,6 +44,18 @@ const cItem = {
       size: 0
     },
     series: [],
+    yaxis: {
+      labels: {
+        formatter: function (a, b, c) {
+          try {
+            return math.parse(a).toString(4);
+          } catch (e) {
+            console.log(e);
+            return "Waiting ..."
+          }
+        }
+      }
+    },
     xaxis: {
       type: 'numeric',
       labels: {
@@ -155,7 +167,7 @@ const cItem = {
 
 
   },
-  resetChart: function() {
+  resetChart: function () {
     this.isFirst = true;
     this.handle.updateSeries([]);
   },

@@ -24,7 +24,7 @@ const editorVue = new Vue({
     this.refreshGraph();
   },
   updated: function () {
-    updateMathJax();
+    mathEqn.update();
   },
   watch: {
     rpSettings: {
@@ -39,7 +39,7 @@ const editorVue = new Vue({
         settingsVue.$set(settingsVue.$data.stings, 'guidesEnabled', a.guidesEnabled);
         settingsVue.$set(settingsVue.$data.stings, 'showLabels', a.showLabels);
         settingsVue.$set(settingsVue.$data.stings, 'showExeOrder', a.showExeOrder);
-        mainSystem.graph.hideGraphText=editorVue.rpSettings.hideGraphText;
+        mainSystem.graph.hideGraphText = editorVue.rpSettings.hideGraphText;
         this.refreshGraph();
       }
     }
@@ -241,6 +241,9 @@ const editorVue = new Vue({
       mainSystem.undoManager.indexOfNextAdd--;
       this.rotate(this.getAngle());
       varManagerVue.checkCellParams(cell);
+      if (simVue.mode !== "mDesign") {
+        simVue.informSim('updateCell', cell.id)
+      }
       mainSystem.graph.setSelectionCells([]);
     },
     toggleParamDisplay: function (index) {

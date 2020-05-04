@@ -5,6 +5,7 @@
   --button-size: 2em;
   --menu-height: 28px;
   --medium-width: 50px;
+  --pane-size: 320px;
 }
 
 html,
@@ -135,7 +136,7 @@ button {
 
 
 .pane {
-  width: calc(var(--left-bar-size)*320px);
+  width: calc(var(--left-bar-size)*var(--pane-size));
   background-color: var(--col-background-0);
   border-top: 1px var(--col-border) solid;
   border-bottom: 1px var(--col-border) solid;
@@ -161,7 +162,7 @@ button {
 
 #right-pane {
   grid-area: right;
-  width: calc(var(--right-bar-size)*320px);
+  width: calc(var(--right-bar-size)*var(--pane-size));
 }
 
 #footer {
@@ -566,14 +567,18 @@ ul.menu-kbs>li {
 }
 
 #outlineContainer {
+  /*grid-area: outline;
+  grid-column: 3;
+  grid-row: 2;
+  justify-self: right;*/
   position: absolute;
-  overflow: hidden;
   top: 5px;
   right: 5px;
-  width: 200px;
+  overflow: hidden;
+  width: 300px;
   height: 150px;
   background: transparent;
-  border: 5px var(--col-border) solid;
+  border: 5px groove var(--col-border);
 }
 
 #modelContainer {
@@ -581,6 +586,7 @@ ul.menu-kbs>li {
   width: 100%;
   cursor: default;
   z-index: 0;
+  overflow: hidden;
 }
 
 /*Checkbox*/

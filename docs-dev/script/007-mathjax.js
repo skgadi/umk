@@ -1,6 +1,24 @@
-function updateMathJax() {
-  MathJax.typesetPromise();
+/*function updateMathJax() {
+  mathEqn.update();
+  //MathJax.typesetPromise();
   //MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+}*/
+const mathEqn = {
+  updInProgress = false,
+  updNow = function () {
+    MathJax.typesetPromise();
+    this.updInProgress = false;
+  },
+  update: function () {
+    if (!this.updInProgress) {
+      this.updInProgress = true;
+      setTimeout(function () {
+        mathEqn.updNow();
+      }, 50);
+    } else {
+      console.log("blocked math update");
+    }
+  }
 }
 
 const TeXTools = {
@@ -19,8 +37,12 @@ const TeXTools = {
   },
   makeMatrix: function (inArray, dec = 4) {
     if (inArray.length === 1 && inArray[0].length === 1) {
-      return inArray[0][0];
+      return math.parse(inArray[0][0]).toTex();
     }
+    return math.parse("[" + inArray.map((a) => {
+      return "[" + a.join(",") + "]";
+    }).join(",") + "]").toTex(dec);
+
     return math.parse(math.matrix(inArray).toString()).toTex(dec).replace(/"/g, "");
     //return this.removeAvoidedItems(math.parse((math.squeeze(math.matrix(val)).toString())).toTex(dec));
   },
