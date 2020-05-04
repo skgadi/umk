@@ -10,6 +10,12 @@ copy /y .\docs-dev\lib.min.js .\docs\lib.min.js
 copy /y .\docs-dev\app1.min.html .\docs\index.html
 copy /y .\docs-dev\favicon.ico .\docs\favicon.ico
 
+rem chart window stuff
+copy /y .\docs-dev\chart.min.html .\docs\chart.html
+copy /y .\docs-dev\css\chart.min.css .\docs\css\chart.min.css
+copy /y .\docs-dev\chart.min.js .\docs\chart.min.js
+
+
 git add .
 git commit -am "Generating and pushing into server. Also deploys functions"
 git push
