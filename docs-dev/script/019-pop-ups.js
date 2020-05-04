@@ -16,7 +16,7 @@ const popup = {
       switch (type) {
         case 'chart':
           this.rType[cell.id] = "chart";
-          this.openUrl(cell.id, "/chart.html?" + urlQueryString, "width=600,height=300,"); //noreferrer, noopener,
+          this.openUrl(cell.id, "chart.html?" + urlQueryString, "width=600,height=300,"); //noreferrer, noopener,
           break;
         default:
           break;

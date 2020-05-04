@@ -8,7 +8,8 @@ const editorVue = new Vue({
     modelValue: null,
     bunchOfItems: false,
     parametersDisplay: null,
-    updatingCounter: 0
+    updatingCounter: 0,
+    enableDimChange: true
   },
   computed: {
     getBlockDetails: function () {

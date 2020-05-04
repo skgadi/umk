@@ -78,7 +78,8 @@ const simVue = new Vue({
             "stop": false,
             "pause": false,
             "forward": true
-          }
+          };
+          editorVue.enableDimChange = true;
           break;
         }
         case 'mSim': {
@@ -87,7 +88,8 @@ const simVue = new Vue({
             "stop": true,
             "pause": true,
             "forward": false
-          }
+          };
+          editorVue.enableDimChange = false;
           break;
         }
         case 'mSimPause': {
@@ -96,7 +98,8 @@ const simVue = new Vue({
             "stop": true,
             "pause": false,
             "forward": true
-          }
+          };
+          editorVue.enableDimChange = false;
           break;
         }
       }
@@ -281,7 +284,7 @@ const simVue = new Vue({
         if (this.exeOrder.length > 0) {
           if (varManagerVue.checkAllCellsParams()) {
             if (!this.simWorker) {
-              this.simWorker = new Worker('/simulator.min.js?date=' + Date.now());
+              this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
             }
             this.simWorker.onmessage = function (event) {
               //console.log(event.data);
@@ -341,9 +344,9 @@ const simVue = new Vue({
     endSim: function () {
       if (!!this.simWorker) {
         this.simWorker.terminate();
-        this.simWorker = null;
-        this.mode = "mDesign";
       }
+      this.simWorker = null;
+      this.mode = "mDesign";
     },
     displayExecutionOrder: function () {
       console.log(this.dispExecOrdInProg);
