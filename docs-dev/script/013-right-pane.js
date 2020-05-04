@@ -17,7 +17,15 @@ const editorVue = new Vue({
         return this.uyamakModel.Details();
       } catch (e) {
         console.log(e);
-        return "¡¡¡UNKNOWN ERROR!!!. If this error continues, please contact the support.";
+        return GUIText[settings.lang].errDetails;
+      }
+    },
+    isBlockValid: function () {
+      try {
+        return !this.uyamakModel.invalidParams();
+      } catch (e) {
+        console.log(e);
+        return 
       }
     }
   },
@@ -40,6 +48,10 @@ const editorVue = new Vue({
         settingsVue.$set(settingsVue.$data.stings, 'guidesEnabled', a.guidesEnabled);
         settingsVue.$set(settingsVue.$data.stings, 'showLabels', a.showLabels);
         settingsVue.$set(settingsVue.$data.stings, 'showExeOrder', a.showExeOrder);
+        settingsVue.$set(settingsVue.$data.stings, 'snapToGrid', a.snapToGrid);
+        //console.log(a.snapToGrid);
+
+
         mainSystem.graph.hideGraphText = editorVue.rpSettings.hideGraphText;
         this.refreshGraph();
       }
@@ -55,6 +67,7 @@ const editorVue = new Vue({
       mainSystem.graph.gridSize = this.rpSettings.gridSize;
       mainSystem.graph.showCaptions = this.rpSettings.showLabels;
       mainSystem.graph.showExeOrder = this.rpSettings.showExeOrder;
+      mainSystem.graph.gridEnabled = this.rpSettings.snapToGrid;
       mainSystem.refresh();
     },
     rotateAll: function (cw = true) {

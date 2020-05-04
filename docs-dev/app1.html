@@ -341,32 +341,30 @@
       <div id="rp-content">
         <div v-if="modelValue !== null">
           <div>
-            <h2 class="compress" v-text="GUIText[settings.lang].name"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].name"></h3>
             <input v-model.trim="modelValue" type="text" :placeholder="GUIText[settings.lang].name+'...'" />
             <div v-html="GUIText[settings.lang].preview+': '+modelValue"></div>
           </div>
-          <br>
           <div class="gen-btn" @click="applyModelValue()" v-text="GUIText[settings.lang].aChanges"></div>
         </div>
         <div v-else-if="!!uyamakModel">
-          <h2 class="compress" v-text="GUIText[settings.lang].label"></h2>
+          <h3 class="compress" v-text="GUIText[settings.lang].label"></h3>
           <input v-model.trim="uyamakModel.Name" type="text" />
           <div v-html="GUIText[settings.lang].preview+': '+uyamakModel.Name"></div>
-          <br />&shy;
           <div v-if="uyamakModel.TerminalsIn.editable && enableDimChange">
-            <h2 class="compress" v-text="GUIText[settings.lang].noOfIns"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].noOfIns"></h3>
             <input v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min"
               v-bind:max="uyamakModel.TerminalsIn.max" />
-            <br />&shy;
+            <br />
           </div>
           <div v-if="uyamakModel.TerminalsOut.editable && enableDimChange">
-            <h2 class="compress" v-text="GUIText[settings.lang].noOfOuts"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].noOfOuts"></h3>
             <input v-model.number="uyamakModel.TerminalsOut.value" type="number"
               v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max" />
-            <br />&shy;
+            <br />
           </div>
           <div v-if="Object.keys(uyamakModel.Parameters).length>0">
-            <h2 class="compress" v-text="GUIText[settings.lang].params"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].params"></h3>
             <template v-for="(Parameter, index) in uyamakModel.Parameters">
               <div class="category-head" @click="toggleParamDisplay(index)" style="cursor: pointer;">
                 <span :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"
@@ -432,17 +430,20 @@
             </template>
           </div>
           <div>
-            <h2 class="compress" v-text="GUIText[settings.lang].functionality"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].functionality"></h3>
             <div style="overflow-x: auto; overflow-y: hidden;">
               <div v-html="getBlockDetails"></div>
             </div>
-            <br />&shy;
+            <br />
+            <div v-if="!isBlockValid" v-html="GUIText[settings.lang].errCompat"></div>
             <div class="splitToTwo">
-              <div class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()"></div>
+              <div v-if="isBlockValid" class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()"></div>
+              <div v-if="!isBlockValid" class="blocked gen-btn" v-html="GUIText[settings.lang].aChanges"></div>
+
               <div class="gen-btn" v-html="GUIText[settings.lang].rChanges"
                 onclick="changeEditModelWithSelectedBlock()"></div>
             </div>
-            <h2 class="compress" v-text="GUIText[settings.lang].orientation"></h2>
+            <h3 class="compress" v-text="GUIText[settings.lang].orientation"></h3>
             <div class="matrix-builder-buttons">
               <span @click="rotate(0)">
                 <i class="far fa-smile"></i>
@@ -460,8 +461,8 @@
           </div>
         </div>
         <div v-else>
-          <h2><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
-              v-text="GUIText[settings.lang].gridLines"></span></h2>
+          <h3 class="compress"><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].gridLines"></span></h3>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMinor = !rpSettings.gLinesMinor">
             <i class="far" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMinor"></span>
@@ -474,11 +475,17 @@
             <i class="far" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMega"></span>
           </div>
-          <h2><i class="fas fa-fw fa-ruler-combined"></i><span class="gap-left"
-              v-text="GUIText[settings.lang].gridSize"></span></h2>
+          <br/>
+          <h3 class="compress"><i class="fas fa-fw fa-ruler-combined"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].gridSize"></span></h3>
           <input type="number" v-model.number="rpSettings.gridSize">
-          <h2><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
-              v-text="GUIText[settings.lang].navi"></span></h2>
+          <div class="checkboxItem pointer" @click="rpSettings.snapToGrid = !rpSettings.snapToGrid">
+            <i class="far" :class="rpSettings.snapToGrid?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].snapToGrid"></span>
+          </div>
+          <br/>
+          <h3 class="compress"><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].navi"></span></h3>
           <div id="graph-nav">
             <div class="gen-btn" @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
             <div class="gen-btn" @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
@@ -490,8 +497,9 @@
             <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
             <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
           </div>
-          <h2><i class="fas fa-fw fa-tools"></i><span class="gap-left" v-text="GUIText[settings.lang].oSettings"></span>
-          </h2>
+          <br/>
+          <h3 class="compress"><i class="fas fa-fw fa-tools"></i><span class="gap-left" v-text="GUIText[settings.lang].oSettings"></span>
+          </h3>
           <div class="checkboxItem pointer" @click="rpSettings.showOutline = !rpSettings.showOutline">
             <i class="far" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showOutline"></span>

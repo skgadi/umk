@@ -1,3 +1,12 @@
+/*
+Settings are distrubuted at various places
+1. All settings with initial values are stored at 000-vars.js
+2. Settings to store and retrive from cookies are available at 999-last.js
+3. settings window is handled by 005-settings.js
+4. some settings are updated at 013-right-pane.js 
+*/
+
+
 const settingsVue = new Vue({
   el: "#settings",
   data: {

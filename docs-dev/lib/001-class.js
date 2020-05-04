@@ -72,8 +72,8 @@ class umk_model {
       splStyle: null
     };
   }
-  //Checks if the parameters are valid?
-  ValidateParams() {
-    return "OK";
+  //Checks for invalid parameters
+  invalidParams() {
+    return false;
   };
 }

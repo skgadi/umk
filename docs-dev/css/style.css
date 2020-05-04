@@ -629,7 +629,7 @@ input[type='checkbox'] {
   grid-template-columns: 30% 30% 30%;
   grid-column-gap: 5%;
   grid-row-gap: 0.5em;
-  padding: 0 1em;
+  font-size: 2em;  
 }
 
 .gen-btn {
@@ -849,4 +849,8 @@ blink,
 
 .blocked>a {
   cursor: not-allowed !important;
+}
+
+#rp-content {
+  padding: 0 0.5em;
 }
