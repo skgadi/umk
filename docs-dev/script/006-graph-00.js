@@ -220,25 +220,31 @@ let Graph = function (container) {
     canvas: Canvas,
     sGraph: this,
     minorStroke: {
-      color: "#808080",
+      color: '#808080',
       thickness: 0.1,
       pattern: "",
       show: false
     },
     majorStroke: {
-      color: "#808080",
+      color: '#808080',
       thickness: 0.2,
       pattern: "2, 2",
       show: true
     },
     megaStroke: {
-      color: "#808080",
+      color: '#808080',
       thickness: 0.3,
       pattern: "20, 5, 5, 5",
       show: false
     },
     repaintGrid: function () {
       let graph = this.sGraph;
+      let lineColor = window.getComputedStyle(graph.container, null).getPropertyValue('color');
+      this.minorStroke.color = lineColor;
+      this.majorStroke.color = lineColor;
+      this.megaStroke.color = lineColor;
+
+      console.log(lineColor);
       let s = 0;
       let gs = 0;
       let tr = new mxPoint();

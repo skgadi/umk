@@ -587,6 +587,7 @@ ul.menu-kbs>li {
   cursor: default;
   z-index: 0;
   overflow: hidden;
+  color: var(--col-border);
 }
 
 /*Checkbox*/
@@ -629,7 +630,7 @@ input[type='checkbox'] {
   grid-template-columns: 30% 30% 30%;
   grid-column-gap: 5%;
   grid-row-gap: 0.5em;
-  font-size: 2em;  
+  font-size: 2em;
 }
 
 .gen-btn {
@@ -853,4 +854,8 @@ blink,
 
 #rp-content {
   padding: 0 0.5em;
+}
+
+.hide-always {
+  display: none;
 }
