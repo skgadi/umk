@@ -79,7 +79,7 @@ const simVue = new Vue({
             "pause": false,
             "forward": true
           };
-          editorVue.enableDimChange = true;
+          editorVue.rpSettings.fEditMode = true;
           break;
         }
         case 'mSim': {
@@ -89,7 +89,7 @@ const simVue = new Vue({
             "pause": true,
             "forward": false
           };
-          editorVue.enableDimChange = false;
+          editorVue.rpSettings.fEditMode = false;
           break;
         }
         case 'mSimPause': {
@@ -99,7 +99,7 @@ const simVue = new Vue({
             "pause": false,
             "forward": true
           };
-          editorVue.enableDimChange = false;
+          editorVue.rpSettings.fEditMode = false;
           break;
         }
       }
@@ -349,14 +349,14 @@ const simVue = new Vue({
       this.mode = "mDesign";
     },
     displayExecutionOrder: function () {
-      console.log(this.dispExecOrdInProg);
+      //console.log(this.dispExecOrdInProg);
       if (!this.dispExecOrdInProg) {
         this.dispExecOrdInProg = true;
         setTimeout(() => {
           simVue.dispExecOrdNow();
         }, 200);
       } else {
-        console.log("avoided unnecessary EO disp");
+        //console.log("Unnecessary EO disp blocked");
       }
     },
     dispExecOrdNow: function () {

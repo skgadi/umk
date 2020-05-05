@@ -116,6 +116,7 @@ mxClipboard.paste = function (graph) {
     let parent = graph.getDefaultParent();
 
     graph.model.beginUpdate();
+    //console.log(delta);
     try {
       for (let i = 0; i < cells.length; i++) {
         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?

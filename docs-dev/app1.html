@@ -214,7 +214,7 @@
             </a>
             <div class="dropdown-content">
               <template v-for="(item0, idx0) in item.subMenu">
-                <a :style="item0.prtBelow?'border-bottom: 1px var(--col-border) solid':''"
+                <a :style="item0.prtBelow?'border-bottom: 1px var(--col-border-0) solid':''"
                   @mouseover="showStatus(item0.moreInfo[lang])" @mouseleave="removeStatus()"
                   @click="evalFunc(item0.func)">
                   <span><span><i class="fa-fw" :class="item0.icon"></i></span><span class="gap-left hide-small"
@@ -296,9 +296,9 @@
                 <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                   @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                   <g>
-                    <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--col-text-0)' />
+                    <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
                   </g>
-                  <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='10'
+                  <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='10'
                     fill='none' v-html="blksSummary[item0].icon"></g>
                 </svg>
               </template>
@@ -315,10 +315,10 @@
                   <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                     @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                     <g>
-                      <rect rx='10' height='100' width='100' fill-opacity='0.15' fill='var(--col-text-0)' />
+                      <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
                     </g>
-                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='10'
-                      fill='none' v-html="blksSummary[item0].icon"></g>
+                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='10'
+                        fill='none' v-html="blksSummary[item0].icon"></g>
                   </svg>
                 </template>
               </div>
@@ -351,13 +351,13 @@
           <h3 class="compress" v-text="GUIText[settings.lang].label"></h3>
           <input v-model.trim="uyamakModel.Name" type="text" />
           <div v-html="GUIText[settings.lang].preview+': '+uyamakModel.Name"></div>
-          <div v-if="uyamakModel.TerminalsIn.editable && enableDimChange">
+          <div v-if="uyamakModel.TerminalsIn.editable && rpSettings.fEditMode">
             <h3 class="compress" v-text="GUIText[settings.lang].noOfIns"></h3>
             <input v-model.number="uyamakModel.TerminalsIn.value" type="number" v-bind:min="uyamakModel.TerminalsIn.min"
               v-bind:max="uyamakModel.TerminalsIn.max" />
             <br />
           </div>
-          <div v-if="uyamakModel.TerminalsOut.editable && enableDimChange">
+          <div v-if="uyamakModel.TerminalsOut.editable && rpSettings.fEditMode">
             <h3 class="compress" v-text="GUIText[settings.lang].noOfOuts"></h3>
             <input v-model.number="uyamakModel.TerminalsOut.value" type="number"
               v-bind:min="uyamakModel.TerminalsOut.min" v-bind:max="uyamakModel.TerminalsOut.max" />
@@ -372,7 +372,7 @@
                 <span v-html="Parameter.Name[settings.lang]"></span>
               </div>
               <div v-if="!!parametersDisplay[index]">
-                <div v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && enableDimChange"
+                <div v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && rpSettings.fEditMode"
                   class="matrix-builder-buttons">
                   <span @click="valueDimensionsModify(0, index)" class="rotate-90">
                     <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-plus-circle fa-fw"></i>

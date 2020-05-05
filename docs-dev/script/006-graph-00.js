@@ -1,19 +1,26 @@
 let Graph = function (container) {
   mxGraph.call(this, container);
-  mxConstants.OUTLINE_COLOR = 'var(--col-border)';
-  mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--col-text-1)';
-  mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--col-text-0)';
-  mxConstants.HIGHLIGHT_COLOR = 'var(--col-border)';
+  mxConstants.OUTLINE_COLOR = 'var(--col-border-1)';
+  mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--col-border-1)';
+  mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--col-background-2)';
+  mxConstants.OUTLINE_STROKEWIDTH = 3;
+  //mxConstants.LABEL_HANDLE_SIZE = 10;
+  mxConstants.STYLE_BACKGROUND_OUTLINE = 'var(--col-background-1)';
+  mxConstants.HIGHLIGHT_COLOR = 'var(--col-border-1)';
   mxConstants.GUIDE_COLOR = 'var(--col-text-1)';
   mxConstants.GUIDE_STROKEWIDTH = 3;
-  mxConstants.HANDLE_STROKECOLOR = 'var(--col-border)';
-  mxConstants.HANDLE_FILLCOLOR = 'var(--col-border)';
-  mxConstants.EDGE_SELECTION_COLOR = 'var(--col-text-1)';
-  mxConstants.VERTEX_SELECTION_COLOR = 'var(--col-text-1)';
-  mxConstants.DROP_TARGET_COLOR = 'var(--col-text-1)';
+  mxConstants.HANDLE_STROKECOLOR = 'var(--col-border-1)';
+  mxConstants.HANDLE_FILLCOLOR = 'var(--col-background-2)';
+  //mxConstants.HANDLE_SIZE = 10;
+  mxConstants.EDGE_SELECTION_COLOR = 'var(--col-border-1)';
+  mxConstants.EDGE_SELECTION_STROKEWIDTH = 3;
+  mxConstants.VERTEX_SELECTION_COLOR = 'var(--col-border-1)';
+  mxConstants.VERTEX_SELECTION_STROKEWIDTH = 3;
+  mxConstants.DROP_TARGET_COLOR = 'var(--col-border-1)';
+
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
-  mxConstants.DEFAULT_FONTSIZE = "16";
+  mxConstants.DEFAULT_FONTSIZE = "15";
   this.dropEnabled = true;
   this.setRecursiveResize(false);
 
@@ -47,7 +54,7 @@ let Graph = function (container) {
   this.eStyle["verticalAlign"] = "top";
   //this.eStyle["overflow"] = "width";
   this.eStyle["align"] = "right";
-  this.eStyle["strokeColor"] = "var(--col-border)";
+  this.eStyle["strokeColor"] = "var(--col-text-0)";
 
   //Stylesheets
   let style = new Object();
@@ -56,7 +63,7 @@ let Graph = function (container) {
   style.verticalAlign = "middle";
   style.fontColor = "var(--col-text-0)";
   style.fillColor = "var(--col-background-1)";
-  style.strokeColor = "var(--col-border)";
+  style.strokeColor = "var(--col-border-0)";
   //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
   this.getStylesheet().putCellStyle("umk_model", style);
   style = new Object();
@@ -65,7 +72,7 @@ let Graph = function (container) {
   style.strokeWidth = 1;
   style.arcSize = 0;
   style.foldable = 1;
-  style.strokeColor = "var(--col-border)";
+  style.strokeColor = "var(--col-border-0)";
   style.fontColor = "var(--col-text-0)";
   //style.verticalLabelPosition = "top";
   style.verticalAlign = "top";
@@ -146,8 +153,8 @@ let Graph = function (container) {
   style.shape = "triangle";
   style.portConstraint = "west";
   style.overflow = "fit";
-  style.fillColor = "var(--col-border)";
-  style.strokeColor = "var(--col-border)";
+  style.fillColor = "var(--col-text-0)";
+  style.strokeColor = "var(--col-text-0)";
   //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
   this.getStylesheet().putCellStyle("umk_input", style);
   style = new Object();
@@ -239,12 +246,12 @@ let Graph = function (container) {
     },
     repaintGrid: function () {
       let graph = this.sGraph;
-      let lineColor = window.getComputedStyle(graph.container, null).getPropertyValue('color');
+      let lineColor = window.getComputedStyle(graph.container, null).getPropertyValue('border-color');
       this.minorStroke.color = lineColor;
       this.majorStroke.color = lineColor;
       this.megaStroke.color = lineColor;
+      //console.log(lineColor);
 
-      console.log(lineColor);
       let s = 0;
       let gs = 0;
       let tr = new mxPoint();
@@ -740,7 +747,7 @@ let System = function (gContainer, oContainer) {
       this.isRefreshing = true;
       setTimeout(this.refreshNow.bind(null, this), 300);
     } else {
-      console.log("no need to call many times");
+      // console.log("Full refresh call blocked");
     }
     //this.graph.grid.repaintGrid();
   }

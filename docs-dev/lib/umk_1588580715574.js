@@ -31,7 +31,7 @@ class umk_1588580715574 extends umk_model {
         }
         out += "]";
       }
-      console.log(out);
+      //console.log(out);
       out = "<div>$$" + TeXTools.strToTex(out) + "$$</div>";
     } catch (e) {
       console.log(e);

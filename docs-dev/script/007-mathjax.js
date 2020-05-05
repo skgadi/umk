@@ -16,7 +16,7 @@ const mathEqn = {
         mathEqn.updNow();
       }, 50);
     } else {
-      console.log("blocked math update");
+      //console.log("blocked math update");
     }
   }
 }

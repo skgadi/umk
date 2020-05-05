@@ -10,38 +10,7 @@ Settings are distrubuted at various places
 const settingsVue = new Vue({
   el: "#settings",
   data: {
-    "cThemes": {
-      "en-us": {
-        "theme-dark": "Dark theme",
-        "theme-light": "Cold regions",
-        "theme-CRIMSON": "Crimson",
-        "theme-theme1": "Theme 1",
-        "theme-theme2": "Theme 2",
-        "theme-theme3": "Theme 3",
-        "theme-theme4": "Theme 4",
-        "theme-theme5": "Theme 5",
-        "theme-theme6": "Theme 6",
-        "theme-theme7": "Theme 7",
-        "theme-theme8": "Theme 8",
-        "theme-theme9": "Theme 9",
-        "theme-theme10": "Theme 10"
-      },
-      "es-mx": {
-        "theme-dark": "Tema oscuro",
-        "theme-light": "Regiones frías",
-        "theme-CRIMSON": "Crimson",
-        "theme-theme1": "Tema 1",
-        "theme-theme2": "Tema 2",
-        "theme-theme3": "Tema 3",
-        "theme-theme4": "Tema 4",
-        "theme-theme5": "Tema 5",
-        "theme-theme6": "Tema 6",
-        "theme-theme7": "Tema 7",
-        "theme-theme8": "Tema 8",
-        "theme-theme9": "Tema 9",
-        "theme-theme10": "Tema 10"
-      }
-    },
+    "cThemes":{"mode":{"dark":"dark","dark2":"dark","dark3":"dark","dark4":"dark","dark5":"dark","light":"light","light2":"light","light3":"light","light4":"light","light5":"light"},"en-us":{"theme-dark":"Dark theme 1 (default)","theme-dark2":"Dark theme 2","theme-dark3":"Dark theme 3","theme-dark4":"Dark theme 4","theme-dark5":"Dark theme 5","theme-light":"Light theme 1","theme-light2":"Light theme 2","theme-light3":"Light theme 3","theme-light4":"Light theme 4","theme-light5":"Light theme 5"},"es-mx":{"theme-dark":"Tema oscuro 1 (predeterminado)","theme-dark2":"Tema oscuro 2","theme-dark3":"Tema oscuro 3","theme-dark4":"Tema oscuro 4","theme-dark5":"Tema oscuro 5","theme-light":"Tema ligero 1","theme-light2":"Tema ligero 2","theme-light3":"Tema ligero 3","theme-light4":"Tema ligero 4","theme-light5":"Tema ligero 5"}},
     stings: settings,
     display: false
   },

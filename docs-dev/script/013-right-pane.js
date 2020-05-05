@@ -2,14 +2,14 @@ const editorVue = new Vue({
   el: "#rp-content",
   data: {
     rpSettings: Object.assign({
-      hideGraphText: false
+      hideGraphText: false,
+      fEditMode: true
     }, settings),
     uyamakModel: null,
     modelValue: null,
     bunchOfItems: false,
     parametersDisplay: null,
-    updatingCounter: 0,
-    enableDimChange: true
+    updatingCounter: 0
   },
   computed: {
     getBlockDetails: function () {
@@ -25,7 +25,7 @@ const editorVue = new Vue({
         return !this.uyamakModel.invalidParams();
       } catch (e) {
         console.log(e);
-        return 
+        return
       }
     }
   },
@@ -59,9 +59,9 @@ const editorVue = new Vue({
   },
   methods: {
     refreshGraph() {
-      mainSystem.graph.grid.minorStroke.show = this.rpSettings.gLinesMinor;
-      mainSystem.graph.grid.majorStroke.show = this.rpSettings.gLinesMajor;
-      mainSystem.graph.grid.megaStroke.show = this.rpSettings.gLinesMega;
+      mainSystem.graph.grid.minorStroke.show = this.rpSettings.fEditMode && this.rpSettings.gLinesMinor;
+      mainSystem.graph.grid.majorStroke.show = this.rpSettings.fEditMode && this.rpSettings.gLinesMajor;
+      mainSystem.graph.grid.megaStroke.show = this.rpSettings.fEditMode && this.rpSettings.gLinesMega;
       mainSystem.outline.visibility = this.rpSettings.showOutline;
       mainSystem.graph.graphHandler.guidesEnabled = this.rpSettings.guidesEnabled;
       mainSystem.graph.gridSize = this.rpSettings.gridSize;
