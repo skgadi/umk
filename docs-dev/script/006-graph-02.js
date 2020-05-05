@@ -121,6 +121,7 @@ mxClipboard.paste = function (graph) {
       for (let i = 0; i < cells.length; i++) {
         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
           mxClipboard.parents[i] : parent;
+        console.log(tmp);
         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
       }
     } finally {
