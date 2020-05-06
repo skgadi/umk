@@ -21,7 +21,10 @@ const popup = {
         default:
           break;
       }
-      this.sendParams(simVue.pCell4Exp(cell)); // sends the cell info to the popup window
+      /*
+      setTimeout(() => {
+        this.sendParams(simVue.pCell4Exp(cell)); // sends the cell info to the popup window
+      }, 100);*/
     }
   },
   openUrl: function (cid, url, spec) {

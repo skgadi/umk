@@ -20,6 +20,7 @@ const simVue = new Vue({
       mHis: 1000
     },
     results: [],
+    cellsWithSInfo: [],
     simWorker: null,
     exeOrder: [],
     updScreen: null,
@@ -181,9 +182,11 @@ const simVue = new Vue({
                   return prepCell;
                 });
                 //console.log(tempCells);
+                this.cellsWithSInfo = this.updateSources(tempCells);
                 out = {
-                  cells: this.updateSources(tempCells)
+                  cells: this.cellsWithSInfo
                 };
+                //console.log(this.cellsWithSInfo);
               } catch (e) {
                 console.log(e);
                 out = {};
@@ -199,6 +202,9 @@ const simVue = new Vue({
                   if (prepCell.isPopup) {
                     popup.sendParams(prepCell);
                   }
+                  //console.log(prepCell);
+                  prepCell.sIndexes = this.cellsWithSInfo[idx].sIndexes; //Prepared cell with updated sources
+                  //console.log(prepCell);
                   out = {
                     updateCell: {
                       v: prepCell, //value

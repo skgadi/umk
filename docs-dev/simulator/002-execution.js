@@ -59,6 +59,7 @@ const exec = {
     eval("var tempModel = new " + value.id + "(value);");
     this.setParams(tempModel);
     this.cells[index] = tempModel;
+    //console.log(index);
   },
   simulate: function () {
     let model;
@@ -72,23 +73,17 @@ const exec = {
       //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
+        //console.log(model.cid);
         for (let j = 0; j < model.TerminalsIn.value; j++) {
-          //console.log(this.cells);
+          //console.log(model.sIndexes);
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
+        //console.log(model.cid);
         model.Evaluate(this.t);
         //console.log(this.t);
         if (model.isOut && store) {
           tempOut[model.cid] = model.inputs[0].toString();
         }
-        /*
-        if (model.isOut && store) {
-          this.results.push({
-            t: this.t,
-            b: model.cid,
-            v: model.inputs[0].toString()
-          });
-        }*/
       }
       //console.log(store);
       //console.log(model.id);
@@ -109,7 +104,7 @@ const exec = {
         }
       });
       this.End();
-      throw("Error in simulation");
+      throw ("Error in simulation");
     } /**/
     this.t += this.simSettings.hs;
     //console.log(this.t);
