@@ -1,7 +1,7 @@
 class umk_1586108946421 extends umk_model {
   Icon() {
     return {
-      html: TeXTools.getTeXInline(this.Parameters.constant.Value),
+      html: TeX.prepDisp(TeX.frmArray(this.Parameters.constant.Value)),
       inLabels: null,
       outLabels: null,
       splStyle: ""
@@ -12,7 +12,7 @@ class umk_1586108946421 extends umk_model {
     this.outputs[0] = this.Parameters.constant.Value;
   }
   Details() {
-    return "$$y(t) = " + TeXTools.makeMatrix(this.Parameters.constant.Value) + "$$";
+    return TeX.prepDisp("y(t) = " + TeX.frmArray(this.Parameters.constant.Value));
   }
   constructor(obj) {
     super(Object.assign({

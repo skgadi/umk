@@ -40,7 +40,7 @@ const popup = {
     }
   },
   prepareData: function (cid) {
-    console.log(cid);
+    //console.log(cid);
     return function (ele) {
       let val = math.evaluate(ele.o[cid]);
       return {

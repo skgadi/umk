@@ -69,6 +69,7 @@ const exec = {
         store = true;
         this.s4Out = 0;
       }
+      //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
         for (let j = 0; j < model.TerminalsIn.value; j++) {
@@ -89,7 +90,10 @@ const exec = {
           });
         }*/
       }
-      if (model.isOut && store) {
+      //console.log(store);
+      //console.log(model.id);
+      //console.log(model.isOut);
+      if (store) {
         this.results.push({
           t: this.t,
           o: tempOut
@@ -105,12 +109,16 @@ const exec = {
         }
       });
       this.End();
+      throw("Error in simulation");
     } /**/
     this.t += this.simSettings.hs;
+    //console.log(this.t);
   },
   Init: function () {
     this.cells.forEach(function (model) {
       model.Init();
+      //console.log(model.id);
+      //console.log(model.isOut);
     });
     this.inPrg = true;
     this.t = 0;
@@ -148,7 +156,7 @@ const exec = {
       N = Math.min(N, this.rSteps);
       w = this.simSettings.h;
     }
-    console.log("N: " + N);
+    //console.log("N: " + N);
     for (let i = 0; i < N; i++) {
       //if (this.simSettings.realtime) {
       while ((performance.now() - this.prevT) < w) {}
@@ -158,6 +166,7 @@ const exec = {
       this.simulate();
       this.rSteps--;
     }
+    //console.log(this.results.length);
     if (!!this.results.length) {
       postMessage({
         put: this.results

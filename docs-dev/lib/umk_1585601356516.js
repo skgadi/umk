@@ -4,7 +4,8 @@ class umk_1585601356516 extends umk_model {
       html: "$+$",
       inLabels: new Array(this.TerminalsIn.value).fill("+"),
       outLabels: null,
-      splStyle: "shape=triangle;"
+      //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected
+      splStyle: ""
     };
   }
   Evaluate() {
@@ -14,7 +15,7 @@ class umk_1585601356516 extends umk_model {
     }
   }
   Details() {
-    return "$$y(t) = \\sum_{i=1\}^{" + this.TerminalsIn.value + "}{u_i(t)}$$";
+    return "$$y(t) = a\\times u(t)$$";
   }
   constructor(obj) {
     super(Object.assign({

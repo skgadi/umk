@@ -15,7 +15,7 @@ let Graph = function (container) {
   mxConstants.EDGE_SELECTION_COLOR = 'var(--col-border-1)';
   mxConstants.EDGE_SELECTION_STROKEWIDTH = 3;
   mxConstants.VERTEX_SELECTION_COLOR = 'var(--col-border-1)';
-  mxConstants.VERTEX_SELECTION_STROKEWIDTH = 3;
+  mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
   mxConstants.DROP_TARGET_COLOR = 'var(--col-border-1)';
 
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
@@ -64,6 +64,7 @@ let Graph = function (container) {
   style.fontColor = "var(--col-text-0)";
   style.fillColor = "var(--col-background-1)";
   style.strokeColor = "var(--col-border-0)";
+  style.strokeWidth = 3;
   //foldable=0;overflow=hidden;verticalAlign=middle;fontColor=#fff;
   this.getStylesheet().putCellStyle("umk_model", style);
   style = new Object();
@@ -167,8 +168,10 @@ let Graph = function (container) {
   style.shape = "triangle";
   style.portConstraint = "east";
   style.overflow = "fit";
-  style.fillColor = "none";
-  style.strokeColor = "none";
+  style.fillColor = "var(--col-text-0)";
+  style.strokeColor = "var(--col-text-0)";
+/*  style.fillColor = "none";
+  style.strokeColor = "none";*/
   //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
   this.getStylesheet().putCellStyle("umk_output", style);
 
@@ -234,13 +237,13 @@ let Graph = function (container) {
     },
     majorStroke: {
       color: '#808080',
-      thickness: 0.2,
+      thickness: 0.5,
       pattern: "2, 2",
       show: true
     },
     megaStroke: {
       color: '#808080',
-      thickness: 0.3,
+      thickness: 1,
       pattern: "20, 5, 5, 5",
       show: false
     },

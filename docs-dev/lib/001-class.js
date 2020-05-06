@@ -16,9 +16,11 @@ class umk_model {
       value: 0,
       editable: false
     };
+    this.fInEO = false, //Is first in the execution order --- FirstInExecutionOrder
     this.isOut = false; //shows that this is a output
     this.showInpOnHtml = false; //update screen while simulating 
     this.Icon_Temp_Html = null; //This is used internal to the Icon function
+    this.temp_exec = {}; //This is temporary item used by execute command of simulation
     this.TerminalsOut = {
       min: 0,
       max: 0,

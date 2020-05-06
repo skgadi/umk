@@ -83,7 +83,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
           height: 8
         },
         offset: {
-          x: -4,
+          x: -6,
           y: -4
         }
       };
@@ -97,7 +97,7 @@ function setTermianls(graph, Cell, type = "umk_input") {
           height: 8
         },
         offset: {
-          x: -4,
+          x: 2,
           y: -4
         }
       };

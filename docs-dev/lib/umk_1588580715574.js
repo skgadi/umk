@@ -1,7 +1,7 @@
 class umk_1588580715574 extends umk_model {
   Icon() {
     return {
-      html: "$\\sin(\\cdot)$",
+      html: TeX.prepDisp("\\sin(\\cdot)"),
       inLabels: null,
       outLabels: null,
       splStyle: ""
@@ -32,7 +32,7 @@ class umk_1588580715574 extends umk_model {
         out += "]";
       }
       //console.log(out);
-      out = "<div>$$" + TeXTools.strToTex(out) + "$$</div>";
+      out = "<div>" + TeX.prepDisp(TeX.frmStr(out)) + "</div>";
     } catch (e) {
       console.log(e);
     }

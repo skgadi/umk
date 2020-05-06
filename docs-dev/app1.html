@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=4" />
-  <link rel="stylesheet" href="css/style.min.css?bv=4" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=5" />
+  <link rel="stylesheet" href="css/style.min.css?bv=5" />
 
 
 </head>
@@ -298,7 +298,7 @@
                   <g>
                     <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
                   </g>
-                  <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='10'
+                  <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
                     fill='none' v-html="blksSummary[item0].icon"></g>
                 </svg>
               </template>
@@ -317,7 +317,7 @@
                     <g>
                       <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
                     </g>
-                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='10'
+                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
                         fill='none' v-html="blksSummary[item0].icon"></g>
                   </svg>
                 </template>
@@ -409,12 +409,11 @@
                               v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text" />
                             <input v-if="Parameter.Type === 'Color'"
                               v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]"
-                              style="padding: 0; min-width: 75px; padding: 0px; min-height: 35px;"
                               v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color" />
-                            <select v-if="Parameter.Type === 'Options'" class="w3-select w3-border-0"
+                            <select v-if="Parameter.Type === 'Options'" class="inter-itm"
                               v-model="uyamakModel.Parameters[index]['Value'][index1][index2]">
                               <template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']">
-                                <option v-bind:value="opnVal">{{opnName}}</option>
+                                <option v-bind:value="opnVal" v-html='opnName[settings.lang]'></option>
                               </template>
                             </select>
                           </td>
@@ -554,8 +553,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=4"></script>
-  <script src="script.min.js?bv=4"></script>
+  <script src="lib.min.js?bv=5"></script>
+  <script src="script.min.js?bv=5"></script>
 </body>
 
 </html>

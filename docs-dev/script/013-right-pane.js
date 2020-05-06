@@ -279,6 +279,10 @@ const editorVue = new Vue({
         case "Color":
           tempItem = "#000";
           break;
+        case "Options":
+          tempItem = Object.keys(this.uyamakModel.Parameters[index].Options)[0];
+          //console.log(index);
+          break;
       }
       switch (func) {
         case 0:

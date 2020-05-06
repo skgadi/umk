@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html class="theme-dark">
+
+<head>
+  <title>SVG generator</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=4" />
+  <link rel="stylesheet" href="css/style.min.css?bv=4" />
+  <style>
+    body,
+    html {
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="svg-handle">
+    <script type="text/javascript" src="dependencies/vue/vue.min.js"></script>
+    <textarea id="editor" style="width: 100%;height: 200px; font-family:'Courier New', Courier, monospace;"
+      v-model="svgText"></textarea>
+    <button @click="insert(-1)">Clear</button>
+    <button @click="insert(0)">Add text</button>
+    <button @click="insert(1)">Add line</button>
+    <button @click="insert(2)">Add polyline</button>
+    <button @click="insert(3)">Add path</button>
+    <button @click="insert(4)">Add rectangle</button>
+    <button @click="insert(5)">Add polygon</button>
+    <button @click="insert(6)">Add circle</button>
+    <button @click="insert(7)">Add ellipse</button>
+    <button @click="copyText">Copy</button>
+    <div style="margin: 1em;width: 50px; height: 50px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 100px; height: 100px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 200px; height: 200px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 300px; height: 300px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 400px; height: 400px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 500px; height: 500px;" v-html="svgHTML"></div>
+    <div style="margin: 1em;width: 600px; height: 600px;" v-html="svgHTML"></div>
+  </div>
+  <script>
+    var a = new Vue({
+      el: "#svg-handle",
+      data: {
+        svgText: ""
+      },
+      computed: {
+        svgHTML: function () {
+          return "<svg class='libraryBlock monospace' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g><rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1' stroke='var(--col-border-1)' /></g><g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5' fill='none'>" +
+            this.svgText + "</g></svg>";
+        }
+      },
+      methods: {
+        copyText: function () {
+          copyToClipboard(this.svgText.replace(/(\r\n|\n|\r)/gm, ""));
+        },
+        insert: function (index = -1) {
+          let tempText = "";
+          switch (index) {
+            case 0:
+              tempText =
+                "<text x='50' y='57' dominant-baseline='middle' text-anchor='middle' font-size='5em'>A</text>";
+              break;
+            case 1:
+              tempText = "<line x1='20' y1='20' x2= '80' y2='80'/>";
+              break;
+            case 2:
+              tempText = "<polyline points='10,10 90,30 10,50 90,70 10,90'/>";
+              break;
+            case 3:
+              tempText = "<path d='M 10 10 q 40 160 80 0'/>";
+              break;
+            case 4:
+              tempText = "<rect x='20' y='20' width='60' height='60'/>";
+              break;
+            case 5:
+              tempText = "<polygon points='20,20 90,50 80,80 50,90'/>";
+              break;
+            case 6:
+              tempText = "<circle cx='50' cy='50' r='30'/>";
+              break;
+            case 7:
+              tempText = "<ellipse cx='50' cy='50' rx='40' ry='20'/>";
+              break;
+            case -1:
+              this.svgText = "";
+          }
+          this.svgText += (!!this.svgText?"\n": "")+ tempText;
+          document.getElementById("editor").focus();
+        }
+      }
+    });
+    const copyToClipboard = str => {
+      const el = document.createElement('textarea');
+      el.value = str;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    };
+  </script>
+</body>
+
+</html>

@@ -183,8 +183,8 @@ const varManagerVue = new Vue({
       this.clearAndparseAll();
     },
     getVariable: function (variable) {
-      return TeXTools.makeMatrix(variable.value);
-      return JSON.stringify(variable.value);
+      return TeX.frmArray(variable.value);
+      //return JSON.stringify(variable.value);
     },
     clearAndparseAll: function () {
       this.startParser();
@@ -211,7 +211,7 @@ const varManagerVue = new Vue({
     processVar: function (variable) {
       try {
         let tempData = this.getVarValue(variable.value)
-        console.log(tempData);
+        //console.log(tempData);
         return this.parser.evaluate(variable.name + "=" + tempData.toString());
       } catch (e) {
         console.log(e);

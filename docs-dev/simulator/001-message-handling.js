@@ -1,5 +1,5 @@
 onmessage = function (oEvent) {
-  //console.log(oEvent);
+  //console.log(oEvent.data);
   //console.log(self.performance);
   if (typeof oEvent.data === "object") {
     let keys = Object.keys(oEvent.data);

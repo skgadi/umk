@@ -20,6 +20,7 @@ const uyamakCbManager = {
     mainSystem.graph.createSubModel();
     mxClipboard.copy(mainSystem.graph);
     mxClipboard.paste(this.graph);
+    mxClipboard.insertCount--;
     this.graph.ungroupSubModel();
     this.presPasteText = uyamakFileManager.compressModel(this.graph);
     navigator.clipboard.writeText(this.presPasteText).then((e) => {
@@ -51,11 +52,12 @@ const uyamakCbManager = {
     });
   },
   bringModelToMain: function () {
+    //Todo ctrl+z and ungroup
     mainSystem.graph.getModel().beginUpdate();
     mxClipboard.paste(mainSystem.graph);
-    mainSystem.graph.ungroupSubModel();
     mainSystem.graph.orderCells(false);
     mainSystem.graph.getModel().endUpdate();
+    mainSystem.graph.ungroupSubModel();
     mainSystem.refresh();
   },
   prepareAltAndCopy: function (text) {
@@ -121,7 +123,7 @@ mxClipboard.paste = function (graph) {
       for (let i = 0; i < cells.length; i++) {
         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
           mxClipboard.parents[i] : parent;
-        console.log(tmp);
+        //console.log(tmp);
         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
       }
     } finally {
