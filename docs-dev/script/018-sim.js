@@ -174,7 +174,11 @@ const simVue = new Vue({
                 this.dispCells = [];
                 let tempCells = this.exeOrder.map((ele) => {
                   //console.log(ele);
-                  return this.pCell4Exp(ele);
+                  let prepCell = this.pCell4Exp(ele)
+                  if (prepCell.isPopup) {
+                    popup.sendParams(prepCell);
+                  }
+                  return prepCell;
                 });
                 //console.log(tempCells);
                 out = {
@@ -191,10 +195,13 @@ const simVue = new Vue({
                   return option === ele.id;
                 })
                 if (idx >= 0) {
-                  let cellValue = this.pCell4Exp(this.exeOrder[idx]);
+                  let prepCell = this.pCell4Exp(this.exeOrder[idx]);
+                  if (prepCell.isPopup) {
+                    popup.sendParams(prepCell);
+                  }
                   out = {
                     updateCell: {
-                      v: cellValue, //value
+                      v: prepCell, //value
                       i: idx //index
                     }
                   }

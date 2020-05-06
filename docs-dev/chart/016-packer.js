@@ -1,3 +1,4 @@
+/*
 const packer = {
   pack: function (fText) {
     let deflated16Bit = this.deflated16bit(fText);
@@ -31,7 +32,7 @@ const packer = {
     return buf;
   }
 }
-
+*/
 
 
 /*function compress(text) {

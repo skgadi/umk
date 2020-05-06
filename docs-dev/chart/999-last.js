@@ -6,24 +6,14 @@ onmessage = function (event) {
   if (!!event.data.r) {
     cItem.resetChart();  
   }
+  if (!!event.data.c) {
+    this.console.log(event.data.c);
+    cItem.showIm = event.data.c.Parameters.showIm.Value[0][0];
+  }
 };
 
 (() => {
   console.log('loaded');
   cItem.prepareChart();
-  /*urlInfo.getInText();
-  urlInfo.getInfo();
-  urlInfo.getLocale();
-  cItem.prepareChart();
-  db.connectDB();
-  db.cid = urlInfo.info.v.cid;*/
-  //for (; true;) {}
-  /*setTimeout(() => {
-      db.getData();
-  }, 100);*/
-  /*setInterval(() => {
-      db.getData();
-  }, 100);*/
-  //console.log(urlInfo.info);
 })()
 

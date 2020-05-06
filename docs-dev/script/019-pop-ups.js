@@ -21,6 +21,7 @@ const popup = {
         default:
           break;
       }
+      this.sendParams(simVue.pCell4Exp(cell)); // sends the cell info to the popup window
     }
   },
   openUrl: function (cid, url, spec) {
@@ -47,6 +48,13 @@ const popup = {
         t: ele.t,
         v: [math.re(val)._data, math.im(val)._data]
       };
+    }
+  },
+  sendParams: function (prepCell) {
+    if (this.rCells[prepCell.cid] && !this.rCells[prepCell.cid].closed) {
+      this.rCells[prepCell.cid].postMessage({
+        c: prepCell
+      });
     }
   },
   sendData: function (cid) {

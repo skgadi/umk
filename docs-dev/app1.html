@@ -416,6 +416,10 @@
                                 <option v-bind:value="opnVal" v-html='opnName[settings.lang]'></option>
                               </template>
                             </select>
+                            <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer" @click="toggleParamCheckVal(index,index1,index2)">
+                              <i class="far" :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
+                              <span v-text="Parameter.Name[settings.lang]"></span>
+                            </div>                  
                           </td>
                         </template>
                       </tr>

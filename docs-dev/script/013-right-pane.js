@@ -283,6 +283,9 @@ const editorVue = new Vue({
           tempItem = Object.keys(this.uyamakModel.Parameters[index].Options)[0];
           //console.log(index);
           break;
+        case "Checkbox":
+          tempItem = false;
+          break;
       }
       switch (func) {
         case 0:
@@ -319,6 +322,10 @@ const editorVue = new Vue({
         console.log(e);
         return '<i class="fas fa-exclamation-triangle fa-fw"></i><span>' + GUIText[settings.lang].k172 + '</span>';
       }
+    },
+    toggleParamCheckVal: function (index, index1, index2) {
+      this.uyamakModel.Parameters[index]['Value'][index1][index2] = !this.uyamakModel.Parameters[index]['Value'][index1][index2];
+      this.updatingCounter++;
     }
   }
 })

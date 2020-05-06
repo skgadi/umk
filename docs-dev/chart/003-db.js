@@ -1,3 +1,4 @@
+/*
 const db = {
   handle: null,
   cid: null,
@@ -16,12 +17,12 @@ const db = {
       }
     });
   },
-  /*
-    removeDB: function () {
-      if (!!this.handle) {
-        this.handle.delete()
-      }
-    },*/
+  
+  //  removeDB: function () {
+   //   if (!!this.handle) {
+   //     this.handle.delete()
+   //   }
+   // },
   getData: function () {
     if (!!this.handle && !this.handle.hasBeenClosed()) {
       this.handle.outs.where("b").equals(this.cid).filter(function (item) {
@@ -87,3 +88,4 @@ const db = {
 
   }
 }
+*/

@@ -73,7 +73,7 @@ const cItem = {
       }
     }
   },
-  showIm: true,
+  showIm: false,
   handle: null,
   isFirst: true,
   setLocale: function (lang) {
@@ -119,37 +119,6 @@ const cItem = {
             });
           });
         }
-        /*
-        mVal.forEach(function (rowItem, j) {
-          console.log(typeof rowItem[0]);
-          if (typeof rowItem[0] === "number") {
-            console.log("entereted");
-            rowItem = [rowItem];
-          }
-          console.log(rowItem);
-          rowItem[0].forEach(function (rNcItem, k) {
-            if (!i) {
-                series.push({
-                  name: (cItem.showIm?"Re":"")+"([" + String(j + 1) + " " + String(k + 1) + "])",
-                  data: []
-                });
-            }
-            series[eleNum++].data.push([vals[i].t, rNcItem]);
-          });
-          if (cItem.showIm) {
-            rowItem[0].forEach(function (rNcItem, k) {
-              if (!i) {
-                series.push({
-                  name: "Im([" + String(j + 1) + " " + String(k + 1) + "])",
-                  data: []
-                });
-
-              }
-              series[eleNum++].data.push([vals[i].t, rNcItem]);
-            });
-          }
-        });
-        */
       }
       //console.log(series);
       if (this.isFirst) {

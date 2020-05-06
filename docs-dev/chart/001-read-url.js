@@ -1,3 +1,4 @@
+/*
 const urlInfo = {
   inText: null,
   info: null,
@@ -28,3 +29,4 @@ const urlInfo = {
     xhr.send();
   }
 };
+*/

@@ -17,6 +17,7 @@ class umk_model {
       editable: false
     };
     this.fInEO = false, //Is first in the execution order --- FirstInExecutionOrder
+    this.isPopup = false, // shows that this block generates a popup window
     this.isOut = false; //shows that this is a output
     this.showInpOnHtml = false; //update screen while simulating 
     this.Icon_Temp_Html = null; //This is used internal to the Icon function

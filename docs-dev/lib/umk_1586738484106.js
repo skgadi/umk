@@ -11,18 +11,19 @@ class umk_1586738484106 extends umk_model {
   constructor(obj) {
     super(Object.assign({
       Parameters: {
-        "real": {
+        "showIm": {
           "Name": {
             "en-us": "Show imaginary values",
             "es-mx": "Mostrar valores imaginarios"
           },
           "Dimension": "Scalar",
-          "Type": "Check",
+          "Type": "Checkbox",
           "Value": [
             [false]
           ]
         }
       },
+      isPopup: true, //shows that it generates a popup window 
       isOut: true //shows that this is a output
     }, obj));
   }
