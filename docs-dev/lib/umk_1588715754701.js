@@ -16,7 +16,12 @@ class umk_1588715754701 extends umk_model {
       this.outputs[0] = math.multiply(this.inputs[0], this.Parameters.gain.Value);
     } else {
       //console.log(this.Parameters.gain.Value);
-      this.outputs[0] = math.dotMultiply(math.squeeze(this.Parameters.gain.Value), this.inputs[0]);
+      let gSize = this.Parameters.gain.Value.size();
+      if (gSize[0]===1 && gSize[1]===1) {
+        this.outputs[0] = math.dotMultiply(math.squeeze(this.Parameters.gain.Value), this.inputs[0]);
+      } else {
+        this.outputs[0] = math.dotMultiply(this.Parameters.gain.Value, this.inputs[0]);
+      }
     }
   }
   Details() {

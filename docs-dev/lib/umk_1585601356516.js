@@ -15,7 +15,7 @@ class umk_1585601356516 extends umk_model {
     }
   }
   Details() {
-    return "$$y(t) = a\\times u(t)$$";
+    return TeX.prepDisp("y(t) = \\sum_{i=1\}^{" + this.TerminalsIn.value + "}{u_i(t)}");
   }
   constructor(obj) {
     super(Object.assign({
