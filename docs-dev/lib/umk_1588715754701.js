@@ -17,10 +17,10 @@ class umk_1588715754701 extends umk_model {
     } else {
       //console.log(this.Parameters.gain.Value);
       let gSize = this.Parameters.gain.Value.size();
-      if (gSize[0]===1 && gSize[1]===1) {
-        this.outputs[0] = math.dotMultiply(math.squeeze(this.Parameters.gain.Value), this.inputs[0]);
+      if (gSize[0] === 1 && gSize[1] === 1) {
+        this.outputs[0] = math.dotMultiply(this.inputs[0], math.squeeze(this.Parameters.gain.Value));
       } else {
-        this.outputs[0] = math.dotMultiply(this.Parameters.gain.Value, this.inputs[0]);
+        this.outputs[0] = math.dotMultiply(this.inputs[0], this.Parameters.gain.Value);
       }
     }
   }

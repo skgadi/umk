@@ -14,9 +14,9 @@ const simVue = new Vue({
     simSettings: {
       h: 100, //Step size
       T: 5, // Total simulation time
-      realtime: false,
+      realtime: true,
       steps: 1,
-      sOEvery: 2,
+      sOEvery: 1,
       mHis: 1000
     },
     results: [],

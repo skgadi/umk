@@ -60,18 +60,23 @@ const uyamakCbManager = {
     mainSystem.graph.ungroupSubModel();
     mainSystem.refresh();
   },
-  prepareAltAndCopy: function (text) {
-    this.inmportToGraph(text, this.graph);
+  prepareAltAndCopy: function (text, isCoded = true) {
+    this.inmportToGraph(text, this.graph, isCoded);
     this.graph.setSelectionCells(this.graph.getChildCells());
     this.graph.createSubModel()
     mxClipboard.copy(this.graph);
     this.graph.ungroupSubModel();
   },
-  inmportToGraph: function (text, graph) {
-    let deflated16bit = new Uint16Array(uyamakFileManager.str2ab(text));
-    deflated16bit = uyamakFileManager.escZero(deflated16bit, false);
-    let inflated8Bit = pako.inflate(deflated16bit);
-    let xmlString = uyamakFileManager.ab2str(inflated8Bit);
+  inmportToGraph: function (text, graph, isCoded = true) {
+    let xmlString;
+    if (isCoded) {
+      let deflated16bit = new Uint16Array(uyamakFileManager.str2ab(text));
+      deflated16bit = uyamakFileManager.escZero(deflated16bit, false);
+      let inflated8Bit = pako.inflate(deflated16bit);
+      xmlString = uyamakFileManager.ab2str(inflated8Bit);
+    } else {
+      xmlString = text;
+    }
     let doc = mxUtils.parseXml(xmlString);
     //console.log(doc);
     let codec = new mxCodec(doc);

@@ -4,9 +4,9 @@ const exec = {
     hs: 5,
     h: 5000,
     T: 5,
-    realtime: false,
+    realtime: true,
     steps: 1,
-    sOEvery: 2,
+    sOEvery: 1,
     pckSize: 2000
   },
   t: 0, //Current simulation time

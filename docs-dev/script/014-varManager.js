@@ -304,6 +304,12 @@ const varManagerVue = new Vue({
       } else {
         return true;
       }
+    },
+    toLocal: function() {
+
+    },
+    frmLocal: function() {
+
     }
   }
 });

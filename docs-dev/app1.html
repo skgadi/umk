@@ -20,8 +20,8 @@
 </head>
 
 <body>
-  <div id="GraphForCopyPaste" style="display:none;"></div>
-  <div id="waitForProcessToFinish">
+  <div id="GraphForCopyPaste" class="hide-always"></div>
+  <div id="waitForProcessToFinish" class="zidx5">
     <div>
       <div id="DOMWaitingAnimation">
         <i class="fas fa-cog fa-spin fa-2x"></i>
@@ -36,9 +36,117 @@
       </div>
     </div>
   </div>
+  <div id="drop-area" class="modal-translusent hide-always">
+    <div class="drop-area"><span><i class="fas fa-flag-checkered fa-2x"></i></span> </div>
+  </div>
+  <div id="lFManager" class="modal zidx4" v-show="display">
+    <div>
+      <div id="lFManager-main">
+        <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
+        <h1 class="center" v-html="GUIText[settings.lang].locFMgr"></h1>
+        <div class="splitShort">
+          <div class="no-col-break center">
+            <h2 v-html="GUIText[settings.lang].saveToLMach"></h2>
+            <div class="limit-250 margin-center">
+              <div>
+                <div class="checkboxItem pointer left" @click="sOptions.m = !sOptions.m">
+                  <i class="fas" :class="sOptions.m?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].model"></span>
+                </div>
+              </div>
+              <div>
+                <div class="checkboxItem pointer left" @click="sOptions.v = !sOptions.v">
+                  <i class="fas" :class="sOptions.v?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].vars"></span>
+                </div>
+              </div>
+              <div>
+                <div class="checkboxItem pointer left" @click="sOptions.s = !sOptions.s">
+                  <i class="fas" :class="sOptions.s?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].simSet"></span>
+                </div>
+              </div>
+              <div>
+                <div class="checkboxItem pointer left" @click="sOptions.g = !sOptions.g">
+                  <i class="fas" :class="sOptions.g?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].guiSet"></span>
+                </div>
+              </div>
+            </div>
+            <br />
+            <h3 class="compress" v-text="GUIText[settings.lang].enterFileName"></h3>
+            <div class="limit-250 margin-center">
+              <input id="fMFName" class="inter-itm center" v-model="sFName" />
+            </div>
+            <br />
+            <div v-show= "enSave" class="center gen-btn" v-html="GUIText[settings.lang].save" @click="sToFile"></div>
+            <div v-show= "!enSave" class="blocked gen-btn" v-html="GUIText[settings.lang].save" ></div>
+          </div>
+          <div class="no-col-break center">
+            <h2 v-html="GUIText[settings.lang].loadFrmLMach"></h2>
+            <div class="limit-250 margin-center">
+              <div>
+                <div v-if="oAvail.m" class="checkboxItem pointer left" @click="oOptions.m = !oOptions.m">
+                  <i class="fas" :class="oOptions.m?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].model"></span>
+                </div>
+                <div v-else class="checkboxItem disabled left">
+                  <i class="fas fa-minus-square"></i>
+                  <span v-text="GUIText[settings.lang].model"></span>
+                </div>
+              </div>
+              <div>
+                <div v-if="oAvail.v" class="checkboxItem pointer left" @click="oOptions.v = !oOptions.v">
+                  <i class="fas" :class="oOptions.v?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].vars"></span>
+                </div>
+                <div v-else class="checkboxItem disabled left">
+                  <i class="fas fa-minus-square"></i>
+                  <span v-text="GUIText[settings.lang].vars"></span>
+                </div>
+              </div>
+              <div>
+                <div v-if="oAvail.s" class="checkboxItem pointer left" @click="oOptions.s = !oOptions.s">
+                  <i class="fas" :class="oOptions.s?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].simSet"></span>
+                </div>
+                <div v-else class="checkboxItem disabled left">
+                  <i class="fas fa-minus-square"></i>
+                  <span v-text="GUIText[settings.lang].simSet"></span>
+                </div>
+              </div>
+              <div>
+                <div v-if="oAvail.g" class="checkboxItem pointer left" @click="oOptions.g = !oOptions.g">
+                  <i class="fas" :class="oOptions.g?'fa-check-square':'fa-square'"></i>
+                  <span v-text="GUIText[settings.lang].guiSet"></span>
+                </div>
+                <div v-else class="checkboxItem disabled left">
+                  <i class="fas fa-minus-square"></i>
+                  <span v-text="GUIText[settings.lang].guiSet"></span>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div @click="selectFile" class="inter-itm pointer">
+              <input id="file-input" type="file" name="name" class="hide-always" />
+              <div v-html="GUIText[settings.lang].sFile"></div>
+              <h3 class="compress" v-html="oFDesc"></h3>
+            </div>
+            <br />
+            <div class="splitToTwo">
+              <div v-if="enOpen" class="center gen-btn" v-html="GUIText[settings.lang].open" @click="oprnOpen(false)"></div>
+              <div v-show="!enOpen" class="center gen-btn blocked" v-html="GUIText[settings.lang].open"></div>
+              <div v-show="enIprt" class="center gen-btn" v-html="GUIText[settings.lang].import" @click="oprnOpen(true)"></div>
+              <div v-show="!enIprt" class="center gen-btn blocked" v-html="GUIText[settings.lang].import"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="cookies-policy" class="modal" v-show="display">
     <div>
-      <div v-html="GUIText[settings.lang].cPolicyText"></div>
+      <h1 class="center" v-html="GUIText[settings.lang].cPolicyText"></h1>
       <br>
       <div class="splitToTwo">
         <div class="center gen-btn" v-html="GUIText[settings.lang].cPolicyLink"></div>
@@ -49,18 +157,18 @@
   <div id="settings" class="modal" v-show="display">
     <div>
       <span class="close-btn" @click="showGUI(false)"><i class="far fa-fw fa-times-circle"></i></span>
-      <h1 v-text="GUIText[settings.lang].settings"></h1>
+      <h1 class="center" v-text="GUIText[settings.lang].settings"></h1>
       <div class="splitShort">
-        <div class="no-col-break">
-          <label v-text="GUIText[settings.lang].language"></label>
-          <select v-model="settings.lang">
+        <div class="no-col-break limit-250 margin-center">
+          <h3 class="compress center" v-html="GUIText[settings.lang].language"></h3>
+          <select class="inter-itm" v-model="settings.lang">
             <option value="en-us" v-text="GUIText[settings.lang]['en-us']"></option>
             <option value="es-mx" v-text="GUIText[settings.lang]['es-mx']"></option>
           </select>
         </div>
-        <div class="no-col-break">
-          <label v-text="GUIText[settings.lang].theme"></label>
-          <select v-model="settings.theme">
+        <div class="no-col-break limit-250 margin-center">
+          <h3 class="compress center" v-text="GUIText[settings.lang].theme"></h3>
+          <select class="inter-itm" v-model="settings.theme">
             <option v-for="(item,idx) in cThemes[settings.lang]" :value="idx" v-text="item"></option>
           </select>
         </div>
@@ -128,7 +236,7 @@
                     </td>
                     <template v-for="(value, index2) in edtVar.value[index1]">
                       <td>
-                        <input v-model.trim="edtVar.value[index1][index2]" type="text" />
+                        <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
                       </td>
                     </template>
                   </tr>
@@ -177,7 +285,7 @@
                   </td>
                   <template v-for="(value, index2) in edtVar.value[index1]">
                     <td>
-                      <input v-model.trim="edtVar.value[index1][index2]" type="text" />
+                      <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
                     </td>
                   </template>
                 </tr>
@@ -235,14 +343,17 @@
         </template>
       </ul>
       <ul class="menu f-right" id="sim-menu">
-        <li class="dropdown" @click="informSim('start')" v-if="disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
+        <li class="dropdown" @click="informSim('start')" v-if="disp.run"><a class="dropbtn"><i
+              class="fas fa-fw fa-play"></i></a></li>
         <li class="blocked" v-if="!disp.run"><a><i class="fas fa-fw fa-play"></i></a></li>
-        <li class="dropdown" @click="informSim('stop')" v-if="disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
+        <li class="dropdown" @click="informSim('stop')" v-if="disp.stop"><a class="dropbtn"><i
+              class="fas fa-fw fa-stop"></i></a></li>
         <li class="blocked" v-if="!disp.stop"><a><i class="fas fa-fw fa-stop"></i></a></li>
-        <li class="dropdown" @click="informSim('pause')" v-show="disp.pause"><a><i class="fas fa-fw fa-pause"></i></a>
+        <li class="dropdown" @click="informSim('pause')" v-show="disp.pause"><a class="dropbtn"><i
+              class="fas fa-fw fa-pause"></i></a>
         </li>
         <li class="blocked" v-if="!disp.pause"><a><i class="fas fa-fw fa-pause"></i></a></li>
-        <li class="dropdown" @click="informSim('steps')" v-if="disp.forward"><a><i
+        <li class="dropdown" @click="informSim('steps')" v-if="disp.forward"><a class="dropbtn"><i
               class="fas fa-fw fa-step-forward"></i></a></li>
         <li class="blocked" v-if="!disp.forward"><a><i class="fas fa-fw fa-step-forward"></i></a></li>
         <li class="dropdown">
@@ -259,7 +370,7 @@
             <p class="compress" v-html="GUIText[settings.lang].nSteps"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.steps">
             <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
-              <i class="far" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
+              <i class="fas" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
               <span v-text="GUIText[settings.lang].rRealTime"></span>
             </div>
           </div>
@@ -278,7 +389,7 @@
           <div class="blocks-search-bar">
             <span @click="focusBar"><i class="fas fa-fw fa-search"></i></span>
             <span>
-              <input id="search-input" @focus="searchbarText(true)" @blur="searchbarText(false)"
+              <input id="search-input" @focus="sBFocus(true)" @blur="sBFocus(false)"
                 :placeholder="GUIText[settings.lang].sblocks" v-model="searchText" type="text">
               <span v-show="!!searchText" @click="searchText=''">
                 <i class="fas fa-fw fa-times"></i>
@@ -296,7 +407,8 @@
                 <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                   @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                   <g>
-                    <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
+                    <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1'
+                      stroke='var(--col-border-1)' />
                   </g>
                   <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
                     fill='none' v-html="blksSummary[item0].icon"></g>
@@ -315,10 +427,11 @@
                   <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                     @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                     <g>
-                      <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width ='1' stroke='var(--col-border-1)' />
+                      <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1'
+                        stroke='var(--col-border-1)' />
                     </g>
                     <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
-                        fill='none' v-html="blksSummary[item0].icon"></g>
+                      fill='none' v-html="blksSummary[item0].icon"></g>
                   </svg>
                 </template>
               </div>
@@ -372,20 +485,15 @@
                 <span v-html="Parameter.Name[settings.lang]"></span>
               </div>
               <div v-if="!!parametersDisplay[index]">
-                <div v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && rpSettings.fEditMode"
+                <div
+                  v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && rpSettings.fEditMode"
                   class="matrix-builder-buttons">
-                  <span @click="valueDimensionsModify(0, index)" class="rotate-90">
-                    <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-plus-circle fa-fw"></i>
-                  </span>
-                  <span @click="valueDimensionsModify(1, index)" class="rotate-90">
-                    <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-minus-circle fa-fw  fa-rotate-90"></i>
-                  </span>
-                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)">
-                    <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-plus-circle fa-fw"></i>
-                  </span>
-                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)">
-                    <i class="fas fa-ellipsis-h fa-fw"></i><i class="fas fa-minus-circle fa-fw"></i>
-                  </span>
+                  <span @click="valueDimensionsModify(0, index)" v-html="'$$\\cdots +$$'" class="rotate-90"></span>
+                  <span @click="valueDimensionsModify(1, index)" v-html="'$$\\cdots~|~$$'" class="rotate-90"></span>
+                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)"
+                    v-html="'$$\\cdots +$$'"></span>
+                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)"
+                    v-html="'$$\\cdots -$$'"></span>
                 </div>
                 <div class="expandable-x">
                   <table>
@@ -404,22 +512,24 @@
                         </td>
                         <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
                           <td>
-                            <input v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
-                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]"
-                              v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="text" />
+                            <input class="center"
+                              v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="text" />
+                            <!--v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" -->
                             <input v-if="Parameter.Type === 'Color'"
-                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]"
-                              v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" type="color" />
+                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="color" />
                             <select v-if="Parameter.Type === 'Options'" class="inter-itm"
                               v-model="uyamakModel.Parameters[index]['Value'][index1][index2]">
                               <template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']">
                                 <option v-bind:value="opnVal" v-html='opnName[settings.lang]'></option>
                               </template>
                             </select>
-                            <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer" @click="toggleParamCheckVal(index,index1,index2)">
-                              <i class="far" :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
+                            <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer"
+                              @click="toggleParamCheckVal(index,index1,index2)">
+                              <i class="fas"
+                                :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
                               <span v-text="Parameter.Name[settings.lang]"></span>
-                            </div>                  
+                            </div>
                           </td>
                         </template>
                       </tr>
@@ -440,7 +550,8 @@
             <br />
             <div v-if="!isBlockValid" v-html="GUIText[settings.lang].errCompat"></div>
             <div class="splitToTwo">
-              <div v-if="isBlockValid" class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()"></div>
+              <div v-if="isBlockValid" class="gen-btn" v-html="GUIText[settings.lang].aChanges" @click="saveModel()">
+              </div>
               <div v-if="!isBlockValid" class="blocked gen-btn" v-html="GUIText[settings.lang].aChanges"></div>
 
               <div class="gen-btn" v-html="GUIText[settings.lang].rChanges"
@@ -448,18 +559,12 @@
             </div>
             <h3 class="compress" v-text="GUIText[settings.lang].orientation"></h3>
             <div class="matrix-builder-buttons">
-              <span @click="rotate(0)">
-                <i class="far fa-smile"></i>
-              </span>
-              <span @click="rotate(90)">
-                <i class="far fa-smile fa-rotate-90"></i>
-              </span>
-              <span @click="rotate(180)">
-                <i class="far fa-smile fa-rotate-180"></i>
-              </span>
-              <span @click="rotate(270)">
-                <i class="far fa-smile fa-rotate-270"></i>
-              </span>
+              <span @click="editorVue.rotateAll(true)"><i class="fas fa-redo"></i></span>
+              <span @click="rotate(0)" v-html="'$$\\Large \\Rightarrow$$'"></span>
+              <span @click="rotate(90)" v-html="'$$\\Large \\Downarrow$$'"></span>
+              <span @click="rotate(180)" v-html="'$$\\Large \\Leftarrow$$'"></span>
+              <span @click="rotate(270)" v-html="'$$\\Large \\Uparrow$$'"></span>
+              <span @click="editorVue.rotateAll(false)"><i class="fas fa-undo"></i></span>
             </div>
           </div>
         </div>
@@ -467,26 +572,26 @@
           <h3 class="compress"><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
               v-text="GUIText[settings.lang].gridLines"></span></h3>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMinor = !rpSettings.gLinesMinor">
-            <i class="far" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMinor"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMajor = !rpSettings.gLinesMajor">
-            <i class="far" :class="rpSettings.gLinesMajor?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.gLinesMajor?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMajor"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMega = !rpSettings.gLinesMega">
-            <i class="far" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMega"></span>
           </div>
-          <br/>
+          <br />
           <h3 class="compress"><i class="fas fa-fw fa-ruler-combined"></i><span class="gap-left"
               v-text="GUIText[settings.lang].gridSize"></span></h3>
           <input type="number" v-model.number="rpSettings.gridSize">
           <div class="checkboxItem pointer" @click="rpSettings.snapToGrid = !rpSettings.snapToGrid">
-            <i class="far" :class="rpSettings.snapToGrid?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.snapToGrid?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].snapToGrid"></span>
           </div>
-          <br/>
+          <br />
           <h3 class="compress"><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
               v-text="GUIText[settings.lang].navi"></span></h3>
           <div id="graph-nav">
@@ -500,27 +605,28 @@
             <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
             <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
           </div>
-          <br/>
-          <h3 class="compress"><i class="fas fa-fw fa-tools"></i><span class="gap-left" v-text="GUIText[settings.lang].oSettings"></span>
+          <br />
+          <h3 class="compress"><i class="fas fa-fw fa-tools"></i><span class="gap-left"
+              v-text="GUIText[settings.lang].oSettings"></span>
           </h3>
           <div class="checkboxItem pointer" @click="rpSettings.showOutline = !rpSettings.showOutline">
-            <i class="far" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showOutline"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.guidesEnabled = !rpSettings.guidesEnabled">
-            <i class="far" :class="rpSettings.guidesEnabled?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.guidesEnabled?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].guidesEnabled"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.showLabels = !rpSettings.showLabels">
-            <i class="far" :class="rpSettings.showLabels?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.showLabels?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showLabels"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.showExeOrder = !rpSettings.showExeOrder">
-            <i class="far" :class="rpSettings.showExeOrder?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.showExeOrder?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showExeOrder"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.hideGraphText = !rpSettings.hideGraphText">
-            <i class="far" :class="rpSettings.hideGraphText?'fa-check-square':'fa-square'"></i>
+            <i class="fas" :class="rpSettings.hideGraphText?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].hideGraphText"></span>
           </div>
         </div>

@@ -1,7 +1,239 @@
+uyamak.lFManagerVue = new Vue({
+  el: "#lFManager",
+  data: {
+    display: false,
+    sFName: null,
+    fInput: null,
+    oFileInfo: {
+      name: ""
+    },
+    reader: null,
+    sOptions: { // Save file options
+      m: true,
+      v: true,
+      s: true,
+      g: true
+    },
+    oOptions: { //Open file options
+      m: true,
+      v: true,
+      s: true,
+      g: false
+    },
+    oAvail: { //Available options to open/import
+      m: false,
+      v: false,
+      s: false,
+      g: false
+    },
+    dDAtn: null,
+    tempKBSus: null
+  },
+  mounted: function () {
+    this.fInput = document.getElementById("file-input");
+    this.fInput.onchange = (e) => {
+      uyamak.lFManagerVue.$set(uyamak.lFManagerVue.$data, "oFileInfo", e.target.files[0]);
+      uyamak.lFManagerVue.$set(uyamak.lFManagerVue.$data.fInput, "value", "");
+    }
+    this.reader = new FileReader();
+    this.reader.onload = function (x) {
+      try {
+        uyamak.lFManagerVue.obtnAvail(x.target.result);
+      } catch (e) {
+        new Noty({
+          text: GUIText[settings.lang].errCrpt,
+          timeout: 5000,
+          theme: "nest",
+          type: 'error'
+        }).show();
+      }
+    };
+  },
+  watch: {
+    "display": function () {
+      kbshort.suspend(this.display, function (evt) {
+        if (evt.keyCode === 27) {
+          uyamak.lFManagerVue.showGUI(false);
+        }
+      });
+    },
+    oFileInfo: {
+      deep: true,
+      handler: function () {
+        this.oAvail = {
+          m: null,
+          v: null,
+          s: null,
+          g: null
+        };
+        if (this.oFileInfo.size > 1e7) {
+          new Noty({
+            text: GUIText[settings.lang].errFSize,
+            timeout: 5000,
+            theme: "nest",
+            type: 'error'
+          }).show();
+          return false;
+        }
+        this.reader.readAsText(this.oFileInfo);
+      }
+    }
+  },
+  computed: {
+    enSave: function () {
+      if ((this.sOptions.m || this.sOptions.v || this.sOptions.s || this.sOptions.g) && !!this.sFName && GSKGenFuncs.isValidFileName(this.sFName.trim())) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    enOpen: function () {
+      if ((this.oOptions.m && !!this.oAvail.m) || (this.oOptions.v && !!this.oAvail.v) || (this.oOptions.s && !!this.oAvail.s) || (this.oOptions.g && !!this.oAvail.g)) {
+        //console.log('hey');
+        return true;
+      } else {
+        return false;
+      }
+    },
+    enIprt: function () {
+      if ((this.oOptions.m && !!this.oAvail.m) || (this.oOptions.v && !!this.oAvail.v)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    oFDesc: function () {
+      if (!this.oFileInfo.name) {
+        return '&nbsp;';
+      } else {
+        return this.oFileInfo.name + "; " + math.unit(this.oFileInfo.size + "b").format(4);
+      }
+    }
+  },
+  methods: {
+    oprnOpen: function (isImport = false) {
+      try {
+        if (this.oOptions.m && !!this.oAvail.m) {
+          console.log(isImport);
+          if (isImport) {
+            uyamakCbManager.prepareAltAndCopy(this.oAvail.m, false);
+            uyamakCbManager.bringModelToMain();
+          } else {
+            mainSystem.graph.getModel().clear();
+            uyamakCbManager.inmportToGraph(this.oAvail.m, mainSystem.graph, false);
+          }
+        }
+        if (this.oOptions.v && !!this.oAvail.v) {
+          if (!isImport) {
+            varManagerVue.variables = [];
+          }
+          let orginalVarLength = varManagerVue.variables.length;
+          for (let i = 0; i < this.oAvail.v.length; i++) {
+            let foundAt = -1;
+            for (let j = 0; j < orginalVarLength; j++) {
+              if (this.oAvail.v[i].name === varManagerVue.variables[j].name) {
+                foundAt = j;
+                break;
+              }
+            }
+            if (foundAt < 0) {
+              varManagerVue.variables.push(this.oAvail.v[i]);
+            } else {
+              varManagerVue.variables[foundAt] = this.oAvail.v[i];
+            }
+          }
+        }
+        if (this.oOptions.s && !!this.oAvail.s) {
+          let keys = Object.keys(this.oAvail.s);
+          for (let i = 0; i < keys.length; i++) {
+            simVue.simSettings[keys[i]] = this.oAvail.s[keys[i]];
+          }
+        }
+        if (this.oOptions.g && !!this.oAvail.g) {
+          let keys = Object.keys(this.oAvail.g);
+          for (let i = 0; i < keys.length; i++) {
+            settings[keys[i]] = this.oAvail.g[keys[i]];
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      this.showGUI(false);
+    },
+    sToFile: function () { //save to file
+      let out = {};
+      if (this.sOptions.m) {
+        out.m = uyamak.cmprs.xmlText();
+      }
+      if (this.sOptions.v) {
+        out.v = varManagerVue.variables;
+      }
+      if (this.sOptions.s) {
+        out.s = simVue.simSettings;
+      }
+      if (this.sOptions.g) {
+        out.g = settings;
+      }
+      if (!!Object.keys(out).length && GSKGenFuncs.isValidFileName(this.sFName.trim())) {
+        GSKGenFuncs.download(this.sFName.trim() + ".umk", uyamak.cmprs.compressJSON(out), "application/uyamak;charset=utf-8");
+      }
+    },
+    isValidFileName: function () {
+      const rg1 = /^[^\\/:\*\?"<>\|]+$/; // forbidden characters \ / : * ? " < > |
+      const rg2 = /^\./; // cannot start with dot (.)
+      const rg3 = /^(nul|prn|con|lpt[0-9]|com[0-9])(\.|$)/i; // forbidden file names
+      return rg1.test(fname) && !rg2.test(fname) && !rg3.test(fname);
+    },
+    obtnAvail: function (codedText) {
+      let obtainedJSON = uyamak.cmprs.decompressJSON(codedText);
+      //console.log(obtainedJSON);
+      this.oAvail.m = obtainedJSON.m;
+      this.oAvail.v = obtainedJSON.v;
+      this.oAvail.s = obtainedJSON.s;
+      this.oAvail.g = obtainedJSON.g;
+    },
+    selectFile: function () {
+      this.fInput.click();
+    },
+    dragOperation: function (evt) {
+      this.dDAtn = evt.type;
+      //console.log(this.dDAtn);
+      if ((this.dDAtn === 'dragenter') || (this.dDAtn === 'dragover')) {
+        document.getElementById("drop-area").style.display = "block";
+        //suspend all keys except esc to cancel update
+        kbshort.suspend(true, function (evt) {
+          if (evt.keyCode === 27) {
+            document.getElementById("drop-area").style.display = "none";
+            kbshort.suspend(false);
+          }
+        });
+      } else {
+        document.getElementById("drop-area").style.display = "none";
+      }
+      GSKGenFuncs.preventDefaults(evt);
+      //console.log(evt.dataTransfer.files[0]);
+      if (this.dDAtn === "drop") {
+        this.oFileInfo = evt.dataTransfer.files[0];
+        this.showGUI(true);
+      }
+    },
+    showGUI: function (show = true) {
+      this.display = show;
+      if (!this.sFName) {
+        this.sFName = GUIText[settings.lang].myUmkModel;
+      }
+      /*//Selects input when focused.
+      setTimeout(function () {
+        document.getElementById("fMFName").select();
+      }, 10);
+      */
+    },
+  }
+});
 // save and load the uymak models
 const uyamakFileManager = {
   fileName: null,
-  xml: function (graph = mainSystem.graph) {
+  xmlText: function (graph = mainSystem.graph) {
     let encoder = new mxCodec();
     return mxUtils.getXml(encoder.encode(graph.getModel()));
   },
@@ -25,12 +257,20 @@ const uyamakFileManager = {
     document.body.removeChild(element);
     window.URL.revokeObjectURL(url);
   },
-  saveLocal: function () {
+  saveLocal: function (isVars = false) {
     this.fileName = prompt(GUIText[settings.lang].enterFileName, GUIText[settings.lang].myUmkModel);
     if (!!this.fileName) {
-      let deflated16bit = this.deflated16bit(this.xml());
-      let escapeZeroArray = this.escZero(deflated16bit);
-      this.download(this.fileName + ".umk", this.ab2str(escapeZeroArray));
+      let saveItem = {
+        v: varManagerVue.variables
+      }; // v for variables
+      if (!isVars) {
+        saveItem.s = simVue.simSettings; // s for simulation settings
+        saveItem.m = this.xmlText(); // m for model
+        /*let deflated16bit = this.deflated16bit(this.xmlText());
+        let escapeZeroArray = this.escZero(deflated16bit);
+        this.download(this.fileName + ".umk", this.ab2str(escapeZeroArray));*/
+      }
+      this.download(this.fileName + ".umk", this.compressJSON(saveItem));
     }
   },
   importFlag: false,
@@ -42,6 +282,18 @@ const uyamakFileManager = {
   },
   fileInp: null,
   encoder: new mxCodec(),
+  compressJSON: function (JSONIn) {
+    let deflated16Bit = this.deflated16bit(JSON.stringify2(JSONIn));
+    deflated16Bit = this.escZero(deflated16Bit);
+    return this.ab2str(deflated16Bit);
+  },
+  decompressJSON: function (codedText) {
+    let deflated16Bit = new Uint16Array(this.str2ab(codedText));
+    deflated16Bit = this.escZero(deflated16Bit, false);
+    let inflated8Bit = pako.inflate(deflated16Bit);
+    let JSONText = this.ab2str(inflated8Bit);
+    return JSON.parse2(JSONText);
+  },
   compressModel: function (graph) {
     //let encoder = new mxCodec();
     let model = graph.getModel();
@@ -112,42 +364,6 @@ const uyamakFileManager = {
 
 
 
-//Handles the umk_model 's value
-const oldEncode = mxCodec.prototype.encode;
-mxCodec.prototype.encode = function (obj) {
-  /*mxLog.show();
-  mxLog.debug('mxCodec.encode: obj=' + mxUtils.getFunctionName(obj.constructor));*/
-  if (obj.constructor.name === "Object" || obj.constructor.name.search(/umk_\d{13}/g) >= 0) {
-    //console.log(obj.constructor.name);
-    return;
-  } else {
-    let xmlOut = oldEncode.apply(this, arguments);
-    if (!!xmlOut && !!xmlOut.getAttribute('style') && xmlOut.getAttribute('style').search('umk_model') >= 0) {
-      xmlOut.setAttribute("value", JSON.stringify2(obj.value));
-    }
-    return xmlOut;
-  }
-
-
-  /*
-  console.log(obj.constructor.name);
-  let a = oldEncode.apply(this, arguments);
-  //console.log(a);
-  return a;
-  return oldEncode.apply(this, arguments);
-  */
-};
-
-/*
-const mxCodecEncodeCell = mxCodec.prototype.encodeCell;
-mxCodec.prototype.encodeCell = function(cell,node,includeChildren	) {
-  console.log(arguments);
-  if (cell.style && cell.style.search('umk_model')>=0) {
-    arguments[3] = false;
-  }
-  mxCodecEncodeCell.apply(this, arguments);
-}
-*/
 /*
 
 
