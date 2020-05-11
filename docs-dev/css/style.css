@@ -948,6 +948,7 @@ blink,
 }
 
 .settings-drop-dn {
+  overflow: hidden;
   right: 0;
   border: 1px var(--col-border-1) solid;
   /*padding: 0 !important;*/

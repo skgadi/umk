@@ -148,15 +148,35 @@ const simVue = new Vue({
     pCell4Exp: function (inCell) { //Prepare cell for export
       let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
       cellVal.cid = inCell.id;
+      eval("var tempModel = new " + cellVal.id + "(cellVal)");
+      //console.log(tempModel);
+      cellVal = tempModel;
       if (!!cellVal.Parameters) {
         let params = Object.keys(cellVal.Parameters);
         for (let i = 0; i < params.length; i++) {
           if (cellVal.Parameters[params[i]].Type === "Complex" ||
-            cellVal.Parameters[params[i]].Type === "real" ||
+            cellVal.Parameters[params[i]].Type === "Real" ||
             cellVal.Parameters[params[i]].Type === "Integer") {
             cellVal.Parameters[params[i]].Value =
-              (varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value)).toString();
+              varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value);
           }
+        }
+      }
+      cellVal.genCompParams();
+      if (!!cellVal.Parameters) {
+        let params = Object.keys(cellVal.Parameters);
+        for (let i = 0; i < params.length; i++) {
+          if (cellVal.Parameters[params[i]].Type === "Complex" ||
+            cellVal.Parameters[params[i]].Type === "Real" ||
+            cellVal.Parameters[params[i]].Type === "Integer") {
+            cellVal.Parameters[params[i]].Value = cellVal.Parameters[params[i]].Value.toString();
+          }
+        }
+      }
+      if (!!cellVal.CompParams) {
+        let params = Object.keys(cellVal.CompParams);
+        for (let i = 0; i < params.length; i++) {
+          cellVal.CompParams[params[i]] = cellVal.CompParams[params[i]].toString();
         }
       }
       //check if it ia display cell

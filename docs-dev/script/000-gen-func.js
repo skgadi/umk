@@ -24,4 +24,19 @@ const GSKGenFuncs = {
     document.body.removeChild(element);
     window.URL.revokeObjectURL(url);
   },
+  makeSVG: function (inPath, background, color, border, mClasses) {
+    if (!background) {
+      background = "#fff";
+    }
+    if (!color) {
+      color = "#000";
+    }
+    if (!border) {
+      border = color;
+    }
+    return "<svg" + (!!mClasses ? " class='" + mClasses + "'" : "") + " viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g><rect height='100' width='100' fill-opacity='1' fill='" + background + "' stroke-width='1' stroke='" + border + "' /></g><g stroke-linecap='round' width='100' height='100' stroke='" + color + "' stroke-width='5' fill='none'>" + inPath + "</g></svg>";
+    let out = "<svg" + (!!mClasses ? " class='" + mClasses + "'" : "") + " viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g><rect height='100' width='100' fill-opacity='1' fill='" + background + "' stroke-width='1' stroke='" + border + "' /></g><g stroke-linecap='round' width='100' height='100' stroke='" + color + "' stroke-width='5' fill='none'>" + inPath + "</g></svg>";
+    console.log(out);
+    return out;
+  }
 }

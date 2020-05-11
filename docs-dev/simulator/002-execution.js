@@ -36,10 +36,16 @@ const exec = {
         let params = Object.keys(cellVal.Parameters);
         for (let i = 0; i < params.length; i++) {
           if (cellVal.Parameters[params[i]].Type === "Complex" ||
-            cellVal.Parameters[params[i]].Type === "real" ||
+            cellVal.Parameters[params[i]].Type === "Real" ||
             cellVal.Parameters[params[i]].Type === "Integer") {
             cellVal.Parameters[params[i]].Value = math.evaluate(cellVal.Parameters[params[i]].Value);
           }
+        }
+      }
+      if (!!cellVal.CompParams) {
+        let params = Object.keys(cellVal.CompParams);
+        for (let i = 0; i < params.length; i++) {
+          cellVal.CompParams[params[i]] = math.evaluate(cellVal.CompParams[params[i]]);
         }
       }
     } catch (e) {

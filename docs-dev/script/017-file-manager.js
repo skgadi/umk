@@ -106,7 +106,7 @@ uyamak.lFManagerVue = new Vue({
       if (!this.oFileInfo.name) {
         return '&nbsp;';
       } else {
-        return this.oFileInfo.name + "; " + math.unit(this.oFileInfo.size + "b").format(4);
+        return this.oFileInfo.name + "; " + math.unit(this.oFileInfo.size + "b").format(4); //"$"+math.parse(this.oFileInfo.size + "b").toTex(4)+"$"
       }
     }
   },
@@ -114,7 +114,7 @@ uyamak.lFManagerVue = new Vue({
     oprnOpen: function (isImport = false) {
       try {
         if (this.oOptions.m && !!this.oAvail.m) {
-          console.log(isImport);
+          //console.log(isImport);
           if (isImport) {
             uyamakCbManager.prepareAltAndCopy(this.oAvail.m, false);
             uyamakCbManager.bringModelToMain();
@@ -142,6 +142,7 @@ uyamak.lFManagerVue = new Vue({
               varManagerVue.variables[foundAt] = this.oAvail.v[i];
             }
           }
+          varManagerVue.clearAndparseAll();
         }
         if (this.oOptions.s && !!this.oAvail.s) {
           let keys = Object.keys(this.oAvail.s);

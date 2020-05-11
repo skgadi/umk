@@ -35,6 +35,7 @@ function blockOnDOM(img) {
       Details.geometry.offset = new mxPoint(0, 0);
       Details.setConnectable(false);
       graph.setSelectionCell(v);
+      v.value.Const();
       graph.orderCells(false);
       setTimeout(() => {
         mainSystem.refresh();

@@ -31,7 +31,7 @@ class umk_1588715754701 extends umk_model {
       return TeX.prepDisp("y = u(t)\\times G");
     } else {
       return TeX.prepDisp("y_{[i,j]} = G_{[i,j]} \\times u(t)_{[i,j]},") + "<br>" + TeX.prepInline("i\\in" +
-          TeX.prepSetWithRange(this.Parameters.gain.Value.length)) + "<br>" +
+          TeX.prepSetWithRange(this.Parameters.gain.Value.length)) + ",<br>" +
         TeX.prepInline("j\\in" + TeX.prepSetWithRange(this.Parameters.gain.Value[0].length));
     }
   }

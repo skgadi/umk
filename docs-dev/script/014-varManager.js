@@ -286,7 +286,7 @@ const varManagerVue = new Vue({
         let params = Object.keys(cell.value.Parameters);
         for (let i = 0; i < params.length; i++) {
           if (cell.value.Parameters[params[i]].Type === "Complex" ||
-            cell.value.Parameters[params[i]].Type === "real" ||
+            cell.value.Parameters[params[i]].Type === "Real" ||
             cell.value.Parameters[params[i]].Type === "Integer") {
             let pVal = cell.value.Parameters[params[i]].Value;
             //console.log(pVal);

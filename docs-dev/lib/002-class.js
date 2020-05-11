@@ -1,9 +1,13 @@
 class umk_model {
-  constructor(obj={}) {
+  constructor(obj = {}) {
     //Block id
     this.id = this.constructor.name;
+    //Cell id
+    this.cid = "";
     // the parameters which user can change
     this.Parameters = {};
+    // the computed parameters are stored in this
+    this.CompParams = {};
     // During simulation inputs and outputs are stored here
     this.inputs = [];
     this.outputs = [];
@@ -17,8 +21,8 @@ class umk_model {
       editable: false
     };
     this.fInEO = false, //Is first in the execution order --- FirstInExecutionOrder
-    this.isPopup = false, // shows that this block generates a popup window
-    this.isOut = false; //shows that this is a output
+      this.isPopup = false, // shows that this block generates a popup window
+      this.isOut = false; //shows that this is a output
     this.showInpOnHtml = false; //update screen while simulating 
     this.Icon_Temp_Html = null; //This is used internal to the Icon function
     this.temp_exec = {}; //This is temporary item used by execute command of simulation
@@ -35,7 +39,7 @@ class umk_model {
       }
     }
     /* in case of output .... make only one input Outputs cannot have more than one input*/
-    if(this.isOut) {
+    if (this.isOut) {
       this.TerminalsIn = {
         min: 1,
         max: 1,
@@ -47,7 +51,7 @@ class umk_model {
         max: 0,
         value: 0,
         editable: false
-      }; 
+      };
     }
   }
   //This is applied when the model (cell) is created
@@ -67,7 +71,7 @@ class umk_model {
     return "";
   }
   //This sets the icon details.
-  Icon () {
+  Icon() {
     return {
       html: 'Not configured',
       inLabels: null,
@@ -79,4 +83,6 @@ class umk_model {
   invalidParams() {
     return false;
   };
+  // compute the parameters to prepare CompParams
+  genCompParams() {}
 }
