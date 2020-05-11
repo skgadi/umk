@@ -627,6 +627,13 @@ ul.menu-kbs>li {
   line-height: var(--button-size);
 }
 
+.category-head i {
+  color: var(--col-background-3);
+}
+.category-head:hover i {
+  color: var(--col-border-1);
+}
+
 /*
 .category-content {
   border-bottom: 1px var(--col-border-0) solid;
@@ -1054,8 +1061,8 @@ table {
   text-align: center;
 }
 
-table,
-td,
-th {
+table.simple-border,
+table.simple-border td,
+table.simple-border th {
   border: 1px solid var(--col-border-0);
 }

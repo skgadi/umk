@@ -18,7 +18,7 @@ const blockUtils = {
     return math.add(math.dotMultiply(compare, lowerLimit), math.dotMultiply(math.not(compare), upperLimit));
   },
   bldTT: function (arr) {
-    let out = "<table>";
+    let out = "<table class='simple-border'>";
     out += "<tr>";
     for (let i = 1; i < arr[0].length; i++) {
       out += "<td>";
