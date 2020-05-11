@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=6" />
-  <link rel="stylesheet" href="css/style.min.css?bv=6" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=7" />
+  <link rel="stylesheet" href="css/style.min.css?bv=7" />
 
 
 </head>
@@ -398,7 +398,7 @@
           </div>
           <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++"
             class="category-head pointer">
-            <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
+            <span><i class="fa-fw fas fa-search"></i></span><span><i class="fas fa-fw fa-caret-right" :class="[(!!disp['search'])?'fa-rotate-90':'']">
               </i></span><span v-text="GUIText[settings.lang].sResults"></span>
           </div>
           <div v-show="!!searchText" class="category-content">
@@ -418,7 +418,7 @@
           </div>
           <template v-for="(item, idx) in categories">
             <div @click="disp[item.id] = !disp[item.id]; updateCounter++" class="category-head pointer">
-              <span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
+              <span><i class="fa-fw" :class="item.icon"></i></span><span><i class="fas fa-fw fa-caret-right" :class="[(!!disp[item.id])?'fa-rotate-90':'']">
                 </i></span><span v-text="item.name[settings.lang]"></span>
             </div>
             <div class="category-content">
@@ -665,8 +665,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=6"></script>
-  <script src="script.min.js?bv=6"></script>
+  <script src="lib.min.js?bv=7"></script>
+  <script src="script.min.js?bv=7"></script>
 </body>
 
 </html>

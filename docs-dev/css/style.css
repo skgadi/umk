@@ -1048,3 +1048,14 @@ blink,
   top: calc(50% - 1.5em);
   left: calc(50% - 1em);
 }
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table,
+td,
+th {
+  border: 1px solid var(--col-border-0);
+}
