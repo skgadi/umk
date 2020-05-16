@@ -10,9 +10,9 @@ class umk_1588715754701 extends umk_model {
   Evaluate() {
     //console.log(this.Parameters.mtype.Value[0][0]);
     //console.log(this.Parameters.gain.Value);
-    if (this.Parameters.mtype.Value[0][0] === "lMul") {
+    if (this.Parameters.mtype.Value[0][0] === "lm") {
       this.outputs[0] = math.multiply(this.Parameters.gain.Value, this.inputs[0]);
-    } else if (this.Parameters.mtype.Value[0][0] === "rMul") {
+    } else if (this.Parameters.mtype.Value[0][0] === "rm") {
       this.outputs[0] = math.multiply(this.inputs[0], this.Parameters.gain.Value);
     } else {
       //console.log(this.Parameters.gain.Value);
@@ -25,9 +25,9 @@ class umk_1588715754701 extends umk_model {
     }
   }
   Details() {
-    if (this.Parameters.mtype.Value[0][0] === "lMul") {
+    if (this.Parameters.mtype.Value[0][0] === "lm") {
       return TeX.prepDisp("y = G\\times u(t)");
-    } else if (this.Parameters.mtype.Value[0][0] === "rMul") {
+    } else if (this.Parameters.mtype.Value[0][0] === "rm") {
       return TeX.prepDisp("y = u(t)\\times G");
     } else {
       return TeX.prepDisp("y_{[i,j]} = G_{[i,j]} \\times u(t)_{[i,j]},") + "<br>" + TeX.prepInline("i\\in" +
@@ -57,21 +57,21 @@ class umk_1588715754701 extends umk_model {
           "Dimension": "Scalar",
           "Type": "Options",
           "Options": {
-            dot: {
-              "en-us": "Dot product",
+            sl: {
+              "en-us": "Scalar product",
               "es-mx": "Producto escalar"
             },
-            lMul: {
+            lm: {
               "en-us": "Matrix multiplication ($Gu(t)$)",
               "es-mx": "Multiplicación de matrices ($Gu(t)$)"
             },
-            rMul: {
+            rm: {
               "en-us": "Matrix multiplication ($u(t)G$)",
               "es-mx": "Multiplicación de matrices ($u(t)G$)"
             }
           },
           "Value": [
-            ["dot"]
+            ["sl"]
           ]
         }
       },

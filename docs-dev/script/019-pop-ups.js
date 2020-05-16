@@ -43,6 +43,11 @@ const popup = {
       this.rCells[keys[i]].close();
     }
   },
+  close: function (id) {
+    if (!!this.rCells && !!this.rCells[id]) {
+      this.rCells[id].close();
+    }
+  },
   prepareData: function (cid) {
     //console.log(cid);
     return function (ele) {

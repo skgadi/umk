@@ -94,7 +94,7 @@
     });
     const copyToClipboard = str => {
       const el = document.createElement('textarea');
-      el.value = str;
+      el.value = str.replace(/"/g,"'");
       document.body.appendChild(el);
       el.select();
       document.execCommand('copy');

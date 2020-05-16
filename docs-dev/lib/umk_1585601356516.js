@@ -43,7 +43,7 @@ class umk_1585601356516 extends umk_model {
     }
   }
   invalidParams() {
-    return (this.Parameters.pm.Value.length !== this.TerminalsIn.value);
+    return !((this.TerminalsIn.value>1) && (this.Parameters.pm.Value.length === this.TerminalsIn.value));
   }
   constructor(obj) {
     super(Object.assign({

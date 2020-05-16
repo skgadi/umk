@@ -13,7 +13,7 @@ class umk_1589037990977 extends umk_model {
     let ulAdj = blockUtils.cmpAsnLimit(math.smaller(this.Parameters.dc.Value, 0), tempMat, this.Parameters.dc.Value);
     tempMat = math.add(100,tempMat);
     let allAdj = blockUtils.cmpAsnLimit(math.smaller(100, ulAdj), tempMat, ulAdj);
-    this.CompParams["aT"] = math.dotDivide(allAdj, 100);
+    this.CompParams["aT"] = math.dotMultiply(this.CompParams["T"], math.dotDivide(allAdj, 100));
     //this.CompParams["m"] = math.dotDivide(math.subtract(this.Parameters.fl.Value, this.Parameters.sl.Value), this.CompParams["T"]);
   }
   Evaluate(t) {

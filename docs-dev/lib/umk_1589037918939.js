@@ -13,7 +13,7 @@ class umk_1589037918939 extends umk_model {
   Details() {
     try {
       if (!this.invalidParams()) {
-        let out = TeX.prepDisp("y_{i,j}(t) := \\left\\{ \\begin{matrix} A_{i,j}, &  T_{0_{i,j}} \< t \\\\ B_{i,j}, &  T_{0_{i,j}} \\ge t \\end{matrix} \\right.");
+        let out = TeX.prepDisp("y_{i,j}(t) := \\left\\{ \\begin{matrix} A_{i,j} & \\text{ "+GUIText[settings.lang].for+" } T_{0_{i,j}} \< t \\\\ B_{i,j} & \\text{ "+GUIText[settings.lang].for+" }  T_{0_{i,j}} \\ge t \\end{matrix} \\right.");
         out += "<br/>" + TeX.prepInline("i \\in" + TeX.prepSetWithRange(this.Parameters.sT.Value.length));
         out += ",<br/>" + TeX.prepInline("j \\in" + TeX.prepSetWithRange(this.Parameters.sT.Value[0].length));
         return out;
@@ -31,7 +31,7 @@ class umk_1589037918939 extends umk_model {
         "iLi": {
           "Name": {
             "en-us": "Value before step time $(A)$",
-            "es-mx": "Valor antes del tiempo de paso $(A)$"
+            "es-mx": "Valor antes del escalón $(A)$"
           },
           "Dimension": "Matrix",
           "Type": "Complex",
@@ -42,7 +42,7 @@ class umk_1589037918939 extends umk_model {
         "fLi": {
           "Name": {
             "en-us": "Value after step time $(B)$",
-            "es-mx": "Valor después del tiempo de paso $(B)$"
+            "es-mx": "Valor después del escalón $(B)$"
           },
           "Dimension": "Matrix",
           "Type": "Complex",
@@ -53,7 +53,7 @@ class umk_1589037918939 extends umk_model {
         "sT": {
           "Name": {
             "en-us": "Step time $(T_0)$",
-            "es-mx": "Tiempo de paso $(T_0)$"
+            "es-mx": "Tiempo de aplicación del escalón $(T_0)$"
           },
           "Dimension": "Matrix",
           "Type": "Real",

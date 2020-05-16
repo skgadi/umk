@@ -25,7 +25,7 @@ class umk_1589128861088 extends umk_model {
   Details() {
     try {
       if (!this.invalidParams()) {
-        return GSKGenFuncs.makeSVG("<polyline points=\'10,50 30,10 70,90 90,50\'\/><g stroke-width=\"1\"><text x=\'35\' y=\'12\' font-size=\'1em\'>L0<\/text><text x=\'48\' y=\'97\' font-size=\'1em\'>L1<\/text><line x1=\'10\' y1=\'50\' x2= \'90\' y2=\'50\'\/><line x1=\'10\' y1=\'30\' x2= \'10\' y2=\'70\'\/><line x1=\'90\' y1=\'30\' x2= \'90\' y2=\'70\'\/><text x=\'15\' y=\'62\' font-size=\'1em\'>1\/f<\/text><\/g>", "#00000000", "var(--col-text-0)", "#00000000", "monospace");
+        return GSKGenFuncs.makeSVG("<polyline points=\'10,50 30,10 70,90 90,50\'\/><g stroke-width=\"1\"><text x=\'35\' y=\'12\' font-size=\'1em\'>L1<\/text><text x=\'48\' y=\'97\' font-size=\'1em\'>L2<\/text><line x1=\'10\' y1=\'50\' x2= \'90\' y2=\'50\'\/><line x1=\'10\' y1=\'30\' x2= \'10\' y2=\'70\'\/><line x1=\'90\' y1=\'30\' x2= \'90\' y2=\'70\'\/><text x=\'15\' y=\'62\' font-size=\'1em\'>1\/f<\/text><\/g>", "#00000000", "var(--col-text-0)", "#00000000", "monospace");
       }
     } catch (e) {
       console.log(e);

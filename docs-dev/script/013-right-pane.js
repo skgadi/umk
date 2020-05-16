@@ -317,7 +317,8 @@ const editorVue = new Vue({
     },
     getComputedValueText: function (Parameter) {
       try {
-        return math.parse(varManagerVue.getVarValue(Parameter.Value).toString()).toTex(4);
+        //<small>"+Parameter.Name[settings.lang]+"</small>
+        return "<br/>"+math.parse(varManagerVue.getVarValue(Parameter.Value).toString()).toTex(4);
       } catch (e) {
         console.log(e);
         return '<i class="fas fa-exclamation-triangle fa-fw"></i><span>' + GUIText[settings.lang].k172 + '</span>';

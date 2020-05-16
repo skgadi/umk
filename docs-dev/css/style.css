@@ -246,6 +246,7 @@ select {
   grid-column: 2;
   grid-row: 3;
   border-radius: 0 calc(var(--button-size)/2) calc(var(--button-size)/2) 0;
+  border: calc(1px * (1 - var(--left-bar-size))) var(--col-border-1) solid;
   /*transition-delay: var(--animation-time);*/
 }
 
@@ -260,6 +261,7 @@ select {
   grid-column: 4;
   grid-row: 3;
   border-radius: calc(var(--button-size)/2) 0 0 calc(var(--button-size)/2);
+  border: calc(1px * (1 - var(--right-bar-size))) var(--col-border-1) solid;
 }
 
 #btn-edit:hover {
@@ -630,6 +632,7 @@ ul.menu-kbs>li {
 .category-head i {
   color: var(--col-background-3);
 }
+
 .category-head:hover i {
   color: var(--col-border-1);
 }
@@ -779,7 +782,7 @@ input[type='checkbox'] {
 input[type='number'],
 input[type='text'],
 input[type='color'] {
-  min-width: 75px;
+  min-width: 50px;
   width: 100%;
   font-size: 1em;
   background-color: var(--col-background-2);
@@ -894,6 +897,7 @@ mjx-container {
 }
 
 .expandable-x {
+  padding-bottom: 1em;
   display: block;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1059,6 +1063,11 @@ blink,
 table {
   border-collapse: collapse;
   text-align: center;
+  min-width: 100%;
+}
+
+td>input {
+  width: calc(100% - 2px) !important;
 }
 
 table.simple-border,

@@ -48,7 +48,7 @@ const blocksVue = new Vue({
       if (!!this.statusVisible) {
         this.removeStatus(this.statusVisible);
       }
-      this.statusVisible = footerVue.addHint("<span><i class='far fa-fw fa-square'></i>&nbsp;" + block.name[settings.lang] + "&nbsp;&mdash;&nbsp;" + block.desc[settings.lang] + "</span>");
+      this.statusVisible = footerVue.addHint("<span><i class='fas fa-fw fa-puzzle-piece'></i>&nbsp;" + block.name[settings.lang] + "&nbsp;&mdash;&nbsp;" + block.desc[settings.lang] + "</span>");
     },
     removeStatus: function () {
       footerVue.removeHint(this.statusVisible);

@@ -1,6 +1,6 @@
 const blockUtils = {
   makeIcon: function (bid) {
-    return "<div style='min-width:45px;'>" + GSKGenFuncs.makeSVG(bSummary.blocks[bid].icon, "#00000000", "var(--col-text-0)", "#00000000") + "</div>";
+    return "<div style='min-width:45px;'>" + GSKGenFuncs.makeSVG(bSummary.blocks[bid].icon, "#00000000", "var(--col-text-0)", "#00000000", "monospace") + "</div>";
   },
   isAllSameDims: function (inAry) {
     //console.log(inAry);
@@ -14,8 +14,15 @@ const blockUtils = {
     }
     return true;
   },
-  cmpAsnLimit: function (compare, lowerLimit, upperLimit) {
-    return math.add(math.dotMultiply(compare, lowerLimit), math.dotMultiply(math.not(compare), upperLimit));
+  cmpAsnLimit: function (compare, satisfying, otherwise) {
+    return compare.map(function(element, index) {
+      if (element) {
+        return satisfying._data[index[0]][index[1]];
+      } else {
+        return otherwise._data[index[0]][index[1]];
+      }
+    });
+    //return math.add(math.dotMultiply(compare, lowerLimit), math.dotMultiply(math.not(compare), upperLimit));
   },
   bldTT: function (arr) {
     let out = "<table class='simple-border'>";

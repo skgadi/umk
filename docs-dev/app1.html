@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=7" />
-  <link rel="stylesheet" href="css/style.min.css?bv=7" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=8" />
+  <link rel="stylesheet" href="css/style.min.css?bv=8" />
 
 
 </head>
@@ -538,13 +538,12 @@
                 </div>
                 <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
                   v-html="getComputedValueText(Parameter)"></div>
-
               </div>
             </template>
           </div>
           <div>
             <h3 class="compress" v-text="GUIText[settings.lang].functionality"></h3>
-            <div style="overflow-x: auto; overflow-y: hidden;">
+            <div class="expandable-x">
               <div v-html="getBlockDetails"></div>
             </div>
             <br />
@@ -665,8 +664,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=7"></script>
-  <script src="script.min.js?bv=7"></script>
+  <script src="lib.min.js?bv=8"></script>
+  <script src="script.min.js?bv=8"></script>
 </body>
 
 </html>

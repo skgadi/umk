@@ -10,6 +10,7 @@ const exec = {
     pckSize: 2000
   },
   t: 0, //Current simulation time
+  k: 0, //step count
   s4Out: 0, //Steps for out
   prevT: 0, // time in milliseconds
   isCont: true, // Is it set to run continously?
@@ -85,7 +86,7 @@ const exec = {
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         //console.log(model.cid);
-        model.Evaluate(this.t);
+        model.Evaluate(this.t,this.k);
         //console.log(this.t);
         if (model.isOut && store) {
           tempOut[model.cid] = model.inputs[0].toString();
@@ -113,6 +114,7 @@ const exec = {
       throw ("Error in simulation");
     } /**/
     this.t += this.simSettings.hs;
+    this.k++;
     //console.log(this.t);
   },
   Init: function () {
@@ -123,6 +125,7 @@ const exec = {
     });
     this.inPrg = true;
     this.t = 0;
+    this.k = 0;
     this.prevT = performance.now();
     //console.log("Init");
     this.setRemainingSteps();

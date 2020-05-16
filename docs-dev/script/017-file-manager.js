@@ -177,6 +177,7 @@ uyamak.lFManagerVue = new Vue({
       }
       if (!!Object.keys(out).length && GSKGenFuncs.isValidFileName(this.sFName.trim())) {
         GSKGenFuncs.download(this.sFName.trim() + ".umk", uyamak.cmprs.compressJSON(out), "application/uyamak;charset=utf-8");
+        this.showGUI(false);
       }
     },
     isValidFileName: function () {
