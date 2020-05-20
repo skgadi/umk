@@ -7,7 +7,8 @@ const exec = {
     realtime: true,
     steps: 1,
     sOEvery: 1,
-    pckSize: 2000
+    pckSize: 2000,
+    it: "fe" //Integreation type
   },
   t: 0, //Current simulation time
   k: 0, //step count
@@ -24,6 +25,7 @@ const exec = {
     this.simSettings.realtime = settings.realtime;
     this.simSettings.steps = settings.steps;
     this.simSettings.sOEvery = settings.sOEvery - 1;
+    this.simSettings.it = settings.it;
     this.pckSize = settings.mHis * settings.sOEvery;
     //console.log(this.pckSize);
     this.s4Out = this.simSettings.sOEvery;
@@ -43,12 +45,18 @@ const exec = {
           }
         }
       }
-      if (!!cellVal.CompParams) {
-        let params = Object.keys(cellVal.CompParams);
-        for (let i = 0; i < params.length; i++) {
-          cellVal.CompParams[params[i]] = math.evaluate(cellVal.CompParams[params[i]]);
+      cellVal.genCompParams();
+      /*
+        if (!!cellVal.CompParams) {
+          let params = Object.keys(cellVal.CompParams);
+          for (let i = 0; i < params.length; i++) {
+            console.log("hey-->");
+            console.log(cellVal.CompParams);
+            cellVal.CompParams[params[i]] = math.evaluate(cellVal.CompParams[params[i]]);
+            console.log("<--hey");
         }
-      }
+        
+      }*/
     } catch (e) {
       console.log(e);
     }
@@ -86,7 +94,7 @@ const exec = {
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         //console.log(model.cid);
-        model.Evaluate(this.t,this.k);
+        model.Evaluate(this.t, this.k, this.simSettings);
         //console.log(this.t);
         if (model.isOut && store) {
           tempOut[model.cid] = model.inputs[0].toString();
@@ -118,8 +126,22 @@ const exec = {
     //console.log(this.t);
   },
   Init: function () {
+    let that = this;
     this.cells.forEach(function (model) {
-      model.Init();
+      try {
+        model.Init();
+      } catch (e) {
+        console.log(e);
+        postMessage({
+          error: {
+            desc: "simErr",
+            log: e,
+            cid: model.cid
+          }
+        });
+        that.End();
+        throw ("Error in simulation");
+      }
       //console.log(model.id);
       //console.log(model.isOut);
     });

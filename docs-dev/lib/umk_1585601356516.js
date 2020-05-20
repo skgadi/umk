@@ -1,9 +1,10 @@
 class umk_1585601356516 extends umk_model {
   Icon() {
+    this.genCompParams();
     return {
-      html: "$+$",
-      inLabels: this.Parameters.pm.Value.map((ele) => {
-        return (ele[0] === "pl") ? "$+$" : "$-$";
+      html: "$$\\LARGE +$$",
+      inLabels: this.CompParams.isAdd.map((ele) => {
+        return (ele) ? "$\\small +$" : "$\\small -$";
       }),
       outLabels: null,
       //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected
@@ -11,13 +12,13 @@ class umk_1585601356516 extends umk_model {
     };
   }
   Evaluate() {
-    if (this.Parameters.pm.Value[0][0] === "pl") {
+    if (this.CompParams.isAdd[0]) {
       this.outputs[0] = this.inputs[0];
     } else {
       this.outputs[0] = math.subtract(0, this.inputs[0]);
     }
     for (let i = 1; i < this.TerminalsIn.value; i++) {
-      if (this.Parameters.pm.Value[i][0] === "pl") {
+      if (this.CompParams.isAdd) {
         this.outputs[0] = math.add(this.outputs[0], this.inputs[i]);
       } else {
         this.outputs[0] = math.subtract(this.outputs[0], this.inputs[i]);
@@ -25,26 +26,37 @@ class umk_1585601356516 extends umk_model {
     }
   }
   Details() {
-    if (!this.invalidParams()) {
+    this.genCompParams();
       let out = "y(t)="
-      if (this.Parameters.pm.Value[0][0] !== "pl") {
+      if (!this.CompParams.isAdd[0]) {
         out += "-";
       }
       out += "u_1(t)";
       for (let i = 1; i < this.TerminalsIn.value; i++) {
-        if (this.Parameters.pm.Value[i][0] === "pl") {
+        if (this.CompParams.isAdd[i]) {
           out += "+";
         } else {
           out += "-";
         }
-        out += "u_" + i + "(t)";
+        out += "u_" + (i+1) + "(t)";
       }
       return TeX.prepDisp(out);
+  }
+  genCompParams () {
+    this.CompParams.isAdd = [];
+    for (let i =0; i<this.TerminalsIn.value; i++) {
+      if (!!this.Parameters.pm.Value[i] && (this.Parameters.pm.Value[i][0]==="mn")) {
+        this.CompParams.isAdd[i] = false;
+      } else {
+        this.CompParams.isAdd[i] = true;
+      }
     }
   }
+  /*
   invalidParams() {
     return !((this.TerminalsIn.value>1) && (this.Parameters.pm.Value.length === this.TerminalsIn.value));
   }
+  */
   constructor(obj) {
     super(Object.assign({
       Parameters: {

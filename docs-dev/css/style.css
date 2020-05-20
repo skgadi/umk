@@ -959,6 +959,8 @@ blink,
 }
 
 .settings-drop-dn {
+  width: auto;
+  padding: 0 4px 0 2px;
   overflow: hidden;
   right: 0;
   border: 1px var(--col-border-1) solid;
@@ -1074,4 +1076,15 @@ table.simple-border,
 table.simple-border td,
 table.simple-border th {
   border: 1px solid var(--col-border-0);
+}
+
+.not-selectable {
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+  user-select: none;
+  /* Standard */
 }

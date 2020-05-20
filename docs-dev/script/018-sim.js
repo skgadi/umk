@@ -17,7 +17,8 @@ const simVue = new Vue({
       realtime: true,
       steps: 1,
       sOEvery: 1,
-      mHis: 1000
+      mHis: 1000,
+      it: "fe" //Integreation type
     },
     results: [],
     cellsWithSInfo: [],
@@ -146,44 +147,52 @@ const simVue = new Vue({
       return inCells;
     },
     pCell4Exp: function (inCell) { //Prepare cell for export
-      let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
-      cellVal.cid = inCell.id;
-      eval("var tempModel = new " + cellVal.id + "(cellVal)");
-      //console.log(tempModel);
-      cellVal = tempModel;
-      if (!!cellVal.Parameters) {
-        let params = Object.keys(cellVal.Parameters);
-        for (let i = 0; i < params.length; i++) {
-          if (cellVal.Parameters[params[i]].Type === "Complex" ||
-            cellVal.Parameters[params[i]].Type === "Real" ||
-            cellVal.Parameters[params[i]].Type === "Integer") {
-            cellVal.Parameters[params[i]].Value =
-              varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value);
+      try {
+        let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
+        cellVal.cid = inCell.id;
+        eval("var tempModel = new " + cellVal.id + "(cellVal)");
+        //console.log(tempModel);
+        cellVal = tempModel;
+        if (!!cellVal.Parameters) {
+          let params = Object.keys(cellVal.Parameters);
+          for (let i = 0; i < params.length; i++) {
+            if (cellVal.Parameters[params[i]].Type === "Complex" ||
+              cellVal.Parameters[params[i]].Type === "Real" ||
+              cellVal.Parameters[params[i]].Type === "Integer") {
+              cellVal.Parameters[params[i]].Value =
+                varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value);
+            }
           }
         }
-      }
-      cellVal.genCompParams();
-      if (!!cellVal.Parameters) {
-        let params = Object.keys(cellVal.Parameters);
-        for (let i = 0; i < params.length; i++) {
-          if (cellVal.Parameters[params[i]].Type === "Complex" ||
-            cellVal.Parameters[params[i]].Type === "Real" ||
-            cellVal.Parameters[params[i]].Type === "Integer") {
-            cellVal.Parameters[params[i]].Value = cellVal.Parameters[params[i]].Value.toString();
+        cellVal.genCompParams();
+        if (!!cellVal.Parameters) {
+          let params = Object.keys(cellVal.Parameters);
+          for (let i = 0; i < params.length; i++) {
+            if (cellVal.Parameters[params[i]].Type === "Complex" ||
+              cellVal.Parameters[params[i]].Type === "Real" ||
+              cellVal.Parameters[params[i]].Type === "Integer") {
+              cellVal.Parameters[params[i]].Value = cellVal.Parameters[params[i]].Value.toString();
+            }
           }
         }
-      }
-      if (!!cellVal.CompParams) {
-        let params = Object.keys(cellVal.CompParams);
-        for (let i = 0; i < params.length; i++) {
-          cellVal.CompParams[params[i]] = cellVal.CompParams[params[i]].toString();
+        if (!!cellVal.CompParams) {
+          let params = Object.keys(cellVal.CompParams);
+          for (let i = 0; i < params.length; i++) {
+            cellVal.CompParams[params[i]] = cellVal.CompParams[params[i]].toString();
+          }
         }
+        //check if it ia display cell
+        if (cellVal.showInpOnHtml) {
+          this.dispCells.push(cellVal.cid);
+        }
+        return cellVal;
+      } catch (e) {
+        console.log(e);
+        throw {
+          cell: inCell,
+          errM: String(e)
+        };
       }
-      //check if it ia display cell
-      if (cellVal.showInpOnHtml) {
-        this.dispCells.push(cellVal.cid);
-      }
-      return cellVal;
     },
     informSim: function (abt, option) {
       try {
@@ -210,6 +219,7 @@ const simVue = new Vue({
               } catch (e) {
                 console.log(e);
                 out = {};
+                throw (e);
               }
               break;
             case 'updateCell':
@@ -235,6 +245,7 @@ const simVue = new Vue({
               } catch (e) {
                 console.log(e);
                 out = {};
+                throw (e);
               }
               break;
             case 'simSettings':
@@ -292,7 +303,12 @@ const simVue = new Vue({
           }).show();
         }
       } catch (e) {
+        if (!!e.cell) {
+          mainSystem.graph.setCellWarning(e.cell, e.errM);
+          console.log(e.errM);
+        }
         console.log(e);
+        throw e;
       }
     },
     propOuts: function () { // propagate the outputs

@@ -19,7 +19,7 @@
 
 </head>
 
-<body>
+<body class="not-selectable">
   <div id="GraphForCopyPaste" class="hide-always"></div>
   <div id="waitForProcessToFinish" class="zidx5">
     <div>
@@ -359,16 +359,20 @@
         <li class="dropdown">
           <a class="dropbtn"><i class="fas fa-fw fa-cogs"></i></a>
           <div class="dropdown-content settings-drop-dn">
+            <p class="compress" v-html="GUIText[settings.lang].nSteps"></p>
+            <input class="sim-settings-entry" type="number" v-model.number="simSettings.steps">
             <p class="compress" v-html="GUIText[settings.lang].endTime"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.T">
             <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
+            <p class="compress" v-html="GUIText[settings.lang].intType"></p>
+            <select class="inter-itm" v-model="simSettings.it">
+              <option v-for="(val, idx) in intTypes" :value="idx" v-html="val.desc[settings.lang]"></option>
+            </select>
             <p class="compress" v-html="GUIText[settings.lang].sOEvery"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.sOEvery">
             <p class="compress" v-html="GUIText[settings.lang].mHis"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.mHis">
-            <p class="compress" v-html="GUIText[settings.lang].nSteps"></p>
-            <input class="sim-settings-entry" type="number" v-model.number="simSettings.steps">
             <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
               <i class="fas" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
               <span v-text="GUIText[settings.lang].rRealTime"></span>
