@@ -18,7 +18,7 @@ class umk_1585601356516 extends umk_model {
       this.outputs[0] = math.subtract(0, this.inputs[0]);
     }
     for (let i = 1; i < this.TerminalsIn.value; i++) {
-      if (this.CompParams.isAdd) {
+      if (this.CompParams.isAdd[i]) {
         this.outputs[0] = math.add(this.outputs[0], this.inputs[i]);
       } else {
         this.outputs[0] = math.subtract(this.outputs[0], this.inputs[i]);

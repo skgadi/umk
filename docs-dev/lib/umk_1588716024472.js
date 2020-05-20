@@ -39,7 +39,7 @@ class umk_1588716024472 extends umk_model {
       out: this.CompParams.out,
       pt: this.CompParams.pt
     };
-    blockUtils.integrate(pData, t, this.inputs);
+    blockUtils.integrate(pData);
     this.outputs[0] = pData.out[0];
   }
   Details() {
