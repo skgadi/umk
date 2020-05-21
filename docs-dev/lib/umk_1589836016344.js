@@ -24,6 +24,17 @@ class umk_1589836016344 extends umk_model {
     this.genCompParams();
   }
   genCompParams() {
+    // Check for the valid dimensions
+    this.CompParams.dims = JSON.parse(this.Parameters.dim.Value[0][0]);
+    if (this.CompParams.dims.length !== 2) {
+      throw "Error in Dimensions entry";
+    }
+    for (let i = 0; i < 2; i++) {
+      if ((!math.isPositive(this.CompParams.dims[i])) || (!math.isInteger(this.CompParams.dims[i]))) {
+        throw "Invalid values for the dimentions";
+      }
+    }
+
     //Den max degree
     for (let i = (this.Parameters.d.Value._data.length - 1); i >= 0; i--) {
       if (!!this.Parameters.d.Value._data[i][0]) {
@@ -69,9 +80,14 @@ class umk_1589836016344 extends umk_model {
     this.CompParams.pOut = []; // previous time
   }
   Evaluate(t, k, simSettings) {
+    //console.log(this.CompParams.dims);
     //console.log('started');
     let it = ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]);
-    this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
+    if (t !== 0) {
+      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
+    } else {
+      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+    }
     let num = math.dotMultiply(this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0], this.CompParams.InCoeff._data[this.CompParams.maxDen - 1][0]);
     for (let i = (this.CompParams.maxDen - 2); i >= 0; i--) {
       let pData = {
@@ -86,12 +102,13 @@ class umk_1589836016344 extends umk_model {
       blockUtils.integrate(pData, false);
       num = math.add(num, math.dotMultiply(this.CompParams.InInts.outs[i][0], this.CompParams.InCoeff._data[i][0]));
     }
-    http: //localhost:5000/app1.html//console.log(JSON.stringify(this.CompParams.InInts));
-      //console.log(num);
-      if (!this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].length) {
-        this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].push(math.zeros(this.inputs[0]._data.length, this.inputs[0]._data[0].length));
-      }
-    let den = math.zeros(this.inputs[0]._data.length, this.inputs[0]._data[0].length);
+    //console.log(JSON.stringify(this.CompParams.InInts));
+    //console.log(num);
+    if (!this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].length) {
+      this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].push(math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]));
+    }
+    let den = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+    //console.log("Hey");
     for (let i = (this.CompParams.maxDen - 2); i >= 0; i--) {
       let pData = {
         mem: this.CompParams.OutInts.mems[i],
@@ -149,6 +166,7 @@ class umk_1589836016344 extends umk_model {
       tempIntTypes[key] = intTypes[key].desc;
     });
     super(Object.assign({
+      fInEO: true,
       Parameters: {
         "n": {
           "Name": {
@@ -183,6 +201,17 @@ class umk_1589836016344 extends umk_model {
           "Options": tempIntTypes,
           "Value": [
             ["default"]
+          ]
+        },
+        "dim": {
+          "Name": {
+            "en-us": "Input dimensions",
+            "es-mx": "Dimensiones de entrada"
+          },
+          "Dimension": "Scalar",
+          "Type": "Text",
+          "Value": [
+            ["[1,1]"]
           ]
         }
       },

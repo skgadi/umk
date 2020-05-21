@@ -50,12 +50,16 @@ const popup = {
   },
   prepareData: function (cid) {
     //console.log(cid);
-    return function (ele) {
-      let val = math.evaluate(ele.o[cid]);
-      return {
-        t: ele.t,
-        v: [math.re(val)._data, math.im(val)._data]
-      };
+    try {
+      return function (ele) {
+        let val = math.evaluate(ele.o[cid]);
+        return {
+          t: ele.t,
+          v: [math.re(val)._data, math.im(val)._data]
+        };
+      }
+    } catch (e) {
+      console.log(e);
     }
   },
   sendParams: function (prepCell) {

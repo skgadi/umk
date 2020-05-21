@@ -64,7 +64,7 @@ const blockUtils = {
     //console.log(h);
     //console.log(inItem.it);
     if (isFirstInEO && !inItem.t) {
-      inItem.mem.push(inItem.iv);
+      inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
     } else {
       inItem.mem.push(inItem.inp);
     }
@@ -77,7 +77,7 @@ const blockUtils = {
     //console.log(JSON.stringify(inItem.mem));
     //console.log(inItem.mem.length);
     //console.log(intTypes[inItem.it].m + 1);
-    for (let i =  inItem.mem.length; i < (intTypes[inItem.it].m + 1); i++) {
+    for (let i = inItem.mem.length; i < (intTypes[inItem.it].m + 1); i++) {
       //console.log("-->"+i);
       inItem.mem.unshift(math.zeros(inItem.mem[0]._data.length, inItem.mem[0]._data[0].length));
     }
@@ -91,7 +91,11 @@ const blockUtils = {
       }
     }
     if (!inItem.out[0]) {
-      inItem.out[0] = out;
+      if (isFirstInEO && !inItem.t) {
+        inItem.out[0] = math.add(out, inItem.iv);
+      } else {
+        inItem.out[0] = out;
+      }
     } else {
       inItem.out[0] = math.add(out, inItem.out[0]);
     }
