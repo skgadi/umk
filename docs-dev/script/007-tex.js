@@ -40,8 +40,8 @@ const TeX = {
   frmMathJS: function (val, dec = 4) {
     return math.parse(val.toString()).toTex(dec);
   },
-  frmArray: function (inArray, dec = 4) { //used to be makeMatrix
-    if (inArray.length === 1 && inArray[0].length === 1) {
+  frmArray: function (inArray, dec = 4, forceBrackets = false) { //used to be makeMatrix
+    if (!forceBrackets && inArray.length === 1 && inArray[0].length === 1) {
       return math.parse(inArray[0][0]).toTex();
     }
     return math.parse("[" + inArray.map((a) => {
