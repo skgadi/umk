@@ -17,6 +17,7 @@ class umk_1590046944883 extends umk_model {
     }*/
   Init() {
     this.genCompParams();
+    this.CompParams.isFr = [0];
   }
   genCompParams() {
     this.CompParams.x = []; //Output of int
@@ -41,7 +42,8 @@ class umk_1590046944883 extends umk_model {
       t: t,
       inp: dx,
       out: this.CompParams.x,
-      pt: this.CompParams.pt
+      pt: this.CompParams.pt,
+      isFr: this.CompParams.isFr
     };
     blockUtils.integrate(pData);
     this.outputs[0] = math.add(math.multiply(this.Parameters.c.Value, pData.out[0]),

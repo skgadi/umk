@@ -16,9 +16,9 @@ class umk_1588723460913 extends umk_model {
       }
     }
     Details() {
-      let arr=[];
+      let arr=[[]];
       for (let i=0; i<this.TerminalsIn.value; i++) {
-        arr.push(["u_"+i+"(t)"]);
+        arr[0].push("u_"+i+"(t)");
       }
       return TeX.prepDisp("y(t)="+TeX.frmArray(arr));
     }

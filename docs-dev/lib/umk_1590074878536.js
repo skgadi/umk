@@ -1,4 +1,4 @@
-class umk_1589836016344 extends umk_model {
+class umk_1590074878536 extends umk_model {
   Icon() {
     return {
       html: this.Details(true),
@@ -17,7 +17,7 @@ class umk_1589836016344 extends umk_model {
     }*/
   Init() {
     this.genCompParams();
-    this.CompParams.isFr = [0];
+    this.CompParams.isForward = 0;
   }
   genCompParams() {
     // Check for the valid dimensions
@@ -52,80 +52,72 @@ class umk_1589836016344 extends umk_model {
       this.err = err[settings.lang];
       throw err[settings.lang];
     }
-    this.CompParams.InCoeff = math.zeros(this.Parameters.d.Value._data.length, this.Parameters.d.Value._data[0].length);
-    this.CompParams.InInts = {
-      outs: [],
-      mems: []
-    };
+    this.CompParams.InCoeff = math.zeros(this.CompParams.maxDen, 1);
+    this.CompParams.OutCoeff = math.zeros(this.CompParams.maxDen, 1);
     for (let i = 0; i < this.CompParams.maxDen; i++) {
-      this.CompParams.InInts.outs[i] = [];
-      this.CompParams.InInts.mems[i] = [];
       if (!!this.Parameters.n.Value._data[i]) {
         this.CompParams.InCoeff._data[i][0] = this.Parameters.n.Value._data[i][0];
       }
+      if (!!this.Parameters.d.Value._data[i]) {
+        this.CompParams.OutCoeff._data[i][0] = this.Parameters.d.Value._data[i][0];
+      }
     }
-    this.CompParams.OutInts = {
-      outs: [],
-      mems: []
-    };
-    for (let i = 0; i < this.CompParams.maxDen; i++) {
-      this.CompParams.OutInts.outs[i] = [];
-      this.CompParams.OutInts.mems[i] = [];
+    this.CompParams.InCoeff = math.dotDivide(this.CompParams.InCoeff, this.CompParams.OutCoeff._data[this.CompParams.maxDen-1][0]);
+    this.CompParams.OutCoeff = math.dotDivide(this.CompParams.OutCoeff, this.CompParams.OutCoeff._data[this.CompParams.maxDen-1][0]);
+
+    this.CompParams.Ins = [];
+    for (let i = this.CompParams.Ins.length; i < this.CompParams.maxDen; i++) {
+      this.CompParams.Ins.push(math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]));
     }
-    this.CompParams.pt = [0]; // previous time
-    this.CompParams.pOut = []; // previous time
+
+    this.CompParams.Outs = [];
+    for (let i = this.CompParams.Outs.length; i < this.CompParams.maxDen; i++) {
+      this.CompParams.Outs.push(math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]));
+    }
   }
-  Evaluate(t, k, simSettings) {
-    //console.log(this.CompParams.dims);
-    //console.log('started');
-    let it = ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]);
-    if (t !== 0) {
-      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
+  Evaluate() {
+    const that = this;
+
+    function putOuts() {
+      //console.log(JSON.stringify(that.CompParams.Outs));
+      //console.log(JSON.stringify(that.CompParams.Ins));
+      //console.log(JSON.stringify(that.CompParams.InCoeff));
+      //console.log(JSON.stringify(that.CompParams.OutCoeff));
+      let out = math.dotMultiply(that.CompParams.Ins[that.CompParams.maxDen - 1], that.CompParams.InCoeff._data[that.CompParams.maxDen - 1][0]);
+      //console.log("Hey");
+      //console.log(JSON.stringify(out._data));
+      //console.log(JSON.stringify(out._data));
+      for (let i = (that.CompParams.maxDen - 2); i >= 0; i--) {
+        out = math.add(out, math.dotMultiply(that.CompParams.Ins[i], that.CompParams.InCoeff._data[i][0]));
+        //console.log(JSON.stringify(out._data));
+        out = math.subtract(out, math.dotMultiply(that.CompParams.Outs[i+1], that.CompParams.OutCoeff._data[i][0]));
+        //console.log(JSON.stringify(out._data));
+      }
+      that.outputs[0] = out;
+      that.CompParams.Outs.push(out);
+      that.CompParams.Outs.shift();
+    }
+
+    function getIns() {
+      if (!!that.inputs[0]) {
+        that.CompParams.Ins.push(that.inputs[0]);
+        that.CompParams.Ins.shift();
+      }
+    }
+    if (this.CompParams.isForward === 0) {
+      if (!!this.inputs[0]) {
+        this.CompParams.isForward = true;
+      } else {
+        this.CompParams.isForward = false;
+      }
+    }
+    if (this.CompParams.isForward) {
+      getIns();
+      putOuts();
     } else {
-      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+      getIns();
+      putOuts();
     }
-    let num = math.dotMultiply(this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0], this.CompParams.InCoeff._data[this.CompParams.maxDen - 1][0]);
-    for (let i = (this.CompParams.maxDen - 2); i >= 0; i--) {
-      let pData = {
-        mem: this.CompParams.InInts.mems[i],
-        it: it,
-        iv: null,
-        t: t,
-        inp: this.CompParams.InInts.outs[i + 1][0],
-        out: this.CompParams.InInts.outs[i],
-        pt: [this.CompParams.pt[0]],
-        isFr: this.CompParams.isFr
-      }
-      blockUtils.integrate(pData, false);
-      num = math.add(num, math.dotMultiply(this.CompParams.InInts.outs[i][0], this.CompParams.InCoeff._data[i][0]));
-    }
-    //console.log(JSON.stringify(this.CompParams.InInts));
-    //console.log(num);
-    if (!this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].length) {
-      this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].push(math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]));
-    }
-    let den = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
-    //console.log("Hey");
-    for (let i = (this.CompParams.maxDen - 2); i >= 0; i--) {
-      let pData = {
-        mem: this.CompParams.OutInts.mems[i],
-        it: it,
-        iv: null,
-        t: t,
-        inp: this.CompParams.OutInts.outs[i + 1][0],
-        out: this.CompParams.OutInts.outs[i],
-        pt: [this.CompParams.pt[0]],
-        isFr: this.CompParams.isFr
-      }
-      //console.log(JSON.stringify(this.CompParams.OutInts));
-      blockUtils.integrate(pData, false);
-      den = math.add(den, math.dotMultiply(this.CompParams.OutInts.outs[i][0], this.Parameters.d.Value._data[i][0]));
-    }
-    //console.log(JSON.stringify(this.CompParams.OutInts));
-    //console.log(den);
-    this.outputs[0] = math.subtract(num, den);
-    this.CompParams.pt = [t]; //
-    this.CompParams.OutInts.outs[this.CompParams.maxDen - 1][0] = this.outputs[0];
   }
   Details(short = false) {
     try {
@@ -135,21 +127,22 @@ class umk_1589836016344 extends umk_model {
       //console.log(d);
       let out = "(";
       for (let i = (n._data.length - 1); i >= 0; i--) {
-        out += "+(" + n._data[i][0] + ")*s^(" + i+")";
+        out += "+(" + n._data[i][0] + ")*z^(" + i + ")";
       }
       out += ")/(";
       for (let i = (d._data.length - 1); i >= 0; i--) {
-        out += "+(" + d._data[i][0] + ")*s^(" + i+")";
+        out += "+(" + d._data[i][0] + ")*z^(" + i + ")";
       }
       out += ")";
+      //console.log(out);
       //this.Icon_Temp_Html = TeX.prepDisp(math.simplify(out).toTex(4));
       if (short) {
         return TeX.prepDisp(math.simplify(out).toTex(4));
       } else {
-        return TeX.prepDisp("\\frac{y(s)}{u(s)}:=" + math.simplify(out).toTex(4));
+        return TeX.prepDisp("\\frac{y(z)}{u(z)}:=" + math.simplify(out).toTex(4));
       }
     } catch (e) {
-      this.Icon_Temp_Html = TeX.prepDisp("\\frac{y(s)}{u(s)}")
+      this.Icon_Temp_Html = TeX.prepDisp("\\frac{y(z)}{u(z)}")
       return this.Icon_Temp_Html;
     }
   }

@@ -8,10 +8,8 @@ class umk_1588716024472 extends umk_model {
     };
   }
   Init() {
-    /*this.Evaluate_out = []; //Output of int
-    this.Evaluate_pt = [0]; // previous time
-    this.Evaluate_mem = []; //Memory for integration*/
-    this.genCompParams();    
+    this.genCompParams();
+    this.CompParams.isFr = [0];
   }
   genCompParams () {
     this.CompParams.out = []; //Output of int
@@ -37,7 +35,8 @@ class umk_1588716024472 extends umk_model {
       t: t,
       inp: this.inputs[0],
       out: this.CompParams.out,
-      pt: this.CompParams.pt
+      pt: this.CompParams.pt,
+      isFr: this.CompParams.isFr
     };
     blockUtils.integrate(pData);
     this.outputs[0] = pData.out[0];

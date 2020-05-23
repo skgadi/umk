@@ -53,6 +53,47 @@ const blockUtils = {
     return out;
   },
   integrate: function (inItem, isFirstInEO = true) {
+    let out;
+    let h = inItem.t - inItem.pt[0];
+
+    //Initialize  the memory
+    if (!inItem.mem.length) {
+      inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
+    }
+    for (let i = inItem.mem.length; i < (intTypes[inItem.it].m + 1); i++) {
+      //console.log("-->"+i);
+      inItem.mem.unshift(math.zeros(inItem.mem[0]._data.length, inItem.mem[0]._data[0].length));
+    }
+
+
+    function addInps() {
+      if (!!inItem.inp) {
+        inItem.mem.push(inItem.inp);
+      }
+      while (inItem.mem.length > (intTypes[inItem.it].m + 1)) {
+        inItem.mem.shift();
+        //console.log(inItem.mem.length);
+      }
+    }
+
+    function getOuts() {
+      for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
+        if (!i) {
+          out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+        } else {
+          out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
+        }
+      }
+      if (!inItem.out[0]) {
+        if (isFirstInEO && !inItem.t) {
+          inItem.out[0] = math.add(out, inItem.iv);
+        } else {
+          inItem.out[0] = out;
+        }
+      } else {
+        inItem.out[0] = math.add(out, inItem.out[0]);
+      }
+    }
     // inItem.mem ----> memory
     // inItem.it -----> Integration type
     // inItem.iv -----> Initial value
@@ -60,45 +101,29 @@ const blockUtils = {
     // inItem.inp ----> Input to integrate
     // inItem.out ---> Previous output
     // inItem.pt -----> Previous time
-    let h = inItem.t - inItem.pt[0];
+    // inItem.isFr ---> is forward
+    if (inItem.isFr[0] === 0) {
+      if (!!inItem.inp) {
+        inItem.isFr[0] = true;
+      } else {
+        inItem.isFr[0] = false;
+      }
+    }
+    if (inItem.isFr[0]) {
+      getOuts();
+      addInps();
+    } else {
+      addInps();
+      getOuts();
+    }
     //console.log(h);
     //console.log(inItem.it);
-    if (isFirstInEO && !inItem.t) {
-      inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
-    } else {
-      inItem.mem.push(inItem.inp);
-    }
     //console.log(JSON.stringify(inItem.mem));
-    while (inItem.mem.length > (intTypes[inItem.it].m + 1)) {
-      inItem.mem.shift();
-      //console.log(inItem.mem.length);
-    }
     //inItem.mem = inItem.mem.slice(-(intTypes[inItem.it].m + 1));
     //console.log(JSON.stringify(inItem.mem));
     //console.log(inItem.mem.length);
     //console.log(intTypes[inItem.it].m + 1);
-    for (let i = inItem.mem.length; i < (intTypes[inItem.it].m + 1); i++) {
-      //console.log("-->"+i);
-      inItem.mem.unshift(math.zeros(inItem.mem[0]._data.length, inItem.mem[0]._data[0].length));
-    }
     //console.log(JSON.stringify(inItem.mem));
-    let out;
-    for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
-      if (!i) {
-        out = math.dotMultiply((inItem.t - inItem.pt[0]), math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
-      } else {
-        out = math.add(out, math.dotMultiply((inItem.t - inItem.pt[0]), math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
-      }
-    }
-    if (!inItem.out[0]) {
-      if (isFirstInEO && !inItem.t) {
-        inItem.out[0] = math.add(out, inItem.iv);
-      } else {
-        inItem.out[0] = out;
-      }
-    } else {
-      inItem.out[0] = math.add(out, inItem.out[0]);
-    }
     inItem.pt[0] = inItem.t;
     //console.log(inItem.t);
     //console.log(JSON.stringify(inItem.out[0]._data));

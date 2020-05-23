@@ -17,6 +17,7 @@ class umk_1590046975775 extends umk_model {
     }*/
   Init() {
     this.genCompParams();
+    this.CompParams.isFr = [0];
   }
   genCompParams() {
     // Check for the valid input dimensions
@@ -61,7 +62,8 @@ class umk_1590046975775 extends umk_model {
       t: t,
       inp: dx,
       out: this.CompParams.x,
-      pt: this.CompParams.pt
+      pt: this.CompParams.pt,
+      isFr: this.CompParams.isFr
     };
     blockUtils.integrate(pData);
     //console.log("Test item");
