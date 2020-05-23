@@ -55,11 +55,12 @@ const blockUtils = {
   integrate: function (inItem, isFirstInEO = true) {
     let out;
     let h = inItem.t - inItem.pt[0];
-
+    
     //Initialize  the memory
     if (!inItem.mem.length) {
       inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
     }
+    //console.log("hey-->");
     for (let i = inItem.mem.length; i < (intTypes[inItem.it].m + 1); i++) {
       //console.log("-->"+i);
       inItem.mem.unshift(math.zeros(inItem.mem[0]._data.length, inItem.mem[0]._data[0].length));

@@ -12,6 +12,8 @@ xcopy .\node_modules\apexcharts\dist ..\docs-dev\dependencies\apexcharts /y/s/q/
 
 xcopy .\github\mxgraph\javascript\src ..\docs-dev\dependencies\mxgraph /y/s/q/i
 xcopy .\github\pako\dist ..\docs-dev\dependencies\pako /y/s/q/i
+xcopy .\github\drawio\src\main\webapp ..\docs-dev\dependencies\drawio /y/s/q/i
+
 
 xcopy .\no-auto-ver ..\docs-dev\dependencies /y/s/q/i
 
