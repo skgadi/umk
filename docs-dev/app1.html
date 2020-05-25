@@ -365,7 +365,7 @@
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.T">
             <p class="compress" v-html="GUIText[settings.lang].stepSize"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.h">
-            <p class="compress" v-html="GUIText[settings.lang].intType"></p>
+            <p class="compress" v-html="GUIText[settings.lang].intType+' ('+GUIText[settings.lang].intTs+' '+((intTypes[simSettings.it].m?intTypes[simSettings.it].m:1)*simSettings.h)+' ms)'"></p>
             <select class="inter-itm" v-model="simSettings.it">
               <option v-for="(val, idx) in intTypes" :value="idx" v-html="val.desc[settings.lang]"></option>
             </select>

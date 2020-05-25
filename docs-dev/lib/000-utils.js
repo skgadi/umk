@@ -53,9 +53,7 @@ const blockUtils = {
     return out;
   },
   integrate: function (inItem, isFirstInEO = true) {
-    let out;
-    let h = inItem.t - inItem.pt[0];
-    
+    /*
     //Initialize  the memory
     if (!inItem.mem.length) {
       inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
@@ -65,34 +63,50 @@ const blockUtils = {
       //console.log("-->"+i);
       inItem.mem.unshift(math.zeros(inItem.mem[0]._data.length, inItem.mem[0]._data[0].length));
     }
+    */
 
 
     function addInps() {
       if (!!inItem.inp) {
         inItem.mem.push(inItem.inp);
       }
-      while (inItem.mem.length > (intTypes[inItem.it].m + 1)) {
+      /* else {
+              inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
+            }*/
+      /*while (inItem.mem.length > (intTypes[inItem.it].m + 1)) {
         inItem.mem.shift();
         //console.log(inItem.mem.length);
-      }
+      }*/
     }
 
     function getOuts() {
-      for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
-        if (!i) {
-          out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
-        } else {
-          out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
-        }
-      }
-      if (!inItem.out[0]) {
-        if (isFirstInEO && !inItem.t) {
-          inItem.out[0] = math.add(out, inItem.iv);
-        } else {
-          inItem.out[0] = out;
-        }
+      console.log(JSON.stringify(inItem.mem));
+      if (!inItem.t) {
+        inItem.out[0] = inItem.iv;
       } else {
-        inItem.out[0] = math.add(out, inItem.out[0]);
+        if (inItem.mem.length > intTypes[inItem.it].m) {
+          let out;
+          let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
+          for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
+            console.log(JSON.stringify(intTypes[inItem.it].b[i]));
+            console.log(JSON.stringify(intTypes[inItem.it].c[i]));
+            console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+            if (!i) {
+              out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+              console.log(JSON.stringify(out));
+            } else {
+              out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
+            }
+          }
+          inItem.out[0] = math.add(inItem.out[0], out);
+          while (inItem.mem.length > 1) {
+            inItem.mem.shift();
+          }
+        } else {
+          if (!inItem.out[0]) {
+            inItem.out[0] = inItem.iv;
+          } // else leave as it is ... don't change output
+        }
       }
     }
     // inItem.mem ----> memory
@@ -110,9 +124,10 @@ const blockUtils = {
         inItem.isFr[0] = false;
       }
     }
+    console.log(inItem.isFr);
     if (inItem.isFr[0]) {
-      getOuts();
       addInps();
+      getOuts();
     } else {
       addInps();
       getOuts();

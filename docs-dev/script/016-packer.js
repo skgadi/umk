@@ -1,6 +1,6 @@
 const packer = {
   pack: function (fText) {
-    let deflated16Bit = this.deflated16bit(fText);
+    let deflated16Bit = this.deflated16bit(encodeURI(fText));
     deflated16Bit = this.escZero(deflated16Bit);
     return this.ab2str(deflated16Bit);
   },
@@ -8,7 +8,7 @@ const packer = {
     let deflated16Bit = new Uint16Array(this.str2ab(sText));
     deflated16Bit = this.escZero(deflated16Bit, false);
     let inflated8Bit = pako.inflate(deflated16Bit);
-    return this.ab2str(inflated8Bit);
+    return decodeURI(this.ab2str(inflated8Bit));
   },
   deflated16bit: function (text) {
     let deflated8Bit = pako.deflate(text);

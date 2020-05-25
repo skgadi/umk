@@ -119,6 +119,7 @@ uyamak.lFManagerVue = new Vue({
             uyamakCbManager.prepareAltAndCopy(this.oAvail.m, false);
             uyamakCbManager.bringModelToMain();
           } else {
+            popup.closeAll(true);
             mainSystem.graph.getModel().clear();
             uyamakCbManager.inmportToGraph(this.oAvail.m, mainSystem.graph, false);
           }

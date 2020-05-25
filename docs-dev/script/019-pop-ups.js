@@ -37,10 +37,15 @@ const popup = {
       this.rCells[cid] = window.open(url, "_blank", spec);
     }
   },
-  closeAll: function () {
+  closeAll: function (clearRegisters = false) {
     let keys = Object.keys(this.rCells);
     for (let i = 0; i < keys.length; i++) {
       this.rCells[keys[i]].close();
+    }
+    //console.log(clearRegisters);
+    if (clearRegisters) {
+      this.rCells = [];
+      this.rType =[];
     }
   },
   close: function (id) {
