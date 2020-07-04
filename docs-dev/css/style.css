@@ -448,7 +448,8 @@ ul.menu {
 }
 
 .dropdown:hover .dropbtn,
-.dropbtn:hover {
+.dropbtn:hover,
+.dropbtn-hovered {
   border-left: 1px solid var(--col-border-1);
   border-right: 1px solid var(--col-border-1);
 }
@@ -457,6 +458,11 @@ ul.menu {
 .dropdown:hover .dropbtn {
   background-color: var(--col-background-2);
   color: var(--col-text-1);
+}
+
+.dropbtn-hovered {
+  background-color: var(--col-background-2) !important;
+  color: var(--col-text-1) !important;
 }
 
 .menu>li.dropdown {
@@ -653,6 +659,7 @@ ul.menu-kbs>li {
 
 .libraryBlock {
   cursor: move;
+  touch-action: none;
   /*opacity: 0.8;*/
 }
 
@@ -969,9 +976,11 @@ blink,
   font-size: 1em;
 }
 
+/*
 #blocks-library {
   touch-action: none;
 }
+*/
 
 .simple-text {
   font-weight: normal;
@@ -1070,7 +1079,7 @@ table {
 }
 
 td>input {
-  width: calc(100% - 2px) !important;
+  width: calc(100% - 5px) !important;
 }
 
 table.simple-border,
@@ -1089,3 +1098,51 @@ table.simple-border th {
   user-select: none;
   /* Standard */
 }
+
+
+/*Context menu Start */
+body div.mxPopupMenu {
+  position: absolute;
+  padding: 3px;
+}
+
+body table.mxPopupMenu {
+  border-collapse: collapse;
+  margin: 0px;
+}
+
+body tr.mxPopupMenuItem {
+  cursor: default;
+}
+
+body td.mxPopupMenuItem {
+  padding: 10px 60px 10px 30px;
+  font-size: 9pt;
+}
+
+body td.mxPopupMenuIcon {
+  padding: 0px;
+}
+
+table.mxPopupMenu hr {
+  border-top: solid 1px var(--col-border-1);
+}
+
+table.mxPopupMenu tr {
+  font-size: 4pt;
+}
+
+div.mxPopupMenu{
+  background: unset !important;
+  background-color: var(--col-background-2) !important;
+	color: var(--col-text-1) !important;
+}
+
+tr.mxPopupMenuItemHover {
+  background-color: var(--col-background-3) !important;
+	color: var(--col-text-1) !important;
+}
+tr.mxPopupMenuItem {
+	color: var(--col-text-1) !important;
+}
+/*Context menu end*/

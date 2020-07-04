@@ -453,10 +453,10 @@ const simVue = new Vue({
       let i = 0;
       try {
         while (fullyConnectedModels.length > 0) {
-          let mSources = this.getSourcesOfAModel(fullyConnectedModels[i]);
+          let mSources = this.getSourcesWithIndexes(fullyConnectedModels[i]);
           let addThisToOrder = true;
           for (let j = 0; j < mSources.length; j++) {
-            if (ExecutionOrder.indexOf(mSources[j]) < 0) {
+            if (ExecutionOrder.indexOf(mSources[j].model) < 0) {
               addThisToOrder = false;
             }
           }
@@ -525,6 +525,36 @@ const simVue = new Vue({
         pc: allConnectedModels.pc
       };
     },
+    getSourcesWithIndexes: function (inModel) {
+      let modelSources = [];
+      for (let i = 0; i < inModel.children.length; i++) {
+        if (inModel.children[i].style.search("umk_input") >= 0) {
+          let srcItem = {
+            model = null,
+            index = null
+          };
+          let nodeItems = mainSystem.graph.getNodeCells(inModel.children[i]);
+          for (let j = 0; j < nodeItems.length; j++) {
+            if (!!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
+              srcItem.model = nodeItems[j].parent;
+              let outIdx = -1;
+              for (let k = 0; k < nodeItems[j].parent.children.length; k++) {
+                if (!!nodeItems[j].parent.children[k].style && nodeItems[j].parent.children[k].style.search("umk_output") >= 0) {
+                  outIdx++;
+                  if (nodeItems[j] === nodeItems[j].parent.children[k]) {
+                    srcItem.index = outIdx;
+                    break;
+                  }
+                }
+              }
+              break;
+            }
+          }
+          modelSources.push(srcItem);
+        }
+      }
+      return modelSources;
+    },
     getSourcesOfAModel: function (inModel) {
       let modelSources = [];
       for (let i = 0; i < inModel.children.length; i++) {
@@ -542,6 +572,7 @@ const simVue = new Vue({
       }
       return modelSources;
     },
+    /*
     getSourcesWithIndexes: function (inModel) {
       let indexes = [];
       for (let i = 0; i < inModel.children.length; i++) {
@@ -568,6 +599,7 @@ const simVue = new Vue({
       }
       return indexes;
     },
+    */
 
     getTargetsOfAModel: function (inModel) {
       let modelTargets = [];
@@ -623,29 +655,21 @@ const simVue = new Vue({
           allTheBlocks = allTheBlocks.concat(allTheBlocks[i].children);
         }
       }
-      let allTheValidEdges = [];
-      for (let i = 0; i < allTheBlocks.length; i++) {
-        if (
-          allTheBlocks[i].isEdge() &&
-          typeof allTheBlocks[i].source.parent.value == "object" &&
-          typeof allTheBlocks[i].target.parent.value == "object"
-        ) {
-          allTheValidEdges.push(allTheBlocks[i]);
-        }
-      }
+
       let allConnectedBlocks = [];
-      for (let i = 0; i < allTheValidEdges.length; i++) {
-        if (
-          allConnectedBlocks.indexOf(allTheValidEdges[i].source.parent) < 0
+      for (let i = 0; i < allTheBlocks.length; i++) {
+        if (allTheBlocks[i].isVertex() &&
+          !!allTheBlocks[i].style &&
+          ((allTheBlocks[i].style.search("umk_input") >= 0) || (allTheBlocks[i].style.search("umk_output") >= 0)) &&
+          (!!allTheBlocks[i].edges) &&
+          (allTheBlocks[i].edges.length > 0)
         ) {
-          allConnectedBlocks.push(allTheValidEdges[i].source.parent);
-        }
-        if (
-          allConnectedBlocks.indexOf(allTheValidEdges[i].target.parent) < 0
-        ) {
-          allConnectedBlocks.push(allTheValidEdges[i].target.parent);
+          if (allConnectedBlocks.indexOf(allTheBlocks[i].parent) < 0) {
+            allConnectedBlocks.push(allTheBlocks[i].parent);
+          }
         }
       }
+
       let allFullyConnectedBlocks = [];
       let allPartiallyConnectedBlocks = [];
       for (let i = 0; i < allConnectedBlocks.length; i++) {

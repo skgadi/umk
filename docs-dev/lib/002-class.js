@@ -8,6 +8,8 @@ class umk_model {
     this.Parameters = {};
     // the computed parameters are stored in this
     this.CompParams = {};
+    // these variables are generated during execution
+    this.ExecParams = {};
     // During simulation inputs and outputs are stored here
     this.inputs = [];
     this.outputs = [];
@@ -85,4 +87,8 @@ class umk_model {
   };
   // compute the parameters to prepare CompParams
   genCompParams() {}
+  // Runs at the end of each execution cycle
+  afterEC() {}
+  // Runs at the begining of each execution cycle
+  beforeEC() {}
 }

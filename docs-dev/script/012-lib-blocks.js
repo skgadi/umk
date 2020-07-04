@@ -7,9 +7,9 @@ function blockOnDOM(img) {
   let Name = bSummary.blocks[model].name[settings.lang];
 
   let dragElt = document.createElement("div");
-  dragElt.style.border = "dashed var(--col-border-1) 2px";
-  dragElt.style.width = (width - 4) + "px";
-  dragElt.style.height = (height - 4) + "px";
+  dragElt.style.border = "dashed var(--col-border-1) 1px";
+  dragElt.style.width = (width - 0) + "px";
+  dragElt.style.height = (height - 0) + "px";
   let addANewBlock = function (graph, evt, cell, x, y) {
     graph.getModel().beginUpdate();
     try {
@@ -80,12 +80,12 @@ function setTermianls(graph, Cell, type = "umk_input") {
       position = {
         x: 0,
         size: {
-          width: 4,
-          height: 8
+          width: 28,
+          height: 10
         },
         offset: {
-          x: -6,
-          y: -4
+          x: -30,
+          y: -5
         }
       };
     } else {
@@ -94,12 +94,12 @@ function setTermianls(graph, Cell, type = "umk_input") {
       position = {
         x: 1,
         size: {
-          width: 4,
-          height: 8
+          width: 20,
+          height: 10
         },
         offset: {
-          x: 2,
-          y: -4
+          x: 0,
+          y: -5
         }
       };
     }

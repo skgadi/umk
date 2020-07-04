@@ -1,1 +1,1 @@
-firebase serve
+miniweb -p 80 -r ./docs-dev

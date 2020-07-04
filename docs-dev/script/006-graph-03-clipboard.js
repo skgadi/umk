@@ -1,6 +1,6 @@
 //Copy paste stuff
 const uyamakCbManager = {
-  graph: new Graph(document.getElementById('GraphForCopyPaste')),
+  graph: new mxGraph(document.getElementById('GraphForCopyPaste')),
   clone: function () {
     mainSystem.graph.createSubModel();
     mxClipboard.copy(mainSystem.graph);

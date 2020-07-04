@@ -85,7 +85,16 @@ const exec = {
         store = true;
         this.s4Out = 0;
       }
-      //console.log(this.cells.length);
+      for (let i = 0; i < this.cells.length; i++) {
+        model = this.cells[i];
+        //console.log(model.cid);
+        for (let j = 0; j < model.TerminalsIn.value; j++) {
+          //console.log(model.sIndexes);
+          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
+        }
+        model.beforeEC();
+      }
+        //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
         //console.log(model.cid);
@@ -108,6 +117,15 @@ const exec = {
           t: this.t,
           o: tempOut
         });
+      }
+      for (let i = 0; i < this.cells.length; i++) {
+        model = this.cells[i];
+        //console.log(model.cid);
+        for (let j = 0; j < model.TerminalsIn.value; j++) {
+          //console.log(model.sIndexes);
+          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
+        }
+        model.afterEC();
       }
     } catch (e) {
       console.log(e);

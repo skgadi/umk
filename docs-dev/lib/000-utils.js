@@ -80,13 +80,14 @@ const blockUtils = {
     }
 
     function getOuts() {
-      console.log(JSON.stringify(inItem.mem));
+      //console.log(JSON.stringify(inItem.mem));
       if (!inItem.t) {
         inItem.out[0] = inItem.iv;
       } else {
         if (inItem.mem.length > intTypes[inItem.it].m) {
           let out;
           let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
+          console.log(h);
           for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
             console.log(JSON.stringify(intTypes[inItem.it].b[i]));
             console.log(JSON.stringify(intTypes[inItem.it].c[i]));
@@ -124,13 +125,13 @@ const blockUtils = {
         inItem.isFr[0] = false;
       }
     }
-    console.log(inItem.isFr);
+    //console.log(inItem.isFr);
     if (inItem.isFr[0]) {
       addInps();
       getOuts();
     } else {
-      addInps();
       getOuts();
+      addInps();
     }
     //console.log(h);
     //console.log(inItem.it);

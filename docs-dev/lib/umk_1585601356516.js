@@ -2,9 +2,9 @@ class umk_1585601356516 extends umk_model {
   Icon() {
     this.genCompParams();
     return {
-      html: "$$\\LARGE +$$",
+      html: '<i class="fas fa-plus"></i>',
       inLabels: this.CompParams.isAdd.map((ele) => {
-        return (ele) ? "$\\small +$" : "$\\small -$";
+        return (ele) ? "+" : "-";
       }),
       outLabels: null,
       //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected

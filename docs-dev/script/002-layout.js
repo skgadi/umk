@@ -1,6 +1,6 @@
 (() => {
-    const minHeight = 360;
-    const minWidth = 500;
+    const minHeight = 200;
+    const minWidth = 400;
     const panes = ['left', 'right'];
     let tooSmallHeight = 0;
     let tooSmallWidth = 0;

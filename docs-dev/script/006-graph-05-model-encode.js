@@ -13,24 +13,4 @@ mxCodec.prototype.encode = function (obj) {
     }
     return xmlOut;
   }
-
-
-  /*
-  console.log(obj.constructor.name);
-  let a = oldEncode.apply(this, arguments);
-  //console.log(a);
-  return a;
-  return oldEncode.apply(this, arguments);
-  */
 };
-
-/*
-const mxCodecEncodeCell = mxCodec.prototype.encodeCell;
-mxCodec.prototype.encodeCell = function(cell,node,includeChildren	) {
-  console.log(arguments);
-  if (cell.style && cell.style.search('umk_model')>=0) {
-    arguments[3] = false;
-  }
-  mxCodecEncodeCell.apply(this, arguments);
-}
-*/
