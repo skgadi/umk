@@ -118,8 +118,11 @@
 
       var parent = this.getModel().getParent(cell);
 
-      if (this.getModel().isVertex(parent)) {
-        tip += this.getTooltipForCell(parent) + '.';
+      if (this.getModel().isVertex(parent) && parent.style.search("umk_model") >= 0) {
+        tip += this.getTooltipForCell(parent);
+        if (!(cell.style.search("umk_EO") >= 0 || cell.style.search("umk_caption") >= 0)) {
+          tip += '.';
+        }
       }
 
       const thisTip = getTooltipForCell.apply(this, arguments);
