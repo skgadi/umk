@@ -41,6 +41,17 @@ const blocksVue = new Vue({
     this.updateCounter++;
   },
   methods: {
+    showHide: function (itemID) {
+      const divId = 'categories_list_' + itemID;
+      const iconId = 'categories_list_icon_' + itemID;
+      if (document.getElementById(divId).style.display === "none") {
+        document.getElementById(divId).style.display = "block";
+        document.getElementById(iconId).innerHTML = "<i class='fas fa-fw fa-caret-down'></i>";
+      } else {
+        document.getElementById(divId).style.display = "none";
+        document.getElementById(iconId).innerHTML = "<i class='fas fa-fw fa-caret-right'></i>";
+      }
+    },
     focusBar: function () {
       document.getElementById("search-input").focus();
     },

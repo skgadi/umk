@@ -95,6 +95,8 @@
         }
         return count;
       }
+    } else if (!!cell.style && (cell.style.search("umk_EO") >= 0 || cell.style.search("umk_caption") >= 0)) {
+      return "";
     } else {
       if (!!cell.value) {
         return cell.value

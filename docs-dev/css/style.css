@@ -634,13 +634,24 @@ ul.menu-kbs>li {
 .category-head {
   height: var(--button-size);
   line-height: var(--button-size);
+  display: inline-block
 }
 
+/*
 .category-head i {
   color: var(--col-background-3);
 }
+*/
 
-.category-head:hover i {
+.category-head:hover {
+  color: var(--col-text-0);
+}
+
+.category-full {
+  color: var(--col-border-0);
+}
+
+.category-full:hover {
   color: var(--col-border-1);
 }
 
@@ -1132,17 +1143,19 @@ table.mxPopupMenu tr {
   font-size: 4pt;
 }
 
-div.mxPopupMenu{
+div.mxPopupMenu {
   background: unset !important;
   background-color: var(--col-background-2) !important;
-	color: var(--col-text-1) !important;
+  color: var(--col-text-1) !important;
 }
 
 tr.mxPopupMenuItemHover {
   background-color: var(--col-background-3) !important;
-	color: var(--col-text-1) !important;
+  color: var(--col-text-1) !important;
 }
+
 tr.mxPopupMenuItem {
-	color: var(--col-text-1) !important;
+  color: var(--col-text-1) !important;
 }
+
 /*Context menu end*/
