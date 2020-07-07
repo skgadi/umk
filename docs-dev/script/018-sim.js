@@ -535,7 +535,7 @@ const simVue = new Vue({
           };
           let nodeItems = mainSystem.graph.getNodeCells(inModel.children[i]);
           for (let j = 0; j < nodeItems.length; j++) {
-            if (!!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
+            if (!!nodeItems[j] && !!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
               srcItem.model = nodeItems[j].parent;
               let outIdx = -1;
               for (let k = 0; k < nodeItems[j].parent.children.length; k++) {

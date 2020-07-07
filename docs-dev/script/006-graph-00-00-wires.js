@@ -4,23 +4,13 @@
 mxConnectionHandler.prototype.movePreviewAway = false;
 mxConnectionHandler.prototype.waypointsEnabled = true;
 mxGraph.prototype.resetEdgesOnConnect = false;
-mxConstants.SHADOWCOLOR = '#C0C0C0';
-var joinNodeSize = 7;
-var strokeWidth = 2;
 
-// Replaces the port image
-mxConstraintHandler.prototype.pointImage = new mxImage('images/dot.gif', 10, 10);
-
-// Enables guides
-mxGraphHandler.prototype.guidesEnabled = true;
 
 // Alt disables guides
 mxGuide.prototype.isEnabledForEvent = function (evt) {
   return !mxEvent.isAltDown(evt);
 };
 
-// Enables snapping waypoints to terminals
-mxEdgeHandler.prototype.snapToTerminals = true;
 
 // <!--  
 // 		Updates connection points before the routing is called.
@@ -260,7 +250,9 @@ mxEdgeHandler.prototype.createMarker = function () {
   var marker = mxEdgeHandlerCreateMarker.apply(this, arguments);
 
   // Adds in-place highlighting when reconnecting existing edges
-  marker.highlight.highlight = this.graph.connectionHandler.marker.highlight.highlight;
+  //marker.highlight.highlight = this.graph.connectionHandler.marker.highlight.highlight;
+  //console.log(marker);
+  marker.validColor = 'var(--col-border-1)';
 
   return marker;
 }

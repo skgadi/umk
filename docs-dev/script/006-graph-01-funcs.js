@@ -1,5 +1,5 @@
 ((graph) => {
-  graph.setAllowDanglingEdges(false);
+  //graph.setAllowDanglingEdges(false);
   graph.setConnectable(true);
   graph.setTooltips(true);
   graph.setPanning(true);
@@ -84,12 +84,12 @@
     let index = 0;
     while (index < nItems.length) {
       const connectedCells = [];
-      if (!!nItems[index].edges) {
+      if (!!nItems[index] && !!nItems[index].edges && nItems[index].edges.length > 0) {
         for (let i = 0; i < nItems[index].edges.length; i++) {
           connectedCells.push(nItems[index].edges[i]);
         }
       }
-      if (nItems[index].isEdge()) {
+      if (!!nItems[index] && nItems[index].isEdge()) {
         connectedCells.push(nItems[index].source);
         connectedCells.push(nItems[index].target);
       }
