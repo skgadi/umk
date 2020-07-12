@@ -13,25 +13,24 @@ class umk_1588716024472 extends umk_model {
     //this.ExecParams.isInFr = 0; //0-> not sure
     //this.CompParams.mem.push(math.zeros(this.Parameters.ic.Value._data.length, this.Parameters.ic.Value._data[0].length));
   }
-  beforeEC() {
-  }
+  beforeEC() {}
   genCompParams() {
     this.CompParams.out = []; //Output of int
     this.CompParams.pt = [0]; // previous time
     this.CompParams.mem = []; //Memory for integration
   }
   Evaluate(t, k, simSettings) {
-/*
-    if (this.ExecParams.isInFr === 0) {
-      this.ExecParams.isInFr = (!!this.inputs[0]);
-    }
-    if (this.ExecParams.isInFr) {
-      this.CompParams.mem.push(this.inputs[0]);
-    }
-    console.log("before ec");
-    console.log(this.ExecParams.isInFr);
-    console.log(JSON.stringify(this.CompParams.mem));
-*/
+    /*
+        if (this.ExecParams.isInFr === 0) {
+          this.ExecParams.isInFr = (!!this.inputs[0]);
+        }
+        if (this.ExecParams.isInFr) {
+          this.CompParams.mem.push(this.inputs[0]);
+        }
+        console.log("before ec");
+        console.log(this.ExecParams.isInFr);
+        console.log(JSON.stringify(this.CompParams.mem));
+    */
 
     //console.log(JSON.stringify(simSettings));
     //console.log(t);
@@ -58,16 +57,16 @@ class umk_1588716024472 extends umk_model {
     this.outputs[0] = pData.out[0];
   }
   afterEC() {
-   /* if (!this.ExecParams.isInFr) {
-      this.CompParams.mem.push(this.inputs[0]);
-    }*/
+    /* if (!this.ExecParams.isInFr) {
+       this.CompParams.mem.push(this.inputs[0]);
+     }*/
     //console.log(JSON.stringify(this.CompParams.mem));
     /*if (!!this.inputs[0]) {
       this.CompParams.mem.push(this.inputs[0]);
     }*/
   }
   Details() {
-    return TeX.prepDisp("\\int_{0}^{t}u(t)\\mathrm{d}t");
+    return TeX.prepDisp("y(t)=\\int_{0}^{t}u(t)\\mathrm{d}t+y(0)");
   }
   constructor(obj) {
     let tempIntTypes = {

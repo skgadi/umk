@@ -20,7 +20,7 @@
 
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
-  mxConstants.DEFAULT_FONTSIZE = "15";
+  mxConstants.DEFAULT_FONTSIZE = "12";
   mxConstants.SHADOWCOLOR = "var(--col-text-0 )";
   mxConstants.SHADOW_OFFSET_X = 3;
   mxConstants.SHADOW_OFFSET_Y = 3;
@@ -49,7 +49,7 @@
   const vStyle = graph.getStylesheet().getDefaultVertexStyle();
   const eStyle = graph.getStylesheet().getDefaultEdgeStyle();
   vStyle["shadow"] = false;
-  vStyle["whiteSpace"] = "wrap";
+  //vStyle["whiteSpace"] = "wrap";
   vStyle["arcSize"] = 10;
   vStyle["absoluteArcSize"] = 1;
   vStyle["rounded"] = "1";

@@ -3,7 +3,7 @@
 // the built-in hit-detection of the HTML document will not be used in this case.
 mxConnectionHandler.prototype.movePreviewAway = false;
 mxConnectionHandler.prototype.waypointsEnabled = true;
-mxGraph.prototype.resetEdgesOnConnect = false;
+//mxGraph.prototype.resetEdgesOnConnect = false;
 
 
 // Alt disables guides
@@ -263,17 +263,26 @@ mxEdgeHandler.prototype.createMarker = function () {
 // 	<script type="text/javascript">
 mxGraphGetCellStyle = mxGraph.prototype.getCellStyle;
 mxGraph.prototype.getCellStyle = function (cell) {
-  var style = mxGraphGetCellStyle.apply(this, arguments);
+  let style = mxGraphGetCellStyle.apply(this, arguments);
 
   if (style != null && this.model.isEdge(cell)) {
     style = mxUtils.clone(style);
 
-    if (this.model.isEdge(this.model.getTerminal(cell, true))) {
+    const source = this.model.getTerminal(cell, true);
+    const target = this.model.getTerminal(cell, false);
+    // console.log(source);
+    // console.log(target);
+    if (this.model.isEdge(source) || ((this.model.isVertex(source)) && (source.getEdgeCount() > 1))) {
       style['startArrow'] = 'oval';
     }
 
-    if (this.model.isEdge(this.model.getTerminal(cell, false))) {
+    if (this.model.isEdge(target) || ((this.model.isVertex(target)) && (target.getEdgeCount() > 1))) {
       style['endArrow'] = 'oval';
+    }
+
+    if ((!source || !target) &&
+      (cell.getEdgeCount() === 0)) {
+      style['dashed'] = 1;
     }
   }
 
@@ -361,7 +370,7 @@ mxEdgeStyle.WireConnector = function (state, source, target, hints, result) {
   }
 
   if (horizontal) {
-    if (pt.y != hint.y && first.x != pt.x) {
+    if (pt.y != hint.y &&  first.x != pt.x) {
       result.push(new mxPoint(pt.x, hint.y));
     }
   } else if (pt.x != hint.x && first.y != pt.y) {

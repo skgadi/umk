@@ -449,6 +449,7 @@ const simVue = new Vue({
           firstModels[i]
         );
       }
+
       let ExecutionOrder = firstModels.slice();
       let i = 0;
       try {
@@ -516,8 +517,13 @@ const simVue = new Vue({
             type: 'warning'
           }).show();
         }*/
-        console.log(e);
+        //console.log(e);
       }
+      /*
+      // Re-organize cells to order in fInEO
+      for (let i=(ExecutionOrder.length-1);i>=0; i--) {
+
+      }*/
       return {
         eo: ExecutionOrder,
         ne: fullyConnectedModels,
@@ -604,7 +610,7 @@ const simVue = new Vue({
     getTargetsOfAModel: function (inModel) {
       let modelTargets = [];
       for (let i = 0; i < inModel.children.length; i++) {
-        if (inModel.children[i].style.search("umk_output") >= 0) {
+        if ((inModel.children[i].style.search("umk_output") >= 0) && (!!inModel.children[i].edges)) {
           for (let j = 0; j < inModel.children[i].edges.length; j++) {
             try {
               if (

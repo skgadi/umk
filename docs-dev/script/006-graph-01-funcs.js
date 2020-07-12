@@ -65,7 +65,7 @@
     for (let i = 0; i < inCells.length; i++) {
       let allNodeCells = this.getNodeCells(inCells[i], ignCells);
       for (let j = 0; j < allNodeCells.length; j++) {
-        if (!!allNodeCells[j].style && allNodeCells[j].style.search("umk_output") >= 0) {
+        if (!!!!allNodeCells[j] && !!allNodeCells[j].style && allNodeCells[j].style.search("umk_output") >= 0) {
           if (foundSource) {
             return true;
           } else {

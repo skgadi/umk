@@ -92,7 +92,7 @@ const exec = {
           //console.log(model.sIndexes);
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
-        model.beforeEC();
+        model.beforeEC(this.t, this.k, this.simSettings);
       }
         //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
@@ -125,7 +125,7 @@ const exec = {
           //console.log(model.sIndexes);
           model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
-        model.afterEC();
+        model.afterEC(this.t, this.k, this.simSettings);
       }
     } catch (e) {
       console.log(e);

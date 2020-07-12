@@ -656,6 +656,18 @@ ul.menu-kbs>li {
 }
 
 /*
+.param-edit-head {
+  height: var(--button-size);
+  line-height: var(--button-size);
+  display: inline-block;
+}
+.param-edit-head:hover {
+  color: var(--col-text-0);
+}
+
+*/
+
+/*
 .category-content {
   border-bottom: 1px var(--col-border-0) solid;
 }*/

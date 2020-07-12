@@ -121,7 +121,7 @@
             ctx.stroke();
           }
 
-          stepping = stepping * 5;
+          stepping = stepping * 4;
           if (this.majorStroke.show) {
             ctx.strokeStyle = this.majorStroke.color;
             xs = Math.floor((0 - tx) / stepping) * stepping + tx;

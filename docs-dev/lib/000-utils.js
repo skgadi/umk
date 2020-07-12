@@ -87,14 +87,14 @@ const blockUtils = {
         if (inItem.mem.length > intTypes[inItem.it].m) {
           let out;
           let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
-          console.log(h);
+          //console.log(h);
           for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
-            console.log(JSON.stringify(intTypes[inItem.it].b[i]));
-            console.log(JSON.stringify(intTypes[inItem.it].c[i]));
-            console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+            // console.log(JSON.stringify(intTypes[inItem.it].b[i]));
+            // console.log(JSON.stringify(intTypes[inItem.it].c[i]));
+            // console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
             if (!i) {
               out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
-              console.log(JSON.stringify(out));
+              //console.log(JSON.stringify(out));
             } else {
               out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
             }

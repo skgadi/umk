@@ -7,9 +7,11 @@ function blockOnDOM(img) {
   let Name = bSummary.blocks[model].name[settings.lang];
 
   let dragElt = document.createElement("div");
-  dragElt.style.border = "dashed var(--col-border-1) 1px";
-  dragElt.style.width = (width - 0) + "px";
-  dragElt.style.height = (height - 0) + "px";
+  //dragElt.style.backgroundColor = 'var(--col-background-2)';
+  dragElt.innerHTML = "<div style='width:calc(100% - 0.5px);height:calc(100% - 0.5px);background:var(--col-background-2);border:solid var(--col-text-1) 1px;border-radius: 5px;text-align:center;overflow:hidden;line-height:"+height+"px;font-size:12px;'>"+Name+"</div>"
+  //dragElt.style.border = "dashed var(--col-border-1) 1px";
+  dragElt.style.width = (width - 00) + "px";
+  dragElt.style.height = (height - 00) + "px";
   let addANewBlock = function (graph, evt, cell, x, y) {
     graph.getModel().beginUpdate();
     try {

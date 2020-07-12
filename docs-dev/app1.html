@@ -495,7 +495,9 @@
           <div v-if="Object.keys(uyamakModel.Parameters).length>0">
             <h3 class="compress" v-text="GUIText[settings.lang].params"></h3>
             <template v-for="(Parameter, index) in uyamakModel.Parameters">
-              <div class="category-head" @click="toggleParamDisplay(index)" style="cursor: pointer;">
+              <div class="category-full">
+
+              <div class="category-head pointer" @click="toggleParamDisplay(index)">
                 <span :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"
                     :class="!!parametersDisplay[index]?'fa-rotate-90':''"></i></span>
                 <span v-html="Parameter.Name[settings.lang]"></span>
@@ -554,6 +556,7 @@
                 </div>
                 <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
                   v-html="getComputedValueText(Parameter)"></div>
+              </div>
               </div>
             </template>
           </div>
