@@ -1,4 +1,4 @@
-((graph) => {
+((graph, system) => {
   //graph.setAllowDanglingEdges(false);
   graph.setConnectable(true);
   graph.setTooltips(true);
@@ -115,4 +115,10 @@
     return nItems;
   }
 
-})(mainSystem.graph);
+  //Delete button action
+  graph.deleteBtnPress = function () {
+    if (graph.isEnabled()) {
+      graph.removeCells(null, false);
+    }
+  }
+})(mainSystem.graph,mainSystem);

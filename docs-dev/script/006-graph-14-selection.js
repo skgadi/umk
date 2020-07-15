@@ -1,9 +1,12 @@
 ((graph) => {
   // Redirects selection to parent
   graph.selectCellForEvent = function (cell) {
+    //Use this code to select parent when a terminal is connected
+    /*
     if (graph.isPart(cell)) {
       cell = graph.model.getParent(cell);
     }
+    */
     mxGraph.prototype.selectCellForEvent.apply(this, arguments);
   };
   // Helper method to mark parts with constituent=1 in the style

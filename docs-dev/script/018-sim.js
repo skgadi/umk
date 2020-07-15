@@ -427,7 +427,103 @@ const simVue = new Vue({
       mainSystem.refresh();
     },
 
-    getExecutionOrder: function () {
+    getExecutionOrder2: function () {
+      let firstModels = [];
+      let sourcesModels = [];
+      let fInEOModels = [];
+      let fInEOModelsOrdered = [];
+      let allConnectedModels = this.getAllConnectedModels();
+      let fullyConnectedModels = allConnectedModels.fc;
+      let aLoopModels = [];
+
+      //Obtaining first executing models
+      for (let i = 0; i < fullyConnectedModels.length; i++) {
+        if (fullyConnectedModels[i].value.TerminalsIn.max === 0) {
+          sourcesModels.push(fullyConnectedModels[i]);
+        } else if (!!fullyConnectedModels[i].value.fInEO) {
+          fInEOModels.push(fullyConnectedModels[i]);
+        }
+      }
+      firstModels = sourcesModels.slice(); //.concat(fInEOModels);
+      //removing first executing models from fullyConnectedModels
+      for (let i = 0; i < firstModels.length; i++) {
+        fullyConnectedModels = this.arrayRemove(
+          fullyConnectedModels,
+          firstModels[i]
+        );
+      }
+      let ExecutionOrder = [];
+      let i = 0;
+      try {
+        while (fullyConnectedModels.length > 0) {
+          let mSources = this.getSourcesWithIndexes(fullyConnectedModels[i]);
+          let addThisToOrder = true;
+          for (let j = 0; j < mSources.length; j++) {
+            if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
+              (sourcesModels.indexOf(mSources[j].model) < 0) &&
+              (fInEOModels.indexOf(mSources[j].model) < 0)) {
+              addThisToOrder = false;
+            }
+            if ((fInEOModels.indexOf(mSources[j].model) >= 0) &&
+              (fInEOModelsOrdered.indexOf(mSources[j].model) < 0)) {
+              fInEOModelsOrdered.push(mSources[j].model);
+              fInEOModels = this.arrayRemove(fInEOModels, mSources[j].model);
+            }
+          }
+          if (addThisToOrder) {
+            if (!fullyConnectedModels[i].value.fInEO) {
+              ExecutionOrder.push(fullyConnectedModels[i]);
+            }
+            fullyConnectedModels = this.arrayRemove(
+              fullyConnectedModels,
+              fullyConnectedModels[i]
+            );
+            i = 0;
+          } else {
+            i++;
+          }
+          if (
+            fullyConnectedModels.length > 0 &&
+            i >= fullyConnectedModels.length
+          ) {
+            for (let j = 0; j < ExecutionOrder.length; j++) {
+              let targets = this.getTargetsOfAModel(ExecutionOrder[j]);
+              for (let k = 0; k < targets.length; k++) {
+                if (fullyConnectedModels.indexOf(targets[k]) >= 0) {
+                  aLoopModels.push(targets[k]);
+                  fullyConnectedModels = this.arrayRemove(
+                    fullyConnectedModels,
+                    targets[k]
+                  );
+                }
+              }
+            }
+            if (aLoopModels.length > 0) {
+              throw {
+                code: "UMKEOAL",
+                message: "arthematic loop(s) found"
+              };
+            } else {
+              throw {
+                code: "UMKEOIC",
+                message: "Incomplete/improper connections detected"
+              };
+            }
+          }
+        }
+      } catch (e) {
+        //console.log(e);
+      }
+      console.log(ExecutionOrder);
+      return {
+        eo: sourcesModels.concat(fInEOModels).concat(fInEOModelsOrdered).concat(ExecutionOrder),
+        ne: fullyConnectedModels,
+        al: aLoopModels,
+        pc: allConnectedModels.pc
+      };
+    },
+
+    getExecutionOrder1: function () {
       let firstModels = [];
       let allConnectedModels = this.getAllConnectedModels();
       let fullyConnectedModels = allConnectedModels.fc;
@@ -531,6 +627,129 @@ const simVue = new Vue({
         pc: allConnectedModels.pc
       };
     },
+
+    getExecutionOrder: function () {
+      let firstModels = [];
+      let sourcesModels = [];
+      let fInEOModels = [];
+      let fInEOModelsOrdered = [];
+      let allConnectedModels = this.getAllConnectedModels();
+      let fullyConnectedModels = allConnectedModels.fc;
+      let aLoopModels = [];
+
+      //Obtaining first executing models
+      for (let i = 0; i < fullyConnectedModels.length; i++) {
+        if (fullyConnectedModels[i].value.TerminalsIn.max === 0) {
+          sourcesModels.push(fullyConnectedModels[i]);
+        } else if (!!fullyConnectedModels[i].value.fInEO) {
+          fInEOModels.push(fullyConnectedModels[i]);
+        }
+      }
+      firstModels = sourcesModels.slice(); //.concat(fInEOModels);
+      //removing first executing models from fullyConnectedModels
+      for (let i = 0; i < firstModels.length; i++) {
+        fullyConnectedModels = this.arrayRemove(
+          fullyConnectedModels,
+          firstModels[i]
+        );
+      }
+      let ExecutionOrder = [];
+      let i = 0;
+      try {
+        while (fullyConnectedModels.length > 0) {
+          let mSources = this.getSourcesWithIndexes(fullyConnectedModels[i]);
+          let addThisToOrder = true;
+          for (let j = 0; j < mSources.length; j++) {
+            if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
+              (sourcesModels.indexOf(mSources[j].model) < 0)) {
+              addThisToOrder = false;
+            }
+          }
+          if (addThisToOrder) {
+            if (fInEOModels.indexOf(fullyConnectedModels[i]) >= 0) {
+              //fInEOModelsOrdered.push(fullyConnectedModels[i]);
+            }
+            ExecutionOrder.push(fullyConnectedModels[i]);
+            fInEOModels = this.arrayRemove(fInEOModels, fullyConnectedModels[i]);
+            fullyConnectedModels = this.arrayRemove(
+              fullyConnectedModels,
+              fullyConnectedModels[i]
+            );
+            i = 0;
+          } else {
+            i++;
+          }
+          if (i >= fullyConnectedModels.length && !!fInEOModels.length) {
+            let firstCellFromFInEOModels = fInEOModels.shift();
+            ExecutionOrder.push(firstCellFromFInEOModels);
+            fullyConnectedModels = this.arrayRemove(
+              fullyConnectedModels,
+              firstCellFromFInEOModels
+            );
+                        i = 0;
+          }
+          else if (
+            fullyConnectedModels.length > 0 &&
+            i >= fullyConnectedModels.length
+          ) {
+            const firstItems = sourcesModels.concat(ExecutionOrder);
+            for (let j = 0; j < firstItems.length; j++) {
+              let targets = this.getTargetsOfAModel(firstItems[j]);
+              for (let k = 0; k < targets.length; k++) {
+                if (fullyConnectedModels.indexOf(targets[k]) >= 0) {
+                  aLoopModels.push(targets[k]);
+                  fullyConnectedModels = this.arrayRemove(
+                    fullyConnectedModels,
+                    targets[k]
+                  );
+                }
+              }
+            }
+            if (aLoopModels.length > 0) {
+              throw {
+                code: "UMKEOAL",
+                message: "arthematic loop(s) found"
+              };
+            } else {
+              throw {
+                code: "UMKEOIC",
+                message: "Incomplete/improper connections detected"
+              };
+            }
+          }
+        }
+      } catch (e) {
+        /*if (!!e.message) {
+          new Noty({
+            text: e.message,
+            timeout: 5000,
+            theme: "nest",
+            type: 'warning'
+          }).show();
+        } else {
+          console.log(e);
+          new Noty({
+            text: "Unknown error in obtaining the execution order",
+            timeout: 5000,
+            theme: "nest",
+            type: 'warning'
+          }).show();
+        }*/
+        console.log(e);
+      }
+      /*
+      // Re-organize cells to order in fInEO
+      for (let i=(ExecutionOrder.length-1);i>=0; i--) {
+
+      }*/
+      return {
+        eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
+        ne: fullyConnectedModels,
+        al: aLoopModels,
+        pc: allConnectedModels.pc
+      };
+    },
+
     getSourcesWithIndexes: function (inModel) {
       let modelSources = [];
       for (let i = 0; i < inModel.children.length; i++) {
@@ -610,17 +829,15 @@ const simVue = new Vue({
     getTargetsOfAModel: function (inModel) {
       let modelTargets = [];
       for (let i = 0; i < inModel.children.length; i++) {
-        if ((inModel.children[i].style.search("umk_output") >= 0) && (!!inModel.children[i].edges)) {
-          for (let j = 0; j < inModel.children[i].edges.length; j++) {
-            try {
-              if (
-                modelTargets.indexOf(
-                  inModel.children[i].edges[j].target.parent
-                ) < 0
-              ) {
-                modelTargets.push(inModel.children[i].edges[j].target.parent);
+        if ((!!inModel.children[i]) && (!!inModel.children[i].style) && (inModel.children[i].style.search("umk_output") >= 0)) {
+          let allNodeCells = mainSystem.graph.getNodeCells(inModel.children[i]);
+          console.log(allNodeCells);
+          for (let j = 0; j < allNodeCells.length; j++) {
+            if (!!allNodeCells[j] && !!allNodeCells[j].style && !!allNodeCells[j].style.search("umk_input") >= 0)
+              if ((modelTargets.indexOf(allNodeCells[j].parent) < 0) && (inModel !== allNodeCells[j].parent)) {
+                modelTargets.push(allNodeCells[j].parent);
               }
-            } catch (e) {}
+            try {} catch (e) {}
           }
         }
       }
