@@ -280,8 +280,7 @@ mxGraph.prototype.getCellStyle = function (cell) {
       style['endArrow'] = 'oval';
     }
 
-    if ((!source || !target) &&
-      (cell.getEdgeCount() === 0)) {
+    if (!mainSystem.isUsefulEdge(cell)) {
       style['dashed'] = 1;
     }
   }

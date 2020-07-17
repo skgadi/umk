@@ -121,4 +121,39 @@
       graph.removeCells(null, false);
     }
   }
-})(mainSystem.graph,mainSystem);
+
+  mainSystem.removeUselessEdges = function () {
+    let contRemoving = true;
+    while(contRemoving) {
+      let cellsToRemove = [];
+      let allCells = Object.values(this.graph.getModel().cells);
+      for (let i = 0; i < allCells.length; i++) {
+        if (!mainSystem.isUsefulEdge(allCells[i])) {
+          //console.log(allCells[i]);
+          cellsToRemove.push(allCells[i]);
+        }
+      }
+      contRemoving = !!cellsToRemove.length;
+      this.graph.removeCells(cellsToRemove, false);
+    }
+  }
+  mainSystem.isUsefulEdge = function (inEdge) {
+    if (this.graph.getModel().isEdge(inEdge)) {
+      let noOfConnections = 0;
+      if (!!inEdge.source) {
+        noOfConnections++;
+      }
+      if (!!inEdge.target) {
+        noOfConnections++;
+      }
+      noOfConnections += inEdge.getEdgeCount();
+      if (noOfConnections<2) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+})(mainSystem.graph, mainSystem);
