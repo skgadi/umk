@@ -176,33 +176,33 @@ const blockUtils = {
     function getOuts() {
       //console.log(JSON.stringify(inItem.mem));
       if (!inItem.t) {
-       // inItem.out[0] = inItem.iv;
-      }
-      if (inItem.mem.length > intTypes[inItem.it].m) {
-        let out;
-        let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
-        //console.log(h);
-        for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
-          // console.log(JSON.stringify(intTypes[inItem.it].b[i]));
-          // console.log(JSON.stringify(intTypes[inItem.it].c[i]));
-          // console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
-          if (!i) {
-            out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
-            //console.log(JSON.stringify(out));
-          } else {
-            out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
-          }
-        }
-        inItem.out[0] = math.add(inItem.out[0], out);
-        while (inItem.mem.length > 1) {
-          inItem.mem.shift();
-        }
+        inItem.out[0] = inItem.iv;
       } else {
-        if (!inItem.out[0]) {
-          inItem.out[0] = inItem.iv;
-        } // else leave as it is ... don't change output
+        if (inItem.mem.length > intTypes[inItem.it].m) {
+          let out;
+          let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
+          //console.log(h);
+          for (let i = 0; i < intTypes[inItem.it].c.length; i++) {
+            // console.log(JSON.stringify(intTypes[inItem.it].b[i]));
+            // console.log(JSON.stringify(intTypes[inItem.it].c[i]));
+            // console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+            if (!i) {
+              out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+              //console.log(JSON.stringify(out));
+            } else {
+              out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].b[i], inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)])));
+            }
+          }
+          inItem.out[0] = math.add(inItem.out[0], out);
+          while (inItem.mem.length > 1) {
+            inItem.mem.shift();
+          }
+        } else {
+          if (!inItem.out[0]) {
+            inItem.out[0] = inItem.iv;
+          } // else leave as it is ... don't change output
+        }
       }
-
     }
     // inItem.mem ----> memory
     // inItem.it -----> Integration type

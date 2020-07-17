@@ -14,10 +14,10 @@ class umk_1588716024472 extends umk_model {
     //this.CompParams.mem.push(math.zeros(this.Parameters.ic.Value._data.length, this.Parameters.ic.Value._data[0].length));
   }
   beforeEC(t, k, simSettings) {
-    this.outputs[0] = this.CompParams.out[0];
+    //this.outputs[0] = this.CompParams.out[0];
   }
   genCompParams() {
-    this.CompParams.out = [this.Parameters.ic.Value]; //Output of int
+    this.CompParams.out = []; //Output of int
     this.CompParams.pt = [0]; // previous time
     this.CompParams.mem = []; //Memory for integration
   }
