@@ -1171,3 +1171,22 @@ tr.mxPopupMenuItem {
 }
 
 /*Context menu end*/
+
+.sink-btns {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 1em;
+}
+
+.sink-btns>button {
+  cursor: pointer;
+  background-color: var(--col-background-2);
+  color: var(--col-border-1);
+  border-width: 0;
+}
+.sink-btns>button:hover {
+  color: var(--col-text-0);
+}
+.sink-btns>button>i {
+  font-size: 2em;
+}

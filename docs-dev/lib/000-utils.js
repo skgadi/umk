@@ -1,6 +1,6 @@
 const blockUtils = {
   makeIcon: function (bid) {
-    return "<div style='min-width:45px;'>" + GSKGenFuncs.makeSVG(bSummary.blocks[bid].icon, "#00000000", "var(--col-text-0)", "#00000000", "monospace") + "</div>";
+    return "<div style='min-width:45px;width:100%'>" + GSKGenFuncs.makeSVG(bSummary.blocks[bid].icon, "#00000000", "var(--col-text-0)", "#00000000", "monospace") + "</div>";
   },
   isAllSameDims: function (inAry) {
     //console.log(inAry);

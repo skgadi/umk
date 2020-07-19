@@ -314,8 +314,9 @@ const simVue = new Vue({
     propOuts: function () { // propagate the outputs
       this.setAllDisplays();
       //this.resStr2Math();
-      for (let i = 0; i < Object.keys(popup.rCells).length; i++) {
-        setTimeout(popup.sendData(Object.keys(popup.rCells)[i]));
+      const keys = Object.keys(popup.refsForSinks);
+      for (let i = 0; i < keys.length; i++) {
+        setTimeout(popup.sendData(keys[i]));
       }
     },
     setAllDisplays: function () {
