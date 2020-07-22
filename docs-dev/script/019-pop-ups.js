@@ -42,10 +42,7 @@ const popup = {
         default:
           break;
       }
-      /*
-      setTimeout(() => {
-        this.sendParams(simVue.pCell4Exp(cell)); // sends the cell info to the popup window
-      }, 100);*/
+      this.initMessages(cell);  // sends the cell info to the popup window
     }
     evt.stopPropagation();
   },
@@ -124,7 +121,7 @@ const popup = {
       console.log(e);
     }
   },
-  messageWindows: function(cid, msg) {
+  messageWindows: function (cid, msg) {
     // console.log(cid);
     if (!!this.refsForSinks[cid]) {
       if (!!this.refsForSinks[cid].extWind &&
@@ -136,13 +133,23 @@ const popup = {
       }
     }
   },
+  initMessages: function (cell) { 
+    setTimeout((that, cell) => {
+      that.sendSettings(cell.id);
+      that.sendParams(simVue.pCell4Exp(cell));
+    }, 1000, this, cell);
+  },
   sendParams: function (prepCell) {
     // console.log('sendParams');
-    this.messageWindows(prepCell.cid, {c: prepCell});
+    this.messageWindows(prepCell.cid, {
+      c: prepCell
+    });
   },
   sendData: function (cid) {
     // console.log('sendData');
-    this.messageWindows(cid, {d: simVue.results.map(popup.prepareData(cid))});
+    this.messageWindows(cid, {
+      d: simVue.results.map(popup.prepareData(cid))
+    });
   },
   resetAll: function () {
     // console.log('resetAll');
@@ -156,7 +163,9 @@ const popup = {
     this.sendSettings(cid);
   },
   sendReset: function (cid) {
-    this.messageWindows(cid, {r: true});
+    this.messageWindows(cid, {
+      r: true
+    });
   },
   sendSettingsToAll: function () {
     let keys = Object.keys(this.refsForSinks);
@@ -165,7 +174,9 @@ const popup = {
     }
   },
   sendSettings: function (cid) {
-    this.messageWindows(cid, {s: settings});
+    this.messageWindows(cid, {
+      s: settings
+    });
   }
 
 };

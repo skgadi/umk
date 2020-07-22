@@ -12,6 +12,7 @@ onmessage = function (event) {
     }
   }
   if (!!event.data.c) {
+    // console.log(event.data.c);
     // show and hide the imagenary axis
     if (settings.showImg !== event.data.c.Parameters.showIm.Value[0][0]) {
       settings.showImg = event.data.c.Parameters.showIm.Value[0][0];
@@ -19,6 +20,7 @@ onmessage = function (event) {
     }
     //Setting data limit
     settings.limitData = JSON.parse(event.data.c.Parameters.limitData.Value)[0][0];
+    document.title = event.data.c.Name;
   }
   if (!!event.data.s) {
     settings.mSettings = event.data.s;

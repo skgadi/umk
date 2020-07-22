@@ -20,8 +20,10 @@ xcopy .\special\amcharts4\lang ..\docs-dev\dependencies\amcharts4\lang /y/s/q/i
 xcopy .\special\amcharts4\themes ..\docs-dev\dependencies\amcharts4\themes /y/s/q/i
 rem xcopy .\special\amcharts_fonts_4.0.1\fonts ..\docs-dev\dependencies\amcharts4\fonts /y/s/q/i
 
-rem chartjs
-xcopy .\node_modules\chart.js\dist ..\docs-dev\dependencies\chart.js /y/s/q/i
+
+rem three.js
+xcopy .\node_modules\three\build ..\docs-dev\dependencies\three\build /y/s/q/i
+xcopy .\node_modules\three\examples ..\docs-dev\dependencies\three\examples /y/s/q/i
 
 
 
