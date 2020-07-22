@@ -32,7 +32,7 @@ const popup = {
       switch (type) {
         case 'chart':
           this.rType[cell.id] = "chart";
-          this.openUrl(cell.id, "scope.html?" + urlQueryString, {
+          this.openUrl(cell.id, "./sinks/scope.html?" + urlQueryString, {
             W: 600,
             H: 300,
             w: 350,

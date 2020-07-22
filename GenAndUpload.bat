@@ -1,4 +1,4 @@
-rmdir /s/q ..\docs
+rmdir /s/q .\docs
 xcopy .\docs-dev\dependencies .\docs\dependencies /y/s/q/i
 xcopy .\docs-dev\css\fonts .\docs\css\fonts /y/s/q/i
 copy /y .\docs-dev\css\style.min.css .\docs\css\style.min.css
@@ -11,9 +11,15 @@ copy /y .\docs-dev\app1.min.html .\docs\index.html
 copy /y .\docs-dev\favicon.ico .\docs\favicon.ico
 
 rem chart window stuff
-copy /y .\docs-dev\chart.min.html .\docs\chart.html
-copy /y .\docs-dev\css\chart.min.css .\docs\css\chart.min.css
-copy /y .\docs-dev\chart.min.js .\docs\chart.min.js
+rem copy /y .\docs-dev\chart.min.html .\docs\chart.html
+rem copy /y .\docs-dev\css\chart.min.css .\docs\css\chart.min.css
+rem copy /y .\docs-dev\chart.min.js .\docs\chart.min.js
+
+
+rem Add all the sinks
+mkdir .\docs\sinks\css
+copy /y .\docs-dev\sinks\*.min.* .\docs\sinks
+copy /y .\docs-dev\sinks\css\*.min.css .\docs\sinks\css
 
 
 git add .
