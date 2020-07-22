@@ -32,7 +32,7 @@ const popup = {
       switch (type) {
         case 'chart':
           this.rType[cell.id] = "chart";
-          this.openUrl(cell.id, "chart.html?" + urlQueryString, {
+          this.openUrl(cell.id, "scope.html?" + urlQueryString, {
             W: 600,
             H: 300,
             w: 350,
@@ -125,7 +125,7 @@ const popup = {
     }
   },
   messageWindows: function(cid, msg) {
-    console.log(cid);
+    // console.log(cid);
     if (!!this.refsForSinks[cid]) {
       if (!!this.refsForSinks[cid].extWind &&
         !this.refsForSinks[cid].extWind.closed) {
@@ -137,18 +137,35 @@ const popup = {
     }
   },
   sendParams: function (prepCell) {
-    console.log('sendParams');
+    // console.log('sendParams');
     this.messageWindows(prepCell.cid, {c: prepCell});
   },
   sendData: function (cid) {
-    console.log('sendData');
+    // console.log('sendData');
     this.messageWindows(cid, {d: simVue.results.map(popup.prepareData(cid))});
   },
   resetAll: function () {
-    console.log('resetAll');
+    // console.log('resetAll');
     let keys = Object.keys(this.refsForSinks);
     for (let i = 0; i < keys.length; i++) {
-      this.messageWindows(keys[i], {r: true});
+      this.sendResetNSettings(keys[i]);
     }
+  },
+  sendResetNSettings: function (cid) {
+    this.sendReset(cid);
+    this.sendSettings(cid);
+  },
+  sendReset: function (cid) {
+    this.messageWindows(cid, {r: true});
+  },
+  sendSettingsToAll: function () {
+    let keys = Object.keys(this.refsForSinks);
+    for (let i = 0; i < keys.length; i++) {
+      this.sendSettings(keys[i]);
+    }
+  },
+  sendSettings: function (cid) {
+    this.messageWindows(cid, {s: settings});
   }
+
 };

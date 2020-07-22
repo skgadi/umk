@@ -1,5 +1,5 @@
 onmessage = function (event) {
-  console.log(event.data);
+  // console.log(event.data);
   if (event.data.d) {
     cItem.updData(event.data.d);
   }
@@ -7,13 +7,13 @@ onmessage = function (event) {
     cItem.resetChart();  
   }
   if (!!event.data.c) {
-    console.log(event.data.c);
+    //console.log(event.data.c);
     cItem.showIm = event.data.c.Parameters.showIm.Value[0][0];
   }
 };
 
 (() => {
-  console.log('loaded');
+  //console.log('loaded');
   cItem.prepareChart();
-})()
+})();
 

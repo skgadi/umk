@@ -99,3 +99,13 @@ var options = {
 //var chart = new ApexCharts(document.querySelector("#chart"), options);
 
 //chart.render();
+
+
+function formatter(val) {
+  try {
+    return math.parse(val).toString(4);
+  } catch (e) {
+    console.log(e);
+    return "Waiting ..."
+  }
+}

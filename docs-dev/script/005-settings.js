@@ -36,6 +36,7 @@ const settingsVue = new Vue({
       handler: function () {
         //console.log(this.stings);
         setCookie("settings", JSON.stringify2(this.stings));
+        popup.sendSettingsToAll();
       }
     },
     "stings.lang": {

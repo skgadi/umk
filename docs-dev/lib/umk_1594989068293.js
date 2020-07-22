@@ -22,6 +22,17 @@ class umk_1594989068293 extends umk_model {
             "Value": [
               [false]
             ]
+          },
+          "limitData": {
+            "Name": {
+              "en-us": "Limit data points",
+              "es-mx": "Limitar puntos de datos"
+            },
+            "Dimension": "Scalar",
+            "Type": "Real",
+            "Value": [
+              [1000]
+            ]
           }
         },
         isPopup: true, //shows that it generates a popup window 

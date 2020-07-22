@@ -46,30 +46,14 @@ const cItem = {
     series: [],
     yaxis: {
       labels: {
-        formatter: function (a, b, c) {
-          try {
-            return math.parse(a).toString(4);
-          } catch (e) {
-            console.log(e);
-            return "Waiting ..."
-          }
-        }
+        formatter: formatter
       }
     },
     xaxis: {
       type: 'numeric',
+      logarithmic: true,
       labels: {
-        formatter: function (a, b, c) {
-          /*console.log(a);
-          console.log(b);
-          console.log(c);*/
-          try {
-            return math.parse(a).toString(4);
-          } catch (e) {
-            console.log(e);
-            return "Waiting ..."
-          }
-        }
+        formatter: formatter
       }
     }
   },
@@ -92,14 +76,20 @@ const cItem = {
     //console.log(vals);
     if (vals.length > 0) {
       let series = [];
+      //let yAxisOptions = [];
       for (let i = 0; i < vals.length; i++) {
         let mVal = vals[i].v;
         let eleNum = 0;
         mVal[0].forEach(function (rowItem, j) {
           rowItem.forEach(function (rNcItem, k) {
             if (!i) {
+              const seriesName = (cItem.showIm ? "Re" : "") + "[" + String(j + 1) + "; " + String(k + 1) + "]";
+              /*yAxisOptions.push({
+                logarithmic: true,
+                seriesName: seriesName
+              });*/
               series.push({
-                name: (cItem.showIm ? "Re" : "") + "[" + String(j + 1) + ", " + String(k + 1) + "]",
+                name: seriesName,
                 data: []
               });
             }
@@ -110,8 +100,13 @@ const cItem = {
           mVal[1].forEach(function (rowItem, j) {
             rowItem.forEach(function (rNcItem, k) {
               if (!i) {
-                series.push({
-                  name: "Im[" + String(j + 1) + ", " + String(k + 1) + "]",
+              const seriesName = "Im[" + String(j + 1) + "; " + String(k + 1) + "]";
+              /*yAxisOptions.push({
+                logarithmic: true,
+                seriesName: seriesName
+              });*/
+              series.push({
+                  name: seriesName,
                   data: []
                 });
               }
@@ -123,6 +118,7 @@ const cItem = {
       //console.log(series);
       if (this.isFirst) {
         this.handle.updateSeries(series);
+        //this.handle.updateOptions(yAxisOptions);
         this.isFirst = false;
       } else {
         for (let i = 0; i < series.length; i++) {
@@ -130,6 +126,7 @@ const cItem = {
         }
         this.handle.appendData(series);
       }
+      //this.handle.updateOptions(this.options);
       //console.log(series);
       //console.log(vals);
     }
@@ -138,9 +135,14 @@ const cItem = {
   },
   resetChart: function () {
     this.isFirst = true;
+    this.prepareChart();
     this.handle.updateSeries([]);
   },
   prepareChart: function () {
+    if (!!this.handle) {
+      this.handle.destroy();
+      this.handle = null;
+    }
     this.handle = new ApexCharts(document.querySelector("#chart"), this.options);
     this.handle.render();
   }
