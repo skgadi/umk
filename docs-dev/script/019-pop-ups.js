@@ -39,19 +39,29 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
-          case 'scope-xy':
-            this.rType[cell.id] = "scope-xy";
-            this.openUrl(cell.id, "./sinks/scope-xy.min.html?" + urlQueryString, {
-              W: 600,
-              H: 300,
-              w: 350,
-              h: 200
-            }, pop); //noreferrer, noopener,
-              break;
+        case 'scope-xy':
+          this.rType[cell.id] = "scope-xy";
+          this.openUrl(cell.id, "./sinks/scope-xy.min.html?" + urlQueryString, {
+            W: 600,
+            H: 300,
+            w: 350,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
+        case 'ball':
+          this.rType[cell.id] = "ball";
+          this.openUrl(cell.id, "./sinks/ball.min.html?" + urlQueryString, {
+            W: 600,
+            H: 300,
+            w: 350,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
+
         default:
           break;
       }
-      this.initMessages(cell);  // sends the cell info to the popup window
+      this.initMessages(cell); // sends the cell info to the popup window
     }
     evt.stopPropagation();
   },
@@ -122,9 +132,12 @@ const popup = {
       return function (ele) {
         // console.log(ele);
         const val = [];
-        for (let i=0; i<ele.o[cid].length; i++) {
+        for (let i = 0; i < ele.o[cid].length; i++) {
           let tempVal = math.evaluate(ele.o[cid][i]);
-          val.push({r:math.re(tempVal)._data, i: math.im(tempVal)._data});
+          val.push({
+            r: math.re(tempVal)._data,
+            i: math.im(tempVal)._data
+          });
         }
         return {
           t: ele.t,
@@ -147,7 +160,7 @@ const popup = {
       }
     }
   },
-  initMessages: function (cell) { 
+  initMessages: function (cell) {
     setTimeout((that, cell) => {
       that.sendSettings(cell.id);
       that.sendParams(simVue.pCell4Exp(cell));
