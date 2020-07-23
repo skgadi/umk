@@ -12,6 +12,19 @@ class umk_1586901838454 extends umk_model {
   }
   constructor(obj) {
     super(Object.assign({
+      Parameters: {
+        "decPlaces": {
+          "Name": {
+            "en-us": "Limit decimal places",
+            "es-mx": "Limitar decimales"
+          },
+          "Dimension": "Scalar",
+          "Type": "Integer",
+          "Value": [
+            [3]
+          ]
+        }
+      },
       isOut: true, //shows that this is a output
       showInpOnHtml: true, // lets to show inputs as HTML on cell 
       TerminalsIn: {

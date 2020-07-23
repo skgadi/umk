@@ -61,3 +61,10 @@ document.getElementsByTagName("BODY")[0].addEventListener("dragleave", GSKGenFun
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
   document.addEventListener(eventName, GSKGenFuncs.preventDefaults, false)
 });
+
+function alertWIP() {
+  alert("\uD83D\uDEB7\uD83D\uDEB7\uD83D\uDEB7 Functionality unavailable:\n\
+  \uD83D\uDEE0\uD83D\uDEE0\uD83D\uDEE0 We are working on this part of the code.\n\
+  \uD83D\uDCC5\uD83D\uDCC5\uD83D\uDCC5 You can expect this functionality by mid-2021.\n\n\n\
+  Inconvenience caused is regretted.");
+}

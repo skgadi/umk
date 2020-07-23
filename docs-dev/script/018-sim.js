@@ -324,7 +324,8 @@ const simVue = new Vue({
       footerVue.presTime = lastItem.t;
       for (let i = 0; i < this.dispCells.length; i++) {
         let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
-        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]][0])));
+        const limitDecimals = parseInt(cell.value.Parameters.decPlaces.Value[0][0]);
+        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]][0], limitDecimals)));
         mainSystem.graph.refresh(cell);
       }
     },
@@ -687,9 +688,8 @@ const simVue = new Vue({
               fullyConnectedModels,
               firstCellFromFInEOModels
             );
-                        i = 0;
-          }
-          else if (
+            i = 0;
+          } else if (
             fullyConnectedModels.length > 0 &&
             i >= fullyConnectedModels.length
           ) {
