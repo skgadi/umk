@@ -56,8 +56,8 @@ function updateData(inData) {
         }
         try {
           if (settings.yLogScale) {
-            tempData['y_' + realID] = (inData[i]['v'][1]['r'][j][k] > 0) ? inData[i]['v'][0]['r'][j][k] : NaN;
-            tempData['y_' + imagID] = (inData[i]['v'][1]['i'][j][k] > 0) ? inData[i]['v'][0]['i'][j][k] : NaN;
+            tempData['y_' + realID] = (inData[i]['v'][1]['r'][j][k] > 0) ? inData[i]['v'][1]['r'][j][k] : NaN;
+            tempData['y_' + imagID] = (inData[i]['v'][1]['i'][j][k] > 0) ? inData[i]['v'][1]['i'][j][k] : NaN;
           } else {
             tempData['y_' + realID] = inData[i]['v'][1]['r'][j][k];
             tempData['y_' + imagID] = inData[i]['v'][1]['i'][j][k];

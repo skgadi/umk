@@ -120,7 +120,7 @@ const popup = {
     //console.log(cid);
     try {
       return function (ele) {
-        console.log(ele);
+        // console.log(ele);
         const val = [];
         for (let i=0; i<ele.o[cid].length; i++) {
           let tempVal = math.evaluate(ele.o[cid][i]);
