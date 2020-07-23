@@ -43,21 +43,28 @@ function updateData(inData) {
   let addSeries = true;
   for (let i = 0; i < inData.length; i++) {
     const tempData = {};
-    if (settings.xLogScale) {
-      tempData["t"] = (inData[i].t > 0) ? inData[i].t : NaN;
-    } else {
-      tempData["t"] = inData[i].t;
-    }
     for (let j = 0; j < inData[i]['v'][0]['r'].length; j++) {
       for (let k = 0; k < inData[i]['v'][0]['r'][0].length; k++) {
         const realID = 'r_' + (j + 1) + '_' + (k + 1);
         const imagID = 'i_' + (j + 1) + '_' + (k + 1);
-        if (settings.yLogScale) {
-          tempData[realID] = (inData[i]['v'][0]['r'][j][k] > 0) ? inData[i]['v'][0]['r'][j][k] : NaN;
-          tempData[imagID] = (inData[i]['v'][0]['i'][j][k] > 0) ? inData[i]['v'][0]['i'][j][k] : NaN;
+        if (settings.xLogScale) {
+          tempData['x_' + realID] = (inData[i]['v'][0]['r'][j][k] > 0) ? inData[i]['v'][0]['r'][j][k] : NaN;
+          tempData['x_' + imagID] = (inData[i]['v'][0]['i'][j][k] > 0) ? inData[i]['v'][0]['i'][j][k] : NaN;
         } else {
-          tempData[realID] = inData[i]['v'][0]['r'][j][k];
-          tempData[imagID] = inData[i]['v'][0]['i'][j][k];
+          tempData['x_' + realID] = inData[i]['v'][0]['r'][j][k];
+          tempData['x_' + imagID] = inData[i]['v'][0]['i'][j][k];
+        }
+        try {
+          if (settings.yLogScale) {
+            tempData['y_' + realID] = (inData[i]['v'][1]['r'][j][k] > 0) ? inData[i]['v'][0]['r'][j][k] : NaN;
+            tempData['y_' + imagID] = (inData[i]['v'][1]['i'][j][k] > 0) ? inData[i]['v'][0]['i'][j][k] : NaN;
+          } else {
+            tempData['y_' + realID] = inData[i]['v'][1]['r'][j][k];
+            tempData['y_' + imagID] = inData[i]['v'][1]['i'][j][k];
+          }
+        } catch (e) {
+          tempData['y_' + realID] = NaN;
+          tempData['y_' + imagID] = NaN;
         }
         //Set series if it is first time
         if ((chart.data.length === 0) && (addSeries)) {
@@ -96,7 +103,6 @@ function adjustImagSeriesView() {
         chart.series.getIndex(i * 2 + 1).hide();
       }
     }
-
   }
 }
 
@@ -134,8 +140,8 @@ function setAxisColorProperties(axis) {
 
 function createANewSeries(id, name) {
   const series = chart.series.push(new am4charts.LineSeries());
-  series.dataFields.valueX = "t";
-  series.dataFields.valueY = id;
+  series.dataFields.valueX = 'x_' + id;
+  series.dataFields.valueY = 'y_' + id;
   series.strokeWidth = 2;
   series.name = name;
   series.tooltipText = "{t}";

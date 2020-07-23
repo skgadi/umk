@@ -495,69 +495,78 @@
           <div v-if="Object.keys(uyamakModel.Parameters).length>0">
             <h3 class="compress" v-text="GUIText[settings.lang].params"></h3>
             <template v-for="(Parameter, index) in uyamakModel.Parameters">
-              <div class="category-full">
+              <div v-if="Parameter.Type === 'Checkbox' && Parameter.Dimension === 'Scalar'">
+                <div class="checkboxItem pointer" @click="toggleParamCheckVal(index,0,0)">
+                  <i class="fas"
+                    :class="uyamakModel.Parameters[index]['Value'][0][0]?'fa-check-square':'fa-square'"></i>
+                  <span v-text="Parameter.Name[settings.lang]"></span>
+                </div>
+              </div>
+              <div v-else>
+                <div class="category-full">
+                  <div class="category-head pointer" @click="toggleParamDisplay(index)">
+                    <span :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"
+                        :class="!!parametersDisplay[index]?'fa-rotate-90':''"></i></span>
+                    <span v-html="Parameter.Name[settings.lang]"></span>
+                  </div>
+                  <div v-if="!!parametersDisplay[index]">
+                    <div
+                      v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && rpSettings.fEditMode"
+                      class="matrix-builder-buttons">
+                      <span @click="valueDimensionsModify(0, index)" v-html="'$$\\cdots +$$'" class="rotate-90"></span>
+                      <span @click="valueDimensionsModify(1, index)" v-html="'$$\\cdots~|~$$'" class="rotate-90"></span>
+                      <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)"
+                        v-html="'$$\\cdots +$$'"></span>
+                      <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)"
+                        v-html="'$$\\cdots -$$'"></span>
+                    </div>
+                    <div class="expandable-x">
+                      <table>
+                        <template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']">
+                          <tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding: 0;">
+                            <td></td>
+                            <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
+                              <td class="center">
+                                {{ index2 + 1 }}
+                              </td>
+                            </template>
+                          </tr>
+                          <tr>
+                            <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')">
+                              {{ index1 + 1 }}
+                            </td>
+                            <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
+                              <td>
+                                <input class="center"
+                                  v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                                  v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="text" />
+                                <!--v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" -->
+                                <input v-if="Parameter.Type === 'Color'"
+                                  v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="color" />
+                                <select v-if="Parameter.Type === 'Options'" class="inter-itm"
+                                  v-model="uyamakModel.Parameters[index]['Value'][index1][index2]">
+                                  <template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']">
+                                    <option v-bind:value="opnVal" v-html='opnName[settings.lang]'></option>
+                                  </template>
+                                </select>
+                                <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer"
+                                  @click="toggleParamCheckVal(index,index1,index2)">
+                                  <i class="fas"
+                                    :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
+                                  <span v-text="Parameter.Name[settings.lang]"></span>
+                                </div>
+                              </td>
+                            </template>
+                          </tr>
+                        </template>
+                      </table>
+                    </div>
+                    <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                      v-html="getComputedValueText(Parameter)"></div>
+                  </div>
+                </div>
+              </div>
 
-              <div class="category-head pointer" @click="toggleParamDisplay(index)">
-                <span :key="index+'_'+updatingCounter"><i class="fas fa-caret-right fa-fw"
-                    :class="!!parametersDisplay[index]?'fa-rotate-90':''"></i></span>
-                <span v-html="Parameter.Name[settings.lang]"></span>
-              </div>
-              <div v-if="!!parametersDisplay[index]">
-                <div
-                  v-if="((Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')) && rpSettings.fEditMode"
-                  class="matrix-builder-buttons">
-                  <span @click="valueDimensionsModify(0, index)" v-html="'$$\\cdots +$$'" class="rotate-90"></span>
-                  <span @click="valueDimensionsModify(1, index)" v-html="'$$\\cdots~|~$$'" class="rotate-90"></span>
-                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(2, index)"
-                    v-html="'$$\\cdots +$$'"></span>
-                  <span v-if="(Parameter.Dimension === 'Matrix')" @click="valueDimensionsModify(3, index)"
-                    v-html="'$$\\cdots -$$'"></span>
-                </div>
-                <div class="expandable-x">
-                  <table>
-                    <template v-for="(rowValue, index1) in uyamakModel.Parameters[index]['Value']">
-                      <tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding: 0;">
-                        <td></td>
-                        <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
-                          <td class="center">
-                            {{ index2 + 1 }}
-                          </td>
-                        </template>
-                      </tr>
-                      <tr>
-                        <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')">
-                          {{ index1 + 1 }}
-                        </td>
-                        <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
-                          <td>
-                            <input class="center"
-                              v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
-                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="text" />
-                            <!--v-bind:style="(Parameter.Type !== 'Text')?'text-align: right':''" -->
-                            <input v-if="Parameter.Type === 'Color'"
-                              v-model.trim="uyamakModel.Parameters[index]['Value'][index1][index2]" type="color" />
-                            <select v-if="Parameter.Type === 'Options'" class="inter-itm"
-                              v-model="uyamakModel.Parameters[index]['Value'][index1][index2]">
-                              <template v-for="(opnName, opnVal) in uyamakModel.Parameters[index]['Options']">
-                                <option v-bind:value="opnVal" v-html='opnName[settings.lang]'></option>
-                              </template>
-                            </select>
-                            <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer"
-                              @click="toggleParamCheckVal(index,index1,index2)">
-                              <i class="fas"
-                                :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
-                              <span v-text="Parameter.Name[settings.lang]"></span>
-                            </div>
-                          </td>
-                        </template>
-                      </tr>
-                    </template>
-                  </table>
-                </div>
-                <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
-                  v-html="getComputedValueText(Parameter)"></div>
-              </div>
-              </div>
             </template>
           </div>
           <div>

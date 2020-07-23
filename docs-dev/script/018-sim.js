@@ -324,7 +324,7 @@ const simVue = new Vue({
       footerVue.presTime = lastItem.t;
       for (let i = 0; i < this.dispCells.length; i++) {
         let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
-        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]])));
+        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]][0])));
         mainSystem.graph.refresh(cell);
       }
     },

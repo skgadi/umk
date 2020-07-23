@@ -27,18 +27,27 @@ const popup = {
       urlQuery.v = Object.assign({
         cid: cell.id
       }, cell.value);
-      urlQuery.lang = (type === 'chart') ? GUIText[settings.lang].chartLang : settings.lang;
+      urlQuery.lang = (type === 'scope') ? GUIText[settings.lang].chartLang : settings.lang;
       let urlQueryString = packer.pack(JSON.stringify2(urlQuery));
       switch (type) {
-        case 'chart':
-          this.rType[cell.id] = "chart";
-          this.openUrl(cell.id, "./sinks/scope.html?" + urlQueryString, {
+        case 'scope':
+          this.rType[cell.id] = "scope";
+          this.openUrl(cell.id, "./sinks/scope.min.html?" + urlQueryString, {
             W: 600,
             H: 300,
             w: 350,
             h: 200
           }, pop); //noreferrer, noopener,
           break;
+          case 'scope-xy':
+            this.rType[cell.id] = "scope-xy";
+            this.openUrl(cell.id, "./sinks/scope-xy.min.html?" + urlQueryString, {
+              W: 600,
+              H: 300,
+              w: 350,
+              h: 200
+            }, pop); //noreferrer, noopener,
+              break;
         default:
           break;
       }
@@ -111,10 +120,15 @@ const popup = {
     //console.log(cid);
     try {
       return function (ele) {
-        let val = math.evaluate(ele.o[cid]);
+        console.log(ele);
+        const val = [];
+        for (let i=0; i<ele.o[cid].length; i++) {
+          let tempVal = math.evaluate(ele.o[cid][i]);
+          val.push({r:math.re(tempVal)._data, i: math.im(tempVal)._data});
+        }
         return {
           t: ele.t,
-          v: [math.re(val)._data, math.im(val)._data]
+          v: val
         };
       }
     } catch (e) {

@@ -1,8 +1,7 @@
 class umk_1586738484106 extends umk_model {
   Icon() {
     return {
-      html: '<div onClick="popup.open(event,\'chart\')" class="pointer"><i class="fas fa-chart-line fa-2x fa-fw"></i></div>',
-      //html: '<iframe style="width:100%; height: 100%" src="/chart.html"></iframe>',
+      html: '<div class="sink-btns"><button onClick="popup.open(event,\'scope\',false)" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'scope\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
       inLabels: null,
       outLabels: null,
       splStyle: null
@@ -21,7 +20,46 @@ class umk_1586738484106 extends umk_model {
           "Value": [
             [false]
           ]
+        },
+        "xLogScale": {
+          "Name": {
+            "en-us": "Logarithmic scale for horizontal axis",
+            "es-mx": "Escala logarítmica para eje horizontal"
+          },
+          "Dimension": "Scalar",
+          "Type": "Checkbox",
+          "Value": [
+            [false]
+          ]
+        },
+        "yLogScale": {
+          "Name": {
+            "en-us": "Logarithmic scale for vertical axis",
+            "es-mx": "Escala logarítmica para eje vertical"
+          },
+          "Dimension": "Scalar",
+          "Type": "Checkbox",
+          "Value": [
+            [false]
+          ]
+        },
+        "limitData": {
+          "Name": {
+            "en-us": "Limit data points",
+            "es-mx": "Limitar puntos de datos"
+          },
+          "Dimension": "Scalar",
+          "Type": "Real",
+          "Value": [
+            [1000]
+          ]
         }
+      },
+      TerminalsIn: {
+        min: 1,
+        max: 1,
+        value: 1,
+        editable: false
       },
       isPopup: true, //shows that it generates a popup window 
       isOut: true //shows that this is a output

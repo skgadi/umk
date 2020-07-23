@@ -42,12 +42,12 @@ class umk_model {
     }
     /* in case of output .... make only one input Outputs cannot have more than one input*/
     if (this.isOut) {
-      this.TerminalsIn = {
+      /*this.TerminalsIn = {
         min: 1,
         max: 1,
         value: 1,
         editable: false
-      };
+      };*/
       this.TerminalsOut = {
         min: 0,
         max: 0,

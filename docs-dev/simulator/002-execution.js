@@ -94,7 +94,7 @@ const exec = {
         }
         model.beforeEC(this.t, this.k, this.simSettings);
       }
-        //console.log(this.cells.length);
+      //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
         //console.log(model.cid);
@@ -106,7 +106,10 @@ const exec = {
         model.Evaluate(this.t, this.k, this.simSettings);
         //console.log(this.t);
         if (model.isOut && store) {
-          tempOut[model.cid] = model.inputs[0].toString();
+          tempOut[model.cid] = [];
+          for (let j = 0; j < model.inputs.length; j++) {
+            tempOut[model.cid].push(model.inputs[j].toString());
+          }
         }
       }
       //console.log(store);
