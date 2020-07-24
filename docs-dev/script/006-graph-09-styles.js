@@ -206,8 +206,9 @@
   style.overflow = "fit";
   style.fillColor = "var(--col-text-0)";
   style.strokeColor = "var(--col-text-0)";
-  style.fontSize = 12;
-  style.spacingLeft = 0;
+  style.fontSize = 15;
+  style.spacingLeft = 2;
+  style.spacingTop = -5;
   style.rounded = 0;
   //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
   graph.getStylesheet().putCellStyle("umk_input", style);

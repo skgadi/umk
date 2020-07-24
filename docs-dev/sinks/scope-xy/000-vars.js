@@ -5,7 +5,8 @@ const settings = {
   limitData: 1000,
   mSettings: {},
   xLogScale: false,
-  yLogScale: false
+  yLogScale: false,
+  aCharts: true
 };
 let inData;
 

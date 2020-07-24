@@ -7,12 +7,16 @@ cd pako
 git pull
 cd ..
 
-cd amcharts4
-git pull
-cd ..
+rem cd amcharts4
+rem git pull
+rem cd ..
 
 rem cd drawio
 rem git pull
 rem cd ..
+
+cd three
+git pull
+cd ..
 
 pause

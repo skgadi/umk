@@ -4,7 +4,7 @@ class umk_1585601356516 extends umk_model {
     return {
       html: '<i class="fas fa-plus"></i>',
       inLabels: this.CompParams.isAdd.map((ele) => {
-        return (ele) ? "+" : "-";
+        return (ele) ? "+" : "&ndash;";
       }),
       outLabels: null,
       //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected

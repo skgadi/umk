@@ -34,6 +34,9 @@ onmessage = function (event) {
     settings.limitData = JSON.parse(event.data.c.Parameters.limitData.Value)[0][0];
     document.title = event.data.c.Name;
 
+    //enable charts animation
+    setAnimation(event.data.c.Parameters.aCharts.Value[0][0]);
+
     if (resetTheChart) {
       prepareScope();
     }

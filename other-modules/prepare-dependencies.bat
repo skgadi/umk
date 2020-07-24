@@ -24,7 +24,8 @@ rem xcopy .\special\amcharts_fonts_4.0.1\fonts ..\docs-dev\dependencies\amcharts
 rem three.js
 xcopy .\node_modules\three\build ..\docs-dev\dependencies\three\build /y/s/q/i
 xcopy .\node_modules\three\examples ..\docs-dev\dependencies\three\examples /y/s/q/i
-
+mkdir ..\docs-dev\dependencies\three\examples\models\collada
+copy .\github\three\examples\models\collada\abb_irb52_7_120.dae ..\docs-dev\dependencies\three\examples\models\collada\abb_irb52_7_120.dae
 
 
 

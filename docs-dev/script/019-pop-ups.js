@@ -57,6 +57,15 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
+          case "robot-3dof":
+            this.rType[cell.id] = "ball";
+            this.openUrl(cell.id, "./sinks/robot-3dof.min.html?" + urlQueryString, {
+              W: 600,
+              H: 300,
+              w: 350,
+              h: 200
+            }, pop); //noreferrer, noopener,
+              break;
 
         default:
           break;

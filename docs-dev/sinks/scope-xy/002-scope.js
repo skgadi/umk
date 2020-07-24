@@ -145,5 +145,49 @@ function createANewSeries(id, name) {
   series.strokeWidth = 2;
   series.name = name;
   series.tooltipText = "{t}";
+  setChartAnimation(series);
   return series;
+}
+
+function setAnimation(on) {
+  if (on === undefined) {
+    on = settings.aCharts;
+  } else {
+    settings.aCharts = on;
+  }
+  const off = !on;
+  //  console.log(off);
+  if (!!chart) {
+    for (let i = 0; i < chart.series.length; i++) {
+      const series = chart.series.getIndex(i);
+      setChartAnimation(series);
+    }
+    chart.hiddenState.transitionDuration = off ? 0 : 1000;
+    chart.defaultState.transitionDuration = off ? 0 : 2000;
+    chart.interpolationDuration = off ? 0 : 500;
+    chart.tooltip.animationDuration = off ? 0 : 400;
+
+    chart.xAxes.getIndex(0).hiddenState.transitionDuration = off ? 0 : 400;
+    chart.xAxes.getIndex(0).defaultState.transitionDuration = off ? 0 : 400;
+    chart.xAxes.getIndex(0).interpolationDuration = off ? 0 : 500;
+    chart.xAxes.getIndex(0).tooltip.animationDuration = off ? 0 : 400;
+
+    chart.yAxes.getIndex(0).hiddenState.transitionDuration = off ? 0 : 400;
+    chart.yAxes.getIndex(0).defaultState.transitionDuration = off ? 0 : 400;
+    chart.yAxes.getIndex(0).interpolationDuration = off ? 0 : 500;
+    chart.yAxes.getIndex(0).tooltip.animationDuration = off ? 0 : 400;
+  }
+}
+
+function setChartAnimation(series, on) {
+  if (on === undefined) {
+    on = settings.aCharts;
+  } else {
+    settings.aCharts = on;
+  }
+  const off = !on;
+  series.hiddenState.transitionDuration = off ? 0 : 700;
+  series.defaultState.transitionDuration = off ? 0 : 1000;
+  series.interpolationDuration = off ? 0 : 500;
+  series.tooltip.animationDuration = off ? 0 : 400;
 }

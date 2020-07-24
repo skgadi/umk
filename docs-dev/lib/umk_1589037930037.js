@@ -11,7 +11,7 @@ class umk_1589037930037 extends umk_model {
     this.CompParams["c"] = math.unaryMinus(math.dotMultiply(this.Parameters.sl.Value, this.Parameters.st.Value));
   }
   Evaluate(t) {
-    let lesM = math.smaller(t, this.Parameters.st.Value);
+    //let lesM = math.smaller(t, this.Parameters.st.Value);
     //console.log(lesM);
     this.outputs[0] = blockUtils.cmpAsnLimit(math.smaller(t, this.Parameters.st.Value), this.Parameters.iv.Value, math.add(math.dotMultiply(t, this.Parameters.sl.Value), this.CompParams["c"]));
   }

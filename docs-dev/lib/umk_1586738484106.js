@@ -43,7 +43,18 @@ class umk_1586738484106 extends umk_model {
             [false]
           ]
         },
-        "limitData": {
+        "aCharts": {
+          "Name": {
+            "en-us": "Animate the charts",
+            "es-mx": "Animar los gráficos"
+          },
+          "Dimension": "Scalar",
+          "Type": "Checkbox",
+          "Value": [
+            [true]
+          ]
+        },
+      "limitData": {
           "Name": {
             "en-us": "Limit data points",
             "es-mx": "Limitar puntos de datos"
