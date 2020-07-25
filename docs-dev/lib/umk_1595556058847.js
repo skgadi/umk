@@ -2,49 +2,19 @@ class umk_1595556058847 extends umk_model {
   Icon() {
     return {
       //html: blockUtils.makeIcon(this.id)+'<button onClick="popup.open(event,\'chart\')" class="pointer"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'chart\')" class="pointer"><i class="fas fa-external-link-alt fa-fw"></i></button>',
-      html: '<div class="sink-btns"><button onClick="popup.open(event,\'robot-3dof\',false)" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'robot-3dof\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
+      html: '<div class="sink-btns"><button onClick="popup.open(event,\'robot-6dof\',false)" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'robot-6dof\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
       //html: '<iframe style="width:100%; height: 100%" src="datetime.html"></iframe>',
       inLabels: null,
       outLabels: null,
       splStyle: null
     };
   }
+  Details() {
+    return "$$\\theta_1 \\in [-180,180]$$$$\\theta_2 \\in [-63,110]$$$$\\theta_3 \\in [-235,55]$$$$\\theta_4 \\in [-200,200]$$$$\\theta_5 \\in [-115,115]$$$$\\theta_6 \\in [-400,400]$$"
+  }
   constructor(obj) {
     super(Object.assign({
       Parameters: {
-        "showIm": {
-          "Name": {
-            "en-us": "Show imaginary values",
-            "es-mx": "Mostrar valores imaginarios"
-          },
-          "Dimension": "Scalar",
-          "Type": "Checkbox",
-          "Value": [
-            [false]
-          ]
-        },
-        "xLogScale": {
-          "Name": {
-            "en-us": "Logarithmic scale for horizontal axis",
-            "es-mx": "Escala logarítmica para eje horizontal"
-          },
-          "Dimension": "Scalar",
-          "Type": "Checkbox",
-          "Value": [
-            [false]
-          ]
-        },
-        "yLogScale": {
-          "Name": {
-            "en-us": "Logarithmic scale for vertical axis",
-            "es-mx": "Escala logarítmica para eje vertical"
-          },
-          "Dimension": "Scalar",
-          "Type": "Checkbox",
-          "Value": [
-            [false]
-          ]
-        },
         "limitData": {
           "Name": {
             "en-us": "Limit data points",
@@ -60,9 +30,9 @@ class umk_1595556058847 extends umk_model {
       isPopup: true, //shows that it generates a popup window 
       isOut: true, //shows that this is a output
       TerminalsIn: {
-        min: 1,
-        max: 1,
-        value: 1,
+        min: 6,
+        max: 6,
+        value: 6,
         editable: false
       }
     }, obj));
