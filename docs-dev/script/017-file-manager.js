@@ -243,6 +243,7 @@ const uyamakFileManager = {
   newModel: function () {
     if (confirm(GUIText[settings.lang].confirmLoss)) {
       mainSystem.graph.getModel().clear();
+      popup.destroyAllPopups();
     }
   },
   download: function (filename, text) {

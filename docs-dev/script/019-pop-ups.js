@@ -204,6 +204,15 @@ const popup = {
     this.messageWindows(cid, {
       s: settings
     });
+  },
+  destroyAllPopups: function() {
+    this.closeAll();
+    this.pointToOpenWind = { //Gives the point at witch the window open
+      x: 50,
+      y: 50
+    };
+    this.refsForSinks={};
+    this.rType = {};
   }
 
 };
