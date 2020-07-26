@@ -48,15 +48,6 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
-        case 'ball':
-          this.rType[cell.id] = "ball";
-          this.openUrl(cell.id, "./sinks/ball.min.html?" + urlQueryString, {
-            W: 300,
-            H: 300,
-            w: 200,
-            h: 200
-          }, pop); //noreferrer, noopener,
-          break;
           case "robot-6dof":
             this.rType[cell.id] = "ball";
             this.openUrl(cell.id, "./sinks/robot-6dof.min.html?" + urlQueryString, {

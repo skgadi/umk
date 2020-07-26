@@ -11,7 +11,7 @@ class umk_1589609346714 extends umk_model {
       this.outputs[0] = math.acsch(this.inputs[0]);
     }
     Details() {
-      return TeX.prepDisp("y_{i,j}(t) = \\csch^{-1}\\left({u_{i,j}(t)}\\right)");
+      return TeX.prepDisp("y_{i,j}(t) = \\text{csch}^{-1}\\left({u_{i,j}(t)}\\right)");
     }
     constructor(obj) {
       super(Object.assign({

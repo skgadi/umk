@@ -20,7 +20,7 @@
 
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
-  mxConstants.DEFAULT_FONTSIZE = "12";
+  mxConstants.DEFAULT_FONTSIZE = "15";
   mxConstants.SHADOWCOLOR = "var(--col-text-0 )";
   mxConstants.SHADOW_OFFSET_X = 3;
   mxConstants.SHADOW_OFFSET_Y = 3;

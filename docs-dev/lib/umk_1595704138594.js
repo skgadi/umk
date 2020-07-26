@@ -1,4 +1,4 @@
-class umk_1589609383222 extends umk_model {
+class umk_1595704138594 extends umk_model {
     Icon() {
       return {
         html: blockUtils.makeIcon(this.id),
@@ -8,10 +8,10 @@ class umk_1589609383222 extends umk_model {
       };
     }
     Evaluate() {
-      this.outputs[0] = math.asech(this.inputs[0]);
+      this.outputs[0] = [[math.inv(this.inputs[0])]];
     }
     Details() {
-      return TeX.prepDisp("y_{i,j}(t) = \\text{sech}^{-1}\\left({u_{i,j}(t)}\\right)");
+      return TeX.prepDisp("y(t) = u^{-1}(t)");
     }
     constructor(obj) {
       super(Object.assign({
