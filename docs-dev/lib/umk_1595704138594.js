@@ -8,7 +8,7 @@ class umk_1595704138594 extends umk_model {
       };
     }
     Evaluate() {
-      this.outputs[0] = [[math.inv(this.inputs[0])]];
+      this.outputs[0] = math.inv(this.inputs[0]);
     }
     Details() {
       return TeX.prepDisp("y(t) = u^{-1}(t)");

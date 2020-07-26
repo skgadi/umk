@@ -8,6 +8,9 @@ class umk_1589386537157 extends umk_model {
     };
   }
   Evaluate() {
+    console.log(this.inputs[0]);
+    console.log(this.inputs[1]);
+
     if (this.Parameters.mtype.Value[0][0] === "mm") {
       this.outputs[0] = math.multiply(this.inputs[0], this.inputs[1]);
       for (let i = 2; i < this.TerminalsIn.value; i++) {
