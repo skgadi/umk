@@ -378,7 +378,7 @@
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.sOEvery">
             <p class="compress" v-html="GUIText[settings.lang].mHis"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.mHis">
-            <div class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
+            <div v-if="false" class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
               <i class="fas" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
               <span v-text="GUIText[settings.lang].rRealTime"></span>
             </div>
