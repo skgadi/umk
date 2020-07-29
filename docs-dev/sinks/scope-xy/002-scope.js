@@ -26,10 +26,12 @@ function prepareScope() {
   // marker.stroke = am4core.color("#ccc");
 
   chart.cursor = new am4charts.XYCursor();
-  chart.numberFormatter.numberFormat = "##.###e";
+  //chart.numberFormatter.numberFormat = "##.###e";
   chart.cursor.behavior = "zoomXY";
   //chart.fontSize = 15;
 
+  // Enable export
+  chart.exporting.menu = new am4core.ExportMenu();
 
   prepareColors();
 }
