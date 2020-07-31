@@ -8,7 +8,7 @@ class umk_1595700759570 extends umk_model {
       };
     }
     Evaluate() {
-      this.outputs[0] = [[math.det(this.inputs[0])]];
+      this.outputs[0] = math.matrix([[math.det(this.inputs[0])]]);
     }
     Details() {
       return TeX.prepDisp("y(t) = \\det(u(t))");

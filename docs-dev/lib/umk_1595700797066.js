@@ -9,7 +9,11 @@ class umk_1595700797066 extends umk_model {
   }
   Evaluate() {
     for (let i=0; i<this.TerminalsOut.value; i++) {
-      this.outputs[i] = math.row(this.inputs[0],i);
+      let tempOut = [math.row(this.inputs[0], i)];
+      if (!math.size(tempOut)[1]) {
+        tempOut = [tempOut];
+      }
+      this.outputs[i] = math.matrix( tempOut);
     }
   }
   Details() {

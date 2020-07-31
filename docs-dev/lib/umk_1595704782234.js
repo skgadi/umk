@@ -8,7 +8,7 @@ class umk_1595704782234 extends umk_model {
       };
     }
     Evaluate() {
-      this.outputs[0] = [[math.trace(this.inputs[0])]];
+      this.outputs[0] = math.matrix([[math.trace(this.inputs[0])]]);
     }
     Details() {
       return TeX.prepDisp("y(t) = \\Sigma {u_{i,i}(t)}");

@@ -10,7 +10,12 @@ class umk_1595700853173 extends umk_model {
   Evaluate() {
     let inpTrans = math.transpose(this.inputs[0]);
     for (let i = 0; i < this.TerminalsOut.value; i++) {
-      this.outputs[i] = math.transpose(math.row(inpTrans, i));
+      let tempOut = [math.transpose(math.row(inpTrans, i))];
+      if (!math.size(tempOut)[1]) {
+        tempOut = [tempOut];
+      }
+      this.outputs[i] = math.matrix(tempOut);
+      console.log(JSON.stringify(math.size(tempOut) ));
     }
   }
   Details() {
