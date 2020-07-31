@@ -702,7 +702,7 @@ ul.menu-kbs>li {
   overflow: hidden;
   width: 200px;
   height: 150px;
-  background: transparent;
+  background: #eeeeeeee;
   border: 3px solid var(--col-border-0);
 }
 
