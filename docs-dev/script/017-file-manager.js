@@ -66,16 +66,18 @@ uyamak.lFManagerVue = new Vue({
           s: null,
           g: null
         };
-        if (this.oFileInfo.size > 1e7) {
-          new Noty({
-            text: GUIText[settings.lang].errFSize,
-            timeout: 5000,
-            theme: "nest",
-            type: 'error'
-          }).show();
-          return false;
+        if (!!this.oFileInfo) {
+          if (this.oFileInfo.size > 1e7) {
+            new Noty({
+              text: GUIText[settings.lang].errFSize,
+              timeout: 5000,
+              theme: "nest",
+              type: 'error'
+            }).show();
+            return false;
+          }
+          this.reader.readAsText(this.oFileInfo);
         }
-        this.reader.readAsText(this.oFileInfo);
       }
     }
   },
@@ -103,10 +105,12 @@ uyamak.lFManagerVue = new Vue({
       }
     },
     oFDesc: function () {
-      if (!this.oFileInfo.name) {
-        return '&nbsp;';
-      } else {
-        return this.oFileInfo.name + "; " + math.unit(this.oFileInfo.size + "b").format(4); //"$"+math.parse(this.oFileInfo.size + "b").toTex(4)+"$"
+      if (!!this.oFileInfo) {
+        if (!this.oFileInfo.name) {
+          return '&nbsp;';
+        } else {
+          return this.oFileInfo.name + "; " + math.unit(this.oFileInfo.size + "b").format(4); //"$"+math.parse(this.oFileInfo.size + "b").toTex(4)+"$"
+        }
       }
     }
   },
@@ -200,8 +204,8 @@ uyamak.lFManagerVue = new Vue({
     },
     dragOperation: function (evt) {
       this.dDAtn = evt.type;
-      //console.log(this.dDAtn);
-      if ((this.dDAtn === 'dragenter') || (this.dDAtn === 'dragover')) {
+      // console.log(evt.dataTransfer.types);
+      if ((evt.dataTransfer.types.indexOf("Files")>=0)&&((this.dDAtn === 'dragenter') || (this.dDAtn === 'dragover'))) {
         document.getElementById("drop-area").style.display = "block";
         //suspend all keys except esc to cancel update
         kbshort.suspend(true, function (evt) {
@@ -215,7 +219,7 @@ uyamak.lFManagerVue = new Vue({
       }
       GSKGenFuncs.preventDefaults(evt);
       //console.log(evt.dataTransfer.files[0]);
-      if (this.dDAtn === "drop") {
+      if ((evt.dataTransfer.types.indexOf("Files")>=0)&&(this.dDAtn === "drop")) {
         this.oFileInfo = evt.dataTransfer.files[0];
         this.showGUI(true);
       }
