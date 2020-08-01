@@ -12,6 +12,8 @@ class umk_1589386537157 extends umk_model {
     //console.log(this.inputs[1]);
 
     if (this.Parameters.mtype.Value[0][0] === "mm") {
+      //console.log(JSON.stringify(this.inputs[0]));
+      //console.log(JSON.stringify(this.inputs[1]));
       this.outputs[0] = math.multiply(this.inputs[0], this.inputs[1]);
       for (let i = 2; i < this.TerminalsIn.value; i++) {
         this.outputs[0] = math.multiply(this.outputs[0], this.inputs[i]);
