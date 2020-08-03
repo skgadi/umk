@@ -20,7 +20,12 @@ const packer = {
     });
   },
   ab2str: function (buf) {
-    return String.fromCharCode.apply(null, new Uint16Array(buf));
+    var enec = new TextDecoder("utf-16");
+    let a = new Uint16Array(buf);
+    //console.log(a);
+    return enec.decode(a);//String.fromCharCode.apply(null, a);
+
+    //return String.fromCharCode.apply(null, new Uint16Array(buf));
   },
   str2ab: function (str) {
     let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
