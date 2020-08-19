@@ -1,0 +1,42 @@
+<title>{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}</title>
+<!--SEO Tags start -->
+<meta name="keywords" content="{{- range  $elem_index, $elem_val := .Keywords -}}
+{{- if gt $elem_index  0 -}}, {{ end -}}
+{{- . -}}{{- end -}}" />
+<meta name="news_keywords"  content="{{- range  $elem_index, $elem_val := .Keywords -}}
+{{- if gt $elem_index  0 -}}, {{ end -}}
+{{- . -}}{{- end -}}" />
+<meta  name="description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />
+{{ if .Lastmod  }}<meta name="revised" content="{{  dateFormat "02/Jan/2006 at 15:04:05 (TZ: -07:00)" .Lastmod }}" /> {{ end }}
+<meta name="author" content="{{ .Site.Params.Author }}" />
+<meta property="og:title" content="{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}" />
+<meta property="og:description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+<link rel="original-source" href="{{ .Permalink }}" />
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="{{ .Permalink }}" />
+<link rel="publisher" href="https://twitter.com/{{ .Site.Params.Twitter }}"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="{{ if eq $isHomePage false }}article{{ else }}website{{ end }}" />
+<meta property="og:site_name" content="{{ .Site.Title }}" />
+<!--meta property="article:publisher" content="https://www.facebook.com/yoast" />
+<meta property="article:author" content="https://www.facebook.com/jdevalk" />
+<meta property="article:tag" content="Crawl directives" />
+<meta property="article:tag" content="Duplicate Content" />
+<meta property="article:tag" content="URL" />
+<meta property="article:section" content="Content SEO" /-->
+{{- if eq .Section "posts" -}}
+<meta property="article:published_time" content="{{  dateFormat "2006-01-02T15:04:05-07:00" .Date }}" />
+{{- end -}}
+<!--meta property="article:modified_time" content="2016-12-23T14:06:40+01:00" />
+<meta property="og:updated_time" content="2016-12-23T14:06:40+01:00" />
+<meta property="fb:admins" content="503714060" /-->
+<meta property="og:image" content="{{ .Site.BaseURL }}images/my-logo.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />	
+<meta name="twitter:title" content="{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}" />
+<!--meta name="twitter:site" content="@yoast" /-->
+<meta name="twitter:image" content="{{ .Site.BaseURL }}images/my-logo.png" />
+<meta name="twitter:creator" content="@{{ .Site.Params.Twitter }}" />
+<!--meta property="DC.date.issued" content="2016-05-10T15:13:12+01:00" /-->
+<!--SEO Tags End   -->

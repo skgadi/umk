@@ -1,0 +1,154 @@
+</div>
+<footer class="w3-container w3-theme w3-padding-16">
+<div class="w3-container w3-padding-0 w3-section">
+<input class="w3-input" id="SearchText" type="text" placeholder="Search: Type your query and press Enter ( &crarr; )">
+</div>
+<div class="w3-container w3-padding-0">
+{{- range (.Site.Menus.small) -}}
+	{{ if .HasChildren -}}
+		<a class="w3-theme-d1" href="{{ .URL }}"> {{- .Name -}}</a>
+<ul>
+		{{- range .Children -}}
+<li>
+			<a href="{{ .URL }}"> {{- .Name -}}</a>
+</li>
+		{{- end -}}
+</ul>
+	{{- else -}}
+		&nbsp;<a class="{{ if eq $.RelPermalink .URL }} w3-theme-d1 w3-medium {{ else }} {{ end }}" href="{{ .URL }}">{{ if .Pre }}<i class='fa {{ .Pre }} fa-fw' aria-hidden='true'></i>{{ end }}<!--&nbsp;{{- .Name -}}--></a>
+	{{- end -}}
+{{- end -}}
+{{- range (.Site.Menus.main) -}}
+	{{ if .HasChildren -}}
+		<a class="w3-theme-d1" href="{{ .URL }}"> {{- .Name -}}</a>
+<ul>
+		{{- range .Children -}}
+<li>
+			<a href="{{ .URL }}"> {{- .Name -}}</a>
+</li>
+		{{- end -}}
+</ul>
+	{{- else -}}
+		&nbsp;<a class="{{ if eq $.RelPermalink .URL }} w3-theme-d1 w3-medium {{ else }} {{ end }}" href="{{ .URL }}">{{ if .Pre }}<i class='fa {{ .Pre }} fa-fw' aria-hidden='true'></i>{{ end }}<!--&nbsp;{{- .Name -}}--></a>
+	{{- end -}}
+{{- end -}}
+</div>
+<div class="w3-container w3-padding-0">
+{{- if .Site.Params.Scopus -}}
+<a class="w3-left w3-padding-tiny" href="https://www.scopus.com/authid/detail.uri?authorId={{ .Site.Params.Scopus }}" target="_blank"><i class="fa fa-circle" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.ORCID -}}
+<a class="w3-left w3-padding-tiny" href="https://orcid.org/{{ .Site.Params.ORCID }}" target="_blank"><i class="fa fa-newspaper-o" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.GScholar -}}
+<a class="w3-left w3-padding-tiny" href="https://scholar.google.co.in/citations?user={{ .Site.Params.GScholar }}" target="_blank"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.LinkedIn -}}
+<a class="w3-left w3-padding-tiny" href="https://mx.linkedin.com/in/{{ .Site.Params.LinkedIn }}" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.Twitter -}}
+<a class="w3-left w3-padding-tiny" href="https://twitter.com/{{ .Site.Params.Twitter }}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.GPlus -}}
+<a class="w3-left w3-padding-tiny" href="https://plus.google.com/{{ .Site.Params.GPlus }}" target="_blank"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.Maps -}}
+<a class="w3-left w3-padding-tiny" href="{{ .Site.Params.Maps }}" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+{{- end -}}
+{{- if .Site.Params.PayPal -}}
+<a class="w3-left w3-padding-tiny" href="{{ .Site.Params.PayPal }}" target="_blank"><i class="fa fa-paypal" aria-hidden="true"></i></a>
+{{- end -}}
+</div>
+<div class="w3-container w3-padding-0 w3-section">
+<p class="w3-padding-0 w3-margin-0">Thanks to:</p>
+	<div class="w3-padding-left">
+	{{- if .Params.thanks -}}
+		{{- range .Params.thanks -}}
+			<p class="w3-padding-0 w3-margin-0">{{- if .url -}}<a href="{{ .url }}" target="_blank">{{- end -}}{{ .name }}{{- if .url -}}</a>{{- end -}}&nbsp;for&nbsp;<i>{{- .reason -}}</i>.</p>
+		{{- end -}}
+	{{- end -}}
+	{{- if .Site.Params.thanks -}}
+		{{- range .Site.Params.thanks -}}
+			<p class="w3-padding-0 w3-margin-0">{{- if .url -}}<a href="{{ .url }}" target="_blank">{{- end -}}{{ .name }}{{- if .url -}}</a>{{- end -}}&nbsp;for&nbsp;<i>{{- .reason -}}</i>.</p>
+		{{- end -}}
+	{{- end -}}
+	</div>
+</div>
+<p class="">{{- if .Site.Params.Address -}}Address:&nbsp;{{- .Site.Params.Address -}}{{- end -}}{{- if .Site.Params.email -}}<br />E-mail:&nbsp;{{- .Site.Params.email -}}{{- end -}}{{- if .Site.Params.Phone -}}<br />Phone:&nbsp;{{- .Site.Params.Phone -}}{{- end -}}{{- if .Site.Params.Fax -}}<br />Fax:&nbsp;{{- .Site.Params.Fax -}}{{- end -}}</p>
+<p class="">Copyright <i class="fa fa-copyright" aria-hidden="true"></i>&nbsp;{{- now.Format "2006" -}}&nbsp;{{- .Site.Params.Author }}  </p>
+</footer>
+</div>
+
+{{- if .Params.LoadPackages.JQuery1 -}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.JQuery2 -}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.JQuery3 -}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.BibTeXJS -}}
+	<script type="text/javascript" src="https://cdn.rawgit.com/pcooksey/bibtex-js/b81606e85986fa8ad0eb66954493bc1c0b3d7ab1/src/bibtex_js.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.ApisGoogleAuth -}}
+	<script src="https://apis.google.com/js/client.js?onload=AuthIsLoaded" async defer></script>
+{{- end -}}
+{{- if .Params.LoadPackages.Notify -}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.SimpleStatistics -}}
+	<script src="https://unpkg.com/simple-statistics@5.2.0/dist/simple-statistics.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.RegressionJS -}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/regression/1.4.0/regression.min.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.GStaticCharts -}}
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{{- end -}}
+{{- if .Params.LoadPackages.MathJS -}}
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/4.1.2/math.min.js"></script>
+{{- end -}}
+
+
+
+
+
+{{- if .Params.JSPlugInEnd -}}
+{{- range .Params.JSPlugInEnd -}}
+<script src="{{ if eq .Local "true"  }}{{ $.Site.BaseURL }}js/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}" type="text/javascript" charset="utf-8"></script>
+{{- end -}}
+{{- end -}}
+
+{{- if .Params.BiBPlugInEnd -}}
+{{- range .Params.BiBPlugInEnd -}}
+<bibtex src="{{ if eq .Local "true"  }}{{ $.Site.BaseURL }}bibtex/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}"charset="utf-8"></bibtex>
+{{- end -}}
+{{- end -}}
+<script src="{{ .Site.BaseURL }}js/script000.js" type="text/javascript" charset="utf-8"></script>
+<script>
+document.getElementById("SearchText")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 13) {
+        SearchClick("{{ .Site.BaseURL }}");
+    }
+});
+</script>
+{{- if .Site.Params.GoogleAnalyticsID -}}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '{{ .Site.Params.GoogleAnalyticsID }}', 'auto');
+  ga('send', 'pageview');
+
+</script>
+{{- end -}}
+{{- if eq .Site.Params.SharingIcona "true" -}}
+<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58d752e61c886f5f"></script> 
+{{- end -}}
+</body>
+</html>

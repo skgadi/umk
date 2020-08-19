@@ -82,12 +82,12 @@ function setTermianls(graph, Cell, type = "umk_input") {
       position = {
         x: 0,
         size: {
-          width: 28,
-          height: 10
+          width: 6,
+          height: 6
         },
         offset: {
-          x: -30,
-          y: -5
+          x: -6,
+          y: -3
         }
       };
     } else {
@@ -96,12 +96,12 @@ function setTermianls(graph, Cell, type = "umk_input") {
       position = {
         x: 1,
         size: {
-          width: 20,
-          height: 10
+          width: 6,
+          height: 3
         },
         offset: {
           x: 0,
-          y: -5
+          y: -1.5
         }
       };
     }

@@ -1,0 +1,73 @@
+.Resume, p, ul, li {
+	/*font: 15px "Arial Narrow", Sans-serif;*/
+	font-size: 15px;
+}
+
+H1.Resume {
+	/*font: 42px "Times New Roman", Serif;*/
+	font-size: 42px;
+    padding: 0px;
+    margin: 0px;
+}
+
+H3.Resume {
+	/*font: 24px "Times New Roman", Serif;*/
+	font-size: 25px;
+    padding: 5px 2px;
+    margin: 10px 0px;
+	background-color: #ddd;
+}
+
+div.Resume>H1 {
+	/*font: 15px "Arial Narrow", Sans-serif;*/
+	font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+	/*text-decoration: underline;*/
+	padding-left: 5px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+div.Resume>H2 {
+	/*font: 15px "Arial Narrow", Sans-serif;*/
+	font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+	padding-left: 15px;
+	font-weight: bold;
+	/*font-style: italic;*/
+}
+
+table {
+	width: 100%;
+}
+	
+table, th, td {
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+}
+
+th{
+	font-weight: bold;
+}
+
+a.Resume{
+	color: black;
+	text-decoration: none;
+}
+
+p {
+	/*font: 15px "Arial Narrow", Sans-serif;*/
+	font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+}
+
+ul {
+	margin: 2px 0px;
+}
+
+li {
+	text-align: justify;
+}

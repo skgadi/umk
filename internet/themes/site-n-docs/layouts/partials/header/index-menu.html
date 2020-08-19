@@ -1,0 +1,64 @@
+<nav class="w3-sidebar side-menu left-menu w3-bar-block w3-hide-small w3-hide-medium">
+  <!--a href="/" class="w3-bar-item w3-xxxlarge remove-text-decoration">
+    <span class="">&#3081;</span>
+  </a-->
+  {{- range .Site.Menus.main -}}
+  <a href="{{- .URL -}}" class="side-menu-item left-menu-item remove-text-decoration">
+    <div>
+      <p class="w3-margin-0 menu-item-icon"><i class="{{- .Pre }} fa-fw"></i></p>
+      <p class="w3-margin-0 menu-item-text">{{- .Name -}}</p>
+    </div>
+  </a>
+  {{- end -}}
+</nav>
+<div class="fixed-item fix-top fix-left w3-xxlarge menu-bars w3-hide-large" onclick="openmodal(event)"><i class="fas fa-bars fa-fw"></i></div>
+<div id="modal" class="w3-modal w3-padding-0 w3-hide-large">
+  <div class="w3-modal-content full-screen w3-margin-0 w3-padding-0">
+    <div class="fixed-item fix-top fix-right w3-right w3-xxxlarge w3-text-red" onclick="closemodal(event)"><i class="far fa-times-circle fa-fw"></i>
+    </div>
+    <div class="w3-container full-screen">
+      <div class="hidable-menu">
+        {{- range .Site.Menus.main -}}
+        <a href="{{- .URL -}}" class="hidable-menu-item remove-text-decoration">
+          <div>
+            <p class="w3-margin-0 w3-xxlarge"><i class="{{- .Pre }} fa-fw"></i>&nbsp; {{- .Name -}}</p>
+          </div>
+        </a>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nav class="w3-sidebar side-menu right-menu w3-bar-block w3-hide-small">
+  <a href="#top" class="side-menu-item right-menu-item remove-text-decoration">
+    <div>
+      <p class="w3-margin-0 menu-item-small-icon"><i class="far fa-arrow-alt-circle-up fa-fw"></i></p>
+      <p class="w3-margin-0 menu-item-small-text">{{- .Language.Params.GskTrans.top -}}</p>
+    </div>
+  </a>
+  {{- range .Params.Anchors -}}
+  <a href="#{{- .id -}}" class="side-menu-item right-menu-item remove-text-decoration">
+    <div>
+      <p class="w3-margin-0 menu-item-small-icon"><i class="far fa-dot-circle fa-fw"></i></p>
+      <p class="w3-margin-0 menu-item-small-text">{{- .value -}}</p>
+    </div>
+  </a>
+  {{- end -}}
+  <a href="#bottom" class="side-menu-item right-menu-item remove-text-decoration">
+    <div>
+      <p class="w3-margin-0 menu-item-small-icon"><i class="far fa-arrow-alt-circle-down fa-fw"></i></p>
+      <p class="w3-margin-0 menu-item-small-text">{{- .Language.Params.GskTrans.bottom -}}</p>
+    </div>
+  </a>
+</nav>
+
+<div class="lang-flag">
+  {{ range .Translations }}
+  <a class="w3-center remove-text-decoration" href="{{ .Permalink }}">
+    <p class="w3-padding-0 w3-margin-0"><img src="{{$.Site.BaseURL}}/images/flags/{{.Site.Language.Params.GskTrans.flag}}" alt="{{.Site.Language.Params.GskTrans.flag}}" style="height: 25px;"/></p>
+    <p class="w3-padding-0 w3-margin-0 flag-text">{{ .Site.Language.LanguageName }}</p>
+  </a>
+  {{ end }}
+</div>

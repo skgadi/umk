@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}</title>
+	{{ .Hugo.Generator }}
+	<meta charset=utf-8>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--SEO Tags start -->
+	<meta name="keywords" content="{{- range  $elem_index, $elem_val := .Keywords -}}
+	{{- if gt $elem_index  0 -}}, {{ end -}}
+	{{- . -}}{{- end -}}" />
+	<meta name="news_keywords"  content="{{- range  $elem_index, $elem_val := .Keywords -}}
+	{{- if gt $elem_index  0 -}}, {{ end -}}
+	{{- . -}}{{- end -}}" />
+	<meta  name="description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />
+	{{ if .Lastmod  }}<meta name="revised" content="{{  dateFormat "02/Jan/2006 at 15:04:05 (TZ: -07:00)" .Lastmod }}" /> {{ end }}
+	<meta name="author" content="{{ .Site.Params.Author }}" />
+	<meta property="og:title" content="{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}" />
+	<meta property="og:description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />
+	<meta property="og:url" content="{{ .Permalink }}" />
+	<link rel="original-source" href="{{ .Permalink }}" />
+	<meta name="robots" content="noodp"/>
+	<link rel="canonical" href="{{ .Permalink }}" />
+	<link rel="publisher" href="https://twitter.com/{{ .Site.Params.Twitter }}"/>
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="{{ if eq $isHomePage false }}article{{ else }}website{{ end }}" />
+	<meta property="og:site_name" content="{{ .Site.Title }}" />
+	<!--meta property="article:publisher" content="https://www.facebook.com/yoast" />
+	<meta property="article:author" content="https://www.facebook.com/jdevalk" />
+	<meta property="article:tag" content="Crawl directives" />
+	<meta property="article:tag" content="Duplicate Content" />
+	<meta property="article:tag" content="URL" />
+	<meta property="article:section" content="Content SEO" /-->
+	{{- if eq .Section "posts" -}}
+	<meta property="article:published_time" content="{{  dateFormat "2006-01-02T15:04:05-07:00" .Date }}" />
+	{{- end -}}
+	<!--meta property="article:modified_time" content="2016-12-23T14:06:40+01:00" />
+	<meta property="og:updated_time" content="2016-12-23T14:06:40+01:00" />
+	<meta property="fb:admins" content="503714060" /-->
+	<meta property="og:image" content="{{ .Site.BaseURL }}images/my-logo.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:description" content="{{ if eq $isHomePage false }}{{ .Description }}{{ else }}{{.Site.Params.Meta.description.name}}{{ end }}" />	
+	<meta name="twitter:title" content="{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}" />
+	<!--meta name="twitter:site" content="@yoast" /-->
+	<meta name="twitter:image" content="{{ .Site.BaseURL }}images/my-logo.png" />
+	<meta name="twitter:creator" content="@{{ .Site.Params.Twitter }}" />
+	<!--meta property="DC.date.issued" content="2016-05-10T15:13:12+01:00" /-->
+	<!--SEO Tags End   -->
+	
+	<link rel="icon" type="image/png" href="{{ .Site.BaseURL }}images/favicon.png">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{{ .Site.BaseURL }}css/style.css">
+
+	{{- if .Params.CSSPlugIn -}}
+	{{- range .Params.CSSPlugIn -}}
+	<link rel="stylesheet" href="{{ if eq .Local "true"  }}{{ $.Site.BaseURL }}css/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}"></script>
+	{{- end -}}
+	{{- end -}}	
+	{{- if .Params.JSPlugIn -}}
+	{{- range .Params.JSPlugIn -}}
+	<script src="{{ if eq .Local "true"  }}{{ $.Site.BaseURL }}js/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}" type="text/javascript" charset="utf-8"></script>
+	{{- end -}}
+	{{- end -}}
+	{{- if .Params.BiBPlugIn -}}
+	{{- range .Params.BiBPlugIn -}}
+	<bibtex src="{{ if eq .Local "true"  }}{{ $.Site.BaseURL }}bibtex/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}"charset="utf-8"></bibtex>
+	{{- end -}}
+	{{- end -}}
+	{{- if .Params.LoadPackages.Handsontable -}}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/2.0.0/handsontable.full.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/2.0.0/handsontable.full.min.js"></script>
+	{{- end -}}
+</head>
+<body>
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-animate-left w3-card" style="z-index:3;width:250px;" id="mySidebar">
+  <a href="/" class="w3-bar-item w3-button w3-border-bottom w3-large">{{ if .Site.Params.SiteNameInText }}<h3 class="w3-margin-0 w3-text-theme"><b>{{.Site.Params.SiteNameInText}}</b></h3>{{ else }}<img src="{{ if .Site.Params.SiteImageURL }}{{ .Site.Params.SiteImageURL }}{{ else }}{{ .Site.BaseURL }}images/site-name.png{{ end }}" alt="site-logo" style="width:100%;">{{end}}</a>
+  <a href="javascript:void(0)" onclick="w3_close()"  class="w3-bar-item w3-button w3-border-bottom w3-text-theme w3-hide-large w3-closenav w3-large">Close <i class="fa fa-remove"></i></a>
+{{- $currentPage := . -}}
+{{- range (.Site.Menus.main) -}}
+	{{ if .HasChildren -}}
+		<a class="w3-bar-item w3-button w3-border-bottom w3-theme-d1" href="{{ .URL }}"> {{- .Name -}}</a>
+<ul>
+		{{- range .Children -}}
+<li>
+			<a href="{{ .URL }}"> {{- .Name -}}</a>
+</li>
+		{{- end -}}
+</ul>
+	{{- else -}}
+		<a class="w3-bar-item w3-button w3-border-bottom {{ if eq $.RelPermalink .URL }} w3-theme-d1 w3-medium {{ else }} {{ end }}" href="{{ .URL }}">{{ if .Pre }}<i class='fa {{ .Pre }} fa-fw' aria-hidden='true'></i>{{ end }}&nbsp;{{- .Name -}}</a>
+	{{- end -}}
+{{- end -}}
+</nav>
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
+<div class="w3-main" style="margin-left:250px;">
+
+<div id="myTop" class="w3-container w3-top w3-theme w3-large">
+  <p><i class="fa fa-bars w3-button w3-teal w3-hide-large w3-xlarge" onclick="w3_open()"></i>
+  <span id="myIntro" class="w3-hide">{{ .Title }}</span></p>
+</div>
+<header class="w3-container w3-theme" style="padding:64px 32px">
+	<h1 class="w3-xxxlarge w3-padding-0 w3-margin-0">{{ .Title  }}</h1>
+	{{- if eq .Section "posts" -}}<p><i>{{ .Date.Format "Mon, Jan 2, 2006" }}</i></p>{{- end -}}
+	{{- if eq .Title .Site.Title -}}
+		<p class="w3-margin-0"><i>{{- .Site.Params.SubTitle }}</i></p>
+	{{- else -}}
+		<div class="w3-show-inline-block">
+		<div class="w3-bar">
+		<a href='/' class="w3-button w3-hover-theme w3-bar-item w3-padding-tiny">Home</a>
+		{{- $.Scratch.Add "path" .Site.BaseURL -}}
+		{{- range $index, $element := split .RelPermalink  "/" -}}
+			{{- $.Scratch.Add "path" $element -}}
+			{{- if ne $element "" -}}
+				<a class="w3-bar-item w3-padding-tiny"><i class="fa fa-angle-double-right"></i></a>
+				<a href='{{ $.Scratch.Get "path" }}' class="w3-button w3-hover-theme w3-bar-item w3-padding-tiny">{{ humanize (replace . "-" " ") }}</a>
+			{{- $.Scratch.Add "path" "/" -}}
+		  {{- end -}}
+		{{- end -}}
+		</div>
+		</div>
+		{{ if .Params.tags }}
+			<div class="w3-margin">
+			<div class="w3-show-inline-block">
+			Tags:
+			{{ range .Params.tags }}
+				<a class="w3-btn w3-tiny w3-theme-d2 " href='{{ "/tags/" | relLangURL }}{{ . | urlize }}'>{{ . }}</a>
+			{{ end }}
+			</div>
+			</div>
+		{{ end }}
+		{{ if .Params.categories }}
+			<div class="w3-margin">
+			<div class="w3-show-inline-block">
+			Categories:
+			{{ range .Params.categories }}
+				<a class="w3-btn w3-tiny w3-theme-d2 " href='{{ "/categories/" | relLangURL }}{{ . | urlize }}'>{{ . }}</a>
+			{{ end }}
+			</div>
+			</div>
+		{{ end }}
+	{{- end -}}
+</header>
+<div class="w3-container w3-padding-0">

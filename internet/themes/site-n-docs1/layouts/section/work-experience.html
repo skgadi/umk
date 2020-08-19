@@ -1,0 +1,27 @@
+{{ partial "header.html" . }}
+<div class="w3-row">
+{{- range .Data.Pages }}
+<div class="w3-col m6 l6 s12 w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+	<div class="w3-container w3-padding-0 w3-border w3-border-theme">
+		<header class="w3-container w3-theme"><h5><b><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;{{ .Title }}</b></h5></header>
+		<table class="w3-table w3-striped w3-hoverable w3-border-bottom w3-border-theme">
+		<tr>
+			<td style="text-align: left;" >Employer</td>
+			<td style="text-align: right;">{{ if .Params.GSKEmployerURL }}<a href="{{ .Params.GSKEmployerURL }}">{{ end }}{{ .Params.GSKEmployer }}{{ if .Params.GSKEmployerURL }}</a>{{ end }}</td>
+		</tr><tr>
+			<td style="text-align: left;" >Place</td>
+			<td style="text-align: right;">{{ .Params.GSKCity }}</td>
+		</tr><tr>
+			<td style="text-align: left;">Period</td>
+			<td style="text-align: right;">{{  dateFormat "2/Jan/2006" .Params.GSKStartDate }} &mdash; {{ if .Params.GSKEndDate }} {{ dateFormat "2/Jan/2006" .Params.GSKEndDate }} {{ else }} Till date {{ end }}</td>
+		</tr><tr>
+			<td style="text-align: left;">Period</td>
+			<td style="text-align: right;">{{ .Params.GSKPeriod }}</td>
+		</tr>	
+		</table>
+		<div class="w3-container w3-center w3-margin-0 w3-padding-0"><a href="{{ .Permalink }}" class="w3-button w3-theme w3-ripple w3-block"><i class="fa fa-th-large" aria-hidden="true"></i>&nbsp;See more</a></div>
+	</div>
+</div>
+{{- end -}}
+</div>
+{{ partial "footer.html" . -}}

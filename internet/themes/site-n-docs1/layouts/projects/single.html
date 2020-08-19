@@ -1,0 +1,51 @@
+{{ partial "header.html" . }}
+<div class="w3-row">
+<div class="w3-col m12 l12 s12 w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+	<div class="w3-container w3-padding-0 w3-border w3-border-theme">
+		<table class="w3-table w3-bordered w3-bordered-theme w3-striped w3-hoverable">
+		<tr>
+			<td style="text-align: left;" >Funding</td>
+			<td style="text-align: right;">{{if .Params.GSKFundName}}
+				{{if .Params.GSKFundURL}}<a class="Resume" href="{{.Params.GSKFundURL}}">{{end}}
+				{{.Params.GSKFundName}}
+				{{if .Params.GSKFundURL}}</a>{{end}}
+			{{else}}None{{end}}</td>
+		</tr><tr>
+			<td style="text-align: left;" >Role</td>
+			<td style="text-align: right;">{{ .Params.GSKRole }}</td>
+		</tr><tr>
+			<td style="text-align: left;" >Team size</td>
+			<td style="text-align: right;">{{ .Params.GSKTeamSize }}</td>
+		</tr><tr>
+			<td style="text-align: left;">Skills used</td>
+			<td style="text-align: right;">{{ delimit .Params.GSKKeySkills "; " }}</td>
+		</tr><tr>
+			<td style="text-align: left;">Period</td>
+			<td style="text-align: right;">{{  dateFormat "Jan 2006" .Params.GSKStartDate }} &mdash; {{ if .Params.GSKEndDate }} {{ dateFormat "Jan 2006" .Params.GSKEndDate }} {{ else }} Till date {{ end }}</td>
+		</tr>	
+{{- if .Params.ExtraDetails -}}
+		{{- range .Params.ExtraDetails -}}
+		<tr>
+			<td style="text-align: left;">{{ .Name }}</td>
+			<td style="text-align: right;">{{ if .URL }}<a href="{{ .URL }}" target="_blank">{{ end }}{{ .Text }}{{ if .URL }}</a>{{ end }}</td>
+		</tr>
+		{{- end -}}
+{{- end -}}
+		</table>
+		{{if .Content}}
+		<div class="w3-padding">
+			{{ .Content }}
+		</div>
+		{{end}}
+	</div>
+</div>
+</div>
+<div class="w3-row">
+<div class="w3-col m6 l6 s6 w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+	<a {{if .PrevInSection}}href="{{.PrevInSection.Permalink}}"{{end}} class=" {{if .PrevInSection}} {{else}} w3-disabled {{end}} w3-button w3-white w3-border w3-border-theme w3-block w3-ripple"><i class="fa fa-angle-double-left"></i> Previous</a>
+</div>
+<div class="w3-col m6 l6 s6 w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+	<a {{if .NextInSection}}href="{{.NextInSection.Permalink}}"{{end}} class=" {{if .NextInSection}} {{else}} w3-disabled {{end}} w3-button w3-white w3-border w3-border-theme w3-block w3-ripple">Next <i class="fa fa-angle-double-right"></i></a>
+</div>
+</div>
+{{ partial "footer.html" . -}}

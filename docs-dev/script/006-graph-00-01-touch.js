@@ -1,4 +1,3 @@
-
 (function () {
   // Enables rotation handle
   mxVertexHandler.prototype.rotationEnabled = false;
@@ -180,7 +179,7 @@
             pt.x = s.x - s.width - this.ports[i].i.offsetWidth / 2;
             pt.y = s.y - this.ports[i].i.offsetHeight / 2;
           } else {
-            pt.x = s.x + ((!!this.ports[i].s.cell && !!this.ports[i].s.cell.style && this.ports[i].s.cell.style.search("umk_input")>=0)?0:(s.width)); // + mxConstants.HANDLE_SIZE / 2 + 4 + this.ports[i].i.offsetWidth / 2;
+            pt.x = s.x + ((!!this.ports[i].s.cell && !!this.ports[i].s.cell.style && this.ports[i].s.cell.style.search("umk_input") >= 0) ? -24 : (s.width + 24)); // + mxConstants.HANDLE_SIZE / 2 + 4 + this.ports[i].i.offsetWidth / 2;
             pt.y = s.y + s.height / 2;
           }
           //console.log(s);

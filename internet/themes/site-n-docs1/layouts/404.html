@@ -1,0 +1,19 @@
+{{ partial "header.html" . }}
+<div class="w3-row">
+<div class="w3-col m12 l12 s12 w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+	<div class="w3-container w3-padding-0 w3-border w3-border-theme">
+		<header class="w3-container w3-theme"><h5 >Error 404: Page not found</h5></header>
+		<div class="w3-container w3-section">
+			<div><p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+			<ul>
+				<li>If you typed the page address in the address bar, double check that it is spelled correctly.</li>
+				<li>Open the <a href="{{ $.Site.BaseURL }}">{{ .Site.BaseURL }}</a> home page, and then look for links to the information you want.</li>
+				<li>Click the <a href="javascript:history.back()">back</a> button to try another link.</li>
+				<li>If nothing worked, you can always search.</li>
+			</ul>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{{ partial "footer.html" . -}}

@@ -1,0 +1,226 @@
+{{- partial "header.html" . -}}
+<div class="w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-border-white">
+<button class="w3-btn w3-theme w3-right" onclick="Print()"><i class="fa fa-print"></i> Print</button>
+<div class="w3-border w3-border-theme w3-padding-small">
+<div id="PrintContent">
+<h1 class="Resume">{{.Params.FirstName}} {{.Params.LastName}}</h1>
+<p class=""><i>{{.Params.SubTitle}}</i></p>
+<hr/>
+
+<h3 class="Resume">Summary</h3>
+<p class="Resume">{{.Description}}</p>
+
+<h3 class="Resume">Personal details</h3>
+<table class="Resume">
+	<tr><td style="width: 90px;">
+		First Name
+	</td><td>
+		{{.Params.FirstName}}
+	</td></tr>
+	<tr><td>
+		Last Name
+	</td><td>
+		{{.Params.LastName}}
+	</td></tr>
+	<tr><td>
+		Date of birth
+	</td><td>
+		{{ (dateFormat "2" .Params.DateOfBirth) }}<sup>{{ if in (slice "1" "21" "31") (dateFormat "2" .Params.DateOfBirth)}}st{{ else if in (slice "2" "22") (dateFormat "2" .Params.DateOfBirth)}}nd{{ else if in (slice "3" "23") (dateFormat "2" .Params.DateOfBirth)}}rd{{ else }}th{{ end }}</sup> of {{ (dateFormat "January 2006" .Params.DateOfBirth) }}
+	</td></tr>
+	<tr><td>
+		Languages
+	</td><td>
+		<b>Reading:</b> 
+		{{range .Params.LanguageInfo}}
+			{{if eq .Ability "Reading"}}
+				{{.Language}} ({{.Level}});
+			{{end}}
+		{{end}}<br/>
+		<b>Writing:</b> 
+		{{range .Params.LanguageInfo}}
+			{{if eq .Ability "Writing"}}
+				{{.Language}} ({{.Level}});
+			{{end}}
+		{{end}}<br/>
+		<b>Listening:</b> 
+		{{range .Params.LanguageInfo}}
+			{{if eq .Ability "Listening"}}
+				{{.Language}} ({{.Level}});
+			{{end}}
+		{{end}}<br/>
+		<b>Talking:</b> 
+		{{range .Params.LanguageInfo}}
+			{{if eq .Ability "Talking"}}
+				{{.Language}} ({{.Level}});
+			{{end}}
+		{{end}}
+	</td></tr>
+	<tr><td>
+		Mobile
+	</td><td>
+		{{.Params.Phone}}
+	</td></tr>
+	<tr><td>
+		Email
+	</td><td>
+		{{.Params.Email}}
+	</td></tr>
+	<tr><td>
+		Address
+	</td><td>
+		{{.Params.Address}}
+	</td></tr>
+	{{if .Params.Email}}
+	{{end}}
+	{{if .Params.WebPage}}
+	<tr><td>
+		Web-page
+	</td><td>
+		{{.Params.WebPage}}
+	</td></tr>
+	{{end}}
+	{{if .Params.Fax}}
+	<tr><td>
+		Fax
+	</td><td>
+		{{.Params.Fax}}
+	</td></tr>
+	{{end}}
+	{{if .Params.WebLinks}}
+	<tr><td>
+		Online Presence
+	</td><td>
+		{{range .Params.WebLinks}}
+			<b>
+				{{if .Icon}}<i class="{{.Icon}}"></i>{{end}} {{.Name}}:
+			</b>
+			<a href="{{.URL}}" class="Resume">
+				{{.URL}}
+			</a>
+			<br/>
+		{{end}}
+	</td></tr>
+	{{end}}
+</table>
+
+<h3 class="Resume">Education</h3>
+<table class="Resume">
+	<tr>
+		<th>Title</th>
+		<th>School</th>
+		<th>Place</th>
+		<th>Grade</th>
+		<th>Period</th>
+	</tr>
+		{{ range where .Site.RegularPages "Section" "education" }}
+	<tr>
+		<td><a class="Resume" href="{{ .Permalink }}" style="text-decoration: none">{{.Title}}</a></td>
+		<td>{{ if .Params.GSKSchoolURL }}<a class="Resume" href="{{ .Params.GSKSchoolURL }}"  style="text-decoration: none">{{ end }}{{ .Params.GSKSchool }}{{ if .Params.GSKSchoolURL }}</a>{{ end }}</td>
+		<td>{{ .Params.GSKCity }}</td>
+		<td>{{ .Params.GSKGrade }}</td>
+		<td>{{  dateFormat "Jan 2006" .Params.GSKStartDate }} &mdash; {{ if .Params.GSKEndDate }} {{ dateFormat "Jan 2006" .Params.GSKEndDate }} {{ else }} Till date {{ end }}</td>
+	</tr>
+	{{ end }}
+
+</table>
+
+<h3 class="Resume">Work experience</h3>
+<table  class="Resume">
+	<tr>
+		<th>Designation</th>
+		<th>Employer</th>
+		<th>Place</th>
+		<th>Period</th>
+	</tr>
+		{{ range where .Site.RegularPages "Section" "work-experience" }}
+	<tr>
+		<td><a class="Resume" href="{{ .Permalink }}" style="text-decoration: none">{{.Title}}</a></td>
+		<td>{{ if .Params.GSKEmployerURL }}<a class="Resume" href="{{ .Params.GSKEmployerURL }}" style="text-decoration: none">{{ end }}{{ .Params.GSKEmployer }}{{ if .Params.GSKEmployerURL }}</a>{{ end }}</td>
+		<td>{{ .Params.GSKCity }}</td>
+		<td>{{  dateFormat "Jan 2006" .Params.GSKStartDate }} &mdash; {{ if .Params.GSKEndDate }} {{ dateFormat "Jan 2006" .Params.GSKEndDate }} {{ else }} Till date {{ end }}</td>
+	</tr>
+	{{ end }}
+</table>
+
+<h3 class="Resume">Teaching</h3>
+<table  class="Resume">
+	<tr>
+		<th>Course Name</th>
+		<th>Level</th>
+		<th>School</th>
+		<th>Place</th>
+		<th>Period</th>
+	</tr>
+		{{ range where .Site.RegularPages "Section" "courses" }}
+	<tr>
+		<td><a class="Resume" href="{{ .Permalink }}" style="text-decoration: none">{{.Title}}</a></td>
+		<td>{{ .Params.GSKLevel }}</td>
+		<td>{{ if .Params.GSKSchoolURL }}<a class="Resume" href="{{ .Params.GSKSchoolURL }}"  style="text-decoration: none">{{ end }}{{ .Params.GSKSchool }}{{ if .Params.GSKSchoolURL }}</a>{{ end }}</td>
+		<td>{{ .Params.GSKCity }}</td>
+		<td>{{  dateFormat "Jan 2006" .Params.GSKStartDate }} &mdash; {{ if .Params.GSKEndDate }} {{ dateFormat "Jan 2006" .Params.GSKEndDate }} {{ else }} Till date {{ end }}</td>
+	</tr>
+	{{ end }}
+</table>
+
+<h3 class="Resume">Projects</h3>
+<table  class="Resume">
+	<tr>
+		<th>Title</th>
+		<th>Role</th>
+		<th>Team size</th>
+		<th>Skills used</th>
+		<th>Funding</th>
+		<th>Period</th>
+	</tr>
+		{{ range where .Site.RegularPages "Section" "projects" }}
+	<tr>
+		<td><a class="Resume" href="{{ .Permalink }}" style="text-decoration: none">{{.Title}}</a></td>
+		<td>{{.Params.GSKRole}}</td>
+		<td>{{.Params.GSKTeamSize}}</td>
+		<td>{{ delimit .Params.GSKKeySkills ", " }}</td>
+		<td>{{if .Params.GSKFundName}}
+				{{if .Params.GSKFundURL}}<a class="Resume" href="{{.Params.GSKFundURL}}">{{end}}
+				{{.Params.GSKFundName}}
+				{{if .Params.GSKFundURL}}</a>{{end}}
+			{{else}}-{{end}}</td>
+		<td style="width: 90px;">{{-  dateFormat "Jan 2006" .Params.GSKStartDate -}}&ndash;{{- if .Params.GSKEndDate -}}{{- dateFormat "Jan 2006" .Params.GSKEndDate -}}{{- else -}}Till&nbsp;date{{- end -}}</td>
+	</tr>
+	{{ end }}
+</table>
+<h3 class="Resume">Achievements</h3>
+{{ range where .Site.RegularPages "Section" "achievements" }}
+	<p><b>{{.Title}}:</b> {{.Description}} </p>
+{{ end }}
+<h3 class="Resume">Publications</h3>
+<div class="bibtex_structure">
+	<div class="group gsktype Resume" extra="ASC string">
+		<div class="sort year Resume" extra="ASC number">
+			<ol class="templates" reversed style="margin: 0px;"></ol>
+		</div>
+	</div> 
+</div>
+<div id="bibtex_display">
+	<li class="if bibtex_template" style="display: none; ">
+		<div>
+			<span class="if author"><span class="author"></span>.</span>
+			<span class="if title">"<span class="title"></span>".</span>
+			<span class="if journal">In: <i><span class="journal"></span></i>.</span>
+			<span class="if booktitle">In: <i><span class="booktitle"></span></i>.</span>
+			<span class="if gskthesislevel"><span class="gskthesislevel"></span> thesis.</span>
+			<span class="if school"><span class="school"></span>,</span>
+			<span class="if organization">Organized by: <i><span class="organization"></span></i>,</span>
+			<span class="if publisher">Published by: <i><span class="publisher"></span></i>,</span>
+			<span class="if month"><span class="month"></span>,</span>
+			<span class="if year"><span class="year"></span>.</span>
+			<span class="if pages">pp. <span class="pages"></span>.</span>
+			<span class="if isbn">ISBN: <span class="isbn"></span>.</span>
+			<span class="if issn">ISSN: <span class="issn"></span>.</span>
+			<span class="if doi">DOI: <span class="doi Resume"></span>.</span>
+			<span class="if url">URL: <span class="url Resume"></span>.</span>
+	</div>
+	</li>
+</div>
+</div>
+</div>
+</div>
+{{- partial "footer.html" . -}}

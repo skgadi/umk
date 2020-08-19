@@ -1,0 +1,13 @@
+
+{{- if .Params.CSSPlugIn -}}
+{{- range .Params.CSSPlugIn -}}
+<link rel="stylesheet" href="{{ if eq .Local true  }}{{ $.Site.BaseURL }}dependencies/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}">
+{{- end -}}
+{{- end -}}	
+{{- if .Params.JSPlugIn -}}
+{{- range .Params.JSPlugIn -}}
+<script src="{{ if eq .Local true  }}{{ $.Site.BaseURL }}dependencies/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}" charset="utf-8"></script>
+{{- end -}}
+{{- end -}}
+</head>
+<body>

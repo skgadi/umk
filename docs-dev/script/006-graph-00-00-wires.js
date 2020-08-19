@@ -230,7 +230,7 @@ mxConnectionHandler.prototype.createMarker = function () {
         this.lastStyle = state.style;
         state.style = mxUtils.clone(state.style);
         state.style['strokeColor'] = 'var(--col-border-1)';
-        state.style['strokeWidth'] = '3';
+        state.style['strokeWidth'] = '1'; // Change here for thickness of highlight, default 3
 
         if (state.shape != null) {
           state.view.graph.cellRenderer.configureShape(state);

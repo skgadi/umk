@@ -56,7 +56,8 @@
   vStyle["strokeWidth"] = 0;
   eStyle["edgeStyle"] = "wireEdgeStyle"; //"wireEdgeStyle"; //"orthogonalEdgeStyle";
   eStyle["strokeWidth"] = 1;
-  eStyle["movable"] = "0";
+  //eStyle["movable"] = "0";
+  eStyle["rounded"] = "0";
   //eStyle["targetJettySize"] = 25;
   eStyle[mxConstants.STYLE_JETTY_SIZE] = 50;
   eStyle["shadow"] = false;
@@ -67,6 +68,8 @@
   eStyle["strokeColor"] = "var(--col-text-0)";
   eStyle['startSize'] = 7;
   eStyle['endSize'] = 7;
+  eStyle['arcSize'] = 10;
+  mxConstants.LINE_ARCSIZE = 5;
   delete eStyle['endArrow'];
   //eStyle["endArrow"] = "none";
 
@@ -77,7 +80,7 @@
   inArrowShape.prototype.constructor = inArrowShape;
   inArrowShape.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
     if (isForeground) {
-      path.moveTo(w / 2, h / 2);
+      path.moveTo(0, h / 2);
       path.lineTo(w, h / 2);
       path.moveTo(3 * w / 4, h);
       path.lineTo(w, h / 2);
@@ -87,17 +90,48 @@
   };
   mxCellRenderer.registerShape('inArrow', inArrowShape);
 
+  function inArrowShapeConnected() {};
+  inArrowShapeConnected.prototype = new mxCylinder();
+  inArrowShapeConnected.prototype.constructor = inArrowShapeConnected;
+  inArrowShapeConnected.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
+    if (isForeground) {
+      path.moveTo(0, h / 2);
+      path.lineTo(3 * w / 4, h / 2);
+      path.lineTo(0.675 * w, h);
+      path.lineTo(w, h / 2);
+      path.lineTo(0.675 * w, 0);
+      path.lineTo(3 * w / 4, h / 2);
+      path.fillAndStroke();
+      path.end();
+    }
+  };
+  mxCellRenderer.registerShape('inArrowConnected', inArrowShapeConnected);
+
+
   function outArrowShape() {};
   outArrowShape.prototype = new mxCylinder();
   outArrowShape.prototype.constructor = outArrowShape;
   outArrowShape.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
     if (isForeground) {
       path.moveTo(0, h / 2);
-      path.lineTo(w / 2, h / 2);
+      path.lineTo(w, h / 2);
       path.end();
     }
   };
   mxCellRenderer.registerShape('outArrow', outArrowShape);
+
+
+  function outArrowConnectedShape() {};
+  outArrowConnectedShape.prototype = new mxCylinder();
+  outArrowConnectedShape.prototype.constructor = outArrowConnectedShape;
+  outArrowConnectedShape.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
+    if (isForeground) {
+      path.moveTo(0, h / 2);
+      //path.lineTo(w, h / 2);
+      path.end();
+    }
+  };
+  mxCellRenderer.registerShape('outArrowConnected', outArrowConnectedShape);
 
 
 
@@ -200,9 +234,30 @@
   style.labelPosition = "right";
   style.labelWidth = 15;
   style.align = "left";
-  style.shape = "inArrow";
+  style.shape = "rectangle"; //arrow inArrow triangle
   style.strokeWidth = 1;
-  style.portConstraint = "west";
+  //style.portConstraint = "west";
+  style.overflow = "fit";
+  style.fillColor = "none"; //"var(--col-text-0)";
+  style.strokeColor = "var(--col-text-0)";
+  style.fontSize = 15;
+  style.spacingLeft = 2;
+  style.spacingTop = -5;
+  style.rounded = 0;
+  style.routingCenterX = -0.5;
+  //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
+  graph.getStylesheet().putCellStyle("umk_input", style);
+
+  style = new Object();
+  style.constituent = 1;
+  style.verticalAlign = "middle";
+  style.fontColor = "var(--col-text-0)";
+  style.labelPosition = "right";
+  style.labelWidth = 15;
+  style.align = "left";
+  style.shape = "inArrowConnected"; //arrow inArrow triangle
+  style.strokeWidth = 1;
+  //style.portConstraint = "west";
   style.overflow = "fit";
   style.fillColor = "var(--col-text-0)";
   style.strokeColor = "var(--col-text-0)";
@@ -210,8 +265,10 @@
   style.spacingLeft = 2;
   style.spacingTop = -5;
   style.rounded = 0;
+  style.routingCenterX = -0.5;
   //constituent=1;verticalAlign=middle;fontColor=#ffffff;labelPosition=right;labelWidth=80;align=left;shape=triangle;portConstraint=west;
-  graph.getStylesheet().putCellStyle("umk_input", style);
+  graph.getStylesheet().putCellStyle("umk_input_connected", style);
+
   style = new Object();
   style.constituent = 1;
   style.verticalAlign = "middle";
@@ -219,8 +276,32 @@
   style.labelPosition = "left";
   style.labelWidth = 12;
   style.align = "right";
-  style.shape = "outArrow"; //"line", ""triangle", "ellipse";
-  style.portConstraint = "east";
+  style.shape = "rectangle"; //"outArrow", "line", ""triangle", "ellipse";
+  //style.portConstraint = "east";
+  style.overflow = "fit";
+  style.fillColor = "var(--col-text-0)";
+  style.strokeColor = "var(--col-text-0)";
+  //style.fontSize = "0.75em";
+  //style.routingCenterX = -0.5;
+  style.spacingLeft = 12;
+  style.strokeWidth = 0.5;
+  style.routingCenterX = 0.5;
+  style.rounded = 0;
+  //'shape=line;align=left;verticalAlign=middle;fontSize=10;routingCenterX=-0.5;' +      'spacingLeft=12;fontColor='
+  /*  style.fillColor = "none";
+  style.strokeColor = "none";*/
+  //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
+  graph.getStylesheet().putCellStyle("umk_output", style);
+
+  style = new Object();
+  style.constituent = 1;
+  style.verticalAlign = "middle";
+  style.fontColor = "var(--col-text-0)";
+  style.labelPosition = "left";
+  style.labelWidth = 12;
+  style.align = "right";
+  style.shape = "line"; //"outArrow", "line", ""triangle", "ellipse";
+  //style.portConstraint = "east";
   style.overflow = "fit";
   style.fillColor = "var(--col-text-0)";
   style.strokeColor = "var(--col-text-0)";
@@ -228,12 +309,13 @@
   //style.routingCenterX = -0.5;
   style.spacingLeft = 12;
   style.strokeWidth = 1;
+  style.routingCenterX = 0.5;
+  style.rounded = 0;
   //'shape=line;align=left;verticalAlign=middle;fontSize=10;routingCenterX=-0.5;' +      'spacingLeft=12;fontColor='
   /*  style.fillColor = "none";
-    style.strokeColor = "none";*/
+  style.strokeColor = "none";*/
   //constituent=1;fontColor=#ffffff;labelPosition=left;labelWidth=80;align=right;shape=triangle;portConstraint=east;
-  graph.getStylesheet().putCellStyle("umk_output", style);
-
+  graph.getStylesheet().putCellStyle("umk_output_connected", style);
 
 
 })(mainSystem.graph);

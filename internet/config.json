@@ -1,0 +1,84 @@
+{
+  "theme": "site-n-docs",
+  "baseURL": "https://uyamak.skgadi.com/",
+  "languageCode": "en-us",
+  "title": "Uyamak",
+  "defaultContentLanguage": "en-us",
+  "params": {
+    "CommonTitle": "Uyamak",
+    "SubTitle": "Learn through simulation",
+    "Twitter": "SureshKumarGadi"
+  },
+  "languages": {
+    "en-us": {
+      "languageName": "US English",
+      "languageCode": "en-us",
+      "params": {
+        "GskTrans": {
+          "flag": "us.svg",
+          "top": "Top",
+          "bottom": "Bottom",
+          "copyright": "Copyright"
+        }
+      },
+      "menu": {
+        "main": [{
+          "URL": "/",
+          "Name": "Home",
+          "pre": "fas fa-home",
+          "Weight": 1
+        }, {
+          "URL": "/app",
+          "Name": "Application",
+          "pre": "fas fa-play",
+          "Weight": 2
+        }, {
+          "URL": "/blog",
+          "Name": "Blog",
+          "pre": "fas fa-blog",
+          "Weight": 3
+        }, {
+          "URL": "/docs",
+          "Name": "Documentation",
+          "pre": "fas fa-book",
+          "Weight": 4
+        }]
+      }
+    },
+    "es-mx": {
+      "languageName": "Español-MX",
+      "languageCode": "es-mx",
+      "params": {
+        "GskTrans": {
+          "flag": "mx.svg",
+          "top": "Arriba",
+          "bottom": "Abajo",
+          "copyright": "Derechos de autor"
+        }
+      },
+      "menu": {
+        "main": [{
+          "URL": "/",
+          "Name": "Hogar",
+          "pre": "fas fa-home",
+          "Weight": 1
+        }, {
+          "URL": "/app",
+          "Name": "Aplicación",
+          "pre": "fas fa-play",
+          "Weight": 2
+        }, {
+          "URL": "/blog",
+          "Name": "Blog",
+          "pre": "fas fa-blog",
+          "Weight": 3
+        }, {
+          "URL": "/docs",
+          "Name": "Documentación",
+          "pre": "fas fa-book",
+          "Weight": 4
+        }]
+      }
+    }
+  }
+}
