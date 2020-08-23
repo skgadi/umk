@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 
+  
   <link rel="stylesheet" href="css/fonts/u57c.min.css" />
   <link rel="stylesheet" href="dependencies/fa/css/all.min.css" />
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
@@ -227,15 +228,11 @@
                   <tr v-if="index1 === 0" style="padding: 0;">
                     <td></td>
                     <template v-for="(value, index2) in edtVar.value[index1]">
-                      <td class="center">
-                        {{ index2 + 1 }}
-                      </td>
+                      <td class="center" v-text="index2 + 1"></td>
                     </template>
                   </tr>
                   <tr>
-                    <td>
-                      {{ index1 + 1 }}
-                    </td>
+                    <td v-text="index1 + 1"></td>
                     <template v-for="(value, index2) in edtVar.value[index1]">
                       <td>
                         <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
@@ -276,15 +273,11 @@
                 <tr v-if="index1 === 0" style="padding: 0;">
                   <td></td>
                   <template v-for="(value, index2) in edtVar.value[index1]">
-                    <td class="center">
-                      {{ index2 + 1 }}
-                    </td>
+                    <td class="center" v-text="index2 + 1"></td>
                   </template>
                 </tr>
                 <tr>
-                  <td>
-                    {{ index1 + 1 }}
-                  </td>
+                  <td v-text="index1 + 1"></td>
                   <template v-for="(value, index2) in edtVar.value[index1]">
                     <td>
                       <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
@@ -320,7 +313,7 @@
           <li class="dropdown">
             <a class="dropbtn" @mouseover="showStatus(item.moreInfo[lang])" @mouseleave="removeStatus()">
               <span><i :class="item.icon"></i></span>
-              <span class="gap-left hide-medium-small">{{item.text[lang]}}</span>
+              <span class="gap-left hide-medium-small" v-text="item.text[lang]"></span>
             </a>
             <div class="dropdown-content">
               <template v-for="(item0, idx0) in item.subMenu">
@@ -526,14 +519,11 @@
                           <tr v-if="(index1 === 0) && (Parameter.Dimension === 'Matrix')" style="padding: 0;">
                             <td></td>
                             <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
-                              <td class="center">
-                                {{ index2 + 1 }}
-                              </td>
+                              <td class="center" v-text="index2 + 1"></td>
                             </template>
                           </tr>
                           <tr>
-                            <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')">
-                              {{ index1 + 1 }}
+                            <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" v-text="index1 + 1">
                             </td>
                             <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
                               <td>

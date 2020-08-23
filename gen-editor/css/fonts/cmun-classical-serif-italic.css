@@ -1,0 +1,12 @@
+@font-face {
+	font-family: 'Computer Modern Classical Serif Italic';
+	src: url('cmun-classical-serif-italic/cmunci.eot');
+	src: url('cmun-classical-serif-italic/cmunci.eot?#iefix') format('embedded-opentype'),
+		 url('cmun-classical-serif-italic/cmunci.woff') format('woff'),
+		 url('cmun-classical-serif-italic/cmunci.ttf') format('truetype'),
+		 url('cmun-classical-serif-italic/cmunci.svg#cmunci') format('svg');
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+

@@ -2,9 +2,10 @@ html,
 body {
   height: 100%;
   font-family: "Univers 57 Condensed";
-  background-color: #fafafa;
+  background-color: #f0f0f0;
   color: black;
   font-size: 15px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -220,12 +221,29 @@ body {
   background-image: url("../images/index/10.jpg");
 }
 
+#features {
+  background-image: url("../images/index/11.jpg");
+}
+
+#clients {
+  background-image: url("../images/index/12.jpg");
+}
+
+#pricing {
+  background-image: url("../images/index/13.jpg");
+}
+
+#contact {
+  background-image: url("../images/index/14.jpg");
+}
+
 .big-title {
   display: inline-block;
   width: fit-content;
-  padding: 0em 2em;
+  min-width: 320px;
+  padding: 0em 1em;
   border: 2px solid #3b5379;
-  border-radius: 2em;
+  border-radius: 1em;
   background: #3b5379f0;
   color: white;
   box-shadow: 2px 2px 10px #4381c0;
@@ -256,6 +274,7 @@ body {
 
 .text-content {
   background-color: #fefefe;
+  border-radius: 1em;
   color: black;
 }
 
@@ -314,4 +333,19 @@ body {
 
 .vertial-space {
   margin-top: 5em;
+}
+
+textarea {
+  min-height: 10em;
+  resize: vertical;
+}
+
+.gsk-card {
+  border-radius: 1em;
+  background-color: white;
+}
+
+.gsk-card:hover {
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2),
+    0 4px 20px 0 rgba(0, 0, 0, 0.19);
 }

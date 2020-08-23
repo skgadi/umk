@@ -3,7 +3,7 @@
     <span class="">&#3081;</span>
   </a-->
   {{- range .Site.Menus.main -}}
-  <a href="{{- .URL -}}" class="side-menu-item left-menu-item remove-text-decoration">
+  <a href="{{- .URL | absLangURL -}}" class="side-menu-item left-menu-item remove-text-decoration">
     <div>
       <p class="w3-margin-0 menu-item-icon"><i class="{{- .Pre }} fa-fw"></i></p>
       <p class="w3-margin-0 menu-item-text">{{- .Name -}}</p>
@@ -32,12 +32,12 @@
 
 
 <nav class="w3-sidebar side-menu right-menu w3-bar-block w3-hide-small">
-  <a href="#top" class="side-menu-item right-menu-item remove-text-decoration">
+  <!--a href="#top" class="side-menu-item right-menu-item remove-text-decoration">
     <div>
       <p class="w3-margin-0 menu-item-small-icon"><i class="far fa-arrow-alt-circle-up fa-fw"></i></p>
       <p class="w3-margin-0 menu-item-small-text">{{- .Language.Params.GskTrans.top -}}</p>
     </div>
-  </a>
+  </a-->
   {{- range .Params.Anchors -}}
   <a href="#{{- .id -}}" class="side-menu-item right-menu-item remove-text-decoration">
     <div>
@@ -46,12 +46,12 @@
     </div>
   </a>
   {{- end -}}
-  <a href="#bottom" class="side-menu-item right-menu-item remove-text-decoration">
+  <!--a href="#bottom" class="side-menu-item right-menu-item remove-text-decoration">
     <div>
       <p class="w3-margin-0 menu-item-small-icon"><i class="far fa-arrow-alt-circle-down fa-fw"></i></p>
       <p class="w3-margin-0 menu-item-small-text">{{- .Language.Params.GskTrans.bottom -}}</p>
     </div>
-  </a>
+  </a-->
 </nav>
 
 <div class="lang-flag">
