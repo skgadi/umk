@@ -37,58 +37,8 @@
 
 
   <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-  <script src="{{$.Site.BaseURL}}/script-dashboard.min.js"></script>
-
-  <script>
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-      apiKey: "AIzaSyDA_s8aENGfVV22XhPG6RyMl2XL1zeWGiQ",
-      authDomain: "uyamak-dcc7f.firebaseapp.com",
-      databaseURL: "https://uyamak-dcc7f.firebaseio.com",
-      projectId: "uyamak-dcc7f",
-      storageBucket: "uyamak-dcc7f.appspot.com",
-      messagingSenderId: "594566257848",
-      appId: "1:594566257848:web:9dfa728fdff61a8d95684d"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-  </script>
-
-  <script>
-    // Initialize the FirebaseUI Widget using Firebase.
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-    ui.start('#firebaseui-auth-container', {
-      signInOptions: [
-        // List of OAuth providers supported.
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
-      ],
-      // Other config options...
-    });
-    firebase.auth().languageCode = 'es';
-
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        // User is signed in.
-        var displayName = user.displayName;
-        var email = user.email;
-        var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
-        var isAnonymous = user.isAnonymous;
-        var uid = user.uid;
-        var providerData = user.providerData;
-        console.log(displayName);
-        // ...
-        document.getElementById("signed-out").style.display = "none";
-        document.getElementById("signed-in").style.display = "block";
-      } else {
-        document.getElementById("signed-out").style.display = "block";
-        document.getElementById("signed-in").style.display = "none";
-        // User is signed out.
-        // ...
-      }
-    });
-  </script>
-
+  {{- partial "footer/must-inlude-end.html" . -}}
+  <script src="{{$.Site.BaseURL}}/script/dashboard.min.js"></script>
 </body>
 
 </html>

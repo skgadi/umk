@@ -3,4 +3,6 @@
 <script src='{{ if eq .Local true  }}{{ $.Site.BaseURL }}dependencies/{{- .URL -}}{{ else }}{{- .URL -}}{{ end }}' charset="utf-8"></script>
 {{- end -}}
 {{- end -}}
+
+{{- partial "footer/must-inlude-end.html" . -}}
 </body></html>

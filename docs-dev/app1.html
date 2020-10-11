@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 
-  
+
   <link rel="stylesheet" href="css/fonts/u57c.min.css" />
   <link rel="stylesheet" href="dependencies/fa/css/all.min.css" />
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="css/style.min.css?bv=s" />
 
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89998286-3"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body class="not-selectable">
@@ -422,6 +425,10 @@
             </div>
           </div>
           <template v-for="(item, idx) in categories">
+            <!--Inline short google ad-->
+            <div style="min-height: 200px;"><ins class="adsbygoogle" style="display:block" data-ad-format="fluid"
+                data-ad-layout-key="-gs-3+1f-3d+2z" data-ad-client="ca-pub-6888060162858982"
+                data-ad-slot="9031340346"></ins></div>
             <div class="category-full">
               <div @click="showHide(item.id)" class="category-head pointer">
                 <span><i class="fa-fw" :class="item.icon"></i></span><span :id="'categories_list_icon_'+item.id"><i
@@ -447,6 +454,10 @@
             </div>
           </template>
         </div>
+        <!--Bar vertical google ad-->
+        <div style="min-height: 400px;"><ins class="adsbygoogle" style="display:block"
+            data-ad-client="ca-pub-6888060162858982" data-ad-slot="3217451477" data-ad-format="auto"
+            data-full-width-responsive="true"></ins></div>
       </div>
     </div>
     <div id="graph">
@@ -523,7 +534,8 @@
                             </template>
                           </tr>
                           <tr>
-                            <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')" v-text="index1 + 1">
+                            <td v-if="(Parameter.Dimension === 'Vector') || (Parameter.Dimension === 'Matrix')"
+                              v-text="index1 + 1">
                             </td>
                             <template v-for="(value, index2) in uyamakModel.Parameters[index]['Value'][index1]">
                               <td>
@@ -647,7 +659,11 @@
             <span v-text="GUIText[settings.lang].hideGraphText"></span>
           </div>
         </div>
-      </div>
+        <!--Bar vertical google ad-->
+        <div style="min-height: 400px;"><ins class="adsbygoogle" style="display:block"
+          data-ad-client="ca-pub-6888060162858982" data-ad-slot="3217451477" data-ad-format="auto"
+          data-full-width-responsive="true"></ins></div>
+    </div>
     </div>
     <div id="footer">
       <div v-html="textForHint"></div>
