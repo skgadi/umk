@@ -20,7 +20,7 @@ rem Add all the sinks
 mkdir .\docs\sinks\css
 copy /y .\docs-dev\sinks\*.min.* .\docs\sinks
 copy /y .\docs-dev\sinks\css\*.min.css .\docs\sinks\css
-
+copy 1471afd8580a3e1d86929ccfebff4273.html .\docs
 
 git add .
 git commit -am "Generating and pushing into server. Also deploys functions"
