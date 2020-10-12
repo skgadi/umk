@@ -56,7 +56,7 @@ select {
   left: 0;
   position: fixed;
   overflow-y: auto;
-  opacity: 0.9;
+  opacity: 0.5;
 }
 
 .modal {
@@ -1095,6 +1095,23 @@ blink,
   top: calc(50% - 1.5em);
   left: calc(50% - 1em);
 }
+
+.skgadi-ad-area {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--col-border-1);
+}
+.skgadi-ad-area>div {
+  font-size: 5em;
+  text-align: center;
+  text-decoration: none;
+  border: 0.2em dashed var(--col-border-1);
+  padding: 50px;
+}
+
 
 table {
   border-collapse: collapse;

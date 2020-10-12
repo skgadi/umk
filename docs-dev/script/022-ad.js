@@ -1,6 +1,10 @@
-setInterval(function () {
-    document.getElementById("skgadi-ad-area").style.display = "block";
-    setTimeout(() => {
+(()=>{
+    function setAnAd() {
         document.getElementById("skgadi-ad-area").style.display = "none";
-    }, 180000);
-}, 120000)
+        setTimeout(() => {
+            document.getElementById("skgadi-ad-area").style.display = "block";
+        }, 60000);
+    }
+    document.getElementById("skgadi-ad-area").addEventListener('click', setAnAd);
+    setAnAd();
+})();

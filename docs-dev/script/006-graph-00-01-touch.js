@@ -1,4 +1,4 @@
-(function () {
+/*(function () {
   // Enables rotation handle
   mxVertexHandler.prototype.rotationEnabled = false;
   // Enables managing of sizers
@@ -218,4 +218,4 @@
 
   // Pre-fetches touch connector
   new Image().src = connectorSrc;
-})();
+})();*/
