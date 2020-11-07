@@ -1,3 +1,4 @@
+/*
 (()=>{
     function setAnAd() {
         document.getElementById("skgadi-ad-area").style.display = "none";
@@ -8,3 +9,4 @@
     document.getElementById("skgadi-ad-area").addEventListener('click', setAnAd);
     setAnAd();
 })();
+*/
