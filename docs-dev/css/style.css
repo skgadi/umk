@@ -596,19 +596,21 @@ ul.menu-kbs>li {
 
 .blocks-search-bar {
   display: grid;
-  grid-template-columns: min-content auto;
+  grid-template-columns: min-content auto min-content;
   column-gap: 4px;
   background-color: var(--col-background-2) !important;
   color: var(--col-border-1);
   border: 1px var(--col-border-1) solid;
-  border-radius: 1em;
-  padding: 0.25em;
+  border-radius: 2em;
+  padding: 0.5em;
   margin: 0.5em 0.25em;
+  align-items: center;
+  justify-items: center;
 }
 
-.blocks-search-bar>span>i {
+/*.blocks-search-bar>span>i {
   color: var(--col-border-1);
-}
+}*/
 
 .blocks-search-bar>span,
 .blocks-search-bar>span>input {

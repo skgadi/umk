@@ -28,6 +28,7 @@
             if (!!cell.style && cell.style.search("umk_display") >= 0) {
               return cell.value.show || "$[\\cdot]$";
             }
+            cell.value.cid=cell.id;
             return (
               "<div class='rotate-" + cell.value.rotateHTML + "'>" +
               cell.value.Icon().html +

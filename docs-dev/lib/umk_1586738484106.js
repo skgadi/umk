@@ -1,7 +1,7 @@
 class umk_1586738484106 extends umk_model {
   Icon() {
     return {
-      html: '<div class="sink-btns"><button onClick="popup.open(event,\'scope\',false)" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'scope\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
+      html: '<div class="sink-btns"><button onClick="popup.open(event,\'scope\',false,\''+this.cid+'\')" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'scope\',true,\''+this.cid+'\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
       inLabels: null,
       outLabels: null,
       splStyle: null

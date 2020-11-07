@@ -2,7 +2,7 @@ class umk_1595556058847 extends umk_model {
   Icon() {
     return {
       //html: blockUtils.makeIcon(this.id)+'<button onClick="popup.open(event,\'chart\')" class="pointer"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'chart\')" class="pointer"><i class="fas fa-external-link-alt fa-fw"></i></button>',
-      html: '<div class="sink-btns"><button onClick="popup.open(event,\'robot-6dof\',false)" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'robot-6dof\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
+      html: '<div class="sink-btns"><button onClick="popup.open(event,\'robot-6dof\',false,\''+this.cid+'\')" style="padding:0;"><i class="far fa-window-restore fa-fw"></i></button><button onClick="popup.open(event,\'robot-6dof\',true,\''+this.cid+'\')" class="pointer" style="padding:0;"><i class="fas fa-external-link-alt fa-fw"></i></button></div>',
       //html: '<iframe style="width:100%; height: 100%" src="datetime.html"></iframe>',
       inLabels: ["1","2","3","4","5","6"],//["$\\theta_1$","$\\theta_2$","$\\theta_3$","$\\theta_4$","$\\theta_5$","$\\theta_6$"],
       outLabels: null,

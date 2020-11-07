@@ -17,11 +17,18 @@ const popup = {
    * 
    */
   rType: {}, //Registered type
-  open: function (evt, type, pop = true) {
+  open: function (evt, type, pop, cid) {
+    console.log(cid);
     let graphDOMHandle = document.getElementById("graph");
-    let x = evt.pageX - graphDOMHandle.offsetLeft;
-    let y = evt.pageY - graphDOMHandle.offsetTop;
-    let cell = mainSystem.graph.getCellAt(x, y);
+    let cell;
+    if (!!cid) {
+      cell = mainSystem.graph.getModel().getCell(cid);
+    } else {
+      let x = evt.pageX - graphDOMHandle.offsetLeft;
+      let y = evt.pageY - graphDOMHandle.offsetTop;
+      cell = mainSystem.graph.getCellAt(x, y);
+      
+    }
     if (cell.style.search("umk_model") >= 0) {
       let urlQuery = {};
       urlQuery.v = Object.assign({

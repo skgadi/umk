@@ -15,7 +15,8 @@ const blocksVue = new Vue({
       icon2: "'/></g><g stroke-linecap='round' width='100' height='100' stroke='",
       icon3: "' stroke-width='10' fill='none'>",
       icon4: "</g></svg>"
-    }
+    },
+    searchResults: []
   },
   updated: function () {
     let AllLibraryBlocks = document.getElementsByClassName(
@@ -25,8 +26,24 @@ const blocksVue = new Vue({
       new blockOnDOM(AllLibraryBlocks[i]);
     }
   },
+  watch: {
+    searchText: function () {
+      this.searchResults = [];
+      let results = [];
+      for (let i = 0; i < Object.keys(this.blksSummary).length; i++) {
+        let key = Object.keys(this.blksSummary)[i];
+        let searchableText = JSON.stringify(Object.values(this.blksSummary[key].name)) + JSON.stringify(Object.values(this.blksSummary[key].desc)) + this.blksSummary[key].keywords;
+        if (searchableText.toLocaleLowerCase().indexOf(this.searchText.toLocaleLowerCase()) > 0) results.push(key);
+      }
+      setTimeout((results) => {
+        //console.log(results);
+        blocksVue.$set(blocksVue.$data,"searchResults",results);
+      }, 100, results);
+      //this.searchResults = results;
+    }
+  },
   computed: {
-    searchResults: function () {
+    /*searchResults: function () {
       let results = [];
       for (let i = 0; i < Object.keys(this.blksSummary).length; i++) {
         let key = Object.keys(this.blksSummary)[i];
@@ -34,7 +51,7 @@ const blocksVue = new Vue({
         if (searchableText.toLocaleLowerCase().indexOf(this.searchText.toLocaleLowerCase()) > 0) results.push(key);
       }
       return results;
-    }
+    }*/
   },
   mounted: function () {
     this.disp[bSummary.getCategoriesIdList()[0]] = true;
