@@ -10,3 +10,5 @@
     setAnAd();
 })();
 */
+
+(adsbygoogle = window.adsbygoogle || []).push({});
