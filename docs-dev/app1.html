@@ -3,7 +3,7 @@
 
 <head>
   <title>Uyamak Editor</title>
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=u" />
-  <link rel="stylesheet" href="css/style.min.css?bv=u" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=0" />
+  <link rel="stylesheet" href="css/style.min.css?bv=0" />
 
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -324,6 +324,9 @@
   <div id="main">
     <div id="tool-bar">
       <ul class="menu f-left" id="main-menu">
+        <li>
+          <a href="/"><i class="fas fa-home"></i></a>
+        </li>
         <template v-for="(item, idx) in tools">
           <li class="dropdown">
             <a class="dropbtn" @mouseover="showStatus(item.moreInfo[lang])" @mouseleave="removeStatus()">
@@ -681,7 +684,7 @@
       </span>
     </div>
   </div>
-  <script type="text/javascript" src="pre-scripts.min.js?bv=u"></script>
+  <script type="text/javascript" src="pre-scripts.min.js?bv=0"></script>
 
 
   <script type="text/javascript" src="dependencies/mathjs/math.min.js"></script>
@@ -698,8 +701,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=u"></script>
-  <script src="script.min.js?bv=u"></script>
+  <script src="lib.min.js?bv=0"></script>
+  <script src="script.min.js?bv=0"></script>
 
 </body>
 

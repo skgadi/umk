@@ -38,7 +38,7 @@ window.onbeforeunload = function () {
   simVue.informSim('stop'); // Stop the simulation before exiting
   simVue.dbName = null;
   popup.closeAll(); //close all the popups
-  //return "Sure?"; //Enable this for confirming before exiting.
+  return "Sure?"; //Enable this for confirming before exiting.
 };
 
 
