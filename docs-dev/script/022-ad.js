@@ -9,6 +9,6 @@
     document.getElementById("skgadi-ad-area").addEventListener('click', setAnAd);
     setAnAd();
 })();
-*/
 
 (adsbygoogle = window.adsbygoogle || []).push({});
+*/
