@@ -1,3 +1,5 @@
+/*
+
 // Your web app's Firebase configuration
 var firebaseConfig = {
     apiKey: "AIzaSyDA_s8aENGfVV22XhPG6RyMl2XL1zeWGiQ",
@@ -12,3 +14,5 @@ var firebaseConfig = {
 if (typeof firebase !== "undefined") {
     firebase.initializeApp(firebaseConfig);
 }
+
+*/

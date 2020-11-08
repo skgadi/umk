@@ -26,7 +26,8 @@ body {
 
 .side-menu {
   display: grid;
-  grid-template-rows: auto;
+  /*grid-template-rows: repeat(6,1fr);*/
+  grid-auto-rows: 1fr;
   align-items: center;
   background-color: #ffffff00;
   color: black;
@@ -103,8 +104,9 @@ body {
 }
 
 .side-menu-item:hover {
-  background-color: #0000fff0;
-  color: white;
+  background-color: #888888f0;
+  /*color: lightcyan;
+  color: lightgreen;
   /*text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);*/
   text-shadow: 2px 2px 4px gray, 0px 0px 50px lightgray;
 }
@@ -130,7 +132,8 @@ body {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: auto;
+  /*grid-template-rows: auto;*/
+  grid-auto-rows: 1fr;
   align-items: center;
   background-color: white;
 }
@@ -253,7 +256,7 @@ body {
   background-image: url("../images/index/12.jpg");
 }
 
-#pricing {
+#support {
   background-image: url("../images/index/14.jpg");
 }
 
@@ -528,4 +531,8 @@ textarea {
 .gsk-input:focus {
   outline: 0;
   border-color: green !important;
+}
+
+.no-underline{
+  text-decoration: none;
 }

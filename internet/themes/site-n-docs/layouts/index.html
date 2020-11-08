@@ -8,61 +8,55 @@
   <div class="blur-div-parallax"></div>
   <div class="big-title">
     <h1>Uyamak</h1>
-    <p>Learning mathematics is made fun</p>
+    <p>{{.Params.head_1_subhead}}</p>
   </div>
 </div>
 <p class="vertial-space"></p>
 <div class="w3-container limit-to-800 text-content">
-  <h1 class="w3-center">Uyamak (&#3081;)</h1>
-  <p class=" justify">Learning mathematics is made fun</p>
-  <p class=" justify">Mutiny draft wench driver six pounders wherry spirits heave down code of conduct Barbary Coast.
-    Clap of thunder run a shot across the bow port warp heave to yardarm belay nipperkin scurvy carouser. Six pounders
-    quarterdeck strike colors snow nipperkin Jack Ketch chantey bring a spring upon her cable nipper scallywag.</p>
-  <p class=" justify">Gun landlubber or just lubber ahoy chase guns crack Jennys tea cup nipperkin gangplank take a
-    caulk warp snow. Boom measured fer yer chains Admiral of the Black fire ship chantey draught landlubber or just
-    lubber crimp scallywag cackle fruit. Flogging tender wherry square-rigged hempen halter scuttle hands broadside keel
-    topsail.</p>
-  <p class=" justify">Arr hearties loaded to the gunwalls hardtack warp schooner chantey chandler stern port. Gangway
-    Plate Fleet chandler jury mast lanyard clap of thunder topmast heave to broadside flogging. Heave to clipper Plate
-    Fleet overhaul bilge rat broadside provost walk the plank gaff ballast.</p>
+  <div class="w3-center">
+    <img src="{{$.Site.BaseURL}}images/umk-logo-192-192.png" />
+  </div>
+  <h1 class="w3-center">Uyamak (<b>&#3081;</b>)</h1>
+  <p class=" justify">{{.Description}}</p>
+  <p class=" justify">{{.Params.head_1_para_1}}</p>
+  <p class=" justify">{{.Params.head_1_para_2}}</p>
+</div>
+<div class="w3-center">
+  <a class="w3-button w3-center w3-padding w3-indigo pointer w3-hover-deep-purple w3-round-large " anim="ripple" href="{{$.Site.BaseURL}}/app">{{.Params.button_goto_app}}</a>
 </div>
 <p class="vertial-space"></p>
 <div class="four-two-one-grid w3-padding limit-to-1440">
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Schools</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_1_card_1_title_1}}</h3>
     <img src="{{$.Site.BaseURL}}images/index/1.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_1_card_1_desc_1}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Colleges</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_1_card_1_title_2}}</h3>
     <img src="{{$.Site.BaseURL}}images/index/2.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_1_card_1_desc_2}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Universities</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_1_card_1_title_3}}</h3>
     <img src="{{$.Site.BaseURL}}images/index/3.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_1_card_1_desc_3}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Researchers</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_1_card_1_title_4}}</h3>
     <img src="{{$.Site.BaseURL}}images/index/4.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_1_card_1_desc_4}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
 </div>
 <p class="vertial-space"></p>
@@ -71,62 +65,53 @@
 <div id="work" class="parallax section">
   <div class="blur-div-parallax"></div>
   <div class="big-title">
-    <h1>How does it work?</h1>
-    <p>Sneak peek under the hood</p>
+    <h1>{{.Params.head_2}}</h1>
+    <p>{{.Params.head_2_subhead}}</p>
   </div>
 </div>
 <p class="vertial-space"></p>
 <div class="w3-container limit-to-800 text-content">
-  <h1 class="w3-center">How does it works?</h1>
-  <p class=" justify">Powerful engine with an easy to use interface</p>
-  <p class=" justify">Mutiny draft wench driver six pounders wherry spirits heave down code of conduct Barbary Coast.
-    Clap of thunder run a shot across the bow port warp heave to yardarm belay nipperkin scurvy carouser. Six pounders
-    quarterdeck strike colors snow nipperkin Jack Ketch chantey bring a spring upon her cable nipper scallywag.</p>
-  <p class=" justify">Gun landlubber or just lubber ahoy chase guns crack Jennys tea cup nipperkin gangplank take a
-    caulk warp snow. Boom measured fer yer chains Admiral of the Black fire ship chantey draught landlubber or just
-    lubber crimp scallywag cackle fruit. Flogging tender wherry square-rigged hempen halter scuttle hands broadside keel
-    topsail.</p>
-  <p class=" justify">Arr hearties loaded to the gunwalls hardtack warp schooner chantey chandler stern port. Gangway
-    Plate Fleet chandler jury mast lanyard clap of thunder topmast heave to broadside flogging. Heave to clipper Plate
-    Fleet overhaul bilge rat broadside provost walk the plank gaff ballast.</p>
+  <h1 class="w3-center">{{.Params.head_2}}</h1>
+  <p class=" justify">{{.Params.head_2_para_1}}</p>
+  <p class=" justify">{{.Params.head_2_para_2}}</p>
+  <p class=" justify">{{.Params.head_2_para_3}}</p>
+</div>
+<div class="w3-center">
+  <a class="w3-button w3-center w3-padding w3-indigo pointer w3-hover-deep-purple w3-round-large " anim="ripple" href="{{$.Site.BaseURL}}/app">{{.Params.button_goto_app}}</a>
 </div>
 <p class="vertial-space"></p>
 <div class="four-two-one-grid w3-padding limit-to-1440">
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Interpret</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_2_card_1_title_1}}</h3>
     <img src="{{$.Site.BaseURL}}images/index/1.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_2_card_1_desc_1}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Simulate</h3>
-    <img src="{{$.Site.BaseURL}}images/index/1.jpg" style="max-width: 100%; max-height: auto ">
+    <h3 class="w3-xlarge w3-center">{{.Params.head_2_card_1_title_2}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/2.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_2_card_1_desc_2}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Display</h3>
-    <img src="{{$.Site.BaseURL}}images/index/1.jpg" style="max-width: 100%; max-height: auto ">
+    <h3 class="w3-xlarge w3-center">{{.Params.head_2_card_1_title_3}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/3.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_2_card_1_desc_3}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Updates</h3>
-    <img src="{{$.Site.BaseURL}}images/index/1.jpg" style="max-width: 100%; max-height: auto ">
+    <h3 class="w3-xlarge w3-center">{{.Params.head_2_card_1_title_4}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/4.jpg" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_2_card_1_desc_4}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
 </div>
 <p class="vertial-space"></p>
@@ -135,210 +120,121 @@
 <div id="features" class="parallax section">
   <div class="blur-div-parallax"></div>
   <div class="big-title">
-    <h1>Features</h1>
-    <p>What makes &#3081; special</p>
+    <h1>{{.Params.head_3}}</h1>
+    <p>{{.Params.head_3_subhead}}</p>
   </div>
 </div>
 <p class="vertial-space"></p>
 <div class="w3-container limit-to-800 text-content">
-  <h1 class="w3-center">Features</h1>
-  <p class=" justify">See how &#3081; makes simulation fun.</p>
-  <p class=" justify">Mutiny draft wench driver six pounders wherry spirits heave down code of conduct Barbary Coast.
-    Clap of thunder run a shot across the bow port warp heave to yardarm belay nipperkin scurvy carouser. Six pounders
-    quarterdeck strike colors snow nipperkin Jack Ketch chantey bring a spring upon her cable nipper scallywag.</p>
-  <p class=" justify">Gun landlubber or just lubber ahoy chase guns crack Jennys tea cup nipperkin gangplank take a
-    caulk warp snow. Boom measured fer yer chains Admiral of the Black fire ship chantey draught landlubber or just
-    lubber crimp scallywag cackle fruit. Flogging tender wherry square-rigged hempen halter scuttle hands broadside keel
-    topsail.</p>
-  <p class=" justify">Arr hearties loaded to the gunwalls hardtack warp schooner chantey chandler stern port. Gangway
-    Plate Fleet chandler jury mast lanyard clap of thunder topmast heave to broadside flogging. Heave to clipper Plate
-    Fleet overhaul bilge rat broadside provost walk the plank gaff ballast.</p>
+  <h1 class="w3-center">{{.Params.head_3}}</h1>
+  <p class=" justify">{{.Params.head_3_para_1}}</p>
+</div>
+<div class="w3-center">
+  <a class="w3-button w3-center w3-padding w3-indigo pointer w3-hover-deep-purple w3-round-large " anim="ripple" href="{{$.Site.BaseURL}}/app">{{.Params.button_goto_app}}</a>
 </div>
 <p class="vertial-space"></p>
 <div class="four-two-one-grid w3-padding limit-to-1440">
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">OS independent</h3>
-    <img src="{{$.Site.BaseURL}}images/index/os-independent.png" alt="os-independent"
-      style="max-width: 100%; max-height: auto ">
-
-    <!--div class="w3-center">
-      <div class="w3-panel">
-        <span style="font-size: 5em;" class="fa-stack fa-2x"> <i class="fas fa-universal-access fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <br><br>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-windows fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-linux fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-apple fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-chrome fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-android fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-      </div>
-    </div-->
+    <h3 class="w3-xlarge w3-center">{{.Params.head_3_card_1_title_1}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/os-independent.png" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_3_card_1_desc_1}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
-
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Instant access</h3>
-    <img src="{{$.Site.BaseURL}}images/index/instant-access.png" alt="instant-access"
-      style="max-width: 100%; max-height: auto ">
-    <!--div class="w3-center">
-      <div class="w3-panel">
-        <span style="font-size: 5em;" class="fa-stack fa-2x"> <i class="fas fa-bolt fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <br><br>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fas fa-download fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="far fa-hdd fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fas fa-shield-alt fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-      </div>
-    </div-->
+    <h3 class="w3-xlarge w3-center">{{.Params.head_3_card_1_title_2}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/instant-access.png" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_3_card_1_desc_2}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
-
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">No coding</h3>
-    <img src="{{$.Site.BaseURL}}images/index/no-coding.png" alt="no-coding" style="max-width: 100%; max-height: auto ">
-    <!--div class="w3-center">
-      <div class="w3-panel">
-        <span style="font-size: 5em;" class="fa-stack fa-2x"> <i class="fas fa-project-diagram fa-stack-1x"></i> <i
-          class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <br><br>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fas fa-code fa-stack-1x"></i> <i
-          class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-          <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-cuttlefish fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-      <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-java fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-python fa-stack-1x"></i> <i
-            class="fas fa-ban fa-stack-2x" style="color:Tomato"></i> </span>
-      </div>
-    </div-->
+    <h3 class="w3-xlarge w3-center">{{.Params.head_3_card_1_title_3}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/no-coding.png" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_3_card_1_desc_3}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
-
   <div class="gsk-card">
-    <h3 class="w3-xlarge w3-center">Sharing</h3>
-    <img src="{{$.Site.BaseURL}}images/index/sharing.png" alt="sharing" style="max-width: 100%; max-height: auto ">
-    <!--div class="w3-center">
-      <div class="w3-panel">
-        <span style="font-size: 5em;" class="fa-stack fa-2x"> <i class="fas fa-share-alt fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-        <br><br>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-creative-commons-share fa-stack-2x"></i>
-          <i class="far fa-circle fa-stack-2x" style="color:Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fab fa-creative-commons-sa fa-stack-2x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color:Green"></i> </span>
-        <span style="font-size: 1em;" class="fa-stack fa-2x"> <i class="fas fa-male fa-stack-1x"></i> <i
-            class="far fa-circle fa-stack-2x" style="color: Green"></i> </span>
-      </div>
-    </div-->
+    <h3 class="w3-xlarge w3-center">{{.Params.head_3_card_1_title_4}}</h3>
+    <img src="{{$.Site.BaseURL}}images/index/sharing.png" style="max-width: 100%; max-height: auto ">
     <div>
-      <p class="w3-container justify w3-margin-0 w3-padding">Flogging tender wherry square-rigged hempen halter scuttle
-        hands broadside keel topsail.</p>
+      <p class="w3-container justify w3-margin-0 w3-padding">{{.Params.head_3_card_1_desc_4}}</p>
     </div>
-    <a class="gsk-btn-as-link">Learn more</a>
+    <!--a class="gsk-btn-as-link">{{.Params.learn_more}}</a-->
   </div>
-
 </div>
 <p class="vertial-space"></p>
-<!--Clients-->
-<div id="clients" class="parallax section">
+<!--support-->
+<div id="support" class="parallax section">
   <div class="blur-div-parallax"></div>
   <div class="big-title">
-    <h1>Who is using &#3081;</h1>
-    <p>Institutions around the globe</p>
+    <h1>{{.Params.head_4}}</h1>
+    <p>{{.Params.head_4_subhead}}</p>
   </div>
 </div>
 <p class="vertial-space"></p>
 <div class="w3-container limit-to-800 text-content">
-  <h1 class="w3-center">Who is using &#3081;</h1>
-  <p class=" justify">Institutions around the globe are using the Uyamak.</p>
-  <p class=" justify">Mutiny draft wench driver six pounders wherry spirits heave down code of conduct Barbary Coast.
-    Clap of thunder run a shot across the bow port warp heave to yardarm belay nipperkin scurvy carouser. Six pounders
-    quarterdeck strike colors snow nipperkin Jack Ketch chantey bring a spring upon her cable nipper scallywag.</p>
-  <p class=" justify">Gun landlubber or just lubber ahoy chase guns crack Jennys tea cup nipperkin gangplank take a
-    caulk warp snow. Boom measured fer yer chains Admiral of the Black fire ship chantey draught landlubber or just
-    lubber crimp scallywag cackle fruit. Flogging tender wherry square-rigged hempen halter scuttle hands broadside keel
-    topsail.</p>
-  <p class=" justify">Arr hearties loaded to the gunwalls hardtack warp schooner chantey chandler stern port. Gangway
-    Plate Fleet chandler jury mast lanyard clap of thunder topmast heave to broadside flogging. Heave to clipper Plate
-    Fleet overhaul bilge rat broadside provost walk the plank gaff ballast.</p>
-  <button class="w3-border w3-blue pointer w3-block w3-hover-blue w3-round" anim="ripple">See testmonies</button>
-</div>
-<p class="vertial-space"></p>
-<!--Pricing-->
-<div id="pricing" class="parallax section">
-  <div class="blur-div-parallax"></div>
-  <div class="big-title">
-    <h1>Pricing</h1>
-    <p>Compare plan features</p>
-  </div>
+  <h1 class="w3-center">{{.Params.head_4}}</h1>
+  <p class=" justify">{{.Params.head_4_para_1}}</p>
+  <p class=" justify">{{.Params.head_4_para_2}}</p>
+  <p class=" justify">{{.Params.head_4_para_3}}</p>
 </div>
 <p class="vertial-space"></p>
 <div class="three-one-grid w3-padding">
-  <div class="gsk-card w3-gray price-card">
-    <h3 class="w3-xlarge w3-center">Free forever</h3>
+  <div class="gsk-card w3-indigo price-card">
+    <h3 class="w3-xlarge w3-center"><i class="fab fa-patreon"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_1_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">Limited bandwidth server</li>
-      <li class="w3-padding-16">Limited functionality</li>
-      <li class="w3-padding-16">Only the latest version</li>
-      <li class="w3-padding-16">No support</li>
-      <li class="w3-padding-16">No private sharing</li>
-      <li class="w3-padding-16">Public sharing</li>
+      <li class="w3-padding-16">{{.Params.head_4_card_1_desc_1}}</li>
       <li class="w3-padding-16">
-        <h2>$ 0.00</h2> <span class="w3-opacity">forever</sup></sup></span>
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.last_month}}</span>
+      </li>
+      <li class="w3-padding-16">
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.this_month}}</span>
       </li>
     </ul>
-    <div></div>
-    <a class="gsk-btn-as-link" anim="ripple">Instant access</a>
+    <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://www.patreon.com/skgadi">{{.Params.button_goto}} {{.Params.head_4_card_1_title}}</a>
   </div>
-  <div class="gsk-card w3-blue price-card">
-    <h3 class="w3-xlarge w3-center">Individual</h3>
+  <div class="gsk-card w3-teal price-card">
+    <h3 class="w3-xlarge w3-center"><i class="fab fa-paypal"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_2_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">High speed server</li>
-      <li class="w3-padding-16">Complete functionality</li>
-      <li class="w3-padding-16">All versions</li>
-      <li class="w3-padding-16">Email support</li>
-      <li class="w3-padding-16">No private sharing</li>
-      <li class="w3-padding-16">Public sharing</li>
+      <li class="w3-padding-16">{{.Params.head_4_card_2_desc_1}}</li>
       <li class="w3-padding-16">
-        <h2>$ 14.95</h2> <span class="w3-opacity">per month</span>
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.last_month}}</span>
+      </li>
+      <li class="w3-padding-16">
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.this_month}}</span>
       </li>
     </ul>
-    <a class="gsk-btn-as-link" anim="ripple">Pay</a>
+    <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://www.paypal.com/donate?hosted_button_id=SKRWAX2RLAB6S">{{.Params.button_goto}} {{.Params.head_4_card_2_title}}</a>
   </div>
-  <div class="gsk-card w3-green price-card">
-    <h3 class="w3-xlarge w3-center">Group</h3>
+  <div class="gsk-card w3-orange price-card">
+    <h3 class="w3-xlarge w3-center"><i class="fas fa-tshirt"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_3_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">High speed server</li>
-      <li class="w3-padding-16">Complete functionality</li>
-      <li class="w3-padding-16">All versions</li>
-      <li class="w3-padding-16">Email and phone support</li>
-      <li class="w3-padding-16">Private sharing</li>
-      <li class="w3-padding-16">Public sharing</li>
+      <li class="w3-padding-16">{{.Params.head_4_card_3_desc_1}}</li>
       <li class="w3-padding-16">
-        <h2>$ 4.95</h2> <span class="w3-opacity">per month per individual</span>
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.last_month}}</span>
+      </li>
+      <li class="w3-padding-16">
+        <span class="w3-opacity">{{.Params.support_generated}}</span>
+        <h2>$ 0.00</h2>
+        <span class="w3-opacity">{{.Params.this_month}}</span>
       </li>
     </ul>
-    <a class="gsk-btn-as-link" anim="ripple">Pay</a>
+    <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://shop.spreadshirt.com/skgadi/">{{.Params.button_goto}} {{.Params.head_4_card_3_title}}</a>
   </div>
 </div>
 <p class="vertial-space"></p>
@@ -346,16 +242,20 @@
 <div id="contact" class="parallax section">
   <div class="blur-div-parallax"></div>
   <div class="big-title">
-    <h1>Contact us</h1>
-    <p>Do you have any questions?</p>
+    <h1>{{.Params.head_5}}</h1>
+    <p>{{.Params.head_5_subhead}}</p>
   </div>
 </div>
 <p class="vertial-space"></p>
 <div class="w3-container limit-to-800 text-content">
-  <h1 class="w3-center">Contact us</h1>
-  <p class="w3-center justify">If you have any questions, suggestions, or complaints, please let us know.</p>
+  <h1 class="w3-center">{{.Params.head_5}}</h1>
+  <p class=" justify">{{.Params.head_5_para_1}}</p>
+  <p class=" justify">{{.Params.head_5_para_2}}</p>
 </div>
-<div class="contact-card limit-to-800">
+<div class="w3-center">
+  <a class="w3-button w3-center w3-padding w3-teal pointer w3-hover-indigo w3-round-large " anim="ripple" href="https://skgadi.com/contact/" target="_blank">{{.Params.button_contact}}</a>
+</div>
+<!--div class="contact-card limit-to-800">
   <div class="icon-text-split">
     <i class="w3-xxxlarge fa fa-user fa-fw"></i>
     <input class="w3-input gsk-input" name="name" type="text" placeholder="Name" />
@@ -368,6 +268,7 @@
   </div>
   <button class="w3-border w3-blue pointer w3-block w3-hover-blue w3-round" anim="ripple">Send</button>
 </div>
-<p></p>
+<p></p-->
+<p class="vertial-space"></p>
 {{- partial "footer/site-footer.html" . -}}
 {{- partial "footer/incl-libs-at-end.html" . -}}

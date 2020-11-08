@@ -353,23 +353,6 @@
         </template>
         <!--li class="dropdown" @click="wMode = !wMode"><a :class="(wMode)?'dropbtn-hovered':'dropbtn'" @mouseover="showStatus(GUIText[settings.lang].wMode)" @mouseleave="removeStatus()"><i class="fas fa-fw fa-route"></i></a></li-->
       </ul>
-      <!--
-
-        <form action="https://www.paypal.com/donate" method="post" target="_top">
-          <input type="hidden" name="hosted_button_id" value="QGKY7X5N2ABH6" />
-          <input type="image" src="https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-          <img alt="" border="0" src="https://www.paypal.com/en_MX/i/scr/pixel.gif" width="1" height="1" />
-          </form>
-      -->
-      <span>
-        <form action="https://www.paypal.com/donate" method="post" target="_top">
-        <input type="hidden" name="hosted_button_id" value="QGKY7X5N2ABH6" />
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-        </form>
-
-      </span>
-        
       <ul class="menu f-right" id="sim-menu">
         <li class="dropdown" @click="informSim('start')" v-if="disp.run"><a class="dropbtn"><i
               class="fas fa-fw fa-play"></i></a></li>
@@ -425,10 +408,10 @@
             <span>
               <input id="search-input" @focus="sBFocus(true)" @blur="sBFocus(false)"
                 :placeholder="GUIText[settings.lang].sblocks" v-model="searchText" type="text">
-              </span>
-                <span v-show="!!searchText" @click="searchText=''">
-                  <i class="fas fa-fw fa-times"></i>
-                </span>
+            </span>
+            <span v-show="!!searchText" @click="searchText=''">
+              <i class="fas fa-fw fa-times"></i>
+            </span>
           </div>
           <div class="category-full">
             <div v-show="!!searchText" @click="disp['search'] = !disp['search']; updateCounter++"
@@ -440,7 +423,7 @@
             <div v-show="!!searchText" class="category-content">
               <div v-show="disp['search']">
                 <template v-for="(item0, idx0) in searchResults" :key="item0">
-                  <svg class="libraryBlock monospace"  :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
+                  <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                     @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                     <g>
                       <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1'
