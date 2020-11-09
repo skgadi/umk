@@ -18,7 +18,7 @@ const popup = {
    */
   rType: {}, //Registered type
   open: function (evt, type, pop, cid) {
-    console.log(cid);
+    //console.log(cid);
     let graphDOMHandle = document.getElementById("graph");
     let cell;
     if (!!cid) {
@@ -30,12 +30,14 @@ const popup = {
       
     }
     if (cell.style.search("umk_model") >= 0) {
+      /*
       let urlQuery = {};
       urlQuery.v = Object.assign({
         cid: cell.id
       }, cell.value);
       urlQuery.lang = (type === 'scope') ? GUIText[settings.lang].chartLang : settings.lang;
-      let urlQueryString = packer.pack(JSON.stringify2(urlQuery));
+      let urlQueryString = packer.pack(JSON.stringify2(urlQuery));*/
+      let urlQueryString ="";
       switch (type) {
         case 'scope':
           this.rType[cell.id] = "scope";

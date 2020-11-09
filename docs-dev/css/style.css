@@ -87,7 +87,17 @@ select {
   z-index: 5 !important;
 }
 
-.splitShort,
+.splitShort {
+  display: grid;
+  /*column-width: 300px;*/
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 8px;
+  row-gap: 16px;
+  align-items: center;
+  justify-items: center;
+}
+
+.splitShort1,
 #settings>div>div {
   column-rule: 2px var(--col-border-0) dotted;
 }
@@ -325,7 +335,7 @@ select {
   }
 
   .splitShort {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -344,7 +354,7 @@ select {
   }
 
   .splitShort {
-    column-count: 2;
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .hide-medium-small {
@@ -367,7 +377,7 @@ select {
   }
 
   .splitShort {
-    column-count: 1;
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .hide-small,
@@ -685,7 +695,7 @@ ul.menu-kbs>li {
 .libraryBlock {
   cursor: move;
   touch-action: none;
-  /*opacity: 0.8;*/
+  opacity: 0.7;
 }
 
 .libraryBlock:hover {
@@ -892,6 +902,43 @@ mjx-container {
   margin: 0 !important;
 }
 
+.matrix-builder-container {
+  display: grid;
+  grid-template-columns: repeat(6, min-content);
+  column-gap: 2px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.matrix-builder-btn {
+  width: 25px;
+  height: 25px;
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 50%;
+  background-color: var(--col-background-3);
+  color: var(--col-text-1);
+  border: 1px var(--col-border-1) solid;
+  cursor: pointer;
+  justify-items: center;
+  align-items: center;
+  gap: 2px;
+  display: grid;
+}
+
+.matrix-builder-btn:hover {
+  background-color: var(--col-background-2);
+}
+
+.matrix-builder-btn-h {
+  grid-template-columns: min-content auto;
+}
+
+.matrix-builder-btn-v {
+  grid-template-rows: min-content auto;
+}
+
+
 .matrix-builder-buttons {
   text-align: center !important;
   /*margin: 16px;*/
@@ -1071,6 +1118,11 @@ blink,
   max-width: 250px;
 }
 
+.limit-960 {
+  max-width: 960px;
+  word-wrap: break-word;
+}
+
 .margin-center {
   margin: auto;
 }
@@ -1106,6 +1158,7 @@ blink,
   height: 100%;
   color: var(--col-border-1);
 }
+
 .skgadi-ad-area>div {
   font-size: 5em;
   text-align: center;
@@ -1204,9 +1257,24 @@ tr.mxPopupMenuItem {
   color: var(--col-border-1);
   border-width: 0;
 }
+
 .sink-btns>button:hover {
   color: var(--col-text-0);
 }
+
 .sink-btns>button>i {
   font-size: 2em;
+}
+
+
+.mxWindow {
+  /*border: 1px solid var(--col-border-1) !important;*/
+}
+
+.mxWindowTitle {
+  background: var(--col-background-1) !important;
+}
+
+iframe {
+  border: 0;
 }

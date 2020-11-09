@@ -1,11 +1,20 @@
 //Check settings cookies
+//rpSettingsKeys-> Right panel settings
 (() => {
   try {
     const rpSettingsKeys = ["gLinesMinor", "gLinesMajor", "gLinesMega", "showOutline", "gridSize", "guidesEnabled", "showLabels", "showExeOrder", "snapToGrid"];
     const cSettings = (!!getCookie("settings")) ? JSON.parse2(getCookie("settings")) : Object.assign({}, settings);
+    // console.log(JSON.stringify(JSON.parse2(getCookie("settings"))));
+    // console.log(JSON.stringify(cSettings));
+
     Object.keys(cSettings).forEach(function (key) {
-      if (!!settings[key]) settings[key] = cSettings[key];
-      if (rpSettingsKeys.indexOf(key) >= 0) editorVue.$set(editorVue.$data.rpSettings, key, cSettings[key]);
+      if (typeof settings[key] != undefined) {
+        //console.log(key);
+        settings[key] = cSettings[key];
+      }
+      if (rpSettingsKeys.indexOf(key) >= 0) {
+        editorVue.$set(editorVue.$data.rpSettings, key, cSettings[key]);
+      }
     });
     settingsVue.updateHideBtnText();
   } catch (e) {

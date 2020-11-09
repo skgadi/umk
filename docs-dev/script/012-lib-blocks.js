@@ -17,7 +17,9 @@ function blockOnDOM(img) {
     let addANewBlock = function (graph, evt, cell, x, y) {
       graph.getModel().beginUpdate();
       try {
-        eval("var modelForVertex = new " + model + "({'Name': '" + Name + "'})");
+        const setNameAs=settings.etyCap?'':Name;
+        //console.log(Name);
+        eval("var modelForVertex = new " + model + "({'Name': '" + setNameAs + "'})");
         let IconDetails = modelForVertex.Icon();
         let inLabels = IconDetails.inLabels || [];
         let outLabels = IconDetails.outLabels || [];
