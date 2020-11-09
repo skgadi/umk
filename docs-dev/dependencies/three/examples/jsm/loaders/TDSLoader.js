@@ -13,6 +13,7 @@ import {
 	MeshPhongMaterial,
 	TextureLoader
 } from "../../../build/three.module.js";
+
 /**
  * Autodesk 3DS three.js file loader, based on lib3ds.
  *
@@ -53,12 +54,13 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var scope = this;
 
-		var path = ( scope.path === '' ) ? LoaderUtils.extractUrlBase( url ) : scope.path;
+		var path = ( this.path === '' ) ? LoaderUtils.extractUrlBase( url ) : this.path;
 
 		var loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
+		loader.setWithCredentials( this.withCredentials );
 
 		loader.load( url, function ( data ) {
 

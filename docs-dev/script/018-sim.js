@@ -325,7 +325,7 @@ const simVue = new Vue({
       for (let i = 0; i < this.dispCells.length; i++) {
         let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
         const limitDecimals = parseInt(cell.value.Parameters.decPlaces.Value[0][0]);
-        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]][0], limitDecimals)));
+        cell.value.Icon(TeX.prepInline(TeX.frmStr(lastItem.o[this.dispCells[i]][0], limitDecimals)));
         mainSystem.graph.refresh(cell);
       }
     },

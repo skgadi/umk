@@ -22,6 +22,8 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-C8DJLT8TXF"></script>
 
 
+  <!--KaTeX-->
+  <link rel="stylesheet" href="dependencies/katex/katex.min.css">
 </head>
 
 <body class="not-selectable">
@@ -592,7 +594,7 @@
                         </template>
                       </table>
                     </div>
-                    <div class="expandable-x" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                    <div class="expandable-x center" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
                       v-html="getComputedValueText(Parameter)"></div>
                   </div>
                 </div>
@@ -618,10 +620,10 @@
             <h3 class="compress" v-text="GUIText[settings.lang].orientation"></h3>
             <div class="matrix-builder-container">
               <span class="matrix-builder-btn" @click="editorVue.rotateAll(true)"><i class="fas fa-redo"></i></span>
-              <span class="matrix-builder-btn" @click="rotate(0)" v-html="'$$\\Large \\Rightarrow$$'"></span>
-              <span class="matrix-builder-btn" @click="rotate(90)" v-html="'$$\\Large \\Downarrow$$'"></span>
-              <span class="matrix-builder-btn" @click="rotate(180)" v-html="'$$\\Large \\Leftarrow$$'"></span>
-              <span class="matrix-builder-btn" @click="rotate(270)" v-html="'$$\\Large \\Uparrow$$'"></span>
+              <span class="matrix-builder-btn" @click="rotate(0)"><i class="fas fa-arrow-right"></i></span>
+              <span class="matrix-builder-btn" @click="rotate(90)"><i class="fas fa-arrow-down"></i></span>
+              <span class="matrix-builder-btn" @click="rotate(180)"><i class="fas fa-arrow-left"></i></span>
+              <span class="matrix-builder-btn" @click="rotate(270)"><i class="fas fa-arrow-up"></i></span>
               <span class="matrix-builder-btn" @click="editorVue.rotateAll(false)"><i class="fas fa-undo"></i></span>
             </div>
           </div>
@@ -709,9 +711,11 @@
   <script type="text/javascript" src="pre-scripts.min.js?bv=0"></script>
 
 
-  <script type="text/javascript" src="dependencies/mathjs/math.min.js"></script>
-  <script type="text/javascript" src="dependencies/js-polyfills/polyfill.min.js"></script>
-  <script type="text/javascript" src="dependencies/mathjax/tex-svg-full.js"></script>
+  <script type="text/javascript" src="dependencies/mathjs/math.js"></script>
+  <!--script type="text/javascript" src="dependencies/js-polyfills/polyfill.min.js"></script-->
+  <!--script type="text/javascript" src="dependencies/mathjax/tex-svg-full.js"></script-->
+  <script type="text/javascript" src="dependencies/katex/katex.min.js"></script>
+  <script type="text/javascript" src="dependencies/katex/contrib/auto-render.min.js"></script>
   <script type="text/javascript" src="dependencies/noty/noty.min.js"></script>
   <script type="text/javascript" src="dependencies/vue/vue.min.js"></script>
   <script type="text/javascript" src="dependencies/mxgraph/js/mxClient.js"></script>

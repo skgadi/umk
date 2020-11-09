@@ -1266,10 +1266,10 @@ tr.mxPopupMenuItem {
   font-size: 2em;
 }
 
-
+/*
 .mxWindow {
-  /*border: 1px solid var(--col-border-1) !important;*/
-}
+  border: 1px solid var(--col-border-1) !important;
+}*/
 
 .mxWindowTitle {
   background: var(--col-background-1) !important;

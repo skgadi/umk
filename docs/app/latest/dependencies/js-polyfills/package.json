@@ -1,8 +1,8 @@
 {
   "_from": "js-polyfills",
-  "_id": "js-polyfills@0.1.42",
+  "_id": "js-polyfills@0.1.43",
   "_inBundle": false,
-  "_integrity": "sha1-XUhJArNh489gH9I60PMLr8yT8Ug=",
+  "_integrity": "sha512-wWCJcw7uMA12uk7qcqZlIQy9nj+Evh1wVUmn5MOlJ7GPC8HT5PLjB9Uiqjw9ldAbbOuNOWJ6ENb7NwU6qqf48g==",
   "_location": "/js-polyfills",
   "_phantomChildren": {},
   "_requested": {
@@ -19,8 +19,8 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/js-polyfills/-/js-polyfills-0.1.42.tgz",
-  "_shasum": "5d484902b361e3cf601fd23ad0f30bafcc93f148",
+  "_resolved": "https://registry.npmjs.org/js-polyfills/-/js-polyfills-0.1.43.tgz",
+  "_shasum": "6ec32030b05dc71a4257a950d1c4eaf301bb8035",
   "_spec": "js-polyfills",
   "_where": "C:\\Suresh\\git\\Uyamak\\other-modules",
   "author": {
@@ -64,12 +64,12 @@
     "polyfill",
     "standards"
   ],
-  "license": "Unlicense",
+  "license": "(Unlicense OR MIT)",
   "main": "polyfill.js",
   "name": "js-polyfills",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/inexorabletash/polyfill.git"
   },
-  "version": "0.1.42"
+  "version": "0.1.43"
 }

@@ -76,9 +76,9 @@ class umk_1590046975775 extends umk_model {
   }
   Details(short = false) {
     if (short) {
-      return TeX.prepDisp("\\dot x(t) = A(t) x(t) + B(t) u(t)") +
+      return TeX.prepInline("\\dot x(t) = A(t) x(t) + B(t) u(t)") +
         "<br/>" +
-        TeX.prepDisp("y(t) = C(t) x(t) + D(t) u(t)");
+        TeX.prepInline("y(t) = C(t) x(t) + D(t) u(t)");
     } else {
       return TeX.prepDisp("\\dot x(t) = A(t) x(t) + B(t) u(t)") +
         "<br/>" +

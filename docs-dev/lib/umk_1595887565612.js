@@ -1,7 +1,7 @@
 class umk_1595887565612 extends umk_model {
   Icon() {
     return {
-      html: this.Details(),
+      html: this.Details(true),
       inLabels: "",
       outLabels: null,
       splStyle: ""
@@ -25,8 +25,12 @@ class umk_1595887565612 extends umk_model {
       this.CompParams.pT = t;
     }
   }
-  Details() {
-    return TeX.prepDisp("\\frac{\\text{d}u}{\\text{d}t}");
+  Details(inline) {
+    if (inline) {
+      return TeX.prepInline("\\frac{\\text{d}u}{\\text{d}t}");
+    } else {
+      return TeX.prepDisp("\\frac{\\text{d}u}{\\text{d}t}");
+    }
   }
   constructor(obj) {
     super(Object.assign({

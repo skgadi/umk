@@ -3,7 +3,42 @@
   //MathJax.typesetPromise();
   //MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }*/
+
 const mathEqn = {
+  katexConfig: {
+    delimiters: [{
+        left: "$$",
+        right: "$$",
+        display: true
+      },
+      {
+        left: "\\[",
+        right: "\\]",
+        display: true
+      },
+      {
+        left: "$",
+        right: "$",
+        display: false
+      },
+      {
+        left: "\\(",
+        right: "\\)",
+        display: false
+      }
+    ],
+    throwOnError: false
+  },
+  update: function() {
+    try {
+      renderMathInElement(document.body, this.katexConfig);
+    } catch (e) {
+  
+    }
+  }
+}
+
+const mathEqn1 = {
   updInProgress = false,
   updNow = function () {
     MathJax.typesetPromise();

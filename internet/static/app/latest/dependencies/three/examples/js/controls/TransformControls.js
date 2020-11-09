@@ -1,5 +1,3 @@
-console.warn( "THREE.TransformControls: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
-
 THREE.TransformControls = function ( camera, domElement ) {
 
 	if ( domElement === undefined ) {
@@ -125,30 +123,18 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	{
 
-		domElement.addEventListener( "mousedown", onPointerDown, false );
-		domElement.addEventListener( "touchstart", onPointerDown, false );
-		domElement.addEventListener( "mousemove", onPointerHover, false );
-		domElement.addEventListener( "touchmove", onPointerHover, false );
-		domElement.addEventListener( "touchmove", onPointerMove, false );
-		scope.domElement.ownerDocument.addEventListener( "mouseup", onPointerUp, false );
-		domElement.addEventListener( "touchend", onPointerUp, false );
-		domElement.addEventListener( "touchcancel", onPointerUp, false );
-		domElement.addEventListener( "touchleave", onPointerUp, false );
+		domElement.addEventListener( "pointerdown", onPointerDown, false );
+		domElement.addEventListener( "pointermove", onPointerHover, false );
+		scope.domElement.ownerDocument.addEventListener( "pointerup", onPointerUp, false );
 
 	}
 
 	this.dispose = function () {
 
-		domElement.removeEventListener( "mousedown", onPointerDown );
-		domElement.removeEventListener( "touchstart", onPointerDown );
-		domElement.removeEventListener( "mousemove", onPointerHover );
-		scope.domElement.ownerDocument.removeEventListener( "mousemove", onPointerMove );
-		domElement.removeEventListener( "touchmove", onPointerHover );
-		domElement.removeEventListener( "touchmove", onPointerMove );
-		scope.domElement.ownerDocument.removeEventListener( "mouseup", onPointerUp );
-		domElement.removeEventListener( "touchend", onPointerUp );
-		domElement.removeEventListener( "touchcancel", onPointerUp );
-		domElement.removeEventListener( "touchleave", onPointerUp );
+		domElement.removeEventListener( "pointerdown", onPointerDown );
+		domElement.removeEventListener( "pointermove", onPointerHover );
+		scope.domElement.ownerDocument.removeEventListener( "pointermove", onPointerMove );
+		scope.domElement.ownerDocument.removeEventListener( "pointerup", onPointerUp );
 
 		this.traverse( function ( child ) {
 
@@ -251,7 +237,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	this.pointerHover = function ( pointer ) {
 
-		if ( this.object === undefined || this.dragging === true || ( pointer.button !== undefined && pointer.button !== 0 ) ) return;
+		if ( this.object === undefined || this.dragging === true ) return;
 
 		raycaster.setFromCamera( pointer, this.camera );
 
@@ -271,9 +257,9 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	this.pointerDown = function ( pointer ) {
 
-		if ( this.object === undefined || this.dragging === true || ( pointer.button !== undefined && pointer.button !== 0 ) ) return;
+		if ( this.object === undefined || this.dragging === true || pointer.button !== 0 ) return;
 
-		if ( ( pointer.button === 0 || pointer.button === undefined ) && this.axis !== null ) {
+		if ( this.axis !== null ) {
 
 			raycaster.setFromCamera( pointer, this.camera );
 
@@ -341,7 +327,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		}
 
-		if ( object === undefined || axis === null || this.dragging === false || ( pointer.button !== undefined && pointer.button !== 0 ) ) return;
+		if ( object === undefined || axis === null || this.dragging === false || pointer.button !== - 1 ) return;
 
 		raycaster.setFromCamera( pointer, this.camera );
 
@@ -577,7 +563,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	this.pointerUp = function ( pointer ) {
 
-		if ( pointer.button !== undefined && pointer.button !== 0 ) return;
+		if ( pointer.button !== 0 ) return;
 
 		if ( this.dragging && ( this.axis !== null ) ) {
 
@@ -587,8 +573,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 		}
 
 		this.dragging = false;
-
-		if ( pointer.button === undefined ) this.axis = null;
+		this.axis = null;
 
 	};
 
@@ -626,7 +611,14 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( ! scope.enabled ) return;
 
-		scope.pointerHover( getPointer( event ) );
+		switch ( event.pointerType ) {
+
+			case 'mouse':
+			case 'pen':
+				scope.pointerHover( getPointer( event ) );
+				break;
+
+		}
 
 	}
 
@@ -634,7 +626,8 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( ! scope.enabled ) return;
 
-		scope.domElement.ownerDocument.addEventListener( "mousemove", onPointerMove, false );
+		scope.domElement.style.touchAction = 'none'; // disable touch scroll
+		scope.domElement.ownerDocument.addEventListener( "pointermove", onPointerMove, false );
 
 		scope.pointerHover( getPointer( event ) );
 		scope.pointerDown( getPointer( event ) );
@@ -653,7 +646,8 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( ! scope.enabled ) return;
 
-		scope.domElement.ownerDocument.removeEventListener( "mousemove", onPointerMove, false );
+		scope.domElement.style.touchAction = '';
+		scope.domElement.ownerDocument.removeEventListener( "pointermove", onPointerMove, false );
 
 		scope.pointerUp( getPointer( event ) );
 

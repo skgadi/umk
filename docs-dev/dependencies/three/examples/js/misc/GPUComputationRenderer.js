@@ -1,4 +1,3 @@
-console.warn( "THREE.GPUComputationRenderer: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
 /**
  * GPUComputationRenderer, based on SimulationRenderer by zz85
  *
@@ -319,7 +318,6 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 			magFilter: magFilter,
 			format: THREE.RGBAFormat,
 			type: dataType,
-			stencilBuffer: false,
 			depthBuffer: false
 		} );
 
