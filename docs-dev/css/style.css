@@ -804,7 +804,11 @@ input[type='checkbox'] {
 
 .gen-btn {
   height: var(--button-size);
-  line-height: var(--button-size);
+  /*line-height: var(--button-size);*/
+  display: grid;
+  justify-items: center;
+  align-items: center;
+
   width: 100%;
   text-align: center;
   cursor: pointer;
