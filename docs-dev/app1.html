@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=0" />
-  <link rel="stylesheet" href="css/style.min.css?bv=0" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=1" />
+  <link rel="stylesheet" href="css/style.min.css?bv=1" />
 
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -68,25 +68,25 @@
             <div class="limit-250 margin-center">
               <div>
                 <div class="checkboxItem pointer left" @click="sOptions.m = !sOptions.m">
-                  <i class="fas" :class="sOptions.m?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="sOptions.m?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].model"></span>
                 </div>
               </div>
               <div>
                 <div class="checkboxItem pointer left" @click="sOptions.v = !sOptions.v">
-                  <i class="fas" :class="sOptions.v?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="sOptions.v?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].vars"></span>
                 </div>
               </div>
               <div>
                 <div class="checkboxItem pointer left" @click="sOptions.s = !sOptions.s">
-                  <i class="fas" :class="sOptions.s?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="sOptions.s?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].simSet"></span>
                 </div>
               </div>
               <div>
                 <div class="checkboxItem pointer left" @click="sOptions.g = !sOptions.g">
-                  <i class="fas" :class="sOptions.g?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="sOptions.g?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].guiSet"></span>
                 </div>
               </div>
@@ -107,41 +107,41 @@
             <div class="limit-250 margin-center">
               <div>
                 <div v-if="oAvail.m" class="checkboxItem pointer left" @click="oOptions.m = !oOptions.m">
-                  <i class="fas" :class="oOptions.m?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="oOptions.m?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].model"></span>
                 </div>
                 <div v-else class="checkboxItem disabled left">
-                  <i class="fas fa-minus-square"></i>
+                  <i class="far fa-minus-square"></i>
                   <span v-text="GUIText[settings.lang].model"></span>
                 </div>
               </div>
               <div>
                 <div v-if="oAvail.v" class="checkboxItem pointer left" @click="oOptions.v = !oOptions.v">
-                  <i class="fas" :class="oOptions.v?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="oOptions.v?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].vars"></span>
                 </div>
                 <div v-else class="checkboxItem disabled left">
-                  <i class="fas fa-minus-square"></i>
+                  <i class="far fa-minus-square"></i>
                   <span v-text="GUIText[settings.lang].vars"></span>
                 </div>
               </div>
               <div>
                 <div v-if="oAvail.s" class="checkboxItem pointer left" @click="oOptions.s = !oOptions.s">
-                  <i class="fas" :class="oOptions.s?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="oOptions.s?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].simSet"></span>
                 </div>
                 <div v-else class="checkboxItem disabled left">
-                  <i class="fas fa-minus-square"></i>
+                  <i class="far fa-minus-square"></i>
                   <span v-text="GUIText[settings.lang].simSet"></span>
                 </div>
               </div>
               <div>
                 <div v-if="oAvail.g" class="checkboxItem pointer left" @click="oOptions.g = !oOptions.g">
-                  <i class="fas" :class="oOptions.g?'fa-check-square':'fa-square'"></i>
+                  <i class="far" :class="oOptions.g?'fa-check-square':'fa-square'"></i>
                   <span v-text="GUIText[settings.lang].guiSet"></span>
                 </div>
                 <div v-else class="checkboxItem disabled left">
-                  <i class="fas fa-minus-square"></i>
+                  <i class="far fa-minus-square"></i>
                   <span v-text="GUIText[settings.lang].guiSet"></span>
                 </div>
               </div>
@@ -199,7 +199,7 @@
         </div>
         <div class="no-col-break limit-250 margin-center">
           <div class="checkboxItem pointer" @click="settings.etyCap = !settings.etyCap">
-            <i class="fas" :class="settings.etyCap?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="settings.etyCap?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].etyCap"></span>
           </div>
         </div>
@@ -214,29 +214,98 @@
       <div class="var-container">
         <template v-for="(item, idx) in variables">
           <div class="expandable-x" v-show="!showEdtVar || edtVar.index !== idx">
-            <span v-text="(idx+1)+'.'" class="gap-right"></span>
-            <pre class="inline font-oneNhalf" v-text="item.name"></pre>
-            <span style="display: inline-flex;" v-text="' $:='+getVariable(item)+'$'"></span>
-            <span style="display: inline-flex;" v-text="'$='+varValidValues[idx]+'$'"></span>
-            <span class="f-right pointer gap-right gap-left" @click="delVar(idx)">
-              <i class="fa-fw far fa-trash-alt"></i>
-            </span>
-            <span class="f-right pointer gap-right gap-left" @click="editVar(idx)">
-              <i class="fa-fw fas fa-pen"></i>
-            </span>
-            <span class="f-right pointer gap-right gap-left" @click="moveVar(true, idx)">
-              <i class="fa-fw fas fa-arrow-up"></i>
-            </span>
-            <span class="f-right pointer gap-right gap-left" @click="moveVar(false, idx)">
-              <i class="fa-fw fas fa-arrow-down"></i>
-            </span>
+            <div class="expandable-x">
+              <!--span v-text="(idx+1)+'.'" class="gap-right"></span-->
+              <pre class="inline font-oneNhalf" v-text="item.name"></pre>
+              <span style="display: inline-flex;" v-text="' $:='+getVariable(item)+'$'"></span>
+              <span style="display: inline-flex;" v-text="'$='+varValidValues[idx]+'$'"></span>
+            </div>
+            <div class="right-align down-flag-btns">
+              <div class="pointer gap-right gap-left" @click="delVar(idx)">
+                <i class="fa-fw far fa-trash-alt"></i>
+              </div>
+              <div class="pointer gap-right gap-left" @click="editVar(idx)">
+                <i class="fa-fw fas fa-pen"></i>
+              </div>
+              <div class="pointer gap-right gap-left" @click="moveVar(true, idx)">
+                <i class="fa-fw fas fa-arrow-up"></i>
+              </div>
+              <div class="pointer gap-right gap-left" @click="moveVar(false, idx)">
+                <i class="fa-fw fas fa-arrow-down"></i>
+              </div>
+            </div>
           </div>
           <div class="expandable-x" v-show="showEdtVar" v-if="edtVar.index===idx">
-            <div v-text="GUIText[settings.lang].var"></div>
-            <input type="text" v-model="edtVar.name">
-            <div v-text="checkValidVar(edtVar.name, edtVar.index).msg"></div>
-            <div v-text="GUIText[settings.lang].value"></div>
+            <div class="expandable-x">
+              <div class="center" v-text="GUIText[settings.lang].var"></div>
+              <div class="limit-250 margin-center">
+                <input type="text" v-model="edtVar.name">
+              </div>
+              <div class="center" v-text="checkValidVar(edtVar.name, edtVar.index).msg"></div>
+              <br>
+              <div class="center" v-text="GUIText[settings.lang].value"></div>
 
+              <div class="matrix-builder-container">
+                <div @click="cngVarDim(0)" class="matrix-builder-btn matrix-builder-btn-v">
+                  <i class="fas fa-ellipsis-v"></i><i class="fas fa-plus"></i>
+                </div>
+                <div @click="cngVarDim(1)" class="matrix-builder-btn matrix-builder-btn-v">
+                  <i class="fas fa-ellipsis-v"></i><i class="fas fa-minus"></i>
+                </div>
+                <div @click="cngVarDim(2)" class="matrix-builder-btn matrix-builder-btn-h">
+                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus"></i>
+                </div>
+                <div @click="cngVarDim(3)" class="matrix-builder-btn matrix-builder-btn-h">
+                  <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus"></i>
+                </div>
+              </div>
+              <div class="expandable-x">
+                <table>
+                  <template v-for="(rowValue, index1) in edtVar.value">
+                    <tr v-if="index1 === 0" style="padding: 0;">
+                      <td></td>
+                      <template v-for="(value, index2) in edtVar.value[index1]">
+                        <td class="center" v-text="index2 + 1"></td>
+                      </template>
+                    </tr>
+                    <tr>
+                      <td v-text="index1 + 1"></td>
+                      <template v-for="(value, index2) in edtVar.value[index1]">
+                        <td>
+                          <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
+                        </td>
+                      </template>
+                    </tr>
+                  </template>
+                </table>
+              </div>
+              <br />
+              <div class="expandable-x">
+                <div class="center">
+                  <pre class="inline font-oneNhalf" v-html="edtVar.name"></pre>
+                  <span v-html="'$:='+TeX.frmArray(edtVar.value)+'$'"></span>
+                </div>
+              </div>
+              <br />
+              <div class="splitToTwo">
+                <div @click="saveVar" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].save">
+                </div>
+                <div @click="showEdtVar = false" class="gen-btn limit-250 margin-center"
+                  v-text="GUIText[settings.lang].cancel"></div>
+              </div>
+
+            </div>
+          </div>
+        </template>
+        <div class="expandable-x" v-show="showEdtVar" v-if="edtVar.index<0">
+          <div>
+
+            <div class="center" v-text="GUIText[settings.lang].var"></div>
+            <div class="limit-250 margin-center">
+              <input type="text" v-model="edtVar.name">
+            </div>
+          <div class="center error-text" v-text="checkValidVar(edtVar.name, edtVar.index).msg"></div> <br>
+            <div class="center" v-text="GUIText[settings.lang].value"></div>
             <div class="matrix-builder-container">
               <div @click="cngVarDim(0)" class="matrix-builder-btn matrix-builder-btn-v">
                 <i class="fas fa-ellipsis-v"></i><i class="fas fa-plus"></i>
@@ -272,58 +341,22 @@
               </table>
             </div>
             <br />
+            <div class="expandable-x">
+              <div class="center">
+                <pre class="inline font-oneNhalf" v-html="edtVar.name"></pre>
+                <span v-html="'$:='+TeX.frmArray(edtVar.value)+'$'"></span>
+              </div>
+            </div>
+            <br />
             <div class="splitToTwo">
               <div @click="saveVar" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].save"></div>
-              <div @click="showEdtVar = false" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].cancel"></div>
+              <div @click="showEdtVar = false" class="gen-btn limit-250 margin-center"
+                v-text="GUIText[settings.lang].cancel"></div>
             </div>
-          </div>
-        </template>
-        <div class="expandable-x" v-show="showEdtVar" v-if="edtVar.index<0">
-          <div v-text="GUIText[settings.lang].var"></div>
-          <input type="text" v-model="edtVar.name">
-          <div v-text="checkValidVar(edtVar.name, edtVar.index).msg"></div>
-          <div v-text="GUIText[settings.lang].value"></div>
-          <div class="matrix-builder-container">
-            <div @click="cngVarDim(0)" class="matrix-builder-btn matrix-builder-btn-v">
-              <i class="fas fa-ellipsis-v"></i><i class="fas fa-plus"></i>
-            </div>
-            <div @click="cngVarDim(1)" class="matrix-builder-btn matrix-builder-btn-v">
-              <i class="fas fa-ellipsis-v"></i><i class="fas fa-minus"></i>
-            </div>
-            <div @click="cngVarDim(2)" class="matrix-builder-btn matrix-builder-btn-h">
-              <i class="fas fa-ellipsis-h"></i><i class="fas fa-plus"></i>
-            </div>
-            <div @click="cngVarDim(3)" class="matrix-builder-btn matrix-builder-btn-h">
-              <i class="fas fa-ellipsis-h"></i><i class="fas fa-minus"></i>
-            </div>
-          </div>
-          <div class="expandable-x">
-            <table>
-              <template v-for="(rowValue, index1) in edtVar.value">
-                <tr v-if="index1 === 0" style="padding: 0;">
-                  <td></td>
-                  <template v-for="(value, index2) in edtVar.value[index1]">
-                    <td class="center" v-text="index2 + 1"></td>
-                  </template>
-                </tr>
-                <tr>
-                  <td v-text="index1 + 1"></td>
-                  <template v-for="(value, index2) in edtVar.value[index1]">
-                    <td>
-                      <input class="center" v-model.trim="edtVar.value[index1][index2]" type="text" />
-                    </td>
-                  </template>
-                </tr>
-              </template>
-            </table>
-          </div>
-          <br />
-          <div class="splitToTwo">
-            <div @click="saveVar" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].save"></div>
-            <div @click="showEdtVar = false" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].cancel"></div>
           </div>
         </div>
-        <div v-if="!showEdtVar" @click="addVar" class="gen-btn limit-250 margin-center" v-text="GUIText[settings.lang].aNewVar"></div>
+        <div v-if="!showEdtVar" @click="addVar" class="gen-btn limit-250 margin-center"
+          v-text="GUIText[settings.lang].aNewVar"></div>
       </div>
       <h2 v-text="GUIText[settings.lang].constants"></h2>
       <div class="splitShort limit-960 margin-center">
@@ -340,8 +373,8 @@
   <div id="main">
     <div id="tool-bar">
       <ul class="menu f-left" id="main-menu">
-        <li>
-          <a href="/"><i class="fas fa-home"></i></a>
+        <li class="dropdown">
+          <a class="dropbtn" href="/"><i class="fas fa-home"></i></a>
         </li>
         <template v-for="(item, idx) in tools">
           <li class="dropdown">
@@ -406,7 +439,7 @@
             <p class="compress" v-html="GUIText[settings.lang].mHis"></p>
             <input class="sim-settings-entry" type="number" v-model.number="simSettings.mHis">
             <div v-if="false" class="checkboxItem pointer" @click="simSettings.realtime = !simSettings.realtime">
-              <i class="fas" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
+              <i class="far" :class="simSettings.realtime?'fa-check-square':'fa-square'"></i>
               <span v-text="GUIText[settings.lang].rRealTime"></span>
             </div>
           </div>
@@ -445,10 +478,10 @@
                   <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                     @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                     <g>
-                      <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1'
-                        stroke='var(--col-border-1)' />
+                      <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-0)' stroke-width='1'
+                        stroke='var(--col-text-0)' />
                     </g>
-                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
+                    <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='5'
                       fill='none' v-html="blksSummary[item0].icon"></g>
                   </svg>
                 </template>
@@ -469,10 +502,10 @@
                     <svg class="libraryBlock monospace" :umk_model="item0" @mouseover="showStatus(blksSummary[item0])"
                       @mouseleave="removeStatus()" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
                       <g>
-                        <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-2)' stroke-width='1'
-                          stroke='var(--col-border-1)' />
+                        <rect height='100' width='100' fill-opacity='1' fill='var(--col-background-0)' stroke-width='1'
+                          stroke='var(--col-text-0)' />
                       </g>
-                      <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-1)' stroke-width='5'
+                      <g stroke-linecap='round' width='100' height='100' stroke='var(--col-text-0)' stroke-width='5'
                         fill='none' v-html="blksSummary[item0].icon"></g>
                     </svg>
                   </template>
@@ -524,7 +557,7 @@
             <template v-for="(Parameter, index) in uyamakModel.Parameters">
               <div v-if="Parameter.Type === 'Checkbox' && Parameter.Dimension === 'Scalar'">
                 <div class="checkboxItem pointer" @click="toggleParamCheckVal(index,0,0)">
-                  <i class="fas"
+                  <i class="far"
                     :class="uyamakModel.Parameters[index]['Value'][0][0]?'fa-check-square':'fa-square'"></i>
                   <span v-text="Parameter.Name[settings.lang]"></span>
                 </div>
@@ -584,7 +617,7 @@
                                 </select>
                                 <div v-if="Parameter.Type === 'Checkbox'" class="checkboxItem pointer"
                                   @click="toggleParamCheckVal(index,index1,index2)">
-                                  <i class="fas"
+                                  <i class="far"
                                     :class="uyamakModel.Parameters[index]['Value'][index1][index2]?'fa-check-square':'fa-square'"></i>
                                   <span v-text="Parameter.Name[settings.lang]"></span>
                                 </div>
@@ -594,7 +627,8 @@
                         </template>
                       </table>
                     </div>
-                    <div class="expandable-x center" v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
+                    <div class="expandable-x center"
+                      v-if="(['Integer', 'Real', 'Complex', 'Text'].indexOf(Parameter.Type))>=0"
                       v-html="getComputedValueText(Parameter)"></div>
                   </div>
                 </div>
@@ -632,15 +666,15 @@
           <h3 class="compress"><i class="fas fa-fw fa-border-all"></i><span class="gap-left"
               v-text="GUIText[settings.lang].gridLines"></span></h3>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMinor = !rpSettings.gLinesMinor">
-            <i class="fas" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.gLinesMinor?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMinor"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMajor = !rpSettings.gLinesMajor">
-            <i class="fas" :class="rpSettings.gLinesMajor?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.gLinesMajor?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMajor"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.gLinesMega = !rpSettings.gLinesMega">
-            <i class="fas" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.gLinesMega?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].gLinesMega"></span>
           </div>
           <br />
@@ -648,45 +682,45 @@
               v-text="GUIText[settings.lang].gridSize"></span></h3>
           <input type="number" v-model.number="rpSettings.gridSize">
           <div class="checkboxItem pointer" @click="rpSettings.snapToGrid = !rpSettings.snapToGrid">
-            <i class="fas" :class="rpSettings.snapToGrid?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.snapToGrid?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].snapToGrid"></span>
           </div>
           <br />
           <h3 class="compress"><i class="fas fa-fw fa-location-arrow"></i><span class="gap-left"
               v-text="GUIText[settings.lang].navi"></span></h3>
           <div id="graph-nav">
-            <div class="gen-btn" @click="mainSystem.navigate('zoomOut')"><i class="fa-fw fas fa-search-minus"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('up')"><i class="fa-fw fas fa-caret-up"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('zoomIn')"><i class="fa-fw fas fa-search-plus"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('left')"><i class="fa-fw fas fa-caret-left"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('0')"><i class="fa-fw fas fa-arrows-alt"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('right')"><i class="fa-fw fas fa-caret-right"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('fit')"><i class="fa-fw fas  fa-expand"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fa-fw fas fa-caret-down"></i></div>
-            <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fa-fw fas  fa-compress"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomOut')"><i class="fas fa-search-minus"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('up')"><i class="fas fa-caret-up"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomIn')"><i class="fas fa-search-plus"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('left')"><i class="fas fa-caret-left"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('0')"><i class="fas fa-arrows-alt"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('right')"><i class="fas fa-caret-right"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('fit')"><i class="fas  fa-expand"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('down')"><i class="fas fa-caret-down"></i></div>
+            <div class="gen-btn" @click="mainSystem.navigate('zoomActual')"><i class="fas  fa-compress"></i></div>
           </div>
           <br />
           <h3 class="compress"><i class="fas fa-fw fa-tools"></i><span class="gap-left"
               v-text="GUIText[settings.lang].oSettings"></span>
           </h3>
           <div class="checkboxItem pointer" @click="rpSettings.showOutline = !rpSettings.showOutline">
-            <i class="fas" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.showOutline?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showOutline"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.guidesEnabled = !rpSettings.guidesEnabled">
-            <i class="fas" :class="rpSettings.guidesEnabled?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.guidesEnabled?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].guidesEnabled"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.showLabels = !rpSettings.showLabels">
-            <i class="fas" :class="rpSettings.showLabels?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.showLabels?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showLabels"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.showExeOrder = !rpSettings.showExeOrder">
-            <i class="fas" :class="rpSettings.showExeOrder?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.showExeOrder?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].showExeOrder"></span>
           </div>
           <div class="checkboxItem pointer" @click="rpSettings.hideGraphText = !rpSettings.hideGraphText">
-            <i class="fas" :class="rpSettings.hideGraphText?'fa-check-square':'fa-square'"></i>
+            <i class="far" :class="rpSettings.hideGraphText?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].hideGraphText"></span>
           </div>
         </div>
@@ -708,7 +742,7 @@
       </span>
     </div>
   </div>
-  <script type="text/javascript" src="pre-scripts.min.js?bv=0"></script>
+  <script type="text/javascript" src="pre-scripts.min.js?bv=1"></script>
 
 
   <script type="text/javascript" src="dependencies/mathjs/math.js"></script>
@@ -727,8 +761,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=0"></script>
-  <script src="script.min.js?bv=0"></script>
+  <script src="lib.min.js?bv=1"></script>
+  <script src="script.min.js?bv=1"></script>
 
 </body>
 

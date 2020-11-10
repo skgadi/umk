@@ -42,12 +42,12 @@ select {
 }
 
 ::placeholder {
-  color: var(--col-text-1);
+  color: var(--col-text-0);
   opacity: 0.5;
 }
 
 .modal-translusent {
-  background-color: var(--col-background-2);
+  background-color: var(--col-background-0);
   color: var(--col-text-0);
   z-index: 5;
   width: 100%;
@@ -60,11 +60,12 @@ select {
 }
 
 .modal {
-  background-color: var(--col-background-1);
+  background-color: var(--col-background-0);
   color: var(--col-text-0);
   z-index: 3;
-  width: 100%;
-  height: 100%;
+  border: 5px ridge var(--col-border-0);
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
   top: 0;
   left: 0;
   position: fixed;
@@ -130,7 +131,7 @@ select {
   width: 100%;
   font-size: 2em;
   background-color: var(--col-background-3);
-  color: var(--col-text-1);
+  color: var(--col-text-0);
   border-width: 0;
   cursor: pointer;
 }
@@ -138,8 +139,8 @@ select {
 
 #waitForProcessToFinish {
   display: block;
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   z-index: 4;
   position: fixed;
   top: 0;
@@ -163,14 +164,14 @@ select {
 
 #DOMWaitingHead,
 #DOMWaitingAnimation {
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   font-size: 2em;
 }
 
 #DOMWaitingDesc {
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   text-align: justify;
 }
 
@@ -183,9 +184,9 @@ select {
 
 #tool-bar {
   grid-area: header;
-  background-color: var(--col-background-1);
+  background-color: var(--col-background-3);
   color: var(--col-text-0);
-  /*border-bottom: 1px var(--text-muted) solid;*/
+  border-bottom: 1px var(--col-border-0) solid;
 }
 
 
@@ -225,6 +226,7 @@ select {
 
 #footer {
   grid-area: footer;
+  border-top: 1px solid var(--col-border-0);
 }
 
 .pull-btn {
@@ -232,16 +234,16 @@ select {
   height: var(--button-size);
   line-height: var(--button-size);
   transition: width var(--animation-time) var(--animation-time), color var(--animation-time), background var(--animation-time), border-radius var(--animation-time);
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   /*opacity: 0.8;*/
   cursor: pointer;
 }
 
 .pull-btn:hover {
   transition: width var(--animation-time) !important;
-  background-color: var(--col-background-3);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   /*opacity: 1;*/
 }
 
@@ -281,7 +283,7 @@ select {
 
 
 #footer>div {
-  background-color: var(--col-background-1);
+  background-color: var(--col-background-3);
   color: var(--col-text-0);
 }
 
@@ -389,9 +391,9 @@ select {
 .hide-btn {
   height: var(--button-size);
   line-height: var(--button-size);
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
-  border-top: 1px solid var(--col-border-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
+  /*border-top: 1px solid var(--col-border-1);*/
   border-bottom: 1px solid var(--col-border-1);
   /*opacity: 0.8;*/
   cursor: pointer;
@@ -408,7 +410,8 @@ select {
 }
 
 .hide-btn:hover {
-  background-color: var(--col-background-3);
+  background-color: var(--col-background-0);
+  font-weight: bold;
   /*opacity: 1;*/
 }
 
@@ -443,7 +446,7 @@ ul.menu {
 .menu>li a,
 .dropbtn {
   display: inline-block;
-  background-color: var(--col-background-1);
+  /*background-color: var(--col-background-1);*/
   color: var(--col-text-0);
   text-align: center;
   padding: 0em .4em;
@@ -453,8 +456,8 @@ ul.menu {
 }
 
 .dropbtn {
-  border-left: 1px solid var(--col-background-1);
-  border-right: 1px solid var(--col-background-1);
+  border-left: 1px solid var(--col-background-3);
+  border-right: 1px solid var(--col-background-3);
 }
 
 .dropdown:hover .dropbtn,
@@ -466,13 +469,13 @@ ul.menu {
 
 .menu>li a:hover,
 .dropdown:hover .dropbtn {
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
 }
 
 .dropbtn-hovered {
-  background-color: var(--col-background-2) !important;
-  color: var(--col-text-1) !important;
+  background-color: var(--col-background-3) !important;
+  color: var(--col-text-0) !important;
 }
 
 .menu>li.dropdown {
@@ -484,8 +487,8 @@ ul.menu {
   z-index: 2 !important;
   display: none !important;
   position: absolute !important;
-  background-color: var(--col-background-2) !important;
-  color: var(--col-text-1) !important;
+  background-color: var(--col-background-3) !important;
+  color: var(--col-text-0) !important;
   border: 1px solid var(--col-border-1);
   font-size: 0.8em;
   /*min-width: 160px !important;*/
@@ -495,8 +498,8 @@ ul.menu {
 }
 
 .dropdown-content a {
-  background-color: var(--col-background-2) !important;
-  color: var(--col-text-1) !important;
+  background-color: var(--col-background-3) !important;
+  color: var(--col-text-0) !important;
   padding: 8px 8px !important;
   text-decoration: none !important;
   display: grid !important;
@@ -505,8 +508,8 @@ ul.menu {
 }
 
 .dropdown-content a:hover {
-  background-color: var(--col-background-3) !important;
-  color: var(--col-text-1) !important;
+  background-color: var(--col-background-0) !important;
+  color: var(--col-text-0) !important;
 }
 
 /**/
@@ -542,7 +545,7 @@ ul.menu {
   margin: 0;
   padding: 0 4px;
   border-radius: 0.3em;
-  border: 1px var(--col-border-0) solid;
+  border: 1px var(--col-text-0) solid;
   background-color: var(--col-background-0);
   color: var(--col-text-0);
 
@@ -566,22 +569,22 @@ ul.menu-kbs>li {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: var(--col-background-3);
-  border: 1px solid var(--col-border-1);
+  background: var(--col-background-0);
+  border: 1px solid var(--col-border-0);
   border-radius: .25em;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--col-background-2);
-  border: 1px solid var(--col-border-1);
+  background: var(--col-background-3);
+  border: 1px solid var(--col-border-0);
   border-radius: .25em;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--col-background-2);
-  border: 1px solid var(--col-border-1);
+  background: var(--col-border-0);
+  border: 1px solid var(--col-border-0);
   border-radius: .25em;
 }
 
@@ -597,19 +600,21 @@ ul.menu-kbs>li {
   font-size: 2em;
   margin: 0.25em;
   cursor: pointer;
-  color: var(--col-background-3);
+  color: var(--col-text-0);
+  transition: 1s;
 }
 
 .close-btn:hover {
-  color: var(--col-border-1);
+  color: var(--col-text-0);
+  transform: rotateZ(90deg);
 }
 
 .blocks-search-bar {
   display: grid;
   grid-template-columns: min-content auto min-content;
   column-gap: 4px;
-  background-color: var(--col-background-2) !important;
-  color: var(--col-border-1);
+  background-color: var(--col-background-0) !important;
+  color: var(--col-text-0);
   border: 1px var(--col-border-1) solid;
   border-radius: 2em;
   padding: 0.5em;
@@ -626,13 +631,15 @@ ul.menu-kbs>li {
 .blocks-search-bar>span>input {
   width: 100%;
   font-size: 1em;
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   border-width: 0;
 }
 
-.blocks-search-bar>span>input:focus {
-  background-color: var(--col-background-2) !important;
+.blocks-search-bar>span>input:focus,
+.blocks-search-bar:focus-within,
+.blocks-search-bar:focus-within>span {
+  background-color: var(--col-background-1) !important;
 }
 
 .blocks-search-bar>span:nth-child(2) {
@@ -660,11 +667,11 @@ ul.menu-kbs>li {
 }
 
 .category-full {
-  color: var(--col-border-0);
+  color: var(--col-text-0);
 }
 
 .category-full:hover {
-  color: var(--col-border-1);
+  color: var(--col-text-0);
 }
 
 /*
@@ -695,12 +702,12 @@ ul.menu-kbs>li {
 .libraryBlock {
   cursor: move;
   touch-action: none;
-  opacity: 0.7;
+  /*opacity: 0.7;*/
 }
 
 .libraryBlock:hover {
   box-shadow: 0 0 1em var(--col-border-0);
-  opacity: 1;
+  /*opacity: 1;*/
 }
 
 #outlineContainer {
@@ -714,7 +721,7 @@ ul.menu-kbs>li {
   overflow: hidden;
   width: 200px;
   height: 150px;
-  background: #eeeeeeee;
+  background: var(--col-background-1);
   border: 3px solid var(--col-border-0);
 }
 
@@ -745,7 +752,7 @@ input[type='checkbox'] {
   height: 1em;
   line-height: 1em;
   align-items: center;
-  color: var(--col-border-1);
+  color: var(--col-text-0);
   text-align: center;
   /*
   border: 1px  var(--col-border-1) solid;
@@ -754,7 +761,11 @@ input[type='checkbox'] {
 }
 
 .checkboxItem:hover i {
-  color: var(--col-background-3);
+  background-color: var(--col-background-1);
+}
+
+.checkboxItem:hover {
+  font-weight: bold;
 }
 
 .checkboxItem>span {
@@ -778,7 +789,7 @@ input[type='checkbox'] {
 */
 
 .checkboxItem.disabled {
-  color: var(--col-border-0);
+  color: var(--col-dis-fore);
 }
 
 .checkboxItem.disabled i {
@@ -812,9 +823,9 @@ input[type='checkbox'] {
   width: 100%;
   text-align: center;
   cursor: pointer;
-  background-color: var(--col-background-3);
-  color: var(--col-text-1);
-  border: 1px solid var(--col-border-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
+  border: 1px solid var(--col-border-0);
   /*opacity: 0.8;*/
   padding: 0 !important;
   border-radius: 1em;
@@ -822,8 +833,8 @@ input[type='checkbox'] {
 
 .gen-btn:hover {
   /*opacity: 1;*/
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
+  background-color: var(--col-background-3);
+  color: var(--col-text-0);
 }
 
 
@@ -833,15 +844,15 @@ input[type='color'] {
   min-width: 50px;
   width: 100%;
   font-size: 1em;
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
-  border: 1px solid var(--col-border-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
+  border: 1px solid var(--col-border-0);
   border-radius: 0.5em;
 }
 
 input[type='number']:focus,
 input[type='text']:focus {
-  background-color: var(--col-background-3);
+  background-color: var(--col-background-1);
 }
 
 input[type='number'] {
@@ -920,9 +931,9 @@ mjx-container {
   font-size: 12px;
   padding: 2px;
   border-radius: 50%;
-  background-color: var(--col-background-3);
-  color: var(--col-text-1);
-  border: 1px var(--col-border-1) solid;
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
+  border: 1px var(--col-border-0) solid;
   cursor: pointer;
   justify-items: center;
   align-items: center;
@@ -931,7 +942,7 @@ mjx-container {
 }
 
 .matrix-builder-btn:hover {
-  background-color: var(--col-background-2);
+  background-color: var(--col-background-3);
 }
 
 .matrix-builder-btn-h {
@@ -957,15 +968,15 @@ mjx-container {
   height: 3em;
   width: 3em;
   line-height: 3em;
-  background-color: var(--col-background-3);
-  color: var(--col-text-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   border: 1px var(--col-border-1) solid;
   cursor: pointer;
   display: inline-block;
 }
 
 .matrix-builder-buttons>span:hover {
-  background-color: var(--col-background-2);
+  background-color: var(--col-background-3);
   /*opacity: 1;*/
 }
 
@@ -1048,7 +1059,7 @@ blink,
   padding: 0 4px 0 2px;
   overflow: hidden;
   right: 0;
-  border: 1px var(--col-border-1) solid;
+  border: 1px var(--col-border-0) solid;
   /*padding: 0 !important;*/
   font-size: 1em;
 }
@@ -1077,9 +1088,36 @@ blink,
   row-gap: 0.5em;
 }
 
-.var-container>div {
-  border: 1px var(--col-border-1) solid;
+.var-container>div>div:first-child {
+  border: 1px var(--col-border-0) solid;
   padding: 0.5em;
+}
+
+.error-text{
+  color: var(--col-dis-fore);
+}
+
+.right-align {
+  text-align: right;
+}
+
+.down-flag-btns {
+  display: grid;
+  grid-template-columns: repeat(10,min-content);
+  justify-content: end;
+}
+.down-flag-btns>div{
+  background-color: var(--col-background-0);
+  border-right: 1px solid var(--col-border-0);
+  border-left: 1px solid var(--col-border-0);
+  border-bottom: 1px solid var(--col-border-0);
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  padding: 0 8px 4px 8px;
+}
+.down-flag-btns>div:hover {
+  background-color: var(--col-background-3);
+
 }
 
 .blocked,
@@ -1104,18 +1142,19 @@ blink,
   min-width: 75px;
   width: 100%;
   font-size: 1em;
-  background-color: var(--col-background-2);
-  color: var(--col-text-1);
-  border: 1px solid var(--col-border-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
+  border: 1px solid var(--col-border-0);
   border-radius: 0.5em;
 }
 
 .inter-itm:focus {
-  background-color: var(--col-background-3);
+  background-color: var(--col-background-1);
 }
 
 .inter-itm:disabled {
   background-color: var(--col-background-1);
+  color: var(--col-text-1);
 }
 
 .limit-250 {
@@ -1176,6 +1215,7 @@ table {
   border-collapse: collapse;
   text-align: center;
   min-width: 100%;
+  color: var(--col-border-0);
 }
 
 td>input {
@@ -1225,7 +1265,7 @@ body td.mxPopupMenuIcon {
 }
 
 table.mxPopupMenu hr {
-  border-top: solid 1px var(--col-border-1);
+  border-top: solid 1px var(--col-border-0);
 }
 
 table.mxPopupMenu tr {
@@ -1234,7 +1274,7 @@ table.mxPopupMenu tr {
 
 div.mxPopupMenu {
   background: unset !important;
-  background-color: var(--col-background-2) !important;
+  background-color: var(--col-background-3) !important;
   color: var(--col-text-1) !important;
 }
 
@@ -1257,8 +1297,8 @@ tr.mxPopupMenuItem {
 
 .sink-btns>button {
   cursor: pointer;
-  background-color: var(--col-background-2);
-  color: var(--col-border-1);
+  background-color: var(--col-background-0);
+  color: var(--col-text-0);
   border-width: 0;
 }
 
@@ -1276,7 +1316,8 @@ tr.mxPopupMenuItem {
 }*/
 
 .mxWindowTitle {
-  background: var(--col-background-1) !important;
+  background: var(--col-background-3) !important;
+  border-bottom: 1px solid var(--col-border-0);
 }
 
 iframe {

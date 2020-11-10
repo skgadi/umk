@@ -11,6 +11,7 @@ import {
 	ShaderMaterial,
 	WebGLRenderTarget
 } from "../../../build/three.module.js";
+
 /**
  * GPUComputationRenderer, based on SimulationRenderer by zz85
  *
@@ -331,7 +332,6 @@ var GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 			magFilter: magFilter,
 			format: RGBAFormat,
 			type: dataType,
-			stencilBuffer: false,
 			depthBuffer: false
 		} );
 

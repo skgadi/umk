@@ -1,22 +1,22 @@
 ((graph) => {
 
-  mxConstants.OUTLINE_COLOR = 'var(--col-border-1)';
-  mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--col-border-1)';
-  mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--col-background-2)';
+  mxConstants.OUTLINE_COLOR = 'var(--col-border-0)';
+  mxConstants.OUTLINE_HANDLE_STROKECOLOR = 'var(--col-border-0)';
+  mxConstants.OUTLINE_HANDLE_FILLCOLOR = 'var(--col-background-3)';
   //mxConstants.OUTLINE_STROKEWIDTH = 3;
   //mxConstants.LABEL_HANDLE_SIZE = 10;
-  mxConstants.STYLE_BACKGROUND_OUTLINE = 'var(--col-background-1)';
-  mxConstants.HIGHLIGHT_COLOR = 'var(--col-border-1)';
+  mxConstants.STYLE_BACKGROUND_OUTLINE = 'var(--col-background-0)';
+  mxConstants.HIGHLIGHT_COLOR = 'var(--col-border-0)';
   mxConstants.GUIDE_COLOR = 'var(--col-text-1)';
   //mxConstants.GUIDE_STROKEWIDTH = 3;
-  mxConstants.HANDLE_STROKECOLOR = 'var(--col-border-1)';
-  mxConstants.HANDLE_FILLCOLOR = 'var(--col-background-2)';
+  mxConstants.HANDLE_STROKECOLOR = 'var(--col-text-0)';
+  mxConstants.HANDLE_FILLCOLOR = 'var(--col-border-0)';
   //mxConstants.HANDLE_SIZE = 10;
-  mxConstants.EDGE_SELECTION_COLOR = 'var(--col-border-1)';
+  mxConstants.EDGE_SELECTION_COLOR = 'var(--col-text-0)';
   //mxConstants.EDGE_SELECTION_STROKEWIDTH = 3;
-  mxConstants.VERTEX_SELECTION_COLOR = 'var(--col-border-1)';
+  mxConstants.VERTEX_SELECTION_COLOR = 'var(--col-text-0)';
   //mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
-  mxConstants.DROP_TARGET_COLOR = 'var(--col-border-1)';
+  mxConstants.DROP_TARGET_COLOR = 'var(--col-text-0)';
 
   mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
   mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
@@ -140,8 +140,8 @@
   style.foldable = 0;
   style.overflow = "hidden";
   style.verticalAlign = "middle";
-  style.fontColor = "var(--col-text-1)";
-  style.fillColor = "var(--col-background-2)";
+  style.fontColor = "var(--col-text-0)";
+  style.fillColor = "var(--col-background-0)";
   //style.gradientColor = "var(--col-background-1)";
   //style.gradientDirection = mxConstants["DIRECTION_SOUTH"]; //  DIRECTION_EAST, DIRECTION_WEST, DIRECTION_NORTH and DIRECTION_SOUTH
   style.strokeColor = "var(--col-text-0)";
@@ -155,7 +155,7 @@
   style.strokeWidth = 1;
   style.arcSize = 0;
   style.foldable = 1;
-  style.strokeColor = "var(--col-border-0)";
+  style.strokeColor = "var(--col-text-0)";
   style.fontColor = "var(--col-text-0)";
   //style.verticalLabelPosition = "top";
   style.verticalAlign = "top";
