@@ -1,7 +1,7 @@
 class umk_1588715754701 extends umk_model {
   Icon() {
     return {
-      html: TeX.prepDisp(TeX.frmArray(this.Parameters.gain.Value)),
+      html: TeX.prepInline(TeX.frmArray(this.Parameters.gain.Value)),
       inLabels: "",
       outLabels: null,
       splStyle: ""
