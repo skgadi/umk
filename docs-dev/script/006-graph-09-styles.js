@@ -240,8 +240,8 @@
   style.overflow = "fit";
   style.fillColor = "none"; //"var(--col-text-0)";
   style.strokeColor = "var(--col-text-0)";
-  style.fontSize = 15;
-  style.spacingLeft = 2;
+  style.fontSize = 10;
+  style.spacingLeft = 1;
   style.spacingTop = -5;
   style.rounded = 0;
   style.routingCenterX = -0.5;
@@ -261,8 +261,8 @@
   style.overflow = "fit";
   style.fillColor = "var(--col-text-0)";
   style.strokeColor = "var(--col-text-0)";
-  style.fontSize = 15;
-  style.spacingLeft = 2;
+  style.fontSize = 8;
+  style.spacingLeft = 1;
   style.spacingTop = -5;
   style.rounded = 0;
   style.routingCenterX = -0.5;

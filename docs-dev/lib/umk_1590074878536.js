@@ -137,7 +137,7 @@ class umk_1590074878536 extends umk_model {
       //console.log(out);
       //this.Icon_Temp_Html = TeX.prepDisp(math.simplify(out).toTex(4));
       if (short) {
-        return TeX.prepInline(math.simplify(out).toTex(4));
+        return TeX.prepDisp(math.simplify(out).toTex(4));
       } else {
         return TeX.prepDisp("\\frac{y(z)}{u(z)}:=" + math.simplify(out).toTex(4));
       }

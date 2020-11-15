@@ -2,7 +2,7 @@ class umk_1589386555683 extends umk_model {
   Icon() {
     return {
       html: TeX.prepDisp("\\Large \\div"),
-      inLabels: null,
+      inLabels: ["1", "2"],
       outLabels: null,
       splStyle: null
     };

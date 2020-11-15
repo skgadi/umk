@@ -1323,3 +1323,7 @@ tr.mxPopupMenuItem {
 iframe {
   border: 0;
 }
+
+.katex-display{
+  margin: 0 !important;
+}

@@ -1,7 +1,7 @@
 class umk_1588716024472 extends umk_model {
   Icon() {
     return {
-      html: TeX.prepInline("\\int"),
+      html: TeX.prepDisp("\\int"),
       inLabels: "",
       outLabels: null,
       splStyle: ""

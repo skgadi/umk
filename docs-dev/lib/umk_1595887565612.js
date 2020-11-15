@@ -1,7 +1,7 @@
 class umk_1595887565612 extends umk_model {
   Icon() {
     return {
-      html: this.Details(true),
+      html: this.Details(),
       inLabels: "",
       outLabels: null,
       splStyle: ""

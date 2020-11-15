@@ -145,7 +145,7 @@ class umk_1589836016344 extends umk_model {
       out += ")";
       //this.Icon_Temp_Html = TeX.prepDisp(math.simplify(out).toTex(4));
       if (short) {
-        return TeX.prepInline(math.simplify(out).toTex());
+        return TeX.prepDisp(math.simplify(out).toTex());
       } else {
         return TeX.prepDisp("\\frac{y(s)}{u(s)}:=" + math.simplify(out).toTex());
       }
@@ -153,7 +153,7 @@ class umk_1589836016344 extends umk_model {
       if (short) {
         this.Icon_Temp_Html = TeX.prepDisp("\\frac{y(s)}{u(s)}")
       } else {
-        this.Icon_Temp_Html = TeX.prepInline("\\frac{y(s)}{u(s)}")
+        this.Icon_Temp_Html = TeX.prepDisp("\\frac{y(s)}{u(s)}")
       }
       return this.Icon_Temp_Html;
     }
