@@ -1,0 +1,34 @@
+/*Start font*/
+@font-face {
+	font-family: 'Univers 57 Condensed';
+	src: url('u57c/u57c.eot');
+	src: local('☺'), url('u57c/u57c.woff') format('woff'), url('u57c/u57c.ttf') format('truetype'), url('u57c/u57c.svg') format('svg'), url('u57c/u57c.eot?#iefix') format('embedded-opentype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Univers 57 Condensed';
+	src: url('u57c/u57c_bold.eot');
+	src: local('☺'), url('u57c/u57c_bold.woff') format('woff'), url('u57c/u57c_bold.ttf') format('truetype'), url('u57c/u57c_bold.svg') format('svg'), url('u57c/u57c_bold.eot?#iefix') format('embedded-opentype');
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Univers 57 Condensed';
+	src: url('u57c/u57c_italic.eot');
+	src: local('☺'), url('u57c/u57c_italic.woff') format('woff'), url('u57c/u57c_italic.ttf') format('truetype'), url('u57c/u57c_italic.svg') format('svg'), url('u57c/u57c_italic.eot?#iefix') format('embedded-opentype');
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Univers 57 Condensed';
+	src: url('u57c/u57c_bold_oblique.eot');
+	src: local('☺'), url('u57c/u57c_bold_oblique.woff') format('woff'), url('u57c/u57c_bold_oblique.ttf') format('truetype'), url('u57c/u57c_bold_oblique.svg') format('svg'), url('u57c/u57c_bold_oblique.eot?#iefix') format('embedded-opentype');
+	font-weight: bold;
+	font-style: italic;
+	font-display: swap;
+}
+/*End font*/
