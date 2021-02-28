@@ -2099,29 +2099,27 @@ mxGraphView.prototype.getRelativePoint = function(edgeState, x, y)
 			var totalLength = edgeState.length;
 			var segments = edgeState.segments;
 
-			// Works which line segment the point of the label is closest to
+			// Works out which line segment the point of the label is closest to
 			var p0 = edgeState.absolutePoints[0];
 			var pe = edgeState.absolutePoints[1];
 			var minDist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
-
+			var length = 0;
 			var index = 0;
 			var tmp = 0;
-			var length = 0;
 			
 			for (var i = 2; i < pointCount; i++)
 			{
-				tmp += segments[i - 2];
+				p0 = pe;
 				pe = edgeState.absolutePoints[i];
 				var dist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
-
+				tmp += segments[i - 2];
+				
 				if (dist <= minDist)
 				{
 					minDist = dist;
 					index = i - 1;
 					length = tmp;
 				}
-				
-				p0 = pe;
 			}
 			
 			var seg = segments[index];
@@ -2585,6 +2583,9 @@ mxGraphView.prototype.installListeners = function()
 			}));
 		}
 		
+		// Fires event only for one pointer per gesture
+		var pointerId = null;
+		
 		// Adds basic listeners for graph event dispatching
 		mxEvent.addGestureListeners(container, mxUtils.bind(this, function(evt)
 		{
@@ -2593,11 +2594,12 @@ mxGraphView.prototype.installListeners = function()
 				!mxClient.IS_OP && !mxClient.IS_SF) || !this.isScrollEvent(evt)))
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
+				pointerId = evt.pointerId;
 			}
 		}),
 		mxUtils.bind(this, function(evt)
 		{
-			if (this.isContainerEvent(evt))
+			if (this.isContainerEvent(evt) && (pointerId == null || evt.pointerId == pointerId))
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
 			}
@@ -2608,6 +2610,8 @@ mxGraphView.prototype.installListeners = function()
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
 			}
+			
+			pointerId = null;
 		}));
 		
 		// Adds listener for double click handling on background, this does always
@@ -2690,7 +2694,7 @@ mxGraphView.prototype.installListeners = function()
 };
 
 /**
- * Function: create
+ * Function: createHtml
  *
  * Creates the DOM nodes for the HTML display.
  */
@@ -2795,7 +2799,7 @@ mxGraphView.prototype.createHtmlPane = function(width, height)
 };
 
 /**
- * Function: create
+ * Function: createVml
  *
  * Creates the DOM nodes for the VML display.
  */
@@ -2849,7 +2853,7 @@ mxGraphView.prototype.createVmlPane = function(width, height)
 };
 
 /**
- * Function: create
+ * Function: createSvg
  *
  * Creates and returns the DOM nodes for the SVG display.
  */

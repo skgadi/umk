@@ -46,6 +46,7 @@ function blockOnDOM(img) {
         setTimeout(() => {
           mainSystem.refresh();
         }, 50);
+        umk_audio.play("blk_placed");
       } catch (e) {
         new Noty({
           text: GUIText[settings.lang].errUblPlcBlock,

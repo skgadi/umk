@@ -87,6 +87,7 @@ const popup = {
         this.refsForSinks[cid].extWind = window.open(url, "_blank", "width=" + spec.W + ",height=" + spec.H + ",");
         //Send all previous data
         this.sendStoredResults(this.refsForSinks[cid].extWind, cid);
+        umk_audio.play("pop_openWind");
       }
     } else {
       if (!!this.refsForSinks[cid] && !!this.refsForSinks[cid].intWind) {
@@ -118,6 +119,7 @@ const popup = {
 
         //Send all previous data
         this.sendStoredResults(tempItem.frmRef.contentWindow, cid);
+        umk_audio.play("pop_openWind");
       }
     }
   },
@@ -242,7 +244,8 @@ const popup = {
       //console.log(handle);
       handle.postMessage({
         d: simVue.results[cid]
-      });      
+      });
+      umk_audio.play("pop_sentPrevData");
     }, settings.waitPRLoad*1000);
   }
 

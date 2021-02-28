@@ -197,6 +197,7 @@ const simVue = new Vue({
       }
     },
     informSim: function (abt, option) {
+      umk_audio.play("sim_btnPress");
       try {
         if (window.Worker) {
           let out = {};
@@ -370,8 +371,10 @@ const simVue = new Vue({
                     simVue.simWorker.postMessage({"recData": true});
                   }
                 }, settings.waitUpdGraphs);
+                umk_audio.play("sim_recPacket",0.10);
               } else if (event.data.ended) {
                 simVue.endSim();
+                umk_audio.play("sim_finished", 0.5);
               } else if (event.data.paused) {
                 simVue.mode = "mSimPause";
               } else if (event.data.error) {

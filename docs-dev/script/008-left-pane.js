@@ -73,6 +73,7 @@ const blocksVue = new Vue({
       document.getElementById("search-input").focus();
     },
     showStatus: function (block) {
+      umk_audio.play("blk_hover");
       if (!!this.statusVisible) {
         this.removeStatus(this.statusVisible);
       }

@@ -201,12 +201,6 @@
           </select>
         </div>
         <div class="no-col-break limit-250 margin-center">
-          <div class="checkboxItem pointer" @click="settings.etyCap = !settings.etyCap">
-            <i class="far" :class="settings.etyCap?'fa-check-square':'fa-square'"></i>
-            <span v-text="GUIText[settings.lang].etyCap"></span>
-          </div>
-        </div>
-        <div class="no-col-break limit-250 margin-center">
           <label class="compress" v-text="GUIText[settings.lang].maxTotalHistory"></label>
           <input type="number" v-model.number="settings.maxTotalHistory">
         </div>
@@ -217,6 +211,18 @@
         <div class="no-col-break limit-250 margin-center">
           <label class="compress" v-text="GUIText[settings.lang].waitUpdGraphs"></label>
           <input type="number" v-model.number="settings.waitUpdGraphs">
+        </div>
+        <div class="no-col-break limit-250 margin-center">
+          <div class="checkboxItem pointer" @click="settings.etyCap = !settings.etyCap">
+            <i class="far" :class="settings.etyCap?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].etyCap"></span>
+          </div>
+        </div>
+        <div class="no-col-break limit-250 margin-center">
+          <div class="checkboxItem pointer" @click="settings.enableAudio = !settings.enableAudio">
+            <i class="far" :class="settings.enableAudio?'fa-check-square':'fa-square'"></i>
+            <span v-text="GUIText[settings.lang].enableAudio"></span>
+          </div>
         </div>
       </div>
     </div>
