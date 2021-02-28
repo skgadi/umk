@@ -82,8 +82,8 @@ function updateData(inData) {
   }
   // console.log(settings.limitData);
   // console.log(removeDatapoints);
-  // console.log(chart.data);
   chart.addData(dataToUpdate, removeDatapoints);
+  //console.log(chart.data);
 
 }
 

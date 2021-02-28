@@ -14,7 +14,7 @@ const simVue = new Vue({
     simSettings: {
       h: 10, //Step size
       T: 5, // Total simulation time
-      realtime: true,
+      realtime: false,
       steps: 1,
       sOEvery: 1,
       mHis: 1000,
@@ -59,7 +59,7 @@ const simVue = new Vue({
         if (this.simSettings.mHis < 0) {
           this.simSettings.mHis = -this.simSettings.mHis;
         } else if (!this.simSettings.mHis) {
-          this.simSettings.mHis = 100;
+          this.simSettings.mHis = 1000;
         }
         if (this.simSettings.mHis === Math.round(this.simSettings.mHis)) {
           this.simSettings.mHis = Math.round(this.simSettings.mHis);
@@ -344,9 +344,11 @@ const simVue = new Vue({
                 //simVue.results = simVue.results.concat(event.data.put);
                 simVue.results = event.data.put;
                 simVue.results = simVue.results.slice(-simVue.simSettings.mHis);
+                popup.prepareData(simVue.results);
                 setTimeout(function () {
                   simVue.propOuts();
                 });
+                simVue.simWorker.postMessage({"recData": true});
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {

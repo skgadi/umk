@@ -1,4 +1,5 @@
 const popup = {
+  preparedData: {},
   pointToOpenWind: { //Gives the point at witch the window open
     x: 50,
     y: 50
@@ -27,7 +28,7 @@ const popup = {
       let x = evt.pageX - graphDOMHandle.offsetLeft;
       let y = evt.pageY - graphDOMHandle.offsetTop;
       cell = mainSystem.graph.getCellAt(x, y);
-      
+
     }
     if (cell.style.search("umk_model") >= 0) {
       /*
@@ -37,7 +38,7 @@ const popup = {
       }, cell.value);
       urlQuery.lang = (type === 'scope') ? GUIText[settings.lang].chartLang : settings.lang;
       let urlQueryString = packer.pack(JSON.stringify2(urlQuery));*/
-      let urlQueryString ="";
+      let urlQueryString = "";
       switch (type) {
         case 'scope':
           this.rType[cell.id] = "scope";
@@ -57,15 +58,15 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
-          case "robot-6dof":
-            this.rType[cell.id] = "ball";
-            this.openUrl(cell.id, "./sinks/robot-6dof.min.html?" + urlQueryString, {
-              W: 300,
-              H: 300,
-              w: 200,
-              h: 200
-            }, pop); //noreferrer, noopener,
-              break;
+        case "robot-6dof":
+          this.rType[cell.id] = "ball";
+          this.openUrl(cell.id, "./sinks/robot-6dof.min.html?" + urlQueryString, {
+            W: 300,
+            H: 300,
+            w: 200,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
 
         default:
           break;
@@ -135,23 +136,31 @@ const popup = {
       delete this.refsForSinks[cid]
     }
   },
-  prepareData: function (cid) {
+  prepareData: function (results) {
+
+
     //console.log(cid);
     try {
-      return function (ele) {
-        // console.log(ele);
-        const val = [];
-        for (let i = 0; i < ele.o[cid].length; i++) {
-          let tempVal = math.evaluate(ele.o[cid][i]);
-          val.push({
-            r: math.re(tempVal)._data,
-            i: math.im(tempVal)._data
-          });
-        }
-        return {
-          t: ele.t,
-          v: val
-        };
+      this.preparedData = {};
+      for (let index = 0; index < Object.keys(results[0].o).length; index++) {
+        const cid = Object.keys(results[0].o)[index];
+        this.preparedData[cid] = results.map(
+          function (ele) {
+            // console.log(ele);
+            const val = [];
+            for (let i = 0; i < ele.o[cid].length; i++) {
+              let tempVal = math.evaluate(ele.o[cid][i]);
+              val.push({
+                r: math.re(tempVal)._data,
+                i: math.im(tempVal)._data
+              });
+            }
+            return {
+              t: ele.t,
+              v: val
+            };
+          }
+        )
       }
     } catch (e) {
       console.log(e);
@@ -184,7 +193,7 @@ const popup = {
   sendData: function (cid) {
     // console.log('sendData');
     this.messageWindows(cid, {
-      d: simVue.results.map(popup.prepareData(cid))
+      d: this.preparedData[cid]
     });
   },
   resetAll: function () {
@@ -214,13 +223,13 @@ const popup = {
       s: settings
     });
   },
-  destroyAllPopups: function() {
+  destroyAllPopups: function () {
     this.closeAll();
     this.pointToOpenWind = { //Gives the point at witch the window open
       x: 50,
       y: 50
     };
-    this.refsForSinks={};
+    this.refsForSinks = {};
     this.rType = {};
   }
 

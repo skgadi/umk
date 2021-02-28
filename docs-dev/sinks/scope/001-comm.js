@@ -18,11 +18,11 @@ onmessage = function (event) {
     let resetTheChart = false;
     if (settings.xLogScale !== event.data.c.Parameters.xLogScale.Value[0][0]) {
       settings.xLogScale = event.data.c.Parameters.xLogScale.Value[0][0];
-      resetTheChart=true;
+      resetTheChart = true;
     }
     if (settings.yLogScale !== event.data.c.Parameters.yLogScale.Value[0][0]) {
       settings.yLogScale = event.data.c.Parameters.yLogScale.Value[0][0];
-      resetTheChart=true;
+      resetTheChart = true;
     }
 
     // show and hide the imagenary axis
@@ -45,4 +45,4 @@ onmessage = function (event) {
     settings.mSettings = event.data.s;
     prepareColors();
   }
-  };
+};

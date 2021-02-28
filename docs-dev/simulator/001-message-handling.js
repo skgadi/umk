@@ -26,7 +26,10 @@ onmessage = function (oEvent) {
         case "steps":
           exec.steps();
           break;
-        /*case "results":
+        case "recData":
+          exec.recData();
+          break;
+              /*case "results":
           exec.updResHandler(oEvent.data.results);
           break;*/
         default:
@@ -34,6 +37,6 @@ onmessage = function (oEvent) {
       }
     }
   } else {
-    exec.start();
+    //exec.start();
   }
 };

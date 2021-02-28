@@ -18,6 +18,7 @@ const exec = {
   inPrg: false, // Is simulation in progress? 
   rSteps: 0, // Number of steps remaining to run
   results: [], // results are stored temporarily here
+  recAck: true, //Received acknowledgement from the main thread
   setSimSettings: function (settings) {
     this.simSettings.hs = settings.h / 1000;
     this.simSettings.h = settings.h;
@@ -26,7 +27,7 @@ const exec = {
     this.simSettings.steps = settings.steps;
     this.simSettings.sOEvery = settings.sOEvery - 1;
     this.simSettings.it = settings.it;
-    this.pckSize = settings.mHis * settings.sOEvery;
+    this.simSettings.pckSize = settings.mHis * settings.sOEvery;
     //console.log(this.pckSize);
     this.s4Out = this.simSettings.sOEvery;
     if (this.inPrg) {
@@ -184,23 +185,25 @@ const exec = {
     });
   },
   loop: function (N = null) {
-    let w = 1; //wait time in milli seconds;
+    let w = 0; //wait time in milli seconds;
     if (!N) {
       if (this.t === 0) {
         N = 1;
-        w = 1;
+        //w = 1;
       } else {
         if (this.simSettings.realtime) {
           let maxStepsPerSecond = 1 / this.simSettings.hs;
-          N = Math.max(0, Math.min(maxStepsPerSecond, this.rSteps));
+          N = Math.max(0, Math.min(this.simSettings.pckSize, maxStepsPerSecond, this.rSteps));
           w = this.simSettings.h;
         } else {
           N = Math.min(this.simSettings.pckSize, this.rSteps);
-          w = 1000 / N;
+          //console.log(this.simSettings.pckSize);
+          //w = 1000 / N;
         }
       }
     } else {
       N = Math.min(N, this.rSteps);
+      //console.log(N);
       w = this.simSettings.h;
     }
     //console.log("N: " + N);
@@ -219,11 +222,15 @@ const exec = {
         put: this.results
       });
       this.results = [];
+      this.recAck=false;
     }
     if (this.rSteps <= 0) {
       this.End();
     } else {
-      if (this.isCont) {
+      //console.log("not eded yet");
+      //console.log(this.isCont);
+      //console.log(this.recAck);
+      if (this.isCont && this.recAck) {
         setTimeout(() => {
           this.loop();
         });
@@ -240,6 +247,8 @@ const exec = {
       this.Init();
     }
     this.isCont = true;
+    //console.log("start pressed");
+    //this.recAck = true;
     setTimeout(this.loop());
   },
   stop: function () {
@@ -261,5 +270,14 @@ const exec = {
     });
     setTimeout(this.loop(this.simSettings.steps));
     //this.loop(this.simSettings.steps);
+  },
+  recData: function() {
+    //console.log('Received acknowledgement');
+    this.recAck = true;
+    if (this.isCont && this.recAck) {
+      setTimeout(() => {
+        this.loop();
+      });
+    }
   }
 };
