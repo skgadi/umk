@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="dependencies/noty/noty.css" />
   <link rel="stylesheet" href="dependencies/noty/themes/nest.css" />
 
-  <link rel="stylesheet" href="css/themes.min.css?bv=3" />
-  <link rel="stylesheet" href="css/style.min.css?bv=3" />
+  <link rel="stylesheet" href="css/themes.min.css?bv=4" />
+  <link rel="stylesheet" href="css/style.min.css?bv=4" />
 
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -205,6 +205,18 @@
             <i class="far" :class="settings.etyCap?'fa-check-square':'fa-square'"></i>
             <span v-text="GUIText[settings.lang].etyCap"></span>
           </div>
+        </div>
+        <div class="no-col-break limit-250 margin-center">
+          <label class="compress" v-text="GUIText[settings.lang].maxTotalHistory"></label>
+          <input type="number" v-model.number="settings.maxTotalHistory">
+        </div>
+        <div class="no-col-break limit-250 margin-center">
+          <label class="compress" v-text="GUIText[settings.lang].waitPRLoad"></label>
+          <input type="number" v-model.number="settings.waitPRLoad">
+        </div>
+        <div class="no-col-break limit-250 margin-center">
+          <label class="compress" v-text="GUIText[settings.lang].waitUpdGraphs"></label>
+          <input type="number" v-model.number="settings.waitUpdGraphs">
         </div>
       </div>
     </div>
@@ -745,7 +757,7 @@
       </span>
     </div>
   </div>
-  <script type="text/javascript" src="pre-scripts.min.js?bv=3"></script>
+  <script type="text/javascript" src="pre-scripts.min.js?bv=4"></script>
 
 
   <script type="text/javascript" src="dependencies/mathjs/math.js"></script>
@@ -764,8 +776,8 @@
 
 
   <!--Uyamak libraries-->
-  <script src="lib.min.js?bv=3"></script>
-  <script src="script.min.js?bv=3"></script>
+  <script src="lib.min.js?bv=4"></script>
+  <script src="script.min.js?bv=4"></script>
 
 </body>
 

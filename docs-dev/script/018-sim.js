@@ -20,7 +20,8 @@ const simVue = new Vue({
       mHis: 1000,
       it: "fe" //Integreation type
     },
-    results: [],
+    results: {},
+    lastItem: {},
     cellsWithSInfo: [],
     simWorker: null,
     exeOrder: [],
@@ -61,9 +62,10 @@ const simVue = new Vue({
         } else if (!this.simSettings.mHis) {
           this.simSettings.mHis = 1000;
         }
-        if (this.simSettings.mHis === Math.round(this.simSettings.mHis)) {
+        this.simSettings.mHis = Math.round(this.simSettings.mHis);
+        /*if (this.simSettings.mHis === Math.round(this.simSettings.mHis)) {
           this.simSettings.mHis = Math.round(this.simSettings.mHis);
-        }
+        }*/
 
         footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
         if (!!this.simWorker) {
@@ -320,13 +322,23 @@ const simVue = new Vue({
       }
     },
     setAllDisplays: function () {
-      let lastItem = this.results[this.results.length - 1];
-      footerVue.presTime = lastItem.t;
+      //let lastItem = this.results[this.results.length - 1];
+      footerVue.presTime = this.lastItem.t;
       for (let i = 0; i < this.dispCells.length; i++) {
         let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
         const limitDecimals = parseInt(cell.value.Parameters.decPlaces.Value[0][0]);
-        cell.value.Icon(TeX.prepDisp(TeX.frmStr(lastItem.o[this.dispCells[i]][0], limitDecimals)));
+        cell.value.Icon(TeX.prepDisp(TeX.frmStr(this.lastItem.o[this.dispCells[i]][0], limitDecimals)));
         mainSystem.graph.refresh(cell);
+      }
+    },
+    updateResults: function() {
+      const AllTheOutCells = Object.keys(popup.preparedData);
+      for (let i=0; i< AllTheOutCells.length; i++) {
+        const cid = AllTheOutCells[i];
+        if (!this.results[cid]) {
+          this.results[cid]=[];
+        }
+        this.results[cid]=(this.results[cid].concat(popup.preparedData[cid])).slice(-settings.maxTotalHistory);
       }
     },
     initSim: function () {
@@ -342,13 +354,22 @@ const simVue = new Vue({
               if (event.data.put) {
                 //console.log(event.data.put);
                 //simVue.results = simVue.results.concat(event.data.put);
-                simVue.results = event.data.put;
-                simVue.results = simVue.results.slice(-simVue.simSettings.mHis);
-                popup.prepareData(simVue.results);
+                popup.prepareData(event.data.put);
+                simVue.lastItem = event.data.put[event.data.put.length -1];
+                simVue.updateResults();
+                //console.log(simVue.lastItem);
+
+
+                //simVue.results = event.data.put;
+                //simVue.results = simVue.results.slice(-settings.maxTotalHistory);
                 setTimeout(function () {
                   simVue.propOuts();
                 });
-                simVue.simWorker.postMessage({"recData": true});
+                setTimeout(() => {
+                  if (simVue.simWorker) {
+                    simVue.simWorker.postMessage({"recData": true});
+                  }
+                }, settings.waitUpdGraphs);
               } else if (event.data.ended) {
                 simVue.endSim();
               } else if (event.data.paused) {
@@ -358,7 +379,7 @@ const simVue = new Vue({
                 mainSystem.graph.setCellWarning(mainSystem.graph.getModel().getCell(event.data.error.cid), "<b>" + GUIText[settings.lang][event.data.error.desc] + "</b>\n" + event.data.error.log.message);
               }
             }
-            this.results = [];
+            this.results = {};
             popup.resetAll();
 
             //set time =0

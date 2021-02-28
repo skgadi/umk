@@ -85,6 +85,8 @@ const popup = {
         this.refsForSinks[cid].extWind.focus();
       } else {
         this.refsForSinks[cid].extWind = window.open(url, "_blank", "width=" + spec.W + ",height=" + spec.H + ",");
+        //Send all previous data
+        this.sendStoredResults(this.refsForSinks[cid].extWind, cid);
       }
     } else {
       if (!!this.refsForSinks[cid] && !!this.refsForSinks[cid].intWind) {
@@ -113,6 +115,9 @@ const popup = {
         // update this.pointToOpenWind
         this.pointToOpenWind.x = ((this.pointToOpenWind.x + 50 + 200 - document.body.clientWidth) < 0) ? this.pointToOpenWind.x + 5 : 50;
         this.pointToOpenWind.y = ((this.pointToOpenWind.y + 50 + 200 - document.body.clientHeight) < 0) ? this.pointToOpenWind.y + 5 : 50;
+
+        //Send all previous data
+        this.sendStoredResults(tempItem.frmRef.contentWindow, cid);
       }
     }
   },
@@ -231,6 +236,14 @@ const popup = {
     };
     this.refsForSinks = {};
     this.rType = {};
+  },
+  sendStoredResults: function (handle, cid) {
+    setTimeout(() => {
+      //console.log(handle);
+      handle.postMessage({
+        d: simVue.results[cid]
+      });      
+    }, settings.waitPRLoad*1000);
   }
 
 };
