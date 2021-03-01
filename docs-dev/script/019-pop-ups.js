@@ -67,6 +67,24 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
+        case "3d-line":
+          this.rType[cell.id] = "ball";
+          this.openUrl(cell.id, "./sinks/3d-line.min.html?" + urlQueryString, {
+            W: 600,
+            H: 300,
+            w: 350,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
+        case "3d-surf":
+          this.rType[cell.id] = "ball";
+          this.openUrl(cell.id, "./sinks/3d-surf.min.html?" + urlQueryString, {
+            W: 600,
+            H: 300,
+            w: 350,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
 
         default:
           break;
@@ -173,6 +191,7 @@ const popup = {
       console.log(e);
     }
   },
+  //Types of messages sent are d,r,c,s which represent Data, reset, configuration, settings
   messageWindows: function (cid, msg) {
     // console.log(cid);
     if (!!this.refsForSinks[cid]) {
@@ -245,8 +264,10 @@ const popup = {
       handle.postMessage({
         d: simVue.results[cid]
       });
-      umk_audio.play("pop_sentPrevData");
-    }, settings.waitPRLoad*1000);
+      setTimeout(() => {
+        umk_audio.play("pop_sentPrevData");
+      }, 500);
+    }, settings.waitPRLoad * 1000);
   }
 
 };

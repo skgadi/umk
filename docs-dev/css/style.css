@@ -484,7 +484,7 @@ ul.menu {
 
 .dropdown-content {
   padding: 0.0em;
-  z-index: 2 !important;
+  z-index: 3 !important;
   display: none !important;
   position: absolute !important;
   background-color: var(--col-background-3) !important;
@@ -1318,6 +1318,7 @@ tr.mxPopupMenuItem {
 .mxWindowTitle {
   background: var(--col-background-3) !important;
   border-bottom: 1px solid var(--col-border-0);
+  color: var(--col-text-0) !important;
 }
 
 iframe {
