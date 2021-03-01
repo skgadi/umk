@@ -67,18 +67,18 @@ function updateConfiguration() {
 }
 
 function reactTheChart() {
-  Plotly.react('chart', fullData, settings.chartConfig);
+  Plotly.react('chart', fullData, settings.chartLayout);
 }
 
 function updateColors() {
   document.getElementsByTagName('html')[0].className = settings.mSettings.theme;
-  settings.chartConfig.plot_bgcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('background-color');
-  settings.chartConfig.paper_bgcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('background-color');
-  settings.chartConfig.font.color = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
+  settings.chartLayout.plot_bgcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('background-color');
+  settings.chartLayout.paper_bgcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('background-color');
+  settings.chartLayout.font.color = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
   ["xaxis", "yaxis", "zaxis"].forEach(function (element) {
-    settings.chartConfig.scene[element].tickcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
-    settings.chartConfig.scene[element].gridcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('border-color');
-    settings.chartConfig.scene[element].zerolinecolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
+    settings.chartLayout.scene[element].tickcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
+    settings.chartLayout.scene[element].gridcolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('border-color');
+    settings.chartLayout.scene[element].zerolinecolor = window.getComputedStyle(document.getElementById("css-ref-ele-0"), null).getPropertyValue('color');
   });
   //console.log(settings);
   reactTheChart();
