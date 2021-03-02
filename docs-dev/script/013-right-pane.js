@@ -255,9 +255,10 @@ const editorVue = new Vue({
       mainSystem.undoManager.indexOfNextAdd--;
       this.rotate(this.getAngle());
       varManagerVue.checkCellParams(cell);
-      if (simVue.mode !== "mDesign") {
+      //Commented if to enable the output graphs to update
+      //if (simVue.mode !== "mDesign") {
         simVue.informSim('updateCell', cell.id)
-      }
+      //}
       mainSystem.graph.setSelectionCells([]);
     },
     toggleParamDisplay: function (index) {

@@ -64,12 +64,12 @@ class umk_1589386537157 extends umk_model {
           "Type": "Options",
           "Options": {
             sl: {
-              "en-us": "Scalar product $(u_{1_{i,j}} u_{2_{i,j}})$",
-              "es-mx": "Producto escalar $(u_{1_{i,j}} u_{2_{i,j}})$"
+              "en-us": "Hadamard element-wise product",
+              "es-mx": "Producto con elementos basados en Hadamard"
             },
             mm: {
-              "en-us": "Matrix multiplication $(u_1 u_2)$",
-              "es-mx": "Multiplicación de matrices $(u_1 u_2)$"
+              "en-us": "Matrix multiplication",
+              "es-mx": "Multiplicación de matrices"
             }
           },
           "Value": [

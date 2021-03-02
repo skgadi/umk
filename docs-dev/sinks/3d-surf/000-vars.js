@@ -39,8 +39,8 @@ const settings = {
     /*modebar: {
       orientation: "v"
     },*/
-    legend:{
-      y:0.5
+    legend: {
+      y: 0.5
     }
   },
   chartConfig: {
@@ -53,7 +53,24 @@ const settings = {
   }
 }
 
-let fullData = [];
+let fullData = [{
+  x:[],
+  y:[],
+  z: [],
+  type: 'surface',
+  colorscale: "Greens",
+  contours: {
+    z: {
+      show: true,
+      usecolormap: true,
+      //highlightcolor: "#42f462",
+      project: {
+        z: true
+      },
+      width: settings.width
+    }
+  }
+}];
 
 
 

@@ -26,17 +26,6 @@ class umk_1614546347150 extends umk_model {
             [false]
           ]
         },
-        "reversescale": {
-          "Name": {
-            "en-us": "Invert the color scaling",
-            "es-mx": "Invertir la escala de color"
-          },
-          "Dimension": "Scalar",
-          "Type": "Checkbox",
-          "Value": [
-            [false]
-          ]
-        },
         "width": {
           "Name": {
             "en-us": "Line thickness",
@@ -46,6 +35,102 @@ class umk_1614546347150 extends umk_model {
           "Type": "Real",
           "Value": [
             [5]
+          ]
+        },
+        "colorscale": {
+          "Name": {
+            "en-us": "Type of color scale",
+            "es-mx": "Tipo de escala de colores"
+          },
+          "Dimension": "Scalar",
+          "Type": "Options",
+          "Options": {
+            Greys: {
+              "en-us": "Greys",
+              "es-mx": "Grises"
+            },
+            YlGnBu: {
+              "en-us": "Yellow, Green and Blue",
+              "es-mx": "Amarilla, verde y azul"
+            },
+            Greens: {
+              "en-us": "Greens",
+              "es-mx": "Verdes"
+            },
+            YlOrRd: {
+              "en-us": "Yellow, Orange and Red",
+              "es-mx": "Amarilla, naranja y roja"
+            },
+            Bluered: {
+              "en-us": "Blue and Red",
+              "es-mx": "Azul y roja"
+            },
+            RdBu: {
+              "en-us": "Red to Blue",
+              "es-mx": "Roja a azul"
+            },
+            Reds: {
+              "en-us": "Reds",
+              "es-mx": "Rojas"
+            },
+            Blues: {
+              "en-us": "Blues",
+              "es-mx": "Azules"
+            },
+            Picnic: {
+              "en-us": "Picnic",
+              "es-mx": "Picnic"
+            },
+            Rainbow: {
+              "en-us": "Rainbow",
+              "es-mx": "Arcoíris"
+            },
+            Portland: {
+              "en-us": "Portland",
+              "es-mx": "Portland"
+            },
+            Jet: {
+              "en-us": "Jet",
+              "es-mx": "Jet"
+            },
+            Hot: {
+              "en-us": "Hot",
+              "es-mx": "Caliente"
+            },
+            Blackbody: {
+              "en-us": "Blackbody",
+              "es-mx": "Cuerpo negro"
+            },
+            Earth: {
+              "en-us": "Earth",
+              "es-mx": "Tierra"
+            },
+            Electric: {
+              "en-us": "Electric",
+              "es-mx": "Eléctrica"
+            },
+            Viridis: {
+              "en-us": "Viridis",
+              "es-mx": "Viridis"
+            },
+            Cividis: {
+              "en-us": "Cividis",
+              "es-mx": "Cividis"
+            }
+          },
+          "Value": [
+            ["Jet"]
+          ]
+        },
+        "reversescale": {
+          "Name": {
+            "en-us": "Invert the color scaling",
+            "es-mx": "Invertir la escala de color"
+          },
+          "Dimension": "Scalar",
+          "Type": "Checkbox",
+          "Value": [
+            [false]
           ]
         },
         "mode": {

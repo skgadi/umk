@@ -65,16 +65,16 @@ class umk_1588715754701 extends umk_model {
           "Type": "Options",
           "Options": {
             sl: {
-              "en-us": "Scalar product",
-              "es-mx": "Producto escalar"
+              "en-us": "Hadamard element-wise product",
+              "es-mx": "Producto con elementos basados en Hadamard"
             },
             lm: {
-              "en-us": "Matrix multiplication ($Gu(t)$)",
-              "es-mx": "Multiplicación de matrices ($Gu(t)$)"
+              "en-us": "Matrix multiplication (Gu(t))",
+              "es-mx": "Multiplicación de matrices (Gu(t))"
             },
             rm: {
-              "en-us": "Matrix multiplication ($u(t)G$)",
-              "es-mx": "Multiplicación de matrices ($u(t)G$)"
+              "en-us": "Matrix multiplication (u(t)G)",
+              "es-mx": "Multiplicación de matrices (u(t)G)"
             }
           },
           "Value": [

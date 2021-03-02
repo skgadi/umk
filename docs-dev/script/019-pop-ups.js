@@ -76,6 +76,15 @@ const popup = {
             h: 200
           }, pop); //noreferrer, noopener,
           break;
+        case "3d-mesh":
+          this.rType[cell.id] = "ball";
+          this.openUrl(cell.id, "./sinks/3d-mesh.min.html?" + urlQueryString, {
+            W: 600,
+            H: 300,
+            w: 350,
+            h: 200
+          }, pop); //noreferrer, noopener,
+          break;
         case "3d-surf":
           this.rType[cell.id] = "ball";
           this.openUrl(cell.id, "./sinks/3d-surf.min.html?" + urlQueryString, {

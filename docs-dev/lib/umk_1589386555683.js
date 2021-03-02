@@ -49,8 +49,8 @@ class umk_1589386555683 extends umk_model {
           "Type": "Options",
           "Options": {
             sl: {
-              "en-us": "Scalar division $(u_{1_{i,j}} / u_{2_{i,j}})$",
-              "es-mx": "División escalar $(u_{1_{i,j}} / u_{2_{i,j}})$"
+              "en-us": "Hadamard element-wise division",
+              "es-mx": "División con elementos basados en Hadamard"
             },
             fd: {
               "en-us": "Forward matrix division (u1 inv(u2))",

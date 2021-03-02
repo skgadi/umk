@@ -11,19 +11,22 @@ function appendData(inData) {
         for (let k = 0; k < inData[0]['v'][0]['r'][0].length; k++) {
           ["", "Img"].forEach(function (textPrepend) {
             fullData.push({
-              type: 'scatter3d',
+              type: 'mesh3d',
               name: textPrepend + '(' + j + ',' + k + ')',
               visible: (!settings.showIm && !!(settings.noOfPlots % 2)) ? 'legendonly' : 'true',
-              mode: settings.mode,
+              //mode: settings.mode,
               x: [],
               y: [],
               z: [],
               opacity: 1,
-              line: {
+              colorscale: settings.colorscale,
+              reversescale: settings.reversescale,
+              intensity: [],
+              intensitymode:'cell',
+              showscale: false,
+              showlegend: true,
+              contour: {
                 width: settings.width,
-                color: [],
-                colorscale: settings.colorscale,
-                reversescale: settings.reversescale
               }
             });
             settings.noOfPlots++;
@@ -41,12 +44,12 @@ function appendData(inData) {
         fullData[plotNumber].x.push(Number(inData[i]['v'][0]['r'][j][k]))
         fullData[plotNumber].y.push(Number(inData[i]['v'][1]['r'][j][k]))
         fullData[plotNumber].z.push(Number(inData[i]['v'][2]['r'][j][k]))
-        fullData[plotNumber].line.color.push(Number(inData[i]['v'][3]['r'][j][k]))
+        fullData[plotNumber].intensity.push(Number(inData[i]['v'][3]['r'][j][k]))
         plotNumber++;
         fullData[plotNumber].x.push(Number(inData[i]['v'][0]['i'][j][k]))
         fullData[plotNumber].y.push(Number(inData[i]['v'][1]['i'][j][k]))
         fullData[plotNumber].z.push(Number(inData[i]['v'][2]['i'][j][k]))
-        fullData[plotNumber].line.color.push(Number(inData[i]['v'][3]['i'][j][k]))
+        fullData[plotNumber].intensity.push(Number(inData[i]['v'][3]['i'][j][k]))
         plotNumber++;
       }
     }
@@ -58,13 +61,14 @@ function appendData(inData) {
 function updateConfiguration() {
   for (let index = 0; index < fullData.length; index++) {
     const eachPlot = fullData[index];
-    eachPlot.mode = settings.mode;
-    eachPlot.line.width = settings.width;
+    //eachPlot.mode = settings.mode;
+    eachPlot.contour.width = settings.width;
     eachPlot.visible = (!settings.showIm && !!(index % 2)) ? 'legendonly' : 'true',
-    eachPlot.line.reversescale = settings.reversescale;
-    eachPlot.line.colorscale = settings.colorscale;
+    eachPlot.reversescale = settings.reversescale;
+    eachPlot.colorscale = settings.colorscale;
   }
-  reactTheChart()
+  console.log('updated configuration');
+  reactTheChart();
 }
 
 function reactTheChart() {
