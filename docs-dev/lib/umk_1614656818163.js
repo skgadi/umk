@@ -8,20 +8,22 @@ class umk_1614656818163 extends umk_model {
     };
   }
   Init() {
-    let fElement = this.Parameters.fElement.Value._data[0][0];
+    let fElement = this.Parameters.fElement.Value.subset(math.index(0, 0));
     let rCount = this.Parameters.rCount.Value._data[0][0];
-    let rLElement = this.Parameters.rLElement.Value._data[0][0];
+    let rLElement = this.Parameters.rLElement.Value.subset(math.index(0, 0));
     let cCount = this.Parameters.cCount.Value._data[0][0];
-    let cLElement = this.Parameters.cLElement.Value._data[0][0];
-    let rInc = (rCount === 1) ? 0 : (rLElement - fElement) / (rCount - 1);
-    let cInc = (cCount === 1) ? 0 : (cLElement - fElement) / (cCount - 1);
-    //console.log(rInc);
+    let cLElement = this.Parameters.cLElement.Value.subset(math.index(0, 0));
+    let rInc = (rCount === 1) ? 0 : math.dotDivide(math.subtract (rLElement, fElement), (rCount - 1));
+    let cInc = (cCount === 1) ? 0 : math.dotDivide(math.subtract (cLElement, fElement), (cCount - 1));
+    //console.log(rInc.toString());
+    //console.log(cInc.toString());
     let tempArray = [];
     for (let i = 0; i < rCount; i++) {
       let tempArray1 = [];
-      let rFElement = fElement + rInc * i;
+      let rFElement = math.add(fElement , math.dotMultiply(rInc,i));
+      //console.log(rFElement.toString());
       for (let j = 0; j < cCount; j++) {
-        tempArray1.push(rFElement + cInc * j);
+        tempArray1.push(math.add(rFElement , math.dotMultiply(cInc,j)));
       }
       tempArray.push(tempArray1);
     }

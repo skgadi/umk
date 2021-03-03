@@ -8,7 +8,8 @@ class umk_1589037930037 extends umk_model {
     };
   }
   genCompParams() {
-    this.CompParams["c"] = math.unaryMinus(math.dotMultiply(this.Parameters.sl.Value, this.Parameters.st.Value));
+    this.CompParams["c"] = math.add(this.Parameters.iv.Value,math.unaryMinus(math.dotMultiply(this.Parameters.sl.Value, this.Parameters.st.Value)));
+    //console.log(this.CompParams["c"].toString());
   }
   Evaluate(t) {
     //let lesM = math.smaller(t, this.Parameters.st.Value);
