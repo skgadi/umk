@@ -61,7 +61,7 @@ class umk_1589037930037 extends umk_model {
           "Dimension": "Matrix",
           "Type": "Real",
           "Value": [
-            [1]
+            [0]
           ]
         }
       },
