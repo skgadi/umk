@@ -2,14 +2,15 @@ class umk_1614890638761 extends umk_model {
   Icon() {
     return {
       html: blockUtils.makeIcon(this.id),
-      inLabels: ['1','L', '2'],
+      inLabels: ['1', 'L', '2'],
       outLabels: null,
       splStyle: ""
     };
   }
   Evaluate() {
     let gSize = this.inputs[1].size();
-    if (gSize[0] === 1 && gSize[1] === 1) {
+    let inScalar = blockUtils.isScalar(this.inputs[1]);
+    if (inScalar) {
       //console.log(gSize);
       if (!!math.compare(this.inputs[1]._data[0][0], 0)) {
         //console.log('sdf');
@@ -18,6 +19,9 @@ class umk_1614890638761 extends umk_model {
         this.outputs[0] = this.inputs[2];
       }
     } else {
+      if (!blockUtils.ifAllSameDimMatrices(this.inputs)) {
+        throw ({message:"Dimension mismatch"});
+      }
       const tempOut1 = [];
       for (let i = 0; i < gSize[0]; i++) {
         const tempOut2 = [];

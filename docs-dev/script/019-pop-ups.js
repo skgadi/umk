@@ -274,6 +274,7 @@ const popup = {
         d: simVue.results[cid]
       });
       setTimeout(() => {
+        mainSystem.refresh();
         umk_audio.play("pop_sentPrevData");
       }, 500);
     }, settings.waitPRLoad * 1000);

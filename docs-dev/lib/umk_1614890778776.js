@@ -9,12 +9,12 @@ class umk_1614890778776 extends umk_model {
   }
   Evaluate() {
     let gSize = this.inputs[0].size();
-    const tempOut =[];
-    for (let i=0;i<gSize[0];i++) {
+    const tempOut = [];
+    for (let i = 0; i < gSize[0]; i++) {
       const tempOut1 = [];
-      for (let j=0; j<gSize[1];j++) {
+      for (let j = 0; j < gSize[1]; j++) {
         let val = this.inputs[0]._data[i][j]
-        for (let k=1; k<this.TerminalsIn.value; k++) {
+        for (let k = 1; k < this.TerminalsIn.value; k++) {
           val = math.max(val, this.inputs[k]._data[i][j]);
         }
         tempOut1.push(val);
@@ -24,7 +24,9 @@ class umk_1614890778776 extends umk_model {
     this.outputs[0] = math.matrix(tempOut);
   }
   Details() {
-    return TeX.prepDisp("y_{i,j} = \\max(u_{1_{i,j}}, u_{2_{i,j}}, \\dots,u_{n_{i,j}})");
+    return TeX.prepDisp("y_{i,j} = \\max(" +
+      Array.from(Array(math.number(this.TerminalsIn.value)).keys(), x => "u_{" + (x+1) + "_{i,j}}") +
+    ")");
   }
   constructor(obj) {
     super(Object.assign({
