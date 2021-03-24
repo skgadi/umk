@@ -5,7 +5,7 @@ class umk_1616354932295 extends umk_model {
       html: "",
       inLabels: null,
       outLabels: this.Parameters.tag.Value.map((ele) => {
-        return TeX.prepInline(ele[0]);
+        return ele[0];
       }),
       //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected
       splStyle: "shape=fromTag;"
