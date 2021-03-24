@@ -15,7 +15,7 @@ class umk_1616354932295 extends umk_model {
     this.TerminalsOut.value=this.Parameters.tag.Value.length;
     let out;
     for (let i=0; i<this.Parameters.tag.Value.length; i++) {
-      out += "<p>"+TeX.prepInline(this.Parameters.tag.Value[i][0])+"</p>";
+      out += "<p>"+this.Parameters.tag.Value[i][0]+"</p>";
     }
     return out;
   }
