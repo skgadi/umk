@@ -265,6 +265,8 @@
           outError = GUIText[settings.lang].errSameBlkConn;
         } else if (graph.doesContainMultipleSources([source, target], [edge])) {
           outError = GUIText[settings.lang].errInpInpConn;
+        } else if (graph.doesContainMultipleTags([source, target], [edge])) {
+          outError = GUIText[settings.lang].errMulTags;
         }
 
         /*

@@ -8,7 +8,7 @@ class umk_1585601356516 extends umk_model {
       }),
       outLabels: null,
       //splStyle: "shape=triangle;" // wait until the out triangle is hidden when connected
-      splStyle: ""
+      splStyle: "shape=triangle"
     };
   }
   Evaluate() {
@@ -26,6 +26,10 @@ class umk_1585601356516 extends umk_model {
     }
   }
   Details() {
+    if (this.Parameters.pm.Value.length<2) {
+      this.Parameters.pm.Value.push(["pl"]);
+    }
+    this.TerminalsIn.value = this.Parameters.pm.Value.length;
     this.genCompParams();
       let out = "y(t)="
       if (!this.CompParams.isAdd[0]) {
@@ -69,12 +73,12 @@ class umk_1585601356516 extends umk_model {
           "Type": "Options",
           "Options": {
             pl: {
-              "en-us": "Plus $(+)$",
-              "es-mx": "Más $(+)$"
+              "en-us": "Plus (+)",
+              "es-mx": "Más (+)"
             },
             mn: {
-              "en-us": "Minus $(-)$",
-              "es-mx": "Menos $(-)$"
+              "en-us": "Minus (-)",
+              "es-mx": "Menos (-)"
             },
           },
           "Value": [
@@ -87,7 +91,7 @@ class umk_1585601356516 extends umk_model {
         min: 2,
         max: 100,
         value: 2,
-        editable: true
+        editable: false
       },
       TerminalsOut: {
         min: 1,

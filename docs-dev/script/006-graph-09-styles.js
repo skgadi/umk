@@ -283,6 +283,7 @@
   style.strokeColor = "var(--col-text-0)";
   //style.fontSize = "0.75em";
   //style.routingCenterX = -0.5;
+  style.fontSize = 10;
   style.spacingLeft = 12;
   style.strokeWidth = 0.5;
   style.routingCenterX = 0.5;
@@ -307,6 +308,7 @@
   style.strokeColor = "var(--col-text-0)";
   //style.fontSize = "0.75em";
   //style.routingCenterX = -0.5;
+  style.fontSize = 8;
   style.spacingLeft = 12;
   style.strokeWidth = 1;
   style.routingCenterX = 0.5;

@@ -332,14 +332,14 @@ const simVue = new Vue({
         mainSystem.graph.refresh(cell);
       }
     },
-    updateResults: function() {
+    updateResults: function () {
       const AllTheOutCells = Object.keys(popup.preparedData);
-      for (let i=0; i< AllTheOutCells.length; i++) {
+      for (let i = 0; i < AllTheOutCells.length; i++) {
         const cid = AllTheOutCells[i];
         if (!this.results[cid]) {
-          this.results[cid]=[];
+          this.results[cid] = [];
         }
-        this.results[cid]=(this.results[cid].concat(popup.preparedData[cid])).slice(-settings.maxTotalHistory);
+        this.results[cid] = (this.results[cid].concat(popup.preparedData[cid])).slice(-settings.maxTotalHistory);
       }
     },
     initSim: function () {
@@ -356,7 +356,7 @@ const simVue = new Vue({
                 //console.log(event.data.put);
                 //simVue.results = simVue.results.concat(event.data.put);
                 popup.prepareData(event.data.put);
-                simVue.lastItem = event.data.put[event.data.put.length -1];
+                simVue.lastItem = event.data.put[event.data.put.length - 1];
                 simVue.updateResults();
                 //console.log(simVue.lastItem);
 
@@ -368,10 +368,12 @@ const simVue = new Vue({
                 });
                 setTimeout(() => {
                   if (simVue.simWorker) {
-                    simVue.simWorker.postMessage({"recData": true});
+                    simVue.simWorker.postMessage({
+                      "recData": true
+                    });
                   }
                 }, settings.waitUpdGraphs);
-                umk_audio.play("sim_recPacket",0.10);
+                umk_audio.play("sim_recPacket", 0.10);
               } else if (event.data.ended) {
                 simVue.endSim();
                 umk_audio.play("sim_finished", 0.5);
@@ -452,6 +454,7 @@ const simVue = new Vue({
       );
       this.showExecutionOrderMessage(executionOrderAndErros.ne, "<i class='fas fa-times'></i>");
       this.showExecutionOrderMessage(executionOrderAndErros.pc, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-plug fa-stack-1x'></i></span>");
+      this.showExecutionOrderMessage(executionOrderAndErros.sr, "<i class='fas fa-route'></i>");
       mainSystem.refresh();
     },
 
@@ -665,15 +668,19 @@ const simVue = new Vue({
       let fullyConnectedModels = allConnectedModels.fc;
       let aLoopModels = [];
 
+      //Obtain the routing details
+      signalRouteVue.updateTags();
+
       //Obtaining first executing models
       for (let i = 0; i < fullyConnectedModels.length; i++) {
-        if (fullyConnectedModels[i].value.TerminalsIn.max === 0) {
+        if (fullyConnectedModels[i].value.TerminalsIn.max === 0 && !fullyConnectedModels[i].value.signalRerouting) {
           sourcesModels.push(fullyConnectedModels[i]);
         } else if (!!fullyConnectedModels[i].value.fInEO) {
           fInEOModels.push(fullyConnectedModels[i]);
         }
       }
       firstModels = sourcesModels.slice(); //.concat(fInEOModels);
+
       //removing first executing models from fullyConnectedModels
       for (let i = 0; i < firstModels.length; i++) {
         fullyConnectedModels = this.arrayRemove(
@@ -681,11 +688,27 @@ const simVue = new Vue({
           firstModels[i]
         );
       }
+
+      // removing the signal routing blocks
+      let tempfullyConnectedModels = [];
+      let signalRouteBlocks = [];
+      for (let i = 0; i < fullyConnectedModels.length; i++) {
+        if (!fullyConnectedModels[i].value.signalRerouting) {
+          tempfullyConnectedModels.push(fullyConnectedModels[i]);
+        } else {
+          signalRouteBlocks.push(fullyConnectedModels[i]);
+        }
+      }
+      fullyConnectedModels = tempfullyConnectedModels;
+
+
       let ExecutionOrder = [];
       let i = 0;
       try {
         while (fullyConnectedModels.length > 0) {
           let mSources = this.getSourcesWithIndexes(fullyConnectedModels[i]);
+          //console.log("a");
+          //console.log(mSources);
           let addThisToOrder = true;
           for (let j = 0; j < mSources.length; j++) {
             if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
@@ -698,6 +721,8 @@ const simVue = new Vue({
               //fInEOModelsOrdered.push(fullyConnectedModels[i]);
             }
             ExecutionOrder.push(fullyConnectedModels[i]);
+            //console.log("b");
+            //console.log(fullyConnectedModels[i]);
             fInEOModels = this.arrayRemove(fInEOModels, fullyConnectedModels[i]);
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
@@ -710,6 +735,8 @@ const simVue = new Vue({
           if (i >= fullyConnectedModels.length && !!fInEOModels.length) {
             let firstCellFromFInEOModels = fInEOModels.shift();
             ExecutionOrder.push(firstCellFromFInEOModels);
+            //console.log("c");
+            //console.log(firstCellFromFInEOModels);
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
               firstCellFromFInEOModels
@@ -773,7 +800,8 @@ const simVue = new Vue({
         eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
         ne: fullyConnectedModels,
         al: aLoopModels,
-        pc: allConnectedModels.pc
+        pc: allConnectedModels.pc,
+        sr: signalRouteBlocks
       };
     },
 
@@ -781,31 +809,44 @@ const simVue = new Vue({
       let modelSources = [];
       for (let i = 0; i < inModel.children.length; i++) {
         if (inModel.children[i].style.search("umk_input") >= 0) {
-          let srcItem = {
-            model = null,
-            index = null
-          };
-          let nodeItems = mainSystem.graph.getNodeCells(inModel.children[i]);
-          for (let j = 0; j < nodeItems.length; j++) {
-            if (!!nodeItems[j] && !!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
-              srcItem.model = nodeItems[j].parent;
-              let outIdx = -1;
-              for (let k = 0; k < nodeItems[j].parent.children.length; k++) {
-                if (!!nodeItems[j].parent.children[k].style && nodeItems[j].parent.children[k].style.search("umk_output") >= 0) {
-                  outIdx++;
-                  if (nodeItems[j] === nodeItems[j].parent.children[k]) {
-                    srcItem.index = outIdx;
-                    break;
-                  }
-                }
-              }
-              break;
-            }
-          }
-          modelSources.push(srcItem);
+          modelSources.push(this.obtainTheSrcAndIdxFor(inModel.children[i]));
         }
       }
       return modelSources;
+    },
+    obtainTheSrcAndIdxFor: function (childItem) {
+      const srcItem = {
+        model = null,
+        index = null
+      };
+      let nodeItems = mainSystem.graph.getNodeCells(childItem);
+      for (let j = 0; j < nodeItems.length; j++) {
+        if (!!nodeItems[j] && !!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
+          if (!nodeItems[j].value.signalRerouting) {
+            srcItem.model = nodeItems[j].parent;
+          }
+          let outIdx = -1;
+          for (let k = 0; k < nodeItems[j].parent.children.length; k++) {
+            if (!!nodeItems[j].parent.children[k].style && nodeItems[j].parent.children[k].style.search("umk_output") >= 0) {
+              outIdx++;
+              if (nodeItems[j] === nodeItems[j].parent.children[k]) {
+                if (!nodeItems[j].parent.value.signalRerouting) {
+                  srcItem.index = outIdx;
+                  //console.log("Not entered to tag");
+                } else {
+                  //console.log("Entered to tag: "+outIdx);
+                  const tempSrc = signalRouteVue.tags[nodeItems[j].parent.value.Parameters.tag.Value[outIdx][0]];
+                  srcItem.model = tempSrc.source.model;
+                  srcItem.index = tempSrc.source.index;
+                }
+                break;
+              }
+            }
+          }
+          break;
+        }
+      }
+      return srcItem;
     },
     getSourcesOfAModel: function (inModel) {
       let modelSources = [];
@@ -926,10 +967,7 @@ const simVue = new Vue({
         let isFullyConnected = true;
         for (let j = 0; j < allConnectedBlocks[i].children.length; j++) {
           if (
-            (allConnectedBlocks[i].children[j].style.search("umk_input") >=
-              0 ||
-              allConnectedBlocks[i].children[j].style.search("umk_input") >=
-              0) &&
+            (allConnectedBlocks[i].children[j].style.search("umk_input") >= 0) &&
             (!allConnectedBlocks[i].children[j].edges ||
               allConnectedBlocks[i].children[j].edges.length < 1)
           ) {
@@ -959,6 +997,10 @@ const simVue = new Vue({
         }
         //mainSystem.graph.setCellWarning(cells[i], warning);
       }
+    },
+
+    getTagLabelsInfo: function () {
+
     },
 
     arrayRemove: function (arr, value) {

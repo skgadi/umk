@@ -67,6 +67,13 @@ const blockUtils = {
     out += "</table>";
     return out;
   },
+  "isValidTagName": function (name) {
+    if (!!name) {
+      return true;
+    } else {
+      return false;
+    }
+  },
   "integrate-old": function (inItem, isFirstInEO = true) {
     /*
     //Initialize  the memory

@@ -77,6 +77,29 @@
     return false;
   }
 
+  //checks for tags signal routing
+  graph.doesContainMultipleTags = function (inCells, ignCells = []) {
+    let foundATag = 0;
+    let foundAFromTag = 0;
+    for (let i = 0; i < inCells.length; i++) {
+      let allNodeCells = this.getNodeCells(inCells[i]);
+      for (let j = 0; j < allNodeCells.length; j++) {
+        //console.log(allNodeCells[j]);
+        if (!!allNodeCells[j] && !!allNodeCells[j].parent && !! allNodeCells[j].parent.value && allNodeCells[j].parent.value.signalRerouting) {
+          foundATag++;
+          if (!allNodeCells[j].parent.value.TerminalsIn.max) {
+            foundAFromTag++;
+          }
+          if (foundATag*foundAFromTag) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+
 
   graph.getNodeCells = function (inCell, ignCells = []) {
     const nItems = []; //Node Items
@@ -124,7 +147,7 @@
 
   mainSystem.removeUselessEdges = function () {
     let contRemoving = true;
-    while(contRemoving) {
+    while (contRemoving) {
       let cellsToRemove = [];
       let allCells = Object.values(this.graph.getModel().cells);
       for (let i = 0; i < allCells.length; i++) {
@@ -147,7 +170,7 @@
         noOfConnections++;
       }
       noOfConnections += inEdge.getEdgeCount();
-      if (noOfConnections<2) {
+      if (noOfConnections < 2) {
         return false;
       } else {
         return true;
