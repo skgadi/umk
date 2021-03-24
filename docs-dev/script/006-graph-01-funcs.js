@@ -79,7 +79,7 @@
 
   //checks for tags signal routing
   graph.doesContainMultipleTags = function (inCells, ignCells = []) {
-    let foundATag = 0;
+    let foundATag = -1;
     let foundAFromTag = 0;
     for (let i = 0; i < inCells.length; i++) {
       let allNodeCells = this.getNodeCells(inCells[i]);
