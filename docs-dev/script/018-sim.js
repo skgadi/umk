@@ -3,6 +3,7 @@ const simVue = new Vue({
   data: {
     mode: "mDesign",
     disp: {
+      "oneRun": true,
       "run": true,
       //"endTime": true,
       //"endTime": true,
@@ -78,6 +79,7 @@ const simVue = new Vue({
       switch (this.mode) {
         case 'mDesign': {
           this.disp = {
+            "oneRun": true,
             "run": true,
             "stop": false,
             "pause": false,
@@ -88,6 +90,7 @@ const simVue = new Vue({
         }
         case 'mSim': {
           this.disp = {
+            "oneRun": false,
             "run": false,
             "stop": true,
             "pause": true,
@@ -98,6 +101,7 @@ const simVue = new Vue({
         }
         case 'mSimPause': {
           this.disp = {
+            "oneRun": false,
             "run": true,
             "stop": true,
             "pause": false,
@@ -255,6 +259,15 @@ const simVue = new Vue({
               out = {
                 simSettings: this.simSettings
               };
+              break;
+            case "oneRun":
+              if (!this.simWorker) {
+                this.initSim();
+              }
+              out = {
+                oneRun: 0
+              };
+              this.mode = "mSim";
               break;
             case "start":
               if (!this.simWorker) {

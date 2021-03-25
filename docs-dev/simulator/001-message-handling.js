@@ -14,6 +14,9 @@ onmessage = function (oEvent) {
         case "simSettings":
           exec.setSimSettings(oEvent.data.simSettings);
           break;
+        case "oneRun":
+          exec.oneRun();
+          break;
         case "start":
           exec.start();
           break;
@@ -29,7 +32,7 @@ onmessage = function (oEvent) {
         case "recData":
           exec.recData();
           break;
-              /*case "results":
+          /*case "results":
           exec.updResHandler(oEvent.data.results);
           break;*/
         default:

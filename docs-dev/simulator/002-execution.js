@@ -242,6 +242,14 @@ const exec = {
     //console.log(this.simSettings);
     //console.log(this.rSteps);
   },
+  oneRun: function () {
+    if (!this.inPrg) {
+      this.Init();
+    }
+    this.isCont = false;
+    this.loop(1);
+    this.End();
+  },
   start: function () {
     if (!this.inPrg) {
       this.Init();
