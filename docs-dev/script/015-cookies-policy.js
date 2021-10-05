@@ -9,7 +9,9 @@ cPolicyVue = new Vue({
     }
   },
   mounted: function () {
-    this.checkAcceptance();
+    if (!isElectron()) {
+      this.checkAcceptance();
+    }
   },
   methods: {
     acceptBtn: function () {

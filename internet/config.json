@@ -28,14 +28,14 @@
           "pre": "fas fa-home",
           "Weight": 1
         }, {
-          "URL": "/app",
-          "Name": "Application",
-          "pre": "fas fa-play",
+          "URL": "/download/uyamak-win64.exe",
+          "Name": "Download",
+          "pre": "fas fa-download",
           "Weight": 2
         }, {
-          "URL": "/blog",
-          "Name": "Blog",
-          "pre": "fas fa-blog",
+          "URL": "/app",
+          "Name": "Run online",
+          "pre": "fas fa-play",
           "Weight": 3
         }, {
           "URL": "/docs",
@@ -62,15 +62,15 @@
           "Name": "Hogar",
           "pre": "fas fa-home",
           "Weight": 1
+          }, {
+            "URL": "/download/uyamak-win64.exe",
+            "Name": "Descargar",
+            "pre": "fas fa-download",
+            "Weight": 2
         }, {
           "URL": "/app",
-          "Name": "Aplicación",
+          "Name": "Ejecutar en línea",
           "pre": "fas fa-play",
-          "Weight": 2
-        }, {
-          "URL": "/blog",
-          "Name": "Blog",
-          "pre": "fas fa-blog",
           "Weight": 3
         }, {
           "URL": "/docs",

@@ -51,7 +51,7 @@ class umk_1586738484106 extends umk_model {
           "Dimension": "Scalar",
           "Type": "Checkbox",
           "Value": [
-            [true]
+            [false]
           ]
         },
       "limitData": {
@@ -62,7 +62,7 @@ class umk_1586738484106 extends umk_model {
           "Dimension": "Scalar",
           "Type": "Real",
           "Value": [
-            [1000]
+            [10000]
           ]
         }
       },

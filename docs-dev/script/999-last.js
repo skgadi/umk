@@ -47,7 +47,9 @@ window.onbeforeunload = function () {
   simVue.informSim('stop'); // Stop the simulation before exiting
   simVue.dbName = null;
   popup.closeAll(); //close all the popups
-  return "Sure?"; //Enable this for confirming before exiting.
+  if (!isElectron()) {
+    return "Sure?"; //Enable this for confirming before exiting.
+  }
 };
 
 

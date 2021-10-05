@@ -160,15 +160,17 @@ const popup = {
     }
   },
   close: function (cid) {
-    if (!!this.refsForSinks[cid]) {
-      if (!!this.refsForSinks[cid].extWind) {
-        this.refsForSinks[cid].extWind.close();
+    try {
+      if (!!this.refsForSinks[cid]) {
+        if (!!this.refsForSinks[cid].extWind) {
+          this.refsForSinks[cid].extWind.close();
+        }
+        if (!!this.refsForSinks[cid].intWind) {
+          this.refsForSinks[cid].intWind.winRef.destroy();
+        }
+        delete this.refsForSinks[cid]
       }
-      if (!!this.refsForSinks[cid].intWind) {
-        this.refsForSinks[cid].intWind.winRef.destroy();
-      }
-      delete this.refsForSinks[cid]
-    }
+    } catch (e) {}
   },
   prepareData: function (results) {
 
