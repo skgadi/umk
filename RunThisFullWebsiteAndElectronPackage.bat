@@ -35,14 +35,14 @@ copy /y .\docs-dev\electron-preload.min.js .\umk-ef\src\preload.js
 
 
 rem preparing installation file
-cd .\umk-ef\
-npm run make
-cd ..
+rem cd .\umk-ef\
+rem npm run make
+rem cd ..
 
 rem Copying downloadable files
-rmdir /s/q .\internet\static\download
-mkdir .\internet\static\download\
-copy /y ".\umk-ef\out\make\squirrel.windows\x64\Uyamak-1.0.0 Setup.exe" .\internet\static\download\uyamak-win64.exe
+rem rmdir /s/q .\internet\static\download
+rem mkdir .\internet\static\download\
+rem copy /y ".\umk-ef\out\make\squirrel.windows\x64\Uyamak-1.0.0 Setup.exe" .\internet\static\download\uyamak-win64.exe
 
 
 

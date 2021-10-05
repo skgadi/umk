@@ -28,7 +28,7 @@
           "pre": "fas fa-home",
           "Weight": 1
         }, {
-          "URL": "/download/uyamak-win64.exe",
+          "URL": "https://sourceforge.net/projects/umk/",
           "Name": "Download",
           "pre": "fas fa-download",
           "Weight": 2
@@ -63,7 +63,7 @@
           "pre": "fas fa-home",
           "Weight": 1
           }, {
-            "URL": "/download/uyamak-win64.exe",
+            "URL": "https://sourceforge.net/projects/umk/",
             "Name": "Descargar",
             "pre": "fas fa-download",
             "Weight": 2
