@@ -28,7 +28,7 @@
           "pre": "fas fa-home",
           "Weight": 1
         }, {
-          "URL": "https://sourceforge.net/projects/umk/",
+          "URL": "https://sourceforge.net/projects/umk/files/latest/download",
           "Name": "Download",
           "pre": "fas fa-download",
           "Weight": 2
@@ -63,7 +63,7 @@
           "pre": "fas fa-home",
           "Weight": 1
           }, {
-            "URL": "https://sourceforge.net/projects/umk/",
+            "URL": "https://sourceforge.net/projects/umk/files/latest/download",
             "Name": "Descargar",
             "pre": "fas fa-download",
             "Weight": 2
