@@ -13,8 +13,8 @@ const simVue = new Vue({
       "forward": true,
     },
     simSettings: {
-      h: 10, //Step size
-      T: 5, // Total simulation time
+      h: 1, //Step size
+      T: 10, // Total simulation time
       realtime: false,
       steps: 1,
       sOEvery: 1,

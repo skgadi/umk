@@ -19,6 +19,20 @@ class umk_1589836016344 extends umk_model {
     this.genCompParams();
     this.CompParams.isFr = [0];
   }
+  beforeEC(t, k, simSettings) {
+    //this.outputs[0] = this.CompParams.out[0];
+    this.CompParams.addInput = true;
+    this.getInputIfRequired();
+  }
+  getInputIfRequired() {
+    if (this.CompParams.addInput){
+      if (!!this.inputs[0]) {
+        this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
+        this.CompParams.addInput = false;
+        //console.log(JSON.stringify(this.CompParams.mem));
+      }
+    }
+  }
   genCompParams() {
     // Check for the valid dimensions
     this.CompParams.dims = JSON.parse(this.Parameters.dim.Value[0][0]);
@@ -79,14 +93,19 @@ class umk_1589836016344 extends umk_model {
     this.CompParams.pt = [0]; // previous time
     this.CompParams.pOut = []; // previous time
     this.CompParams.iv = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+    this.CompParams.addInput = true;
   }
   Evaluate(t, k, simSettings) {
     //console.log(this.CompParams.dims);
     //console.log('started');
+    this.getInputIfRequired();
     let it = ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]);
-    if (!!this.inputs[0]) {
+    /*if (!!this.inputs[0]) {
       this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
     } else {
+      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+    }*/
+    if (!this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0]) {
       this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
     }
     let finalOut = math.dotMultiply(this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0], this.CompParams.InCoeff._data[this.CompParams.maxDen - 1][0]);
@@ -127,6 +146,9 @@ class umk_1589836016344 extends umk_model {
     this.outputs[0] = finalOut;
     this.CompParams.pt[0] = t; //
     this.CompParams.OutInts.outs[(this.CompParams.maxDen - 1)][0] = finalOut;
+  }
+  afterEC(t, k, simSettings) {
+    this.getInputIfRequired();
   }
   Details(short = false) {
     try {

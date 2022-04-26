@@ -19,19 +19,33 @@ class umk_1590046944883 extends umk_model {
     this.genCompParams();
     this.CompParams.isFr = [0];
   }
+  beforeEC(t, k, simSettings) {
+    //this.outputs[0] = this.CompParams.out[0];
+    this.CompParams.addInput = true;
+    this.getInputIfRequired();
+  }
+  getInputIfRequired() {
+    if (this.CompParams.addInput){
+      if (!!this.inputs[0]) {
+        this.CompParams.matInp = this.inputs[0];
+        this.CompParams.addInput = false;
+        //console.log(JSON.stringify(this.CompParams.mem));
+      }
+    }
+  }
   genCompParams() {
     this.CompParams.x = []; //Output of int
     this.CompParams.pt = [0]; // previous time
     this.CompParams.mem = []; //Memory for integration
+    this.CompParams.addInput = true;
+    this.CompParams.matInp = math.zeros(this.Parameters.b.Value._data[0].length, this.Parameters.ic.Value._data[0].length);
   }
   Evaluate(t, k, simSettings) {
-    let matInp, dx;
+    this.getInputIfRequired();
+    let dx;
     if (!!t) {
-      matInp = this.inputs[0];
       dx = math.add(math.multiply(this.Parameters.a.Value, this.CompParams.x[0]),
-      math.multiply(this.Parameters.b.Value, matInp));
-    } else {
-      matInp = math.zeros(this.Parameters.b.Value._data[0].length, this.Parameters.ic.Value._data[0].length);
+      math.multiply(this.Parameters.b.Value, this.CompParams.matInp));
     }
     //console.log(JSON.stringify(matInp));
     //console.log(this.CompParams.x[0]);
@@ -47,8 +61,12 @@ class umk_1590046944883 extends umk_model {
     };
     blockUtils.integrate(pData);
     this.outputs[0] = math.add(math.multiply(this.Parameters.c.Value, pData.out[0]),
-      math.multiply(this.Parameters.d.Value, matInp));
+      math.multiply(this.Parameters.d.Value, this.CompParams.matInp));
   }
+  afterEC(t, k, simSettings) {
+    this.getInputIfRequired();
+  }
+
   Details(short = false) {
     if (short) {
       return TeX.prepInline("\\dot x(t) = A x(t) + B u(t)") +

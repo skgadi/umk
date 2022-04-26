@@ -15,19 +15,32 @@ class umk_1588716024472 extends umk_model {
   }
   beforeEC(t, k, simSettings) {
     //this.outputs[0] = this.CompParams.out[0];
+    this.CompParams.addInput = true;
+    this.getInputIfRequired();
+  }
+  getInputIfRequired() {
+    if (this.CompParams.addInput){
+      if (!!this.inputs[0]) {
+        this.CompParams.mem.unshift(this.inputs[0]);
+        this.CompParams.addInput = false;
+        //console.log(JSON.stringify(this.CompParams.mem));
+      }
+    }
   }
   genCompParams() {
     this.CompParams.out = []; //Output of int
     this.CompParams.pt = [0]; // previous time
     this.CompParams.mem = []; //Memory for integration
+    this.CompParams.addInput = true;
   }
   Evaluate(t, k, simSettings) {
+    this.getInputIfRequired();
     let pData = {
       mem: this.CompParams.mem,
       it: ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]),
       iv: this.Parameters.ic.Value,
       t: t,
-      inp: this.inputs[0],
+      //inp: this.inputs[0], // Inputs are handled here in this page
       out: this.CompParams.out,
       pt: this.CompParams.pt,
       isFr: this.CompParams.isFr
@@ -43,6 +56,7 @@ class umk_1588716024472 extends umk_model {
     }*/
   }
   afterEC(t, k, simSettings) {
+    this.getInputIfRequired();
   }
   Details() {
     return TeX.prepDisp("y(t)=\\int_{0}^{t}u(t)\\mathrm{d}t+y(0)");

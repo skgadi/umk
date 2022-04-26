@@ -19,6 +19,24 @@ class umk_1590046975775 extends umk_model {
     this.genCompParams();
     this.CompParams.isFr = [0];
   }
+  beforeEC(t, k, simSettings) {
+    //this.outputs[0] = this.CompParams.out[0];
+    this.CompParams.addInput = true;
+    this.getInputIfRequired();
+  }
+  getInputIfRequired() {
+    //console.log("testing");
+    if (this.CompParams.addInput){
+      if (!!this.inputs[0] && !!this.inputs[1] && !!this.inputs[2] && !!this.inputs[3] && !!this.inputs[4]) {
+        this.CompParams.matInp = this.inputs[4];
+        for (let i=0; i<4; i++) {
+          this.CompParams.inputs[i] = this.inputs[i];
+        }
+        this.CompParams.addInput = false;
+        //console.log("passed");
+      }
+    }
+  }
   genCompParams() {
     // Check for the valid input dimensions
     this.CompParams.inDims = JSON.parse(this.Parameters.dimIn.Value[0][0]);
@@ -43,15 +61,16 @@ class umk_1590046975775 extends umk_model {
     this.CompParams.x = []; //Output of int
     this.CompParams.pt = [0]; // previous time
     this.CompParams.mem = []; //Memory for integration
+    this.CompParams.addInput = true;
+    this.CompParams.inputs=[];
+    this.CompParams.matInp = math.zeros(this.CompParams.inDims[0], this.CompParams.inDims[1]);
   }
   Evaluate(t, k, simSettings) {
-    let matInp, dx;
+    this.getInputIfRequired();
+    let dx;
     if (!!t) {
-      matInp = this.inputs[4];
-      dx = math.add(math.multiply(this.inputs[0], this.CompParams.x[0]),
-        math.multiply(this.inputs[1], matInp));
-    } else {
-      matInp = math.zeros(this.CompParams.inDims[0], this.CompParams.inDims[1]);
+      dx = math.add(math.multiply(this.CompParams.inputs[0], this.CompParams.x[0]),
+        math.multiply(this.CompParams.inputs[1], this.CompParams.matInp));
     }
     //console.log(JSON.stringify(matInp));
     //console.log(this.CompParams.x[0]);
@@ -70,10 +89,14 @@ class umk_1590046975775 extends umk_model {
     if (!t) {
       this.outputs[0] = math.zeros(this.CompParams.outDims[0], this.CompParams.outDims[1]);
     } else {
-      this.outputs[0] = math.add(math.multiply(this.inputs[2], pData.out[0]),
-      math.multiply(this.inputs[3], matInp));
+      this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], pData.out[0]),
+      math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
     }
   }
+  afterEC(t, k, simSettings) {
+    this.getInputIfRequired();
+  }
+
   Details(short = false) {
     if (short) {
       return TeX.prepInline("\\dot x(t) = A(t) x(t) + B(t) u(t)") +

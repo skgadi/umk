@@ -281,7 +281,10 @@ const blockUtils = {
 
     function addInps() {
       if (!!inItem.inp) {
-        inItem.mem.push(inItem.inp);
+        inItem.mem.unshift(inItem.inp);
+        //console.log(JSON.stringify(inItem.mem));
+      } else {
+        //TODO.....
       }
       /* else {
               inItem.mem.push(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
@@ -305,16 +308,17 @@ const blockUtils = {
             // console.log(JSON.stringify(intTypes[inItem.it].b[i]));
             // console.log(JSON.stringify(intTypes[inItem.it].c[i]));
             // console.log(JSON.stringify(inItem.mem[math.round(intTypes[inItem.it].c[i] * intTypes[inItem.it].m)]));
+            let calcRes = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].a[i], inItem.mem[i]));
             if (!i) {
-              out = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].a[i], inItem.mem[i]));
+              out = calcRes;
               //console.log(JSON.stringify(out));
             } else {
-              out = math.add(out, math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].a[i], inItem.mem[i])));
+              out = math.add(out, calcRes);
             }
           }
           inItem.out[0] = math.add(inItem.out[0], out);
           while (inItem.mem.length > 1) {
-            inItem.mem.shift();
+            inItem.mem.pop();
           }
         } else {
           if (!inItem.out[0]) {
