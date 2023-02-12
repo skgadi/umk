@@ -17,9 +17,11 @@
     <img src="{{$.Site.BaseURL}}images/umk-logo-192-192.png" />
   </div>
   <h1 class="w3-center">Uyamak (<b>&#3081;</b>)</h1>
-  <p class=" justify">{{.Description}}</p>
   <p class=" justify">{{.Params.head_1_para_1}}</p>
   <p class=" justify">{{.Params.head_1_para_2}}</p>
+  <p class=" justify">{{.Params.head_1_para_3}}</p>
+  <p class=" justify">{{.Params.head_1_para_4}}</p>
+  <p class=" justify">{{.Params.head_1_para_5}}</p>
 </div>
 <div class="w3-center">
   <a class="w3-button w3-center w3-padding w3-indigo pointer w3-hover-deep-purple w3-round-large " anim="ripple" href="{{$.Site.BaseURL}}/app"><i class="fas fa-play"></i> {{.Params.button_goto_app}}</a>
@@ -185,13 +187,16 @@
   <p class=" justify">{{.Params.head_4_para_1}}</p>
   <p class=" justify">{{.Params.head_4_para_2}}</p>
   <p class=" justify">{{.Params.head_4_para_3}}</p>
+  <p class=" justify">{{.Params.head_4_para_4}}</p>
+  <p class=" justify">{{.Params.head_4_para_5}}</p>
 </div>
 <p class="vertial-space"></p>
 <div class="three-one-grid w3-padding">
   <div class="gsk-card w3-indigo price-card">
-    <h3 class="w3-xlarge w3-center"><i class="fab fa-github"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_1_title}}</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_4_card_1_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">{{.Params.head_4_card_1_desc_1}}</li>
+      <li style="font-size: 5em;"><i class="fab fa-github"></i></li>
+      <!--li class="w3-padding-16">{{.Params.head_4_card_1_desc_1}}</li>
       <li class="w3-padding-16">
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
@@ -201,14 +206,15 @@
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
         <span class="w3-opacity">{{.Params.this_month}}</span>
-      </li>
+      </li-->
     </ul>
     <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://github.com/sponsors/skgadi" target="_blank">{{.Params.button_goto}} {{.Params.head_4_card_1_title}}</a>
   </div>
   <div class="gsk-card w3-teal price-card">
-    <h3 class="w3-xlarge w3-center"><i class="fab fa-patreon"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_2_title}}</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_4_card_2_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">{{.Params.head_4_card_2_desc_1}}</li>
+      <li style="font-size: 5em;"><i class="fab fa-patreon"></i></li>
+      <!--li class="w3-padding-16">{{.Params.head_4_card_2_desc_1}}</li>
       <li class="w3-padding-16">
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
@@ -218,14 +224,15 @@
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
         <span class="w3-opacity">{{.Params.this_month}}</span>
-      </li>
+      </li-->
     </ul>
     <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://www.patreon.com/skgadi" target="_blank">{{.Params.button_goto}} {{.Params.head_4_card_2_title}}</a>
   </div>
   <div class="gsk-card w3-orange price-card">
-    <h3 class="w3-xlarge w3-center"><i class="fab fa-paypal"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{.Params.head_4_card_3_title}}</h3>
+    <h3 class="w3-xlarge w3-center">{{.Params.head_4_card_3_title}}</h3>
     <ul class="w3-ul w3-white w3-border w3-center">
-      <li class="w3-padding-16">{{.Params.head_4_card_3_desc_1}}</li>
+      <li style="font-size: 5em;"><i class="fab fa-paypal"></i></li>
+      <!--li class="w3-padding-16">{{.Params.head_4_card_3_desc_1}}</li>
       <li class="w3-padding-16">
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
@@ -235,11 +242,16 @@
         <span class="w3-opacity">{{.Params.support_generated}}</span>
         <h2>$ 0.00</h2>
         <span class="w3-opacity">{{.Params.this_month}}</span>
-      </li>
+      </li-->
     </ul>
     <a class="gsk-btn-as-link no-underline" anim="ripple" href="https://www.paypal.com/donate?hosted_button_id=SKRWAX2RLAB6S" target="_blank">{{.Params.button_goto}} {{.Params.head_4_card_3_title}}</a>
   </div>
 </div>
+<p class="vertial-space"></p>
+<div class="w3-container limit-to-800 text-content">
+  <p class=" justify">{{.Params.head_4_conclusion}}</p>
+</div>
+
 <p class="vertial-space"></p>
 <!--Contact us-->
 <div id="contact" class="parallax section">
@@ -254,6 +266,7 @@
   <h1 class="w3-center">{{.Params.head_5}}</h1>
   <p class=" justify">{{.Params.head_5_para_1}}</p>
   <p class=" justify">{{.Params.head_5_para_2}}</p>
+  <p class=" justify">{{.Params.head_5_para_3}}</p>
 </div>
 <div class="w3-center">
   <a class="w3-button w3-center w3-padding w3-teal pointer w3-hover-indigo w3-round-large " anim="ripple" href="https://skgadi.com/contact/" target="_blank">{{.Params.button_contact}}</a>
