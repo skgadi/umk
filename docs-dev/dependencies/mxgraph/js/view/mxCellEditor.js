@@ -913,9 +913,9 @@ mxCellEditor.prototype.isSelectText = function()
 };
 
 /**
- * Function: clearSelection
+ * Function: isSelectText
  * 
- * Clears the selection.
+ * Returns <selectText>.
  */
 mxCellEditor.prototype.clearSelection = function()
 {

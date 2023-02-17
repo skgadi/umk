@@ -1,38 +1,37 @@
 import {
 	Vector2
-} from 'three';
-
+} from "../../../build/three.module.js";
 /**
  * tool for "unwrapping" and debugging three.js geometries UV mapping
  *
  * Sample usage:
- *	document.body.appendChild( UVsDebug( new THREE.SphereGeometry( 10, 10, 10, 10 ) );
+ *	document.body.appendChild( UVsDebug( new THREE.SphereBufferGeometry( 10, 10, 10, 10 ) );
  *
  */
 
-function UVsDebug( geometry, size = 1024 ) {
+var UVsDebug = function ( geometry, size ) {
 
 	// handles wrapping of uv.x > 1 only
 
-	const abc = 'abc';
-	const a = new Vector2();
-	const b = new Vector2();
+	var abc = 'abc';
+	var a = new Vector2();
+	var b = new Vector2();
 
-	const uvs = [
+	var uvs = [
 		new Vector2(),
 		new Vector2(),
 		new Vector2()
 	];
 
-	const face = [];
+	var face = [];
 
-	const canvas = document.createElement( 'canvas' );
-	const width = size; // power of 2 required for wrapping
-	const height = size;
+	var canvas = document.createElement( 'canvas' );
+	var width = size || 1024; // power of 2 required for wrapping
+	var height = size || 1024;
 	canvas.width = width;
 	canvas.height = height;
 
-	const ctx = canvas.getContext( '2d' );
+	var ctx = canvas.getContext( '2d' );
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = 'rgb( 63, 63, 63 )';
 	ctx.textAlign = 'center';
@@ -42,42 +41,68 @@ function UVsDebug( geometry, size = 1024 ) {
 	ctx.fillStyle = 'rgb( 255, 255, 255 )';
 	ctx.fillRect( 0, 0, width, height );
 
-	const index = geometry.index;
-	const uvAttribute = geometry.attributes.uv;
+	if ( geometry.isGeometry ) {
 
-	if ( index ) {
+		var faces = geometry.faces;
+		var uvSet = geometry.faceVertexUvs[ 0 ];
 
-		// indexed geometry
+		for ( var i = 0, il = uvSet.length; i < il; i ++ ) {
 
-		for ( let i = 0, il = index.count; i < il; i += 3 ) {
+			var face = faces[ i ];
+			var uv = uvSet[ i ];
 
-			face[ 0 ] = index.getX( i );
-			face[ 1 ] = index.getX( i + 1 );
-			face[ 2 ] = index.getX( i + 2 );
+			face[ 0 ] = face.a;
+			face[ 1 ] = face.b;
+			face[ 2 ] = face.c;
 
-			uvs[ 0 ].fromBufferAttribute( uvAttribute, face[ 0 ] );
-			uvs[ 1 ].fromBufferAttribute( uvAttribute, face[ 1 ] );
-			uvs[ 2 ].fromBufferAttribute( uvAttribute, face[ 2 ] );
+			uvs[ 0 ].copy( uv[ 0 ] );
+			uvs[ 1 ].copy( uv[ 1 ] );
+			uvs[ 2 ].copy( uv[ 2 ] );
 
-			processFace( face, uvs, i / 3 );
+			processFace( face, uvs, i );
 
 		}
 
 	} else {
 
-		// non-indexed geometry
+		var index = geometry.index;
+		var uvAttribute = geometry.attributes.uv;
 
-		for ( let i = 0, il = uvAttribute.count; i < il; i += 3 ) {
+		if ( index ) {
 
-			face[ 0 ] = i;
-			face[ 1 ] = i + 1;
-			face[ 2 ] = i + 2;
+			// indexed geometry
 
-			uvs[ 0 ].fromBufferAttribute( uvAttribute, face[ 0 ] );
-			uvs[ 1 ].fromBufferAttribute( uvAttribute, face[ 1 ] );
-			uvs[ 2 ].fromBufferAttribute( uvAttribute, face[ 2 ] );
+			for ( var i = 0, il = index.count; i < il; i += 3 ) {
 
-			processFace( face, uvs, i / 3 );
+				face[ 0 ] = index.getX( i );
+				face[ 1 ] = index.getX( i + 1 );
+				face[ 2 ] = index.getX( i + 2 );
+
+				uvs[ 0 ].fromBufferAttribute( uvAttribute, face[ 0 ] );
+				uvs[ 1 ].fromBufferAttribute( uvAttribute, face[ 1 ] );
+				uvs[ 2 ].fromBufferAttribute( uvAttribute, face[ 2 ] );
+
+				processFace( face, uvs, i / 3 );
+
+			}
+
+		} else {
+
+			// non-indexed geometry
+
+			for ( var i = 0, il = uvAttribute.count; i < il; i += 3 ) {
+
+				face[ 0 ] = i;
+				face[ 1 ] = i + 1;
+				face[ 2 ] = i + 2;
+
+				uvs[ 0 ].fromBufferAttribute( uvAttribute, face[ 0 ] );
+				uvs[ 1 ].fromBufferAttribute( uvAttribute, face[ 1 ] );
+				uvs[ 2 ].fromBufferAttribute( uvAttribute, face[ 2 ] );
+
+				processFace( face, uvs, i / 3 );
+
+			}
 
 		}
 
@@ -93,9 +118,9 @@ function UVsDebug( geometry, size = 1024 ) {
 
 		a.set( 0, 0 );
 
-		for ( let j = 0, jl = uvs.length; j < jl; j ++ ) {
+		for ( var j = 0, jl = uvs.length; j < jl; j ++ ) {
 
-			const uv = uvs[ j ];
+			var uv = uvs[ j ];
 
 			a.x += uv.x;
 			a.y += uv.y;
@@ -140,12 +165,12 @@ function UVsDebug( geometry, size = 1024 ) {
 
 		// label uv edge orders
 
-		for ( let j = 0, jl = uvs.length; j < jl; j ++ ) {
+		for ( j = 0, jl = uvs.length; j < jl; j ++ ) {
 
-			const uv = uvs[ j ];
+			var uv = uvs[ j ];
 			b.addVectors( a, uv ).divideScalar( 2 );
 
-			const vnum = face[ j ];
+			var vnum = face[ j ];
 			ctx.fillText( abc[ j ] + vnum, b.x * width, ( 1 - b.y ) * height );
 
 			if ( b.x > 0.95 ) {
@@ -160,6 +185,6 @@ function UVsDebug( geometry, size = 1024 ) {
 
 	}
 
-}
+};
 
 export { UVsDebug };

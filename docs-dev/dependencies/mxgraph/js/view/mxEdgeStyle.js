@@ -108,20 +108,6 @@ var mxEdgeStyle =
 		var pe = pts[pts.length-1];
 
 	 	var isSourceLeft = false;
-	 	
-	 	if (source != null)
-	 	{
- 			var sourceGeometry = graph.getCellGeometry(source.cell);
-	
-		 	if (sourceGeometry.relative)
-		 	{
-		 		isSourceLeft = sourceGeometry.x <= 0.5;
-		 	}
-		 	else if (target != null)
-		 	{
-		 		isSourceLeft = ((pe != null) ? pe.x : target.x + target.width) < ((p0 != null) ? p0.x : source.x);
-		 	}
-	 	}
 
 		if (p0 != null)
 		{
@@ -138,6 +124,19 @@ var mxEdgeStyle =
 			{
 				isSourceLeft = constraint == mxConstants.DIRECTION_MASK_WEST;
 			}
+			else
+			{
+			 	var sourceGeometry = graph.getCellGeometry(source.cell);
+		
+			 	if (sourceGeometry.relative)
+			 	{
+			 		isSourceLeft = sourceGeometry.x <= 0.5;
+			 	}
+			 	else if (target != null)
+			 	{
+			 		isSourceLeft = target.x + target.width < source.x;
+			 	}
+			}
 		}
 		else
 		{
@@ -145,21 +144,7 @@ var mxEdgeStyle =
 		}
 	 	
 	 	var isTargetLeft = true;
-	 	
-	 	if (target != null)
-	 	{
-		 	var targetGeometry = graph.getCellGeometry(target.cell);
-	
-		 	if (targetGeometry.relative)
-		 	{
-		 		isTargetLeft = targetGeometry.x <= 0.5;
-		 	}
-		 	else if (source != null)
-		 	{
-		 		isTargetLeft = ((p0 != null) ? p0.x : source.x + source.width) < ((pe != null) ? pe.x : target.x);
-		 	}
-	 	}
-		
+
 		if (pe != null)
 		{
 			target = new mxCellState();
@@ -174,6 +159,19 @@ var mxEdgeStyle =
 				mxConstants.DIRECTION_MASK_EAST)
 			{
 				isTargetLeft = constraint == mxConstants.DIRECTION_MASK_WEST;
+			}
+			else
+			{
+			 	var targetGeometry = graph.getCellGeometry(target.cell);
+	
+			 	if (targetGeometry.relative)
+			 	{
+			 		isTargetLeft = targetGeometry.x <= 0.5;
+			 	}
+			 	else if (source != null)
+			 	{
+			 		isTargetLeft = source.x + source.width < target.x;
+			 	}
 			}
 	 	}
 		
@@ -192,7 +190,7 @@ var mxEdgeStyle =
 					
 			dx = (isTargetLeft) ? -seg : seg;
 			var arr = new mxPoint(xe + dx, ye);
-			
+	
 			// Adds intermediate points if both go out on same side
 			if (isSourceLeft == isTargetLeft)
 			{

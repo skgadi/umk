@@ -1,25 +1,28 @@
-import { Pass } from './Pass.js';
 
-class MaskPass extends Pass {
+import { Pass } from "../postprocessing/Pass.js";
 
-	constructor( scene, camera ) {
+var MaskPass = function ( scene, camera ) {
 
-		super();
+	Pass.call( this );
 
-		this.scene = scene;
-		this.camera = camera;
+	this.scene = scene;
+	this.camera = camera;
 
-		this.clear = true;
-		this.needsSwap = false;
+	this.clear = true;
+	this.needsSwap = false;
 
-		this.inverse = false;
+	this.inverse = false;
 
-	}
+};
 
-	render( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
+MaskPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-		const context = renderer.getContext();
-		const state = renderer.state;
+	constructor: MaskPass,
+
+	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
+
+		var context = renderer.getContext();
+		var state = renderer.state;
 
 		// don't update color or depth
 
@@ -33,7 +36,7 @@ class MaskPass extends Pass {
 
 		// set up stencil
 
-		let writeValue, clearValue;
+		var writeValue, clearValue;
 
 		if ( this.inverse ) {
 
@@ -77,25 +80,28 @@ class MaskPass extends Pass {
 
 	}
 
-}
+} );
 
-class ClearMaskPass extends Pass {
 
-	constructor() {
+var ClearMaskPass = function () {
 
-		super();
+	Pass.call( this );
 
-		this.needsSwap = false;
+	this.needsSwap = false;
 
-	}
+};
 
-	render( renderer /*, writeBuffer, readBuffer, deltaTime, maskActive */ ) {
+ClearMaskPass.prototype = Object.create( Pass.prototype );
+
+Object.assign( ClearMaskPass.prototype, {
+
+	render: function ( renderer /*, writeBuffer, readBuffer, deltaTime, maskActive */ ) {
 
 		renderer.state.buffers.stencil.setLocked( false );
 		renderer.state.buffers.stencil.setTest( false );
 
 	}
 
-}
+} );
 
 export { MaskPass, ClearMaskPass };

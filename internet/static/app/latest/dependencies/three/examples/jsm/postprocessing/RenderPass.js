@@ -1,35 +1,34 @@
-import {
-	Color
-} from 'three';
-import { Pass } from './Pass.js';
 
-class RenderPass extends Pass {
+import { Pass } from "../postprocessing/Pass.js";
 
-	constructor( scene, camera, overrideMaterial, clearColor, clearAlpha ) {
+var RenderPass = function ( scene, camera, overrideMaterial, clearColor, clearAlpha ) {
 
-		super();
+	Pass.call( this );
 
-		this.scene = scene;
-		this.camera = camera;
+	this.scene = scene;
+	this.camera = camera;
 
-		this.overrideMaterial = overrideMaterial;
+	this.overrideMaterial = overrideMaterial;
 
-		this.clearColor = clearColor;
-		this.clearAlpha = ( clearAlpha !== undefined ) ? clearAlpha : 0;
+	this.clearColor = clearColor;
+	this.clearAlpha = ( clearAlpha !== undefined ) ? clearAlpha : 0;
 
-		this.clear = true;
-		this.clearDepth = false;
-		this.needsSwap = false;
-		this._oldClearColor = new Color();
+	this.clear = true;
+	this.clearDepth = false;
+	this.needsSwap = false;
 
-	}
+};
 
-	render( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
+RenderPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-		const oldAutoClear = renderer.autoClear;
+	constructor: RenderPass,
+
+	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
+
+		var oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
 
-		let oldClearAlpha, oldOverrideMaterial;
+		var oldClearColor, oldClearAlpha, oldOverrideMaterial;
 
 		if ( this.overrideMaterial !== undefined ) {
 
@@ -41,7 +40,7 @@ class RenderPass extends Pass {
 
 		if ( this.clearColor ) {
 
-			renderer.getClearColor( this._oldClearColor );
+			oldClearColor = renderer.getClearColor().getHex();
 			oldClearAlpha = renderer.getClearAlpha();
 
 			renderer.setClearColor( this.clearColor, this.clearAlpha );
@@ -62,7 +61,7 @@ class RenderPass extends Pass {
 
 		if ( this.clearColor ) {
 
-			renderer.setClearColor( this._oldClearColor, oldClearAlpha );
+			renderer.setClearColor( oldClearColor, oldClearAlpha );
 
 		}
 
@@ -76,6 +75,6 @@ class RenderPass extends Pass {
 
 	}
 
-}
+} );
 
 export { RenderPass };

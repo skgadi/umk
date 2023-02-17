@@ -289,9 +289,7 @@ mxStackLayout.prototype.getLayoutCells = function(parent)
 			var geo1 = this.graph.getCellGeometry(c1);
 			var geo2 = this.graph.getCellGeometry(c2);
 			
-			return (this.horizontal) ?
-				((geo1.x == geo2.x) ? 0 : ((geo1.x > geo2.x > 0) ? 1 : -1)) :
-				((geo1.y == geo2.y) ? 0 : ((geo1.y > geo2.y > 0) ? 1 : -1));
+			return (geo1.y == geo2.y) ? 0 : ((geo1.y > geo2.y > 0) ? 1 : -1);
 		}));
 	}
 	
@@ -530,14 +528,12 @@ mxStackLayout.prototype.execute = function(parent)
 };
 
 /**
- * Function: setChildGeometry
+ * Function: execute
  * 
- * Sets the specific geometry to the given child cell.
+ * Implements <mxGraphLayout.execute>.
  * 
- * Parameters:
- * 
- * child - The given child of <mxCell>.
- * geo - The specific geometry of <mxGeometry>.
+ * Only children where <isVertexIgnored> returns false are taken into
+ * account.
  */
 mxStackLayout.prototype.setChildGeometry = function(child, geo)
 {
@@ -551,15 +547,12 @@ mxStackLayout.prototype.setChildGeometry = function(child, geo)
 };
 
 /**
- * Function: updateParentGeometry
+ * Function: execute
  * 
- * Updates the geometry of the given parent cell.
+ * Implements <mxGraphLayout.execute>.
  * 
- * Parameters:
- * 
- * parent - The given parent of <mxCell>.
- * pgeo - The new <mxGeometry> for parent.
- * last - The last <mxGeometry>.
+ * Only children where <isVertexIgnored> returns false are taken into
+ * account.
  */
 mxStackLayout.prototype.updateParentGeometry = function(parent, pgeo, last)
 {

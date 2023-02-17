@@ -1,125 +1,71 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
+var NodeUtils = {
 
-export const getCacheKey = ( object ) => {
+	elements: [ 'x', 'y', 'z', 'w' ],
 
-	let cacheKey = '{';
+	addShortcuts: function () {
 
-	if ( object.isNode === true ) {
+		function applyShortcut( proxy, property, subProperty ) {
 
-		cacheKey += `uuid:"${ object.uuid }",`;
+			if ( subProperty ) {
 
-	}
+				return {
 
-	for ( const property of getNodesKeys( object ) ) {
+					get: function () {
 
-		cacheKey += `${ property }:${ object[ property ].getCacheKey() },`;
+						return this[ proxy ][ property ][ subProperty ];
 
-	}
+					},
 
-	cacheKey += '}';
+					set: function ( val ) {
 
-	return cacheKey;
+						this[ proxy ][ property ][ subProperty ] = val;
 
-};
+					}
 
-export const getNodesKeys = ( object ) => {
+				};
 
-	const props = [];
+			} else {
 
-	for ( const name in object ) {
+				return {
 
-		const value = object[ name ];
+					get: function () {
 
-		if ( value && value.isNode === true ) {
+						return this[ proxy ][ property ];
 
-			props.push( name );
+					},
+
+					set: function ( val ) {
+
+						this[ proxy ][ property ] = val;
+
+					}
+
+				};
+
+			}
 
 		}
 
-	}
+		return function addShortcuts( proto, proxy, list ) {
 
-	return props;
+			var shortcuts = {};
 
-};
+			for ( var i = 0; i < list.length; ++ i ) {
 
-export const getValueType = ( value ) => {
+				var data = list[ i ].split( "." ),
+					property = data[ 0 ],
+					subProperty = data[ 1 ];
 
-	if ( typeof value === 'number' ) {
+				shortcuts[ property ] = applyShortcut( proxy, property, subProperty );
 
-		return 'float';
+			}
 
-	} else if ( typeof value === 'boolean' ) {
+			Object.defineProperties( proto, shortcuts );
 
-		return 'bool';
+		};
 
-	} else if ( value && value.isVector2 === true ) {
-
-		return 'vec2';
-
-	} else if ( value && value.isVector3 === true ) {
-
-		return 'vec3';
-
-	} else if ( value && value.isVector4 === true ) {
-
-		return 'vec4';
-
-	} else if ( value && value.isMatrix3 === true ) {
-
-		return 'mat3';
-
-	} else if ( value && value.isMatrix4 === true ) {
-
-		return 'mat4';
-
-	} else if ( value && value.isColor === true ) {
-
-		return 'color';
-
-	}
-
-	return null;
+	}()
 
 };
 
-export const getValueFromType = ( type, ...params ) => {
-
-	const last4 = type ? type.slice( - 4 ) : undefined;
-
-	if ( type === 'color' ) {
-
-		return new Color( ...params );
-
-	} else if ( last4 === 'vec2' ) {
-
-		return new Vector2( ...params );
-
-	} else if ( last4 === 'vec3' ) {
-
-		return new Vector3( ...params );
-
-	} else if ( last4 === 'vec4' ) {
-
-		return new Vector4( ...params );
-
-	} else if ( last4 === 'mat3' ) {
-
-		return new Matrix3( ...params );
-
-	} else if ( last4 === 'mat4' ) {
-
-		return new Matrix4( ...params );
-
-	} else if ( type === 'bool' ) {
-
-		return params[ 0 ] || false;
-
-	} else if ( ( type === 'float' ) || ( type === 'int' ) || ( type === 'uint' ) ) {
-
-		return params[ 0 ] || 0;
-
-	}
-
-	return null;
-
-};
+export { NodeUtils };

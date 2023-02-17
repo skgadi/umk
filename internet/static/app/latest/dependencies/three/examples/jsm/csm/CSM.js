@@ -6,19 +6,16 @@ import {
 	ShaderChunk,
 	Matrix4,
 	Box3
-} from 'three';
-import { CSMFrustum } from './CSMFrustum.js';
-import { CSMShader } from './CSMShader.js';
+} from '../../../build/three.module.js';
+import Frustum from './Frustum.js';
+import Shader from './Shader.js';
 
 const _cameraToLightMatrix = new Matrix4();
-const _lightSpaceFrustum = new CSMFrustum();
+const _lightSpaceFrustum = new Frustum();
 const _center = new Vector3();
 const _bbox = new Box3();
 const _uniformArray = [];
 const _logArray = [];
-const _lightOrientationMatrix = new Matrix4();
-const _lightOrientationMatrixInverse = new Matrix4();
-const _up = new Vector3( 0, 1, 0 );
 
 export class CSM {
 
@@ -40,7 +37,7 @@ export class CSM {
 		this.lightMargin = data.lightMargin || 200;
 		this.customSplitsCallback = data.customSplitsCallback;
 		this.fade = false;
-		this.mainFrustum = new CSMFrustum();
+		this.mainFrustum = new Frustum();
 		this.frustums = [];
 		this.breaks = [];
 
@@ -203,19 +200,14 @@ export class CSM {
 
 		const camera = this.camera;
 		const frustums = this.frustums;
-
-		// for each frustum we need to find its min-max box aligned with the light orientation
-		// the position in _lightOrientationMatrix does not matter, as we transform there and back
-		_lightOrientationMatrix.lookAt( new Vector3(), this.lightDirection, _up );
-		_lightOrientationMatrixInverse.copy( _lightOrientationMatrix ).invert();
-
 		for ( let i = 0; i < frustums.length; i ++ ) {
 
 			const light = this.lights[ i ];
 			const shadowCam = light.shadow.camera;
 			const texelWidth = ( shadowCam.right - shadowCam.left ) / this.shadowMapSize;
 			const texelHeight = ( shadowCam.top - shadowCam.bottom ) / this.shadowMapSize;
-			_cameraToLightMatrix.multiplyMatrices( _lightOrientationMatrixInverse, camera.matrixWorld );
+			light.shadow.camera.updateMatrixWorld( true );
+			_cameraToLightMatrix.multiplyMatrices( light.shadow.camera.matrixWorldInverse, camera.matrixWorld );
 			frustums[ i ].toSpace( _cameraToLightMatrix, _lightSpaceFrustum );
 
 			const nearVerts = _lightSpaceFrustum.vertices.near;
@@ -232,7 +224,7 @@ export class CSM {
 			_center.z = _bbox.max.z + this.lightMargin;
 			_center.x = Math.floor( _center.x / texelWidth ) * texelWidth;
 			_center.y = Math.floor( _center.y / texelHeight ) * texelHeight;
-			_center.applyMatrix4( _lightOrientationMatrix );
+			_center.applyMatrix4( light.shadow.camera.matrixWorld );
 
 			light.position.copy( _center );
 			light.target.position.copy( _center );
@@ -247,8 +239,8 @@ export class CSM {
 
 	injectInclude() {
 
-		ShaderChunk.lights_fragment_begin = CSMShader.lights_fragment_begin;
-		ShaderChunk.lights_pars_begin = CSMShader.lights_pars_begin;
+		ShaderChunk.lights_fragment_begin = Shader.lights_fragment_begin;
+		ShaderChunk.lights_pars_begin = Shader.lights_pars_begin;
 
 	}
 
@@ -329,8 +321,8 @@ export class CSM {
 
 		for ( let i = 0; i < this.cascades; i ++ ) {
 
-			const amount = this.breaks[ i ];
-			const prev = this.breaks[ i - 1 ] || 0;
+			let amount = this.breaks[ i ];
+			let prev = this.breaks[ i - 1 ] || 0;
 			target[ i ].x = prev;
 			target[ i ].y = amount;
 
@@ -351,7 +343,6 @@ export class CSM {
 
 		for ( let i = 0; i < this.lights.length; i ++ ) {
 
-			this.parent.remove( this.lights[ i ].target );
 			this.parent.remove( this.lights[ i ] );
 
 		}

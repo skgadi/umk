@@ -1,41 +1,46 @@
 import {
 	ShaderMaterial,
 	UniformsUtils
-} from 'three';
-import { Pass, FullScreenQuad } from './Pass.js';
-import { FilmShader } from '../shaders/FilmShader.js';
+} from "../../../build/three.module.js";
+import { Pass } from "../postprocessing/Pass.js";
+import { FilmShader } from "../shaders/FilmShader.js";
 
-class FilmPass extends Pass {
+var FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
 
-	constructor( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
+	Pass.call( this );
 
-		super();
+	if ( FilmShader === undefined )
+		console.error( "FilmPass relies on FilmShader" );
 
-		const shader = FilmShader;
+	var shader = FilmShader;
 
-		this.uniforms = UniformsUtils.clone( shader.uniforms );
+	this.uniforms = UniformsUtils.clone( shader.uniforms );
 
-		this.material = new ShaderMaterial( {
+	this.material = new ShaderMaterial( {
 
-			uniforms: this.uniforms,
-			vertexShader: shader.vertexShader,
-			fragmentShader: shader.fragmentShader
+		uniforms: this.uniforms,
+		vertexShader: shader.vertexShader,
+		fragmentShader: shader.fragmentShader
 
-		} );
+	} );
 
-		if ( grayscale !== undefined )	this.uniforms.grayscale.value = grayscale;
-		if ( noiseIntensity !== undefined ) this.uniforms.nIntensity.value = noiseIntensity;
-		if ( scanlinesIntensity !== undefined ) this.uniforms.sIntensity.value = scanlinesIntensity;
-		if ( scanlinesCount !== undefined ) this.uniforms.sCount.value = scanlinesCount;
+	if ( grayscale !== undefined )	this.uniforms.grayscale.value = grayscale;
+	if ( noiseIntensity !== undefined ) this.uniforms.nIntensity.value = noiseIntensity;
+	if ( scanlinesIntensity !== undefined ) this.uniforms.sIntensity.value = scanlinesIntensity;
+	if ( scanlinesCount !== undefined ) this.uniforms.sCount.value = scanlinesCount;
 
-		this.fsQuad = new FullScreenQuad( this.material );
+	this.fsQuad = new Pass.FullScreenQuad( this.material );
 
-	}
+};
 
-	render( renderer, writeBuffer, readBuffer, deltaTime /*, maskActive */ ) {
+FilmPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-		this.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
-		this.uniforms[ 'time' ].value += deltaTime;
+	constructor: FilmPass,
+
+	render: function ( renderer, writeBuffer, readBuffer, deltaTime /*, maskActive */ ) {
+
+		this.uniforms[ "tDiffuse" ].value = readBuffer.texture;
+		this.uniforms[ "time" ].value += deltaTime;
 
 		if ( this.renderToScreen ) {
 
@@ -52,14 +57,6 @@ class FilmPass extends Pass {
 
 	}
 
-	dispose() {
-
-		this.material.dispose();
-
-		this.fsQuad.dispose();
-
-	}
-
-}
+} );
 
 export { FilmPass };

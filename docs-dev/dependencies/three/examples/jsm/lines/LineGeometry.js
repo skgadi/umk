@@ -1,25 +1,28 @@
-import { LineSegmentsGeometry } from '../lines/LineSegmentsGeometry.js';
 
-class LineGeometry extends LineSegmentsGeometry {
+import { LineSegmentsGeometry } from "../lines/LineSegmentsGeometry.js";
 
-	constructor() {
+var LineGeometry = function () {
 
-		super();
+	LineSegmentsGeometry.call( this );
 
-		this.isLineGeometry = true;
+	this.type = 'LineGeometry';
 
-		this.type = 'LineGeometry';
+};
 
-	}
+LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prototype ), {
 
-	setPositions( array ) {
+	constructor: LineGeometry,
+
+	isLineGeometry: true,
+
+	setPositions: function ( array ) {
 
 		// converts [ x1, y1, z1,  x2, y2, z2, ... ] to pairs format
 
-		const length = array.length - 3;
-		const points = new Float32Array( 2 * length );
+		var length = array.length - 3;
+		var points = new Float32Array( 2 * length );
 
-		for ( let i = 0; i < length; i += 3 ) {
+		for ( var i = 0; i < length; i += 3 ) {
 
 			points[ 2 * i ] = array[ i ];
 			points[ 2 * i + 1 ] = array[ i + 1 ];
@@ -31,20 +34,20 @@ class LineGeometry extends LineSegmentsGeometry {
 
 		}
 
-		super.setPositions( points );
+		LineSegmentsGeometry.prototype.setPositions.call( this, points );
 
 		return this;
 
-	}
+	},
 
-	setColors( array ) {
+	setColors: function ( array ) {
 
 		// converts [ r1, g1, b1,  r2, g2, b2, ... ] to pairs format
 
-		const length = array.length - 3;
-		const colors = new Float32Array( 2 * length );
+		var length = array.length - 3;
+		var colors = new Float32Array( 2 * length );
 
-		for ( let i = 0; i < length; i += 3 ) {
+		for ( var i = 0; i < length; i += 3 ) {
 
 			colors[ 2 * i ] = array[ i ];
 			colors[ 2 * i + 1 ] = array[ i + 1 ];
@@ -56,24 +59,40 @@ class LineGeometry extends LineSegmentsGeometry {
 
 		}
 
-		super.setColors( colors );
+		LineSegmentsGeometry.prototype.setColors.call( this, colors );
 
 		return this;
 
-	}
+	},
 
-	fromLine( line ) {
+	fromLine: function ( line ) {
 
-		const geometry = line.geometry;
+		var geometry = line.geometry;
 
-		this.setPositions( geometry.attributes.position.array ); // assumes non-indexed
+		if ( geometry.isGeometry ) {
+
+			this.setPositions( geometry.vertices );
+
+		} else if ( geometry.isBufferGeometry ) {
+
+			this.setPositions( geometry.attributes.position.array ); // assumes non-indexed
+
+		}
 
 		// set colors, maybe
 
 		return this;
 
+	},
+
+	copy: function ( /* source */ ) {
+
+		// todo
+
+		return this;
+
 	}
 
-}
+} );
 
 export { LineGeometry };

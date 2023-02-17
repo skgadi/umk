@@ -4260,7 +4260,7 @@ if (!Date.prototype.toISOString) {
 // This helper is defined outside the main scope so that the use of
 // 'eval' does not taint the scope for minifiers.
 function __cons(t, a) {
-  return eval('new t(' + Array.prototype.map.call(a, function(_, i) { return 'a[' + i + ']'; }).join(',') + ')');
+  return eval('new t(' + a.map(function(_, i) { return 'a[' + i + ']'; }).join(',') + ')');
 }
 //----------------------------------------------------------------------
 //
@@ -5053,13 +5053,6 @@ function __cons(t, a) {
     }
   };
 
-
-  function addToElementPrototype(p, f) {
-    if ('Element' in global && Element.prototype && Object.defineProperty) {
-      Object.defineProperty(Element.prototype, p, { get: f });
-    }
-  }
-
   // DOMTokenList interface and Element.classList / Element.relList
   // Needed for: IE9-
   // Use getClassList(elem) instead of elem.classList() if IE7- support is needed
@@ -5095,6 +5088,8 @@ function __cons(t, a) {
           contains: {
             value: function(token) {
               token = String(token);
+              if (token.length === 0) { throw SyntaxError(); }
+              if (/\s/.test(token)) { throw Error("InvalidCharacterError"); }
               var tokens = split(o[p]);
 
               return tokens.indexOf(token) !== -1;
@@ -5203,6 +5198,12 @@ function __cons(t, a) {
       }
     }
 
+    function addToElementPrototype(p, f) {
+      if ('Element' in global && Element.prototype && Object.defineProperty) {
+        Object.defineProperty(Element.prototype, p, { get: f });
+      }
+    }
+
     // HTML - https://html.spec.whatwg.org
     // Element.classList
     if ('classList' in document.createElement('span')) {
@@ -5242,30 +5243,29 @@ function __cons(t, a) {
       };
     }());
 
+
+    // DOM - Interface NonDocumentTypeChildNode
+    // Interface NonDocumentTypeChildNode
+    // previousElementSibling / nextElementSibling - for IE8
+
+    if (!('previousElementSibling' in document.documentElement)) {
+      addToElementPrototype('previousElementSibling', function() {
+        var n = this.previousSibling;
+        while (n && n.nodeType !== Node.ELEMENT_NODE)
+          n = n.previousSibling;
+        return n;
+      });
+    }
+
+    if (!('nextElementSibling' in document.documentElement)) {
+      addToElementPrototype('nextElementSibling', function() {
+        var n = this.nextSibling;
+        while (n && n.nodeType !== Node.ELEMENT_NODE)
+          n = n.nextSibling;
+        return n;
+      });
+    }
   }());
-
-
-  // Interface NonDocumentTypeChildNode
-  // previousElementSibling / nextElementSibling - for IE8
-
-  if (!('previousElementSibling' in document.documentElement)) {
-    addToElementPrototype('previousElementSibling', function() {
-      var n = this.previousSibling;
-      while (n && n.nodeType !== Node.ELEMENT_NODE)
-        n = n.previousSibling;
-      return n;
-    });
-  }
-
-  if (!('nextElementSibling' in document.documentElement)) {
-    addToElementPrototype('nextElementSibling', function() {
-      var n = this.nextSibling;
-      while (n && n.nodeType !== Node.ELEMENT_NODE)
-        n = n.nextSibling;
-      return n;
-    });
-  }
-
 
   // Element.matches
   // https://developer.mozilla.org/en/docs/Web/API/Element/matches
@@ -5304,7 +5304,7 @@ function __cons(t, a) {
       do {
         i = matches.length;
         while (--i >= 0 && matches.item(i) !== el) {};
-      } while ((i < 0) && (el = el.parentElement));
+      } while ((i < 0) && (el = el.parentElement)); 
       return el;
     };
   }
@@ -5359,36 +5359,6 @@ function __cons(t, a) {
   mixin(global.Document || global.HTMLDocument, ParentNode); // HTMLDocument for IE8
   mixin(global.DocumentFragment, ParentNode);
   mixin(global.Element, ParentNode);
-
-  // Attributes for IE8
-  if (!('firstElementChild' in document.documentElement)) {
-    addToElementPrototype('firstElementChild', function() {
-      for (var nodes = this.children, i = 0, l = nodes.length; i < l; ++i) {
-        var n = nodes[i];
-        if (n.nodeType === Node.ELEMENT_NODE) return n;
-      }
-      return null;
-    });
-  }
-
-  if (!('lastElementChild' in document.documentElement)) {
-    addToElementPrototype('lastElementChild', function() {
-      for (var nodes = this.children, i = nodes.length - 1; i >= 0; --i) {
-        var n = nodes[i];
-        if (n.nodeType === Node.ELEMENT_NODE) return n;
-      }
-      return null;
-    });
-  }
-
-  if (!('childElementCount' in document.documentElement)) {
-    addToElementPrototype('childElementCount', function() {
-      for (var c = 0, nodes = this.children, i = 0, l = nodes.length; i < l; ++i) {
-        if (nodes[i].nodeType === Node.ELEMENT_NODE) ++c;
-      }
-      return c;
-    });
-  }
 
   // Mixin ChildNode
   // https://dom.spec.whatwg.org/#interface-childnode

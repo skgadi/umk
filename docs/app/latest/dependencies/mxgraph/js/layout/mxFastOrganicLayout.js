@@ -80,9 +80,9 @@ mxFastOrganicLayout.prototype.forceConstantSquared = 0;
 mxFastOrganicLayout.prototype.minDistanceLimit = 2;
 
 /**
- * Variable: maxDistanceLimit
+ * Variable: minDistanceLimit
  * 
- * Maximal distance limit. Default is 500. Prevents of
+ * Minimal distance limit. Default is 2. Prevents of
  * dividing by zero.
  */
 mxFastOrganicLayout.prototype.maxDistanceLimit = 500;

@@ -457,9 +457,10 @@ mxPanningHandler.prototype.zoomGraph = function(evt)
 };
 
 /**
- * Function: reset
+ * Function: mouseUp
  * 
- * Resets the state of this handler.
+ * Handles the event by setting the translation on the view or showing the
+ * popupmenu.
  */
 mxPanningHandler.prototype.reset = function()
 {

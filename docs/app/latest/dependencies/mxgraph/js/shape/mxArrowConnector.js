@@ -57,16 +57,6 @@ mxUtils.extend(mxArrowConnector, mxShape);
 mxArrowConnector.prototype.useSvgBoundingBox = true;
 
 /**
- * Function: isRoundable
- * 
- * Hook for subclassers.
- */
-mxArrowConnector.prototype.isRoundable = function()
-{
-	return true;
-};
-
-/**
  * Variable: resetStyles
  * 
  * Overrides mxShape to reset spacing.
@@ -396,9 +386,9 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 };
 
 /**
- * Function: paintMarker
+ * Function: paintEdgeShape
  * 
- * Paints the marker.
+ * Paints the line shape.
  */
 mxArrowConnector.prototype.paintMarker = function(c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove)
 {

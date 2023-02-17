@@ -60,9 +60,9 @@ mxSwimlane.prototype.isRoundable = function(c, x, y, w, h)
 };
 
 /**
- * Function: getTitleSize
+ * Function: getGradientBounds
  * 
- * Returns the title size.
+ * Returns the bounding box for the gradient box for this shape.
  */
 mxSwimlane.prototype.getTitleSize = function()
 {
@@ -70,9 +70,9 @@ mxSwimlane.prototype.getTitleSize = function()
 };
 
 /**
- * Function: getLabelBounds
+ * Function: getGradientBounds
  * 
- * Returns the bounding box for the label.
+ * Returns the bounding box for the gradient box for this shape.
  */
 mxSwimlane.prototype.getLabelBounds = function(rect)
 {

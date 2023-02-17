@@ -1,26 +1,31 @@
+
 /**
  * Simple test shader
  */
 
-const BasicShader = {
+var BasicShader = {
 
 	uniforms: {},
 
-	vertexShader: /* glsl */`
+	vertexShader: [
 
-		void main() {
+		"void main() {",
 
-			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		"	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
 
-		}`,
+		"}"
 
-	fragmentShader: /* glsl */`
+	].join( "\n" ),
 
-		void main() {
+	fragmentShader: [
 
-			gl_FragColor = vec4( 1.0, 0.0, 0.0, 0.5 );
+		"void main() {",
 
-		}`
+		"	gl_FragColor = vec4( 1.0, 0.0, 0.0, 0.5 );",
+
+		"}"
+
+	].join( "\n" )
 
 };
 

@@ -949,18 +949,6 @@ mxPrintPreview.prototype.getRoot = function()
 };
 
 /**
- * Function: useCssTransforms
- * 
- * Returns true if CSS transforms should be used for scaling content.
- * This returns true if foreignObject is supported and we're not in Safari
- * as it has clipping bugs for transformed CSS content with foreignObjects.
- */
-mxPrintPreview.prototype.useCssTransforms = function()
-{
-	return !mxClient.NO_FO && !mxClient.IS_SF;
-};
-
-/**
  * Function: addGraphFragment
  * 
  * Adds a graph fragment to the given div.
@@ -991,7 +979,7 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 		view.createSvg();
 		
 		// Uses CSS transform for scaling
-		if (this.useCssTransforms())
+		if (!mxClient.NO_FO)
 		{
 			var g = view.getDrawPane().parentNode;
 			var prev = g.getAttribute('transform');

@@ -1,254 +1,66 @@
 import {
-	BufferAttribute,
-	BufferGeometry,
-	Color,
 	Group,
-	Matrix4,
-	Mesh,
-	Vector3
-} from 'three';
+	Mesh
+} from "../../../build/three.module.js";
 
-import { mergeGroups, deepCloneAttribute } from './BufferGeometryUtils.js';
+var SceneUtils = {
 
-const _color = /*@__PURE__*/new Color();
-const _matrix = /*@__PURE__*/new Matrix4();
+	createMeshesFromInstancedMesh: function ( instancedMesh ) {
 
-function createMeshesFromInstancedMesh( instancedMesh ) {
+		var group = new Group();
 
-	const group = new Group();
+		var count = instancedMesh.count;
+		var geometry = instancedMesh.geometry;
+		var material = instancedMesh.material;
 
-	const count = instancedMesh.count;
-	const geometry = instancedMesh.geometry;
-	const material = instancedMesh.material;
+		for ( var i = 0; i < count; i ++ ) {
 
-	for ( let i = 0; i < count; i ++ ) {
+			var mesh = new Mesh( geometry, material );
 
-		const mesh = new Mesh( geometry, material );
+			instancedMesh.getMatrixAt( i, mesh.matrix );
+			mesh.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 
-		instancedMesh.getMatrixAt( i, mesh.matrix );
-		mesh.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-
-		group.add( mesh );
-
-	}
-
-	group.copy( instancedMesh );
-	group.updateMatrixWorld(); // ensure correct world matrices of meshes
-
-	return group;
-
-}
-
-function createMeshesFromMultiMaterialMesh( mesh ) {
-
-	if ( Array.isArray( mesh.material ) === false ) {
-
-		console.warn( 'THREE.SceneUtils.createMeshesFromMultiMaterialMesh(): The given mesh has no multiple materials.' );
-		return mesh;
-
-	}
-
-	const object = new Group();
-	object.copy( mesh );
-
-	// merge groups (which automatically sorts them)
-
-	const geometry = mergeGroups( mesh.geometry );
-
-	const index = geometry.index;
-	const groups = geometry.groups;
-	const attributeNames = Object.keys( geometry.attributes );
-
-	// create a mesh for each group by extracting the buffer data into a new geometry
-
-	for ( let i = 0; i < groups.length; i ++ ) {
-
-		const group = groups[ i ];
-
-		const start = group.start;
-		const end = start + group.count;
-
-		const newGeometry = new BufferGeometry();
-		const newMaterial = mesh.material[ group.materialIndex ];
-
-		// process all buffer attributes
-
-		for ( let j = 0; j < attributeNames.length; j ++ ) {
-
-			const name = attributeNames[ j ];
-			const attribute = geometry.attributes[ name ];
-			const itemSize = attribute.itemSize;
-
-			const newLength = group.count * itemSize;
-			const type = attribute.array.constructor;
-
-			const newArray = new type( newLength );
-			const newAttribute = new BufferAttribute( newArray, itemSize );
-
-			for ( let k = start, n = 0; k < end; k ++, n ++ ) {
-
-				const ind = index.getX( k );
-
-				if ( itemSize >= 1 ) newAttribute.setX( n, attribute.getX( ind ) );
-				if ( itemSize >= 2 ) newAttribute.setY( n, attribute.getY( ind ) );
-				if ( itemSize >= 3 ) newAttribute.setZ( n, attribute.getZ( ind ) );
-				if ( itemSize >= 4 ) newAttribute.setW( n, attribute.getW( ind ) );
-
-			}
-
-
-			newGeometry.setAttribute( name, newAttribute );
+			group.add( mesh );
 
 		}
 
-		const newMesh = new Mesh( newGeometry, newMaterial );
-		object.add( newMesh );
+		group.copy( instancedMesh );
+		group.updateMatrixWorld(); // ensure correct world matrices of meshes
 
-	}
+		return group;
 
-	return object;
+	},
 
-}
+	createMultiMaterialObject: function ( geometry, materials ) {
 
-function createMultiMaterialObject( geometry, materials ) {
+		var group = new Group();
 
-	const group = new Group();
+		for ( var i = 0, l = materials.length; i < l; i ++ ) {
 
-	for ( let i = 0, l = materials.length; i < l; i ++ ) {
-
-		group.add( new Mesh( geometry, materials[ i ] ) );
-
-	}
-
-	return group;
-
-}
-
-function reduceVertices( object, func, initialValue ) {
-
-	let value = initialValue;
-	const vertex = new Vector3();
-
-	object.updateWorldMatrix( true, true );
-
-	object.traverseVisible( ( child ) => {
-
-		const { geometry } = child;
-
-		if ( geometry !== undefined ) {
-
-			const { position } = geometry.attributes;
-
-			if ( position !== undefined ) {
-
-				for ( let i = 0, l = position.count; i < l; i ++ ) {
-
-					if ( child.isMesh ) {
-
-						child.getVertexPosition( i, vertex );
-
-					} else {
-
-						vertex.fromBufferAttribute( position, i );
-
-					}
-
-					if ( ! child.isSkinnedMesh ) {
-
-						vertex.applyMatrix4( child.matrixWorld );
-
-					}
-
-					value = func( value, vertex );
-
-				}
-
-			}
+			group.add( new Mesh( geometry, materials[ i ] ) );
 
 		}
 
-	} );
+		return group;
 
-	return value;
+	},
 
-}
+	detach: function ( child, parent, scene ) {
 
-/**
- * @param {InstancedMesh}
- * @param {function(int, int):int}
- */
-function sortInstancedMesh( mesh, compareFn ) {
+		console.warn( 'THREE.SceneUtils: detach() has been deprecated. Use scene.attach( child ) instead.' );
 
-	// store copy of instanced attributes for lookups
+		scene.attach( child );
 
-	const instanceMatrixRef = deepCloneAttribute( mesh.instanceMatrix );
-	const instanceColorRef = mesh.instanceColor ? deepCloneAttribute( mesh.instanceColor ) : null;
+	},
 
-	const attributeRefs = new Map();
+	attach: function ( child, scene, parent ) {
 
-	for ( const name in mesh.geometry.attributes ) {
+		console.warn( 'THREE.SceneUtils: attach() has been deprecated. Use parent.attach( child ) instead.' );
 
-		const attribute = mesh.geometry.attributes[ name ];
-
-		if ( attribute.isInstancedBufferAttribute ) {
-
-			attributeRefs.set( attribute, deepCloneAttribute( attribute ) );
-
-		}
+		parent.attach( child );
 
 	}
 
-
-	// compute sort order
-
-	const tokens = [];
-
-	for ( let i = 0; i < mesh.count; i ++ ) tokens.push( i );
-
-	tokens.sort( compareFn );
-
-
-	// apply sort order
-
-	for ( let i = 0; i < tokens.length; i ++ ) {
-
-		const refIndex = tokens[ i ];
-
-		_matrix.fromArray( instanceMatrixRef.array, refIndex * mesh.instanceMatrix.itemSize );
-		_matrix.toArray( mesh.instanceMatrix.array, i * mesh.instanceMatrix.itemSize );
-
-		if ( mesh.instanceColor ) {
-
-			_color.fromArray( instanceColorRef.array, refIndex * mesh.instanceColor.itemSize );
-			_color.toArray( mesh.instanceColor.array, i * mesh.instanceColor.itemSize );
-
-		}
-
-		for ( const name in mesh.geometry.attributes ) {
-
-			const attribute = mesh.geometry.attributes[ name ];
-
-			if ( attribute.isInstancedBufferAttribute ) {
-
-				const attributeRef = attributeRefs.get( attribute );
-
-				attribute.setX( i, attributeRef.getX( refIndex ) );
-				if ( attribute.itemSize > 1 ) attribute.setY( i, attributeRef.getY( refIndex ) );
-				if ( attribute.itemSize > 2 ) attribute.setZ( i, attributeRef.getZ( refIndex ) );
-				if ( attribute.itemSize > 3 ) attribute.setW( i, attributeRef.getW( refIndex ) );
-
-			}
-
-		}
-
-	}
-
-}
-
-export {
-	createMeshesFromInstancedMesh,
-	createMeshesFromMultiMaterialMesh,
-	createMultiMaterialObject,
-	reduceVertices,
-	sortInstancedMesh
 };
+
+export { SceneUtils };

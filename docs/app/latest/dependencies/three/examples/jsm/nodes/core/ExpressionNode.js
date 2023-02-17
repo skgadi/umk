@@ -1,32 +1,13 @@
-import Node from './Node.js';
+import { FunctionNode } from './FunctionNode.js';
 
-class ExpressionNode extends Node {
+function ExpressionNode( src, type, keywords, extensions, includes ) {
 
-	constructor( snipped = '', nodeType = 'void' ) {
-
-		super( nodeType );
-
-		this.snipped = snipped;
-
-	}
-
-	generate( builder, output ) {
-
-		const type = this.getNodeType( builder );
-		const snipped = this.snipped;
-
-		if ( type === 'void' ) {
-
-			builder.addFlowCode( snipped );
-
-		} else {
-
-			return builder.format( `( ${ snipped } )`, type, output );
-
-		}
-
-	}
+	FunctionNode.call( this, src, includes, extensions, keywords, type );
 
 }
 
-export default ExpressionNode;
+ExpressionNode.prototype = Object.create( FunctionNode.prototype );
+ExpressionNode.prototype.constructor = ExpressionNode;
+ExpressionNode.prototype.nodeType = "Expression";
+
+export { ExpressionNode };
