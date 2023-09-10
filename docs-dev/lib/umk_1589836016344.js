@@ -27,13 +27,19 @@ class umk_1589836016344 extends umk_model {
   getInputIfRequired() {
     if (this.CompParams.addInput){
       if (!!this.inputs[0]) {
-        this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
+        this.CompParams.matInp = this.inputs[0];
         this.CompParams.addInput = false;
-        //console.log(JSON.stringify(this.CompParams.mem));
       }
     }
   }
   genCompParams() {
+
+    this.CompParams.addInput = true;
+    
+
+
+
+
     // Check for the valid dimensions
     this.CompParams.dims = JSON.parse(this.Parameters.dim.Value[0][0]);
     if (this.CompParams.dims.length !== 2) {
@@ -58,7 +64,7 @@ class umk_1589836016344 extends umk_model {
         break;
       }
     }
-    if (!(this.CompParams.maxDen >= this.CompParams.maxNum)) {
+    if (!(this.CompParams.maxDen > this.CompParams.maxNum)) {
       let err = {
         "en-us": "Not a proper transfer function.", // strictly
         "es-mx": "No es una función de transferencia adecuada." //estrictamente
@@ -66,86 +72,93 @@ class umk_1589836016344 extends umk_model {
       this.err = err[settings.lang];
       throw err[settings.lang];
     }
-    this.CompParams.InCoeff = math.zeros(this.Parameters.d.Value._data.length, this.Parameters.d.Value._data[0].length);
-    this.CompParams.OutCoeff = math.zeros(this.Parameters.d.Value._data.length, this.Parameters.d.Value._data[0].length);
-    this.CompParams.InInts = {
-      outs: [],
-      mems: []
-    };
-    this.CompParams.OutInts = {
-      outs: [],
-      mems: []
-    };
-    for (let i = 0; i < this.CompParams.maxDen; i++) {
-      this.CompParams.InInts.outs[i] = [];
-      this.CompParams.InInts.mems[i] = [];
-      if (!!this.Parameters.n.Value._data[i]) {
-        this.CompParams.InCoeff._data[i][0] = this.Parameters.n.Value._data[i][0];
+    //Calculate A, B, C, D matrices from the transfer function using observable canonical form
+    //Calculating A
+    this.CompParams.A = math.zeros(this.CompParams.maxDen-1, this.CompParams.maxDen-1);
+    for (let i = 0; i < (this.CompParams.maxDen-1 ); i++) {
+      if (i < (this.CompParams.maxDen - 2)) {
+        this.CompParams.A._data[i][i+1] = 1;
       }
-      this.CompParams.OutInts.outs[i] = [];
-      this.CompParams.OutInts.mems[i] = [];
-      if (!!this.Parameters.d.Value._data[i]) {
-        this.CompParams.OutCoeff._data[i][0] = this.Parameters.d.Value._data[i][0];
+      this.CompParams.A._data[i][0] = -this.Parameters.d.Value._data[this.CompParams.maxDen - 2 - i][0]/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0]);
+    }
+    //Calculating B
+    this.CompParams.B = math.zeros(this.CompParams.maxDen-1, 1);
+    for (let i = 0; i < (this.CompParams.maxNum ); i++) {
+      this.CompParams.B._data[this.CompParams.maxDen - 2 - i][0] = this.Parameters.n.Value._data[i][0]/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0]);
+    }
+    //Calculating C
+    this.CompParams.C = math.zeros(1, this.CompParams.maxDen-1);
+    this.CompParams.C._data[0][0] = 1;
+
+    //Calculating D
+    this.CompParams.D = math.zeros(1, 1);
+    this.CompParams.D._data[0][0] = 0;
+
+    this.CompParams.matInp = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+
+    //creating the variables for integration
+
+    this.CompParams.xs = [[[]]]; //Output of int
+    this.CompParams.pts = [[]]; // previous time
+    this.CompParams.mems = [[[]]]; //Memory for integration
+    for (let i = 0; i < this.CompParams.dims[0]; i++) {
+      this.CompParams.xs[i] = [];
+      this.CompParams.pts[i] = [];
+      this.CompParams.mems[i] = [];
+      for (let j = 0; j < this.CompParams.dims[1]; j++) {
+        this.CompParams.xs[i][j] = [];
+        this.CompParams.pts[i][j] = [0];
+        this.CompParams.mems[i][j] = [];
       }
     }
-    this.CompParams.InCoeff = math.dotDivide(this.CompParams.InCoeff, this.CompParams.OutCoeff._data[(this.CompParams.maxDen - 1)][0]);
-    this.CompParams.OutCoeff = math.dotDivide(this.CompParams.OutCoeff, this.CompParams.OutCoeff._data[(this.CompParams.maxDen - 1)][0]);
-    this.CompParams.pt = [0]; // previous time
-    this.CompParams.pOut = []; // previous time
-    this.CompParams.iv = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
-    this.CompParams.addInput = true;
+
+    //create zero intial conditions
+    this.CompParams.initValues = math.zeros(this.CompParams.maxDen - 1, 1);
+
+
+
+    //console.log(this.CompParams);
   }
   Evaluate(t, k, simSettings) {
-    //console.log(this.CompParams.dims);
-    //console.log('started');
+
     this.getInputIfRequired();
-    let it = ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]);
-    /*if (!!this.inputs[0]) {
-      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = this.inputs[0];
-    } else {
-      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
-    }*/
-    if (!this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0]) {
-      this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0] = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
-    }
-    let finalOut = math.dotMultiply(this.CompParams.InInts.outs[this.CompParams.maxDen - 1][0], this.CompParams.InCoeff._data[this.CompParams.maxDen - 1][0]);
-    /*if (!this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].length) {
-      this.CompParams.OutInts.outs[this.CompParams.maxDen - 1].push(math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]));
-    }*/
-    //console.log(JSON.stringify(finalOut));
-    for (let i = (this.CompParams.maxDen - 2); i >= 0; i--) {
-      let pData = {
-        mem: this.CompParams.InInts.mems[i],
-        it: it,
-        iv: this.CompParams.iv,
-        t: t,
-        inp: this.CompParams.InInts.outs[i + 1][0],
-        out: this.CompParams.InInts.outs[i],
-        pt: [this.CompParams.pt[0]],
-        isFr: this.CompParams.isFr
+    let out = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
+    for (let i = 0; i < this.CompParams.dims[0]; i++) {
+      for (let j = 0; j < this.CompParams.dims[1]; j++) {
+        let dx;
+        if (!!t) {
+          dx = math.add(math.multiply(this.CompParams.A, this.CompParams.xs[i][j][0]),
+          math.multiply(this.CompParams.B, this.CompParams.matInp._data[i][j]));
+        }
+        //console.log("A = " + JSON.stringify(this.CompParams.A));
+        //console.log("B = " + JSON.stringify(this.CompParams.B));
+        //console.log("C = " + JSON.stringify(this.CompParams.C));
+        //console.log("D = " + JSON.stringify(this.CompParams.D));
+        //console.log("xs before int = " + JSON.stringify(this.CompParams.xs[i][j]));
+        //console.log("dx = " + JSON.stringify(dx));
+        let pData = {
+          mem: this.CompParams.mems[i][j],
+          it: ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]),
+          iv: this.CompParams.initValues,
+          t: t,
+          inp: dx,
+          out: this.CompParams.xs[i][j],
+          pt: this.CompParams.pts[i][j],
+          isFr: this.CompParams.isFr
+        };
+        blockUtils.integrate(pData);
+        
+        //console.log("xs after int = " + JSON.stringify(this.CompParams.xs[i][j]));
+        //console.log(JSON.stringify(this.CompParams.xs[i][j]));
+        //console.log(JSON.stringify(pData.out));
+        //let tempOut = math.add(math.multiply(this.CompParams.C, pData.out[0]),math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
+        let tempOut = math.multiply(this.CompParams.C, pData.out[0]);
+        out._data[i][j] = tempOut._data[0][0];
+        //console.log(JSON.stringify(out));
+        
       }
-      blockUtils.integrate(pData, false);
-      finalOut = math.add(finalOut, math.dotMultiply(this.CompParams.InInts.outs[i][0], this.CompParams.InCoeff._data[i][0]));
-      //console.log(JSON.stringify(finalOut));
-      pData = {
-        mem: this.CompParams.OutInts.mems[i],
-        it: it,
-        iv: this.CompParams.iv,
-        t: t,
-        inp: this.CompParams.OutInts.outs[i + 1][0],
-        out: this.CompParams.OutInts.outs[i],
-        pt: [this.CompParams.pt[0]],
-        isFr: this.CompParams.isFr
-      }
-      //console.log(JSON.stringify(this.CompParams.OutInts));
-      blockUtils.integrate(pData, false);
-      finalOut = math.subtract(finalOut, math.dotMultiply(this.CompParams.OutInts.outs[i][0], this.CompParams.OutCoeff._data[i][0]));
-      //console.log(JSON.stringify(finalOut));
     }
-    //console.log(JSON.stringify(this.CompParams.OutInts.outs));
-    this.outputs[0] = finalOut;
-    this.CompParams.pt[0] = t; //
-    this.CompParams.OutInts.outs[(this.CompParams.maxDen - 1)][0] = finalOut;
+    this.outputs[0] = out;
   }
   afterEC(t, k, simSettings) {
     this.getInputIfRequired();
