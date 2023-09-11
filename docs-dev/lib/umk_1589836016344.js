@@ -64,7 +64,7 @@ class umk_1589836016344 extends umk_model {
         break;
       }
     }
-    if (!(this.CompParams.maxDen > this.CompParams.maxNum)) {
+    if (this.CompParams.maxNum > this.CompParams.maxDen) {
       let err = {
         "en-us": "Not a proper transfer function.", // strictly
         "es-mx": "No es una función de transferencia adecuada." //estrictamente
@@ -72,27 +72,40 @@ class umk_1589836016344 extends umk_model {
       this.err = err[settings.lang];
       throw err[settings.lang];
     }
-    //Calculate A, B, C, D matrices from the transfer function using observable canonical form
+    //Calculate A, B, C, D matrices from the transfer function using observable canonical form give
+    //in Ingeniería de control moderna by Ogata 5th edition page 650 (Forma canónica observable)
     //Calculating A
     this.CompParams.A = math.zeros(this.CompParams.maxDen-1, this.CompParams.maxDen-1);
     for (let i = 0; i < (this.CompParams.maxDen-1 ); i++) {
-      if (i < (this.CompParams.maxDen - 2)) {
-        this.CompParams.A._data[i][i+1] = 1;
+      if (!!i) {
+        this.CompParams.A._data[i][i-1] = 1;
       }
-      this.CompParams.A._data[i][0] = -this.Parameters.d.Value._data[this.CompParams.maxDen - 2 - i][0]/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0]);
+      this.CompParams.A._data[i][this.CompParams.maxDen-2] = -this.Parameters.d.Value._data[i][0]/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0]);
     }
     //Calculating B
     this.CompParams.B = math.zeros(this.CompParams.maxDen-1, 1);
-    for (let i = 0; i < (this.CompParams.maxNum ); i++) {
-      this.CompParams.B._data[this.CompParams.maxDen - 2 - i][0] = this.Parameters.n.Value._data[i][0]/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0]);
+    let b0 = this.Parameters.n.Value._data[this.CompParams.maxDen - 1];
+    if (!b0) {
+      b0 = 0;
+    } else {
+      b0 = b0[0]/this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0];
+    }
+    for (let i = 0; i < (this.CompParams.maxDen-1); i++) {
+      let temp = this.Parameters.n.Value._data[i];
+      if (!temp) {
+        temp = 0;
+      } else {
+        temp = temp[0];
+      }
+      this.CompParams.B._data[i][0] = temp/(this.Parameters.d.Value._data[this.CompParams.maxDen - 1][0])+b0*this.CompParams.A._data[i][this.CompParams.maxDen-2];
     }
     //Calculating C
     this.CompParams.C = math.zeros(1, this.CompParams.maxDen-1);
-    this.CompParams.C._data[0][0] = 1;
+    this.CompParams.C._data[0][this.CompParams.maxDen-2] = 1;
 
     //Calculating D
     this.CompParams.D = math.zeros(1, 1);
-    this.CompParams.D._data[0][0] = 0;
+    this.CompParams.D._data[0][0] = b0;
 
     this.CompParams.matInp = math.zeros(this.CompParams.dims[0], this.CompParams.dims[1]);
 
@@ -152,7 +165,8 @@ class umk_1589836016344 extends umk_model {
         //console.log(JSON.stringify(this.CompParams.xs[i][j]));
         //console.log(JSON.stringify(pData.out));
         //let tempOut = math.add(math.multiply(this.CompParams.C, pData.out[0]),math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
-        let tempOut = math.multiply(this.CompParams.C, pData.out[0]);
+        //let tempOut = math.multiply(this.CompParams.C, pData.out[0]);
+        let tempOut = math.add(math.multiply(this.CompParams.C, pData.out[0]), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
         out._data[i][j] = tempOut._data[0][0];
         //console.log(JSON.stringify(out));
         
