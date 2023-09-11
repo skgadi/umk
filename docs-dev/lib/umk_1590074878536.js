@@ -182,18 +182,6 @@ class umk_1590074878536 extends umk_model {
             [1]
           ]
         },
-        "it": {
-          "Name": {
-            "en-us": "Integration type",
-            "es-mx": "Tipo de integración"
-          },
-          "Dimension": "Scalar",
-          "Type": "Options",
-          "Options": tempIntTypes,
-          "Value": [
-            ["default"]
-          ]
-        },
         "dim": {
           "Name": {
             "en-us": "Input dimensions",
