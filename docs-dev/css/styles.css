@@ -12,7 +12,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    font-family: "Univers 57 Condensed";
+    font-family: "Roboto";
     background-color: var(--col-background-1);
     color: var(--col-text-0);
 }

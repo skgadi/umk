@@ -18,8 +18,8 @@
   //mxConstants.VERTEX_SELECTION_STROKEWIDTH = 2;
   mxConstants.DROP_TARGET_COLOR = 'var(--col-text-0)';
 
-  mxConstants.STYLE_FONTFAMILY = "Univers 57 Condensed";
-  mxConstants.DEFAULT_FONTFAMILY = "Univers 57 Condensed";
+  mxConstants.STYLE_FONTFAMILY = "Roboto";
+  mxConstants.DEFAULT_FONTFAMILY = "Roboto";
   mxConstants.DEFAULT_FONTSIZE = "15";
   mxConstants.SHADOWCOLOR = "var(--col-text-0 )";
   mxConstants.SHADOW_OFFSET_X = 3;
