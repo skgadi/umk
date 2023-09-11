@@ -1,3 +1,5 @@
+
+
 var WEBGL = {
 
 	isWebGLAvailable: function () {

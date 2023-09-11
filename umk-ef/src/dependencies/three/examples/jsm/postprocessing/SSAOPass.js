@@ -20,13 +20,13 @@ import {
 	Vector3,
 	WebGLRenderTarget,
 	ZeroFactor
-} from '../../../build/three.module.js';
-import { Pass } from '../postprocessing/Pass.js';
-import { SimplexNoise } from '../math/SimplexNoise.js';
-import { SSAOShader } from '../shaders/SSAOShader.js';
-import { SSAOBlurShader } from '../shaders/SSAOShader.js';
-import { SSAODepthShader } from '../shaders/SSAOShader.js';
-import { CopyShader } from '../shaders/CopyShader.js';
+} from "../../../build/three.module.js";
+import { Pass } from "../postprocessing/Pass.js";
+import { SimplexNoise } from "../math/SimplexNoise.js";
+import { SSAOShader } from "../shaders/SSAOShader.js";
+import { SSAOBlurShader } from "../shaders/SSAOShader.js";
+import { SSAODepthShader } from "../shaders/SSAOShader.js";
+import { CopyShader } from "../shaders/CopyShader.js";
 
 var SSAOPass = function ( scene, camera, width, height ) {
 
@@ -49,31 +49,32 @@ var SSAOPass = function ( scene, camera, width, height ) {
 	this.minDistance = 0.005;
 	this.maxDistance = 0.1;
 
-	this._visibilityCache = new Map();
-
 	//
 
 	this.generateSampleKernel();
 	this.generateRandomKernelRotations();
 
-	// beauty render target
+	// beauty render target with depth buffer
 
 	var depthTexture = new DepthTexture();
 	depthTexture.type = UnsignedShortType;
+	depthTexture.minFilter = NearestFilter;
+	depthTexture.maxFilter = NearestFilter;
 
 	this.beautyRenderTarget = new WebGLRenderTarget( this.width, this.height, {
 		minFilter: LinearFilter,
 		magFilter: LinearFilter,
-		format: RGBAFormat
+		format: RGBAFormat,
+		depthTexture: depthTexture,
+		depthBuffer: true
 	} );
 
-	// normal render target with depth buffer
+	// normal render target
 
 	this.normalRenderTarget = new WebGLRenderTarget( this.width, this.height, {
 		minFilter: NearestFilter,
 		magFilter: NearestFilter,
-		format: RGBAFormat,
-		depthTexture: depthTexture
+		format: RGBAFormat
 	} );
 
 	// ssao render target
@@ -104,14 +105,14 @@ var SSAOPass = function ( scene, camera, width, height ) {
 
 	this.ssaoMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
 	this.ssaoMaterial.uniforms[ 'tNormal' ].value = this.normalRenderTarget.texture;
-	this.ssaoMaterial.uniforms[ 'tDepth' ].value = this.normalRenderTarget.depthTexture;
+	this.ssaoMaterial.uniforms[ 'tDepth' ].value = this.beautyRenderTarget.depthTexture;
 	this.ssaoMaterial.uniforms[ 'tNoise' ].value = this.noiseTexture;
 	this.ssaoMaterial.uniforms[ 'kernel' ].value = this.kernel;
 	this.ssaoMaterial.uniforms[ 'cameraNear' ].value = this.camera.near;
 	this.ssaoMaterial.uniforms[ 'cameraFar' ].value = this.camera.far;
 	this.ssaoMaterial.uniforms[ 'resolution' ].value.set( this.width, this.height );
 	this.ssaoMaterial.uniforms[ 'cameraProjectionMatrix' ].value.copy( this.camera.projectionMatrix );
-	this.ssaoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse );
+	this.ssaoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.getInverse( this.camera.projectionMatrix );
 
 	// normal material
 
@@ -138,7 +139,7 @@ var SSAOPass = function ( scene, camera, width, height ) {
 		fragmentShader: SSAODepthShader.fragmentShader,
 		blending: NoBlending
 	} );
-	this.depthRenderMaterial.uniforms[ 'tDepth' ].value = this.normalRenderTarget.depthTexture;
+	this.depthRenderMaterial.uniforms[ 'tDepth' ].value = this.beautyRenderTarget.depthTexture;
 	this.depthRenderMaterial.uniforms[ 'cameraNear' ].value = this.camera.near;
 	this.depthRenderMaterial.uniforms[ 'cameraFar' ].value = this.camera.far;
 
@@ -193,17 +194,15 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 	render: function ( renderer, writeBuffer /*, readBuffer, deltaTime, maskActive */ ) {
 
-		// render beauty
+		// render beauty and depth
 
 		renderer.setRenderTarget( this.beautyRenderTarget );
 		renderer.clear();
 		renderer.render( this.scene, this.camera );
 
-		// render normals and depth (honor only meshes, points and lines do not contribute to SSAO)
+		// render normals
 
-		this.overrideVisibility();
 		this.renderOverride( renderer, this.normalMaterial, this.normalRenderTarget, 0x7777ff, 1.0 );
-		this.restoreVisibility();
 
 		// render SSAO
 
@@ -280,7 +279,7 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 	renderPass: function ( renderer, passMaterial, renderTarget, clearColor, clearAlpha ) {
 
 		// save original state
-		renderer.getClearColor( this.originalClearColor );
+		this.originalClearColor.copy( renderer.getClearColor() );
 		var originalClearAlpha = renderer.getClearAlpha();
 		var originalAutoClear = renderer.autoClear;
 
@@ -308,7 +307,7 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 	renderOverride: function ( renderer, overrideMaterial, renderTarget, clearColor, clearAlpha ) {
 
-		renderer.getClearColor( this.originalClearColor );
+		this.originalClearColor.copy( renderer.getClearColor() );
 		var originalClearAlpha = renderer.getClearAlpha();
 		var originalAutoClear = renderer.autoClear;
 
@@ -350,7 +349,7 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 		this.ssaoMaterial.uniforms[ 'resolution' ].value.set( width, height );
 		this.ssaoMaterial.uniforms[ 'cameraProjectionMatrix' ].value.copy( this.camera.projectionMatrix );
-		this.ssaoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse );
+		this.ssaoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.getInverse( this.camera.projectionMatrix );
 
 		this.blurMaterial.uniforms[ 'resolution' ].value.set( width, height );
 
@@ -415,37 +414,6 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 		this.noiseTexture = new DataTexture( data, width, height, RGBAFormat, FloatType );
 		this.noiseTexture.wrapS = RepeatWrapping;
 		this.noiseTexture.wrapT = RepeatWrapping;
-
-	},
-
-	overrideVisibility: function () {
-
-		var scene = this.scene;
-		var cache = this._visibilityCache;
-
-		scene.traverse( function ( object ) {
-
-			cache.set( object, object.visible );
-
-			if ( object.isPoints || object.isLine ) object.visible = false;
-
-		} );
-
-	},
-
-	restoreVisibility: function () {
-
-		var scene = this.scene;
-		var cache = this._visibilityCache;
-
-		scene.traverse( function ( object ) {
-
-			var visible = cache.get( object );
-			object.visible = visible;
-
-		} );
-
-		cache.clear();
 
 	}
 

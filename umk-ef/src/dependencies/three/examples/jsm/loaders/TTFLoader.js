@@ -1,9 +1,8 @@
 import {
 	FileLoader,
 	Loader
-} from '../../../build/three.module.js';
-import { opentype } from '../libs/opentype.module.min.js';
-
+} from "../../../build/three.module.js";
+import { opentype } from "../libs/opentype.module.min.js";
 /**
  * Requires opentype.js to be included in the project.
  * Loads TTF files and converts them into typeface JSON that can be used directly
@@ -31,7 +30,6 @@ TTFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
-		loader.setWithCredentials( this.withCredentials );
 		loader.load( url, function ( buffer ) {
 
 			try {
@@ -215,7 +213,7 @@ TTFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		}
 
-		return convert( opentype.parse( arraybuffer ), this.reversed ); // eslint-disable-line no-undef
+		return convert( opentype.parse( arraybuffer ), this.reversed );
 
 	}
 

@@ -3,8 +3,7 @@ import {
 	Float32BufferAttribute,
 	Matrix4,
 	Vector3
-} from '../../../build/three.module.js';
-
+} from "../../../build/three.module.js";
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.
  * e.g. adding unique details to models, performing dynamic visual environmental changes or covering seams.
@@ -40,8 +39,7 @@ var DecalGeometry = function ( mesh, position, orientation, size ) {
 	projectorMatrix.makeRotationFromEuler( orientation );
 	projectorMatrix.setPosition( position );
 
-	var projectorMatrixInverse = new Matrix4();
-	projectorMatrixInverse.copy( projectorMatrix ).invert();
+	var projectorMatrixInverse = new Matrix4().getInverse( projectorMatrix );
 
 	// generate buffers
 
@@ -56,7 +54,7 @@ var DecalGeometry = function ( mesh, position, orientation, size ) {
 	function generate() {
 
 		var i;
-
+		var geometry = new BufferGeometry();
 		var decalVertices = [];
 
 		var vertex = new Vector3();
@@ -64,14 +62,15 @@ var DecalGeometry = function ( mesh, position, orientation, size ) {
 
 		// handle different geometry types
 
-		if ( mesh.geometry.isGeometry === true ) {
+		if ( mesh.geometry.isGeometry ) {
 
-			console.error( 'THREE.DecalGeometry no longer supports THREE.Geometry. Use BufferGeometry instead.' );
-			return;
+			geometry.fromGeometry( mesh.geometry );
+
+		} else {
+
+			geometry.copy( mesh.geometry );
 
 		}
-
-		var geometry = mesh.geometry;
 
 		var positionAttribute = geometry.attributes.position;
 		var normalAttribute = geometry.attributes.normal;

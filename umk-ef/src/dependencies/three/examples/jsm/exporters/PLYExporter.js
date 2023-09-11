@@ -1,8 +1,8 @@
 import {
+	BufferGeometry,
 	Matrix3,
 	Vector3
-} from '../../../build/three.module.js';
-
+} from "../../../build/three.module.js";
 /**
  * https://github.com/gkjohnson/ply-exporter-js
  *
@@ -42,15 +42,19 @@ PLYExporter.prototype = {
 					var mesh = child;
 					var geometry = mesh.geometry;
 
-					if ( geometry.isBufferGeometry !== true ) {
+					if ( geometry.isGeometry === true ) {
 
-						throw new Error( 'THREE.PLYExporter: Geometry is not of type THREE.BufferGeometry.' );
+						geometry = geomToBufferGeom.get( geometry );
 
 					}
 
-					if ( geometry.hasAttribute( 'position' ) === true ) {
+					if ( geometry.isBufferGeometry === true ) {
 
-						cb( mesh, geometry );
+						if ( geometry.getAttribute( 'position' ) !== undefined ) {
+
+							cb( mesh, geometry );
+
+						}
 
 					}
 
@@ -70,6 +74,7 @@ PLYExporter.prototype = {
 		options = Object.assign( defaultOptions, options );
 
 		var excludeAttributes = options.excludeAttributes;
+		var geomToBufferGeom = new WeakMap();
 		var includeNormals = false;
 		var includeColors = false;
 		var includeUVs = false;
@@ -85,32 +90,38 @@ PLYExporter.prototype = {
 				var mesh = child;
 				var geometry = mesh.geometry;
 
-				if ( geometry.isBufferGeometry !== true ) {
+				if ( geometry.isGeometry === true ) {
 
-					throw new Error( 'THREE.PLYExporter: Geometry is not of type THREE.BufferGeometry.' );
-
-				}
-
-				var vertices = geometry.getAttribute( 'position' );
-				var normals = geometry.getAttribute( 'normal' );
-				var uvs = geometry.getAttribute( 'uv' );
-				var colors = geometry.getAttribute( 'color' );
-				var indices = geometry.getIndex();
-
-				if ( vertices === undefined ) {
-
-					return;
+					var bufferGeometry = geomToBufferGeom.get( geometry ) || new BufferGeometry().setFromObject( mesh );
+					geomToBufferGeom.set( geometry, bufferGeometry );
+					geometry = bufferGeometry;
 
 				}
 
-				vertexCount += vertices.count;
-				faceCount += indices ? indices.count / 3 : vertices.count / 3;
+				if ( geometry.isBufferGeometry === true ) {
 
-				if ( normals !== undefined ) includeNormals = true;
+					var vertices = geometry.getAttribute( 'position' );
+					var normals = geometry.getAttribute( 'normal' );
+					var uvs = geometry.getAttribute( 'uv' );
+					var colors = geometry.getAttribute( 'color' );
+					var indices = geometry.getIndex();
 
-				if ( uvs !== undefined ) includeUVs = true;
+					if ( vertices === undefined ) {
 
-				if ( colors !== undefined ) includeColors = true;
+						return;
+
+					}
+
+					vertexCount += vertices.count;
+					faceCount += indices ? indices.count / 3 : vertices.count / 3;
+
+					if ( normals !== undefined ) includeNormals = true;
+
+					if ( uvs !== undefined ) includeUVs = true;
+
+					if ( colors !== undefined ) includeColors = true;
+
+				}
 
 			}
 
@@ -184,7 +195,7 @@ PLYExporter.prototype = {
 			// faces
 			header +=
 				`element face ${faceCount}\n` +
-				'property list uchar int vertex_index\n';
+				`property list uchar int vertex_index\n`;
 
 		}
 

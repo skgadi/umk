@@ -1,3 +1,4 @@
+console.warn( "THREE.GPUComputationRenderer: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
 /**
  * GPUComputationRenderer, based on SimulationRenderer by zz85
  *
@@ -114,7 +115,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	var passThruShader = createShaderMaterial( getPassThroughFragmentShader(), passThruUniforms );
 
-	var mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), passThruShader );
+	var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), passThruShader );
 	scene.add( mesh );
 
 
@@ -155,15 +156,16 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	this.init = function () {
 
-		if ( renderer.capabilities.isWebGL2 === false && renderer.extensions.has( 'OES_texture_float' ) === false ) {
+		if ( ! renderer.capabilities.isWebGL2 &&
+			 ! renderer.extensions.get( "OES_texture_float" ) ) {
 
-			return 'No OES_texture_float support for float textures.';
+			return "No OES_texture_float support for float textures.";
 
 		}
 
 		if ( renderer.capabilities.maxVertexTextures === 0 ) {
 
-			return 'No support for vertex shader textures.';
+			return "No support for vertex shader textures.";
 
 		}
 
@@ -204,7 +206,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 						if ( ! found ) {
 
-							return 'Variable dependency not found. Variable=' + variable.name + ', dependency=' + depVar.name;
+							return "Variable dependency not found. Variable=" + variable.name + ", dependency=" + depVar.name;
 
 						}
 
@@ -212,7 +214,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 					uniforms[ depVar.name ] = { value: null };
 
-					material.fragmentShader = '\nuniform sampler2D ' + depVar.name + ';\n' + material.fragmentShader;
+					material.fragmentShader = "\nuniform sampler2D " + depVar.name + ";\n" + material.fragmentShader;
 
 				}
 
@@ -272,7 +274,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	function addResolutionDefine( materialShader ) {
 
-		materialShader.defines.resolution = 'vec2( ' + sizeX.toFixed( 1 ) + ', ' + sizeY.toFixed( 1 ) + ' )';
+		materialShader.defines.resolution = 'vec2( ' + sizeX.toFixed( 1 ) + ', ' + sizeY.toFixed( 1 ) + " )";
 
 	}
 
@@ -317,6 +319,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 			magFilter: magFilter,
 			format: THREE.RGBAFormat,
 			type: dataType,
+			stencilBuffer: false,
 			depthBuffer: false
 		} );
 
@@ -362,25 +365,25 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	function getPassThroughVertexShader() {
 
-		return	'void main()	{\n' +
-				'\n' +
-				'	gl_Position = vec4( position, 1.0 );\n' +
-				'\n' +
-				'}\n';
+		return	"void main()	{\n" +
+				"\n" +
+				"	gl_Position = vec4( position, 1.0 );\n" +
+				"\n" +
+				"}\n";
 
 	}
 
 	function getPassThroughFragmentShader() {
 
-		return	'uniform sampler2D passThruTexture;\n' +
-				'\n' +
-				'void main() {\n' +
-				'\n' +
-				'	vec2 uv = gl_FragCoord.xy / resolution.xy;\n' +
-				'\n' +
-				'	gl_FragColor = texture2D( passThruTexture, uv );\n' +
-				'\n' +
-				'}\n';
+		return	"uniform sampler2D passThruTexture;\n" +
+				"\n" +
+				"void main() {\n" +
+				"\n" +
+				"	vec2 uv = gl_FragCoord.xy / resolution.xy;\n" +
+				"\n" +
+				"	gl_FragColor = texture2D( passThruTexture, uv );\n" +
+				"\n" +
+				"}\n";
 
 	}
 

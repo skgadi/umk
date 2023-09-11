@@ -13,7 +13,7 @@ import {
 	Vector3,
 	Vector4,
 	WebGLRenderTarget
-} from '../../../build/three.module.js';
+} from "../../../build/three.module.js";
 
 var Refractor = function ( geometry, options ) {
 
@@ -47,7 +47,8 @@ var Refractor = function ( geometry, options ) {
 	var parameters = {
 		minFilter: LinearFilter,
 		magFilter: LinearFilter,
-		format: RGBFormat
+		format: RGBFormat,
+		stencilBuffer: false
 	};
 
 	var renderTarget = new WebGLRenderTarget( textureWidth, textureHeight, parameters );
@@ -67,9 +68,9 @@ var Refractor = function ( geometry, options ) {
 		transparent: true // ensures, refractors are drawn from farthest to closest
 	} );
 
-	this.material.uniforms[ 'color' ].value = color;
-	this.material.uniforms[ 'tDiffuse' ].value = renderTarget.texture;
-	this.material.uniforms[ 'textureMatrix' ].value = textureMatrix;
+	this.material.uniforms[ "color" ].value = color;
+	this.material.uniforms[ "tDiffuse" ].value = renderTarget.texture;
+	this.material.uniforms[ "textureMatrix" ].value = textureMatrix;
 
 	// functions
 
@@ -131,7 +132,7 @@ var Refractor = function ( geometry, options ) {
 		return function updateVirtualCamera( camera ) {
 
 			virtualCamera.matrixWorld.copy( camera.matrixWorld );
-			virtualCamera.matrixWorldInverse.copy( virtualCamera.matrixWorld ).invert();
+			virtualCamera.matrixWorldInverse.getInverse( virtualCamera.matrixWorld );
 			virtualCamera.projectionMatrix.copy( camera.projectionMatrix );
 			virtualCamera.far = camera.far; // used in WebGLBackground
 

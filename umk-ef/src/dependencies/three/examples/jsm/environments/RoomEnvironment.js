@@ -8,7 +8,7 @@ function RoomEnvironment() {
 
 	const scene = new THREE.Scene();
 
-	const geometry = new THREE.BoxGeometry();
+	const geometry = new THREE.BoxBufferGeometry();
 	geometry.deleteAttribute( 'uv' );
 
 	const roomMaterial = new THREE.MeshStandardMaterial( { side: THREE.BackSide } );

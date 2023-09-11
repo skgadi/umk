@@ -18,14 +18,13 @@ import {
 	Vector2,
 	WebGLRenderTarget,
 	ZeroFactor
-} from '../../../build/three.module.js';
-import { Pass } from '../postprocessing/Pass.js';
-import { SAOShader } from '../shaders/SAOShader.js';
-import { DepthLimitedBlurShader } from '../shaders/DepthLimitedBlurShader.js';
-import { BlurShaderUtils } from '../shaders/DepthLimitedBlurShader.js';
-import { CopyShader } from '../shaders/CopyShader.js';
-import { UnpackDepthRGBAShader } from '../shaders/UnpackDepthRGBAShader.js';
-
+} from "../../../build/three.module.js";
+import { Pass } from "../postprocessing/Pass.js";
+import { SAOShader } from "../shaders/SAOShader.js";
+import { DepthLimitedBlurShader } from "../shaders/DepthLimitedBlurShader.js";
+import { BlurShaderUtils } from "../shaders/DepthLimitedBlurShader.js";
+import { CopyShader } from "../shaders/CopyShader.js";
+import { UnpackDepthRGBAShader } from "../shaders/UnpackDepthRGBAShader.js";
 /**
  * SAO implementation inspired from bhouston previous SAO work
  */
@@ -44,7 +43,7 @@ var SAOPass = function ( scene, camera, depthTexture, useNormals, resolution ) {
 	this.supportsNormalTexture = ( useNormals !== undefined ) ? useNormals : false;
 
 	this.originalClearColor = new Color();
-	this._oldClearColor = new Color();
+	this.oldClearColor = new Color();
 	this.oldClearAlpha = 1;
 
 	this.params = {
@@ -81,6 +80,8 @@ var SAOPass = function ( scene, camera, depthTexture, useNormals, resolution ) {
 
 		var depthTexture = new DepthTexture();
 		depthTexture.type = UnsignedShortType;
+		depthTexture.minFilter = NearestFilter;
+		depthTexture.maxFilter = NearestFilter;
 
 		this.beautyRenderTarget.depthTexture = depthTexture;
 		this.beautyRenderTarget.depthBuffer = true;
@@ -113,7 +114,7 @@ var SAOPass = function ( scene, camera, depthTexture, useNormals, resolution ) {
 	this.saoMaterial.uniforms[ 'tDepth' ].value = ( this.supportsDepthTextureExtension ) ? depthTexture : this.depthRenderTarget.texture;
 	this.saoMaterial.uniforms[ 'tNormal' ].value = this.normalRenderTarget.texture;
 	this.saoMaterial.uniforms[ 'size' ].value.set( this.resolution.x, this.resolution.y );
-	this.saoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse );
+	this.saoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.getInverse( this.camera.projectionMatrix );
 	this.saoMaterial.uniforms[ 'cameraProjectionMatrix' ].value = this.camera.projectionMatrix;
 	this.saoMaterial.blending = NoBlending;
 
@@ -218,7 +219,7 @@ SAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 		}
 
-		renderer.getClearColor( this._oldClearColor );
+		this.oldClearColor.copy( renderer.getClearColor() );
 		this.oldClearAlpha = renderer.getClearAlpha();
 		var oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
@@ -329,7 +330,7 @@ SAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 		// Rendering SAOPass result on top of previous pass
 		this.renderPass( renderer, outputMaterial, this.renderToScreen ? null : readBuffer );
 
-		renderer.setClearColor( this._oldClearColor, this.oldClearAlpha );
+		renderer.setClearColor( this.oldClearColor, this.oldClearAlpha );
 		renderer.autoClear = oldAutoClear;
 
 	},
@@ -337,7 +338,7 @@ SAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 	renderPass: function ( renderer, passMaterial, renderTarget, clearColor, clearAlpha ) {
 
 		// save original state
-		renderer.getClearColor( this.originalClearColor );
+		this.originalClearColor.copy( renderer.getClearColor() );
 		var originalClearAlpha = renderer.getClearAlpha();
 		var originalAutoClear = renderer.autoClear;
 
@@ -365,7 +366,7 @@ SAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 	renderOverride: function ( renderer, overrideMaterial, renderTarget, clearColor, clearAlpha ) {
 
-		renderer.getClearColor( this.originalClearColor );
+		this.originalClearColor.copy( renderer.getClearColor() );
 		var originalClearAlpha = renderer.getClearAlpha();
 		var originalAutoClear = renderer.autoClear;
 
@@ -402,7 +403,7 @@ SAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 		this.depthRenderTarget.setSize( width, height );
 
 		this.saoMaterial.uniforms[ 'size' ].value.set( width, height );
-		this.saoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse );
+		this.saoMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.getInverse( this.camera.projectionMatrix );
 		this.saoMaterial.uniforms[ 'cameraProjectionMatrix' ].value = this.camera.projectionMatrix;
 		this.saoMaterial.needsUpdate = true;
 

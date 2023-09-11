@@ -1,4 +1,4 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '../../../../build/three.module.js';
+import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
 
 class WebGPUUniform {
 
@@ -34,10 +34,10 @@ class FloatUniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isFloatUniform = true;
+
 		this.boundary = 4;
 		this.itemSize = 1;
-
-		Object.defineProperty( this, 'isFloatUniform', { value: true } );
 
 	}
 
@@ -49,10 +49,10 @@ class Vector2Uniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isVector2Uniform = true;
+
 		this.boundary = 8;
 		this.itemSize = 2;
-
-		Object.defineProperty( this, 'isVector2Uniform', { value: true } );
 
 	}
 
@@ -64,10 +64,10 @@ class Vector3Uniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isVector3Uniform = true;
+
 		this.boundary = 16;
 		this.itemSize = 3;
-
-		Object.defineProperty( this, 'isVector3Uniform', { value: true } );
 
 	}
 
@@ -79,10 +79,10 @@ class Vector4Uniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isVector4Uniform = true;
+
 		this.boundary = 16;
 		this.itemSize = 4;
-
-		Object.defineProperty( this, 'isVector4Uniform', { value: true } );
 
 	}
 
@@ -94,10 +94,10 @@ class ColorUniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isColorUniform = true;
+
 		this.boundary = 16;
 		this.itemSize = 3;
-
-		Object.defineProperty( this, 'isColorUniform', { value: true } );
 
 	}
 
@@ -109,10 +109,10 @@ class Matrix3Uniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isMatrix3Uniform = true;
+
 		this.boundary = 48;
 		this.itemSize = 12;
-
-		Object.defineProperty( this, 'isMatrix3Uniform', { value: true } );
 
 	}
 
@@ -124,10 +124,10 @@ class Matrix4Uniform extends WebGPUUniform {
 
 		super( name, value );
 
+		this.isMatrix4Uniform = true;
+
 		this.boundary = 64;
 		this.itemSize = 16;
-
-		Object.defineProperty( this, 'isMatrix4Uniform', { value: true } );
 
 	}
 

@@ -12,7 +12,7 @@ import {
 	Points,
 	PointsMaterial,
 	Vector3
-} from '../../../build/three.module.js';
+} from "../../../build/three.module.js";
 
 var OBJLoader = ( function () {
 
@@ -75,6 +75,7 @@ var OBJLoader = ( function () {
 						normals: [],
 						colors: [],
 						uvs: [],
+						hasNormalIndices: false,
 						hasUVIndices: false
 					},
 					materials: [],
@@ -353,6 +354,8 @@ var OBJLoader = ( function () {
 
 					this.addNormal( ia, ib, ic );
 
+					this.object.geometry.hasNormalIndices = true;
+
 				} else {
 
 					this.addFaceNormal( ia, ib, ic );
@@ -391,10 +394,7 @@ var OBJLoader = ( function () {
 
 				for ( var vi = 0, l = vertices.length; vi < l; vi ++ ) {
 
-					var index = this.parseVertexIndex( vertices[ vi ], vLen );
-
-					this.addVertexPoint( index );
-					this.addColor( index );
+					this.addVertexPoint( this.parseVertexIndex( vertices[ vi ], vLen ) );
 
 				}
 
@@ -447,10 +447,9 @@ var OBJLoader = ( function () {
 
 			var scope = this;
 
-			var loader = new FileLoader( this.manager );
+			var loader = new FileLoader( scope.manager );
 			loader.setPath( this.path );
 			loader.setRequestHeader( this.requestHeader );
-			loader.setWithCredentials( this.withCredentials );
 			loader.load( url, function ( text ) {
 
 				try {
@@ -612,10 +611,10 @@ var OBJLoader = ( function () {
 
 				} else if ( lineFirstChar === 'l' ) {
 
-					var lineParts = line.substring( 1 ).trim().split( ' ' );
+					var lineParts = line.substring( 1 ).trim().split( " " );
 					var lineVertices = [], lineUVs = [];
 
-					if ( line.indexOf( '/' ) === - 1 ) {
+					if ( line.indexOf( "/" ) === - 1 ) {
 
 						lineVertices = lineParts;
 
@@ -623,10 +622,10 @@ var OBJLoader = ( function () {
 
 						for ( var li = 0, llen = lineParts.length; li < llen; li ++ ) {
 
-							var parts = lineParts[ li ].split( '/' );
+							var parts = lineParts[ li ].split( "/" );
 
-							if ( parts[ 0 ] !== '' ) lineVertices.push( parts[ 0 ] );
-							if ( parts[ 1 ] !== '' ) lineUVs.push( parts[ 1 ] );
+							if ( parts[ 0 ] !== "" ) lineVertices.push( parts[ 0 ] );
+							if ( parts[ 1 ] !== "" ) lineUVs.push( parts[ 1 ] );
 
 						}
 
@@ -637,7 +636,7 @@ var OBJLoader = ( function () {
 				} else if ( lineFirstChar === 'p' ) {
 
 					var lineData = line.substr( 1 ).trim();
-					var pointData = lineData.split( ' ' );
+					var pointData = lineData.split( " " );
 
 					state.addPointGeometry( pointData );
 
@@ -649,7 +648,7 @@ var OBJLoader = ( function () {
 
 					// WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
 					// var name = result[ 0 ].substr( 1 ).trim();
-					var name = ( ' ' + result[ 0 ].substr( 1 ).trim() ).substr( 1 );
+					var name = ( " " + result[ 0 ].substr( 1 ).trim() ).substr( 1 );
 
 					state.startObject( name );
 
@@ -727,181 +726,151 @@ var OBJLoader = ( function () {
 			var container = new Group();
 			container.materialLibraries = [].concat( state.materialLibraries );
 
-			var hasPrimitives = ! ( state.objects.length === 1 && state.objects[ 0 ].geometry.vertices.length === 0 );
+			for ( var i = 0, l = state.objects.length; i < l; i ++ ) {
 
-			if ( hasPrimitives === true ) {
+				var object = state.objects[ i ];
+				var geometry = object.geometry;
+				var materials = object.materials;
+				var isLine = ( geometry.type === 'Line' );
+				var isPoints = ( geometry.type === 'Points' );
+				var hasVertexColors = false;
 
-				for ( var i = 0, l = state.objects.length; i < l; i ++ ) {
+				// Skip o/g line declarations that did not follow with any faces
+				if ( geometry.vertices.length === 0 ) continue;
 
-					var object = state.objects[ i ];
-					var geometry = object.geometry;
-					var materials = object.materials;
-					var isLine = ( geometry.type === 'Line' );
-					var isPoints = ( geometry.type === 'Points' );
-					var hasVertexColors = false;
+				var buffergeometry = new BufferGeometry();
 
-					// Skip o/g line declarations that did not follow with any faces
-					if ( geometry.vertices.length === 0 ) continue;
+				buffergeometry.setAttribute( 'position', new Float32BufferAttribute( geometry.vertices, 3 ) );
 
-					var buffergeometry = new BufferGeometry();
+				if ( geometry.hasNormalIndices === true ) {
 
-					buffergeometry.setAttribute( 'position', new Float32BufferAttribute( geometry.vertices, 3 ) );
+					buffergeometry.setAttribute( 'normal', new Float32BufferAttribute( geometry.normals, 3 ) );
 
-					if ( geometry.normals.length > 0 ) {
+				}
 
-						buffergeometry.setAttribute( 'normal', new Float32BufferAttribute( geometry.normals, 3 ) );
+				if ( geometry.colors.length > 0 ) {
+
+					hasVertexColors = true;
+					buffergeometry.setAttribute( 'color', new Float32BufferAttribute( geometry.colors, 3 ) );
+
+				}
+
+				if ( geometry.hasUVIndices === true ) {
+
+					buffergeometry.setAttribute( 'uv', new Float32BufferAttribute( geometry.uvs, 2 ) );
+
+				}
+
+				// Create materials
+
+				var createdMaterials = [];
+
+				for ( var mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
+
+					var sourceMaterial = materials[ mi ];
+					var materialHash = sourceMaterial.name + '_' + sourceMaterial.smooth + '_' + hasVertexColors;
+					var material = state.materials[ materialHash ];
+
+					if ( this.materials !== null ) {
+
+						material = this.materials.create( sourceMaterial.name );
+
+						// mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
+						if ( isLine && material && ! ( material instanceof LineBasicMaterial ) ) {
+
+							var materialLine = new LineBasicMaterial();
+							Material.prototype.copy.call( materialLine, material );
+							materialLine.color.copy( material.color );
+							material = materialLine;
+
+						} else if ( isPoints && material && ! ( material instanceof PointsMaterial ) ) {
+
+							var materialPoints = new PointsMaterial( { size: 10, sizeAttenuation: false } );
+							Material.prototype.copy.call( materialPoints, material );
+							materialPoints.color.copy( material.color );
+							materialPoints.map = material.map;
+							material = materialPoints;
+
+						}
 
 					}
 
-					if ( geometry.colors.length > 0 ) {
+					if ( material === undefined ) {
 
-						hasVertexColors = true;
-						buffergeometry.setAttribute( 'color', new Float32BufferAttribute( geometry.colors, 3 ) );
+						if ( isLine ) {
+
+							material = new LineBasicMaterial();
+
+						} else if ( isPoints ) {
+
+							material = new PointsMaterial( { size: 1, sizeAttenuation: false } );
+
+						} else {
+
+							material = new MeshPhongMaterial();
+
+						}
+
+						material.name = sourceMaterial.name;
+						material.flatShading = sourceMaterial.smooth ? false : true;
+						material.vertexColors = hasVertexColors;
+
+						state.materials[ materialHash ] = material;
 
 					}
 
-					if ( geometry.hasUVIndices === true ) {
+					createdMaterials.push( material );
 
-						buffergeometry.setAttribute( 'uv', new Float32BufferAttribute( geometry.uvs, 2 ) );
+				}
 
-					}
+				// Create mesh
 
-					// Create materials
+				var mesh;
 
-					var createdMaterials = [];
+				if ( createdMaterials.length > 1 ) {
 
 					for ( var mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
 
 						var sourceMaterial = materials[ mi ];
-						var materialHash = sourceMaterial.name + '_' + sourceMaterial.smooth + '_' + hasVertexColors;
-						var material = state.materials[ materialHash ];
-
-						if ( this.materials !== null ) {
-
-							material = this.materials.create( sourceMaterial.name );
-
-							// mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
-							if ( isLine && material && ! ( material instanceof LineBasicMaterial ) ) {
-
-								var materialLine = new LineBasicMaterial();
-								Material.prototype.copy.call( materialLine, material );
-								materialLine.color.copy( material.color );
-								material = materialLine;
-
-							} else if ( isPoints && material && ! ( material instanceof PointsMaterial ) ) {
-
-								var materialPoints = new PointsMaterial( { size: 10, sizeAttenuation: false } );
-								Material.prototype.copy.call( materialPoints, material );
-								materialPoints.color.copy( material.color );
-								materialPoints.map = material.map;
-								material = materialPoints;
-
-							}
-
-						}
-
-						if ( material === undefined ) {
-
-							if ( isLine ) {
-
-								material = new LineBasicMaterial();
-
-							} else if ( isPoints ) {
-
-								material = new PointsMaterial( { size: 1, sizeAttenuation: false } );
-
-							} else {
-
-								material = new MeshPhongMaterial();
-
-							}
-
-							material.name = sourceMaterial.name;
-							material.flatShading = sourceMaterial.smooth ? false : true;
-							material.vertexColors = hasVertexColors;
-
-							state.materials[ materialHash ] = material;
-
-						}
-
-						createdMaterials.push( material );
+						buffergeometry.addGroup( sourceMaterial.groupStart, sourceMaterial.groupCount, mi );
 
 					}
 
-					// Create mesh
+					if ( isLine ) {
 
-					var mesh;
+						mesh = new LineSegments( buffergeometry, createdMaterials );
 
-					if ( createdMaterials.length > 1 ) {
+					} else if ( isPoints ) {
 
-						for ( var mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
-
-							var sourceMaterial = materials[ mi ];
-							buffergeometry.addGroup( sourceMaterial.groupStart, sourceMaterial.groupCount, mi );
-
-						}
-
-						if ( isLine ) {
-
-							mesh = new LineSegments( buffergeometry, createdMaterials );
-
-						} else if ( isPoints ) {
-
-							mesh = new Points( buffergeometry, createdMaterials );
-
-						} else {
-
-							mesh = new Mesh( buffergeometry, createdMaterials );
-
-						}
+						mesh = new Points( buffergeometry, createdMaterials );
 
 					} else {
 
-						if ( isLine ) {
-
-							mesh = new LineSegments( buffergeometry, createdMaterials[ 0 ] );
-
-						} else if ( isPoints ) {
-
-							mesh = new Points( buffergeometry, createdMaterials[ 0 ] );
-
-						} else {
-
-							mesh = new Mesh( buffergeometry, createdMaterials[ 0 ] );
-
-						}
+						mesh = new Mesh( buffergeometry, createdMaterials );
 
 					}
 
-					mesh.name = object.name;
+				} else {
 
-					container.add( mesh );
+					if ( isLine ) {
 
-				}
+						mesh = new LineSegments( buffergeometry, createdMaterials[ 0 ] );
 
-			} else {
+					} else if ( isPoints ) {
 
-				// if there is only the default parser state object with no geometry data, interpret data as point cloud
+						mesh = new Points( buffergeometry, createdMaterials[ 0 ] );
 
-				if ( state.vertices.length > 0 ) {
+					} else {
 
-					var material = new PointsMaterial( { size: 1, sizeAttenuation: false } );
-
-					var buffergeometry = new BufferGeometry();
-
-					buffergeometry.setAttribute( 'position', new Float32BufferAttribute( state.vertices, 3 ) );
-
-					if ( state.colors.length > 0 && state.colors[ 0 ] !== undefined ) {
-
-						buffergeometry.setAttribute( 'color', new Float32BufferAttribute( state.colors, 3 ) );
-						material.vertexColors = true;
+						mesh = new Mesh( buffergeometry, createdMaterials[ 0 ] );
 
 					}
 
-					var points = new Points( buffergeometry, material );
-					container.add( points );
-
 				}
+
+				mesh.name = object.name;
+
+				container.add( mesh );
 
 			}
 

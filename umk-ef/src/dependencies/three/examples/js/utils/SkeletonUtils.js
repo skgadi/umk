@@ -1,3 +1,5 @@
+console.warn( "THREE.SkeletonUtils: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
+
 THREE.SkeletonUtils = {
 
 	retarget: function () {
@@ -16,7 +18,7 @@ THREE.SkeletonUtils = {
 			options.preservePosition = options.preservePosition !== undefined ? options.preservePosition : true;
 			options.preserveHipPosition = options.preserveHipPosition !== undefined ? options.preserveHipPosition : false;
 			options.useTargetMatrix = options.useTargetMatrix !== undefined ? options.useTargetMatrix : false;
-			options.hip = options.hip !== undefined ? options.hip : 'hip';
+			options.hip = options.hip !== undefined ? options.hip : "hip";
 			options.names = options.names || {};
 
 			var sourceBones = source.isObject3D ? source.skeleton.bones : this.getBones( source ),
@@ -112,7 +114,7 @@ THREE.SkeletonUtils = {
 
 					} else {
 
-						relativeMatrix.copy( target.matrixWorld ).invert();
+						relativeMatrix.getInverse( target.matrixWorld );
 						relativeMatrix.multiply( boneTo.matrixWorld );
 
 					}
@@ -129,7 +131,7 @@ THREE.SkeletonUtils = {
 					if ( target.isObject3D ) {
 
 						var boneIndex = bones.indexOf( bone ),
-							wBindMatrix = bindBones ? bindBones[ boneIndex ] : bindBoneMatrix.copy( target.skeleton.boneInverses[ boneIndex ] ).invert();
+							wBindMatrix = bindBones ? bindBones[ boneIndex ] : bindBoneMatrix.getInverse( target.skeleton.boneInverses[ boneIndex ] );
 
 						globalMatrix.multiply( wBindMatrix );
 
@@ -141,7 +143,7 @@ THREE.SkeletonUtils = {
 
 				if ( bone.parent && bone.parent.isBone ) {
 
-					bone.matrix.copy( bone.parent.matrixWorld ).invert();
+					bone.matrix.getInverse( bone.parent.matrixWorld );
 					bone.matrix.multiply( globalMatrix );
 
 				} else {
@@ -297,7 +299,7 @@ THREE.SkeletonUtils = {
 				if ( boneData.pos ) {
 
 					convertedTracks.push( new THREE.VectorKeyframeTrack(
-						'.bones[' + boneData.bone.name + '].position',
+						".bones[" + boneData.bone.name + "].position",
 						boneData.pos.times,
 						boneData.pos.values
 					) );
@@ -305,7 +307,7 @@ THREE.SkeletonUtils = {
 				}
 
 				convertedTracks.push( new THREE.QuaternionKeyframeTrack(
-					'.bones[' + boneData.bone.name + '].quaternion',
+					".bones[" + boneData.bone.name + "].quaternion",
 					boneData.quat.times,
 					boneData.quat.values
 				) );
@@ -341,7 +343,7 @@ THREE.SkeletonUtils = {
 		return function ( target, source, options ) {
 
 			options = options || {};
-			options.hip = options.hip !== undefined ? options.hip : 'hip';
+			options.hip = options.hip !== undefined ? options.hip : "hip";
 			options.names = options.names || {};
 
 			if ( ! source.isObject3D ) {

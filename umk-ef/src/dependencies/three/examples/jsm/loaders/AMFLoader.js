@@ -8,9 +8,8 @@ import {
 	LoaderUtils,
 	Mesh,
 	MeshPhongMaterial
-} from '../../../build/three.module.js';
-import * as fflate from '../libs/fflate.module.min.js';
-
+} from "../../../build/three.module.js";
+import { JSZip } from "../libs/jszip.module.min.js";
 /**
  * Description: Early release of an AMF Loader following the pattern of the
  * example loaders in the three.js project.
@@ -24,7 +23,7 @@ import * as fflate from '../libs/fflate.module.min.js';
  *	});
  *
  * Materials now supported, material colors supported
- * Zip support, requires fflate
+ * Zip support, requires jszip
  * No constellation support (yet)!
  *
  */
@@ -47,7 +46,6 @@ AMFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
-		loader.setWithCredentials( scope.withCredentials );
 		loader.load( url, function ( text ) {
 
 			try {
@@ -90,20 +88,20 @@ AMFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				try {
 
-					zip = fflate.unzipSync( new Uint8Array( data ) ); // eslint-disable-line no-undef
+					zip = new JSZip( data );
 
 				} catch ( e ) {
 
 					if ( e instanceof ReferenceError ) {
 
-						console.log( 'THREE.AMFLoader: fflate missing and file is compressed.' );
+						console.log( 'THREE.AMFLoader: jszip missing and file is compressed.' );
 						return null;
 
 					}
 
 				}
 
-				for ( var file in zip ) {
+				for ( file in zip.files ) {
 
 					if ( file.toLowerCase().substr( - 4 ) === '.amf' ) {
 
@@ -114,7 +112,7 @@ AMFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 				}
 
 				console.log( 'THREE.AMFLoader: Trying to load file asset: ' + file );
-				view = new DataView( zip[ file ].buffer );
+				view = new DataView( zip.file( file ).asArrayBuffer() );
 
 			}
 

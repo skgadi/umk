@@ -1,3 +1,5 @@
+console.warn( "THREE.FlyControls: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
+
 THREE.FlyControls = function ( object, domElement ) {
 
 	if ( domElement === undefined ) {
@@ -24,10 +26,6 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	// internals
 
-	var scope = this;
-	var changeEvent = { type: 'change' };
-	var EPS = 0.000001;
-
 	this.tmpQuaternion = new THREE.Quaternion();
 
 	this.mouseStatus = 0;
@@ -46,28 +44,27 @@ THREE.FlyControls = function ( object, domElement ) {
 
 		//event.preventDefault();
 
-		switch ( event.code ) {
+		switch ( event.keyCode ) {
 
-			case 'ShiftLeft':
-			case 'ShiftRight': this.movementSpeedMultiplier = .1; break;
+			case 16: /* shift */ this.movementSpeedMultiplier = .1; break;
 
-			case 'KeyW': this.moveState.forward = 1; break;
-			case 'KeyS': this.moveState.back = 1; break;
+			case 87: /*W*/ this.moveState.forward = 1; break;
+			case 83: /*S*/ this.moveState.back = 1; break;
 
-			case 'KeyA': this.moveState.left = 1; break;
-			case 'KeyD': this.moveState.right = 1; break;
+			case 65: /*A*/ this.moveState.left = 1; break;
+			case 68: /*D*/ this.moveState.right = 1; break;
 
-			case 'KeyR': this.moveState.up = 1; break;
-			case 'KeyF': this.moveState.down = 1; break;
+			case 82: /*R*/ this.moveState.up = 1; break;
+			case 70: /*F*/ this.moveState.down = 1; break;
 
-			case 'ArrowUp': this.moveState.pitchUp = 1; break;
-			case 'ArrowDown': this.moveState.pitchDown = 1; break;
+			case 38: /*up*/ this.moveState.pitchUp = 1; break;
+			case 40: /*down*/ this.moveState.pitchDown = 1; break;
 
-			case 'ArrowLeft': this.moveState.yawLeft = 1; break;
-			case 'ArrowRight': this.moveState.yawRight = 1; break;
+			case 37: /*left*/ this.moveState.yawLeft = 1; break;
+			case 39: /*right*/ this.moveState.yawRight = 1; break;
 
-			case 'KeyQ': this.moveState.rollLeft = 1; break;
-			case 'KeyE': this.moveState.rollRight = 1; break;
+			case 81: /*Q*/ this.moveState.rollLeft = 1; break;
+			case 69: /*E*/ this.moveState.rollRight = 1; break;
 
 		}
 
@@ -78,28 +75,27 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.keyup = function ( event ) {
 
-		switch ( event.code ) {
+		switch ( event.keyCode ) {
 
-			case 'ShiftLeft':
-			case 'ShiftRight': this.movementSpeedMultiplier = 1; break;
+			case 16: /* shift */ this.movementSpeedMultiplier = 1; break;
 
-			case 'KeyW': this.moveState.forward = 0; break;
-			case 'KeyS': this.moveState.back = 0; break;
+			case 87: /*W*/ this.moveState.forward = 0; break;
+			case 83: /*S*/ this.moveState.back = 0; break;
 
-			case 'KeyA': this.moveState.left = 0; break;
-			case 'KeyD': this.moveState.right = 0; break;
+			case 65: /*A*/ this.moveState.left = 0; break;
+			case 68: /*D*/ this.moveState.right = 0; break;
 
-			case 'KeyR': this.moveState.up = 0; break;
-			case 'KeyF': this.moveState.down = 0; break;
+			case 82: /*R*/ this.moveState.up = 0; break;
+			case 70: /*F*/ this.moveState.down = 0; break;
 
-			case 'ArrowUp': this.moveState.pitchUp = 0; break;
-			case 'ArrowDown': this.moveState.pitchDown = 0; break;
+			case 38: /*up*/ this.moveState.pitchUp = 0; break;
+			case 40: /*down*/ this.moveState.pitchDown = 0; break;
 
-			case 'ArrowLeft': this.moveState.yawLeft = 0; break;
-			case 'ArrowRight': this.moveState.yawRight = 0; break;
+			case 37: /*left*/ this.moveState.yawLeft = 0; break;
+			case 39: /*right*/ this.moveState.yawRight = 0; break;
 
-			case 'KeyQ': this.moveState.rollLeft = 0; break;
-			case 'KeyE': this.moveState.rollRight = 0; break;
+			case 81: /*Q*/ this.moveState.rollLeft = 0; break;
+			case 69: /*E*/ this.moveState.rollRight = 0; break;
 
 		}
 
@@ -183,37 +179,23 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	};
 
-	this.update = function () {
+	this.update = function ( delta ) {
 
-		var lastQuaternion = new THREE.Quaternion();
-		var lastPosition = new THREE.Vector3();
+		var moveMult = delta * this.movementSpeed;
+		var rotMult = delta * this.rollSpeed;
 
-		return function ( delta ) {
+		this.object.translateX( this.moveVector.x * moveMult );
+		this.object.translateY( this.moveVector.y * moveMult );
+		this.object.translateZ( this.moveVector.z * moveMult );
 
-			var moveMult = delta * scope.movementSpeed;
-			var rotMult = delta * scope.rollSpeed;
+		this.tmpQuaternion.set( this.rotationVector.x * rotMult, this.rotationVector.y * rotMult, this.rotationVector.z * rotMult, 1 ).normalize();
+		this.object.quaternion.multiply( this.tmpQuaternion );
 
-			scope.object.translateX( scope.moveVector.x * moveMult );
-			scope.object.translateY( scope.moveVector.y * moveMult );
-			scope.object.translateZ( scope.moveVector.z * moveMult );
+		// expose the rotation vector for convenience
+		this.object.rotation.setFromQuaternion( this.object.quaternion, this.object.rotation.order );
 
-			scope.tmpQuaternion.set( scope.rotationVector.x * rotMult, scope.rotationVector.y * rotMult, scope.rotationVector.z * rotMult, 1 ).normalize();
-			scope.object.quaternion.multiply( scope.tmpQuaternion );
 
-			if (
-				lastPosition.distanceToSquared( scope.object.position ) > EPS ||
-				8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) > EPS
-			) {
-
-				scope.dispatchEvent( changeEvent );
-				lastQuaternion.copy( scope.object.quaternion );
-				lastPosition.copy( scope.object.position );
-
-			}
-
-		};
-
-	}();
+	};
 
 	this.updateMovementVector = function () {
 
@@ -275,13 +257,13 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.dispose = function () {
 
-		this.domElement.removeEventListener( 'contextmenu', contextmenu );
-		this.domElement.removeEventListener( 'mousedown', _mousedown );
-		this.domElement.removeEventListener( 'mousemove', _mousemove );
-		this.domElement.removeEventListener( 'mouseup', _mouseup );
+		this.domElement.removeEventListener( 'contextmenu', contextmenu, false );
+		this.domElement.removeEventListener( 'mousedown', _mousedown, false );
+		this.domElement.removeEventListener( 'mousemove', _mousemove, false );
+		this.domElement.removeEventListener( 'mouseup', _mouseup, false );
 
-		window.removeEventListener( 'keydown', _keydown );
-		window.removeEventListener( 'keyup', _keyup );
+		window.removeEventListener( 'keydown', _keydown, false );
+		window.removeEventListener( 'keyup', _keyup, false );
 
 	};
 
@@ -291,19 +273,16 @@ THREE.FlyControls = function ( object, domElement ) {
 	var _keydown = bind( this, this.keydown );
 	var _keyup = bind( this, this.keyup );
 
-	this.domElement.addEventListener( 'contextmenu', contextmenu );
+	this.domElement.addEventListener( 'contextmenu', contextmenu, false );
 
-	this.domElement.addEventListener( 'mousemove', _mousemove );
-	this.domElement.addEventListener( 'mousedown', _mousedown );
-	this.domElement.addEventListener( 'mouseup', _mouseup );
+	this.domElement.addEventListener( 'mousemove', _mousemove, false );
+	this.domElement.addEventListener( 'mousedown', _mousedown, false );
+	this.domElement.addEventListener( 'mouseup', _mouseup, false );
 
-	window.addEventListener( 'keydown', _keydown );
-	window.addEventListener( 'keyup', _keyup );
+	window.addEventListener( 'keydown', _keydown, false );
+	window.addEventListener( 'keyup', _keyup, false );
 
 	this.updateMovementVector();
 	this.updateRotationVector();
 
 };
-
-THREE.FlyControls.prototype = Object.create( THREE.EventDispatcher.prototype );
-THREE.FlyControls.prototype.constructor = THREE.FlyControls;

@@ -1,3 +1,4 @@
+console.warn( "THREE.3MFLoader: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
 /**
  *
  * 3D Manufacturing Format (3MF) specification: https://3mf.io/specification/
@@ -35,7 +36,6 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
-		loader.setWithCredentials( scope.withCredentials );
 		loader.load( url, function ( buffer ) {
 
 			try {
@@ -88,20 +88,20 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 
 			try {
 
-				zip = fflate.unzipSync( new Uint8Array( data ) ); // eslint-disable-line no-undef
+				zip = new JSZip( data );
 
 			} catch ( e ) {
 
 				if ( e instanceof ReferenceError ) {
 
-					console.error( 'THREE.3MFLoader: fflate missing and file is compressed.' );
+					console.error( 'THREE.3MFLoader: jszip missing and file is compressed.' );
 					return null;
 
 				}
 
 			}
 
-			for ( file in zip ) {
+			for ( file in zip.files ) {
 
 				if ( file.match( /\_rels\/.rels$/ ) ) {
 
@@ -133,7 +133,7 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 
 			//
 
-			var relsView = zip[ relsName ];
+			var relsView = new Uint8Array( zip.file( relsName ).asArrayBuffer() );
 			var relsFileText = THREE.LoaderUtils.decodeText( relsView );
 			rels = parseRelsXml( relsFileText );
 
@@ -141,7 +141,7 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 
 			if ( modelRelsName ) {
 
-				var relsView = zip[ modelRelsName ];
+				var relsView = new Uint8Array( zip.file( modelRelsName ).asArrayBuffer() );
 				var relsFileText = THREE.LoaderUtils.decodeText( relsView );
 				modelRels = parseRelsXml( relsFileText );
 
@@ -152,7 +152,7 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 			for ( var i = 0; i < modelPartNames.length; i ++ ) {
 
 				var modelPart = modelPartNames[ i ];
-				var view = zip[ modelPart ];
+				var view = new Uint8Array( zip.file( modelPart ).asArrayBuffer() );
 
 				var fileText = THREE.LoaderUtils.decodeText( view );
 				var xmlData = new DOMParser().parseFromString( fileText, 'application/xml' );
@@ -195,7 +195,7 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 			for ( var i = 0; i < texturesPartNames.length; i ++ ) {
 
 				var texturesPartName = texturesPartNames[ i ];
-				texturesParts[ texturesPartName ] = zip[ texturesPartName ].buffer;
+				texturesParts[ texturesPartName ] = zip.file( texturesPartName ).asArrayBuffer();
 
 			}
 
@@ -1387,24 +1387,11 @@ THREE.ThreeMFLoader.prototype = Object.assign( Object.create( THREE.Loader.proto
 
 		}
 
-		function fetch3DModelPart( rels ) {
-
-			for ( var i = 0; i < rels.length; i ++ ) {
-
-				var rel = rels[ i ];
-				var extension = rel.target.split( '.' ).pop();
-
-				if ( extension.toLowerCase() === 'model' ) return rel;
-
-			}
-
-		}
-
 		function build( objects, data3mf ) {
 
 			var group = new THREE.Group();
 
-			var relationship = fetch3DModelPart( data3mf[ 'rels' ] );
+			var relationship = data3mf[ 'rels' ][ 0 ];
 			var buildData = data3mf.model[ relationship[ 'target' ].substring( 1 ) ][ 'build' ];
 
 			for ( var i = 0; i < buildData.length; i ++ ) {
