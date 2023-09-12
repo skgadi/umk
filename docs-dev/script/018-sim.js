@@ -30,12 +30,15 @@ const simVue = new Vue({
     dispCells: [],
     dispExecOrdInProg: false
   },
+  mounted: function () {
+    footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
+  },
   watch: {
     simSettings: {
       deep: true,
       handler: function () {
         if (!this.simSettings.T) {
-          this.simSettings.T = 5;
+          this.simSettings.T = 10;
         }
         if (this.simSettings.h < 0) {
           this.simSettings.h = -this.simSettings.h;

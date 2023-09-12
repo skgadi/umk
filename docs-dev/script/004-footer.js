@@ -4,7 +4,7 @@ const footerVue = new Vue({
     updateCounter: 0,
     Hints: {},
     mode: "mDesign",
-    totalTime: 5,
+    totalTime: 10,
     presTime: 0
   },
   /*watch: {
