@@ -21,8 +21,8 @@ class umk_1590046975775 extends umk_model {
   }
   beforeEC(t, k, simSettings) {
     //this.outputs[0] = this.CompParams.out[0];
-    this.CompParams.addInput = true;
     this.getInputIfRequired();
+    this.CompParams.addInput = true;
   }
   getInputIfRequired() {
     //console.log("testing");
@@ -68,9 +68,11 @@ class umk_1590046975775 extends umk_model {
   Evaluate(t, k, simSettings) {
     this.getInputIfRequired();
     let dx;
+    let xBefore = this.Parameters.ic.Value;
     if (!!t) {
       dx = math.add(math.multiply(this.CompParams.inputs[0], this.CompParams.x[0]),
         math.multiply(this.CompParams.inputs[1], this.CompParams.matInp));
+      xBefore = this.CompParams.x[0];
     }
     //console.log(JSON.stringify(matInp));
     //console.log(this.CompParams.x[0]);
@@ -89,7 +91,7 @@ class umk_1590046975775 extends umk_model {
     if (!t) {
       this.outputs[0] = math.zeros(this.CompParams.outDims[0], this.CompParams.outDims[1]);
     } else {
-      this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], pData.out[0]),
+      this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], xBefore),
       math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
     }
   }

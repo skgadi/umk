@@ -15,8 +15,8 @@ class umk_1588716024472 extends umk_model {
   }
   beforeEC(t, k, simSettings) {
     //this.outputs[0] = this.CompParams.out[0];
-    this.CompParams.addInput = true;
     this.getInputIfRequired();
+    this.CompParams.addInput = true;
   }
   getInputIfRequired() {
     if (this.CompParams.addInput){
