@@ -66,8 +66,8 @@ const cItem = {
     }
     this.options.chart.locales.push(lang);
     this.options.chart.defaultLocale = lang.name;
-    console.log(lang);
-    console.log(lang.name);
+    //console.log(lang);
+    //console.log(lang.name);
     if (!!this.handle) {
       this.handle.updateOptions(this.options);
     }

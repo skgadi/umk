@@ -12,7 +12,7 @@ const blockUtils = {
   },
   ifAllSameDimMatrices: function (inMatrixArray) {
     const outArray = [];
-    for (let i=0; i<inMatrixArray.length; i++) {
+    for (let i = 0; i < inMatrixArray.length; i++) {
       outArray.push(inMatrixArray[i]._data);
     }
     return this.isAllSameDims(outArray);
@@ -266,6 +266,7 @@ const blockUtils = {
     //return out;
   },
   integrate: function (inItem, isFirstInEO = true) {
+    //console.log("integrate");
     // inItem.mem ----> memory
     // inItem.it -----> Integration type
     // inItem.iv -----> Initial value
@@ -274,6 +275,18 @@ const blockUtils = {
     // inItem.out ---> Previous output
     // inItem.pt -----> Previous time
     // inItem.isFr ---> is forward
+    function addInps() {
+      if (!!inItem.inp) {
+        inItem.mem.unshift(inItem.inp);
+        //console.log(JSON.stringify(inItem.mem));
+      } else {
+        //TODO.....
+        //inItem.mem.unshift(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
+        if (inItem.t === 0 && inItem.mem.length === 0) {
+          inItem.mem.unshift(math.zeros(inItem.iv._data.length, inItem.iv._data[0].length));
+        }
+      }
+    }
 
     function getOuts() {
       //console.log(JSON.stringify(inItem.mem));
@@ -303,6 +316,7 @@ const blockUtils = {
         }
       }
     }
+    addInps();
     getOuts();
     inItem.pt[0] = inItem.t;
   }

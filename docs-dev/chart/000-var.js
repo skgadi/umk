@@ -105,7 +105,7 @@ function formatter(val) {
   try {
     return math.parse(val).toString(4);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return "Waiting ..."
   }
 }

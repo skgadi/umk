@@ -284,8 +284,8 @@
         graph.getModel().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
         graph.getView().addListener(mxEvent.CELLS_RESIZED, resizeChildren);
         var resizeChildren = function (sender, evt) {
-          console.log(sender);
-          console.log(evt);
+          //console.log(sender);
+          //console.log(evt);
         };
 
         //Undo/redo activities
@@ -2479,7 +2479,7 @@
               var tempRow = this.vars[endID];
               this.vars[endID] = this.vars[startID];
               this.vars[startID] = tempRow;
-              console.log(e);
+              //console.log(e);
               this.updatingCounter++;
               break;
             }
@@ -3581,8 +3581,8 @@
         },
         removeFromInvalidInputs: function (index, index1, index2) {
           var tempValidateItem = index + "," + index1 + "," + index2;
-          console.log(this.invalidInputs);
-          console.log(tempValidateItem);
+          //console.log(this.invalidInputs);
+          //console.log(tempValidateItem);
           this.invalidInputs = arrayRemove(
             this.invalidInputs,
             tempValidateItem
@@ -4427,7 +4427,7 @@
                     );
                 }
               }
-              console.log(event.data);
+              //console.log(event.data);
             };
           } catch (e) {
             console.log(e);

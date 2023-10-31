@@ -67,7 +67,7 @@ function updateConfiguration() {
     eachPlot.reversescale = settings.reversescale;
     eachPlot.colorscale = settings.colorscale;
   }
-  console.log('updated configuration');
+  //console.log('updated configuration');
   reactTheChart();
 }
 

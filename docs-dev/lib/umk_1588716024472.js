@@ -46,6 +46,7 @@ class umk_1588716024472 extends umk_model {
       isFr: this.CompParams.isFr
     };
     blockUtils.integrate(pData);
+    console.log(pData);
     this.outputs[0] = pData.out[0];
         /* if (!this.ExecParams.isInFr) {
        this.CompParams.mem.push(this.inputs[0]);

@@ -1,5 +1,5 @@
 onmessage = function (event) {
-  console.log(event.data);
+  //console.log(event.data);
   if (event.data.d) {
     appendData(event.data.d);
   }
@@ -7,7 +7,7 @@ onmessage = function (event) {
     clearData();
   }
   if (!!event.data.c) {
-    console.log('sdfsdf');
+    //console.log('sdfsdf');
     settings.width = JSON.parse(event.data.c.Parameters.width.Value)[0][0];
     settings.reversescale = !!event.data.c.Parameters.reversescale.Value[0][0];
     settings.showIm = !!event.data.c.Parameters.showIm.Value[0][0];

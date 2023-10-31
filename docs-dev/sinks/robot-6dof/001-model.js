@@ -197,7 +197,7 @@ function setupTween() {
         tweenParameters[prop] = position;
 
         target[prop] = THREE.MathUtils.randInt(joint.limits.min, joint.limits.max);
-        console.log(prop);
+        //console.log(prop);
       }
 
     }

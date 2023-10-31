@@ -56,7 +56,7 @@ window.onbeforeunload = function () {
 
 /* recMessage */
 window.addEventListener("message", function (event) {
-  console.log(event)
+  //console.log(event)
 }, true);
 
 

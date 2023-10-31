@@ -734,7 +734,7 @@ const simVue = new Vue({
           }
           if (addThisToOrder) {
             if (fInEOModels.indexOf(fullyConnectedModels[i]) >= 0) {
-              //fInEOModelsOrdered.push(fullyConnectedModels[i]);
+              fInEOModelsOrdered.push(fullyConnectedModels[i]);
             }
             ExecutionOrder.push(fullyConnectedModels[i]);
             //console.log("b");
@@ -812,8 +812,21 @@ const simVue = new Vue({
       for (let i=(ExecutionOrder.length-1);i>=0; i--) {
 
       }*/
+
+      //remove all the fInEOModelsOrdered elements from ExecutionOrder
+      for (let i = 0; i < fInEOModelsOrdered.length; i++) {
+        ExecutionOrder = this.arrayRemove(ExecutionOrder, fInEOModelsOrdered[i]);
+      }
+
+      
+
+
+      //console.log(fInEOModelsOrdered);
+      //console.log(sourcesModels);
+      //console.log(ExecutionOrder);
       return {
-        eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
+        //eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
+        eo: fInEOModelsOrdered.concat(sourcesModels).concat(ExecutionOrder),
         ne: fullyConnectedModels,
         al: aLoopModels,
         pc: allConnectedModels.pc,
@@ -832,8 +845,8 @@ const simVue = new Vue({
     },
     obtainTheSrcAndIdxFor: function (childItem) {
       const srcItem = {
-        model = null,
-        index = null
+        model: null,
+        index: null
       };
       let nodeItems = mainSystem.graph.getNodeCells(childItem);
       for (let j = 0; j < nodeItems.length; j++) {
