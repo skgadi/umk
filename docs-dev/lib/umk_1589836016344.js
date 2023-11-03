@@ -32,7 +32,7 @@ class umk_1589836016344 extends umk_model {
         this.CompParams.matInp = this.inputs[0];
         for (let i = 0; i < this.CompParams.dims[0]; i++) {
           for (let j = 0; j < this.CompParams.dims[1]; j++) {
-            this.CompParams.dx[i][j] = math.add(math.multiply(this.CompParams.A, this.CompParams.xs[i][j]),
+            this.CompParams.dx[i][j] = math.add(math.multiply(this.CompParams.A, this.CompParams.xs[i][j][0]),
             math.multiply(this.CompParams.B, this.CompParams.matInp._data[i][j]));
           }
         }
@@ -133,7 +133,7 @@ class umk_1589836016344 extends umk_model {
       this.CompParams.mems[i] = [];
       this.CompParams.dx[i] = [];
       for (let j = 0; j < this.CompParams.dims[1]; j++) {
-        this.CompParams.xs[i][j] = this.CompParams.initValues;
+        this.CompParams.xs[i][j] = [this.CompParams.initValues];
         this.CompParams.pts[i][j] = [0];
         this.CompParams.mems[i][j] = [];
         this.CompParams.dx[i][j] = [];
@@ -175,15 +175,15 @@ class umk_1589836016344 extends umk_model {
         //console.log("dx = " + JSON.stringify(dx));
 
         let inpForInt = this.CompParams.dx[i][j];
-        console.log("inpForInt = " + JSON.stringify(inpForInt));
+        //console.log("inpForInt = " + JSON.stringify(inpForInt));
         try {
           inpForInt = inpForInt._data[0][0];
           inpForInt = this.CompParams.dx[i][j];
         } catch (e) {
-          console.log(e);
+          //console.log(e);
           inpForInt = undefined;
         }
-        console.log("inpForInt = " + JSON.stringify(inpForInt));
+        //console.log("inpForInt = " + JSON.stringify(inpForInt));
 
         let pData = {
           mem: this.CompParams.mems[i][j],
@@ -197,14 +197,14 @@ class umk_1589836016344 extends umk_model {
         };
         blockUtils.integrate(pData);
         
-        console.log("pData = " + JSON.stringify(pData));
+        //console.log("pData = " + JSON.stringify(pData));
 
         //console.log("xs after int = " + JSON.stringify(this.CompParams.xs[i][j][0]._data));
         
         //console.log("Cx = "+ JSON.stringify(math.multiply(this.CompParams.C, xBefore)._data));
         //console.log("Du = "+ JSON.stringify(math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j])._data));
         //let tempOut = math.add(math.multiply(this.CompParams.C, xBefore), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
-        let tempOut = math.add(math.multiply(this.CompParams.C, this.CompParams.xs[i][j]), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
+        let tempOut = math.add(math.multiply(this.CompParams.C, this.CompParams.xs[i][j][0]), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
         
         out._data[i][j] = tempOut._data[0][0];
         //console.log( "out = " + JSON.stringify(out._data));

@@ -289,7 +289,6 @@ const blockUtils = {
     }
 
     function getOuts() {
-      //console.log(JSON.stringify(inItem.mem));
       if (!inItem.t) {
         inItem.out[0] = inItem.iv;
       } else {
@@ -306,6 +305,8 @@ const blockUtils = {
             }
           }
           inItem.out[0] = math.add(inItem.out[0], out);
+          //console.log("Out: " + JSON.stringify(out));
+          //console.log("Out: " + JSON.stringify(inItem.out));
           while (inItem.mem.length > 1) {
             inItem.mem.pop();
           }
