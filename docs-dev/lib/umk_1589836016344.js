@@ -185,6 +185,7 @@ class umk_1589836016344 extends umk_model {
         }
         //console.log("inpForInt = " + JSON.stringify(inpForInt));
 
+
         let pData = {
           mem: this.CompParams.mems[i][j],
           it: ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]),
@@ -197,6 +198,9 @@ class umk_1589836016344 extends umk_model {
         };
         blockUtils.integrate(pData);
         
+
+        
+
         //console.log("pData = " + JSON.stringify(pData));
 
         //console.log("xs after int = " + JSON.stringify(this.CompParams.xs[i][j][0]._data));
@@ -204,6 +208,8 @@ class umk_1589836016344 extends umk_model {
         //console.log("Cx = "+ JSON.stringify(math.multiply(this.CompParams.C, xBefore)._data));
         //console.log("Du = "+ JSON.stringify(math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j])._data));
         //let tempOut = math.add(math.multiply(this.CompParams.C, xBefore), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
+
+
         let tempOut = math.add(math.multiply(this.CompParams.C, this.CompParams.xs[i][j][0]), math.multiply(this.CompParams.D, this.CompParams.matInp._data[i][j]));
         
         out._data[i][j] = tempOut._data[0][0];

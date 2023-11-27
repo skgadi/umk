@@ -826,7 +826,7 @@ const simVue = new Vue({
       //console.log(ExecutionOrder);
       return {
         //eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
-        eo: fInEOModelsOrdered.concat(sourcesModels).concat(ExecutionOrder),
+        eo: sourcesModels.concat(fInEOModelsOrdered).concat(ExecutionOrder),
         ne: fullyConnectedModels,
         al: aLoopModels,
         pc: allConnectedModels.pc,
