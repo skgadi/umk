@@ -35,13 +35,13 @@ class umk_1614796116806 extends umk_model {
       let outString_1 = "";
       let outString_2 = "";
       if (this.Parameters.iSelected.Value[0][0] === "ae") {
-        outString_1 = "\\operatorname{RMS} (u)"; //TeX.prepDisp();
+        outString_1 = "\\operatorname{hypot} (u)"; //TeX.prepDisp();
         outString_2 = "y=";
       } else if (this.Parameters.iSelected.Value[0][0] === "rw") {
-        outString_1 = " \\operatorname{RMS} \\left( u_{i,\\left[1,n\\right]}\\right)"; //TeX.prepDisp();
+        outString_1 = " \\operatorname{hypot} \\left( u_{i,\\left[1,n\\right]}\\right)"; //TeX.prepDisp();
         outString_2 = "y_{i,1}=";
       } else {
-        outString_1 = "\\operatorname{RMS} \\left( u_{\\left[1,m\\right],j}\\right)"; //TeX.prepDisp();
+        outString_1 = "\\operatorname{hypot} \\left( u_{\\left[1,m\\right],j}\\right)"; //TeX.prepDisp();
         outString_2 = "y_{1,j}=";
       }
       if (short) {
