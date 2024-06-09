@@ -9,13 +9,12 @@ class umk_1704846786288 extends umk_model {
   }
   Evaluate() {
     //Check if the input matrix size is the same as the upper and lower limits
-    let isSame = blockUtils.isAllSameDims([this.inputs[0]._data, this.Parameters.ul.Value._data, this.Parameters.ll.Value._data]);
-
+    let isSame = blockUtils.isAllSameDims([this.inputs[0]._data, this.Parameters.ul.Value._data]);
     this.outputs[0] = this.inputs[0];
-    const gSize = this.Parameters.ul.Value.size();
+    const gSize = this.inputs[0].size();
     for (let i = 0; i < gSize[0]; i++) {
       for (let j = 0; j < gSize[1]; j++) {
-        this.outputs[0]._data[i][j] = math.min(math.max(this.inputs[0]._data[i][j], this.Parameters.ll.Value._data[isSame?i:0][isSame?j:0]), this.Parameters.ul.Value._data[isSame?i:0][isSame?j:0]);
+        this.outputs[0]._data[i][j] = math.min(math.max(this.inputs[0]._data[i][j], this.Parameters.ll.Value._data[(isSame?i:0)][(isSame?j:0)]), this.Parameters.ul.Value._data[(isSame?i:0)][(isSame?j:0)]);
       }
     }
 

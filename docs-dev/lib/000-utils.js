@@ -274,9 +274,11 @@ const blockUtils = {
     // inItem.inp ----> Input to integrate
     // inItem.out ---> Previous output
     // inItem.pt -----> Previous time
-    // inItem.isFr ---> is forward
+    // inItem.isFr ---> is forward <- not used in this function
+    // inItem.isMovedFirstInEO ---> is moved first in EO
     function addInps() {
       if (!!inItem.inp) {
+        //inItem.mem.push(inItem.inp);
         inItem.mem.unshift(inItem.inp);
         //console.log(JSON.stringify(inItem.mem));
       } else {
@@ -289,6 +291,7 @@ const blockUtils = {
     }
 
     function getOuts() {
+      //console.log("int-In: " + JSON.stringify(inItem.mem));
       if (!inItem.t) {
         inItem.out[0] = inItem.iv;
       } else {
@@ -297,7 +300,7 @@ const blockUtils = {
           let h = (inItem.t - inItem.pt[0]) * ((!!intTypes[inItem.it].m) ? intTypes[inItem.it].m : 1);
           //console.log(h);
           for (let i = 0; i < intTypes[inItem.it].a.length; i++) {
-            let calcRes = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].a[i], inItem.mem[i]));
+            const calcRes = math.dotMultiply(h, math.dotMultiply(intTypes[inItem.it].a[i], inItem.mem[i]));
             if (!i) {
               out = calcRes;
             } else {
@@ -309,6 +312,7 @@ const blockUtils = {
           //console.log("Out: " + JSON.stringify(inItem.out));
           while (inItem.mem.length > 1) {
             inItem.mem.pop();
+            //inItem.mem.shift();
           }
         } else {
           if (!inItem.out[0]) {
@@ -316,9 +320,17 @@ const blockUtils = {
           } // else leave as it is ... don't change output
         }
       }
+      //console.log("int-Out: " + JSON.stringify(inItem.out));
     }
-    addInps();
-    getOuts();
+    if (inItem.isMovedFirstInEO) {
+      addInps();
+      getOuts();
+    } else {
+      getOuts();
+      addInps();
+    }
+    //addInps();
+    //getOuts();
     inItem.pt[0] = inItem.t;
   }
 }

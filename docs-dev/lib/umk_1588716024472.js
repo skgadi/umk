@@ -9,23 +9,11 @@ class umk_1588716024472 extends umk_model {
   }
   Init() {
     this.genCompParams();
-    this.CompParams.isFr = [0];
+    //this.CompParams.isFr = [0];
     //this.ExecParams.isInFr = 0; //0-> not sure
     //this.CompParams.mem.push(math.zeros(this.Parameters.ic.Value._data.length, this.Parameters.ic.Value._data[0].length));
   }
   beforeEC(t, k, simSettings) {
-    //this.outputs[0] = this.CompParams.out[0];
-    this.getInputIfRequired();
-    this.CompParams.addInput = true;
-  }
-  getInputIfRequired() {
-    if (this.CompParams.addInput){
-      if (!!this.inputs[0]) {
-        this.CompParams.mem.unshift(this.inputs[0]);
-        this.CompParams.addInput = false;
-        //console.log(JSON.stringify(this.CompParams.mem));
-      }
-    }
   }
   genCompParams() {
     this.CompParams.out = []; //Output of int
@@ -34,16 +22,15 @@ class umk_1588716024472 extends umk_model {
     this.CompParams.addInput = true;
   }
   Evaluate(t, k, simSettings) {
-    this.getInputIfRequired();
     let pData = {
       mem: this.CompParams.mem,
       it: ((this.Parameters.it.Value[0][0] === "default") ? simSettings.it : this.Parameters.it.Value[0][0]),
       iv: this.Parameters.ic.Value,
       t: t,
-      //inp: this.inputs[0], // Inputs are handled here in this page
+      inp: this.inputs[0],
       out: this.CompParams.out,
       pt: this.CompParams.pt,
-      isFr: this.CompParams.isFr
+      isMovedFirstInEO: this.isMovedFirstInEO//this.CompParams.isFr
     };
     blockUtils.integrate(pData);
     //console.log(pData);
@@ -57,7 +44,6 @@ class umk_1588716024472 extends umk_model {
     }*/
   }
   afterEC(t, k, simSettings) {
-    this.getInputIfRequired();
   }
   Details() {
     return TeX.prepDisp("y(t)=\\int_{0}^{t}u(t)\\mathrm{d}t+y(0)");

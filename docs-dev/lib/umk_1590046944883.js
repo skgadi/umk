@@ -59,7 +59,8 @@ class umk_1590046944883 extends umk_model {
       inp: dx,
       out: this.CompParams.x,
       pt: this.CompParams.pt,
-      isFr: this.CompParams.isFr
+      isFr: this.CompParams.isFr,
+      isMovedFirstInEO: true || this.isMovedFirstInEO
     };
     blockUtils.integrate(pData);
     this.outputs[0] = math.add(math.multiply(this.Parameters.c.Value, xBefore),

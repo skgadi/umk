@@ -29,6 +29,7 @@ class umk_model {
     this.Icon_Temp_Html = null; //This is used internal to the Icon function
     this.temp_exec = {}; //This is temporary item used by execute command of simulation
     this.signalRerouting = false;// This will determine if the block is associated with signal re-routing.
+    this.isMovedFirstInEO = false; //This is used to determine if the block is moved to first in EO
     this.TerminalsOut = {
       min: 0,
       max: 0,
