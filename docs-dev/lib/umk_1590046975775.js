@@ -84,7 +84,8 @@ class umk_1590046975775 extends umk_model {
       inp: dx,
       out: this.CompParams.x,
       pt: this.CompParams.pt,
-      isFr: this.CompParams.isFr
+      isFr: this.CompParams.isFr,
+      isMovedFirstInEO: true || this.isMovedFirstInEO
     };
     blockUtils.integrate(pData);
     //console.log("Test item");

@@ -853,6 +853,7 @@ const simVue = new Vue({
 
       //Obtaining first executing models
       for (let i = 0; i < fullyConnectedModels.length; i++) {
+        console.log(fullyConnectedModels[i].value);
         if (fullyConnectedModels[i].value.TerminalsIn.max === 0 && !fullyConnectedModels[i].value.signalRerouting) {
           sourcesModels.push(fullyConnectedModels[i]);
         } else if (!!fullyConnectedModels[i].value.fInEO) {
