@@ -89,12 +89,12 @@ class umk_1590046975775 extends umk_model {
     };
     blockUtils.integrate(pData);
     //console.log("Test item");
-    if (!t) {
+    this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], xBefore),
+    math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
+    /*if (!t) {
       this.outputs[0] = math.zeros(this.CompParams.outDims[0], this.CompParams.outDims[1]);
     } else {
-      this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], xBefore),
-      math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
-    }
+    }*/
   }
   afterEC(t, k, simSettings) {
     this.getInputIfRequired();
