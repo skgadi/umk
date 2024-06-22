@@ -66,7 +66,8 @@ class umk_1694403449663 extends umk_model {
 
 
     //console.log("this.Parameters.ic: " + JSON.stringify(this.Parameters.ic.Value));
-    this.CompParams.x = math.zeros(this.Parameters.ic.Value._data.length, this.Parameters.ic.Value._data[0].length); // states
+    //this.CompParams.x = math.zeros(this.Parameters.ic.Value._data.length, this.Parameters.ic.Value._data[0].length); // states
+    this.CompParams.x = this.Parameters.ic.Value;
     //console.log(this.CompParams.x);
     this.CompParams.addInput = true;
     this.CompParams.matInp = math.zeros(this.CompParams.inDims[0], this.CompParams.inDims[1]);
