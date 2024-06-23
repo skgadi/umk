@@ -80,7 +80,7 @@ class umk_1694403449663 extends umk_model {
     //console.log("this.CompParams: " + JSON.stringify(this.CompParams));
     let tempX = this.CompParams.x;
     //console.log("this.CompParams: " + JSON.stringify(this.CompParams));
-    if (!!this.CompParams.inputs) {
+    if (!!t && !!this.CompParams.inputs) {
       tempX = math.add(math.multiply(this.CompParams.inputs[0], this.CompParams.x),
         math.multiply(this.CompParams.inputs[1], this.CompParams.matInp));
     }
