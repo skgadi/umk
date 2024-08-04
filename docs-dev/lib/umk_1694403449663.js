@@ -31,6 +31,7 @@ class umk_1694403449663 extends umk_model {
         this.CompParams.matInp = this.inputs[4];
         for (let i=0; i<4; i++) {
           this.CompParams.inputs[i] = this.inputs[i];
+          //console.log(i, this.CompParams.inputs[i]);
         }
         this.CompParams.addInput = false;
         //console.log("passed");
@@ -88,8 +89,11 @@ class umk_1694403449663 extends umk_model {
     let tempY = math.zeros(this.CompParams.outDims[0], this.CompParams.outDims[1]);
     if (!!this.CompParams.inputs) {
       tempY = math.add(math.multiply(this.CompParams.inputs[2], this.CompParams.x),
-        math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
+        math.multiply(this.inputs[3],this.inputs[4]));
     }
+    //console.log('compParams.inputs[3]: ' + JSON.stringify(this.CompParams.inputs[3]));
+    //console.log('compParams.matInp: ' + JSON.stringify(this.CompParams.matInp));
+    //console.log("tempY: " + JSON.stringify(tempY));
     this.outputs[0] = tempY;
   }
 

@@ -561,7 +561,7 @@ const simVue = new Vue({
       } catch (e) {
         //console.log(e);
       }
-      console.log(ExecutionOrder);
+      //console.log(ExecutionOrder);
       return {
         eo: sourcesModels.concat(fInEOModels).concat(fInEOModelsOrdered).concat(ExecutionOrder),
         ne: fullyConnectedModels,
@@ -853,7 +853,7 @@ const simVue = new Vue({
 
       //Obtaining first executing models
       for (let i = 0; i < fullyConnectedModels.length; i++) {
-        console.log(fullyConnectedModels[i].value);
+        //console.log(fullyConnectedModels[i].value);
         if (fullyConnectedModels[i].value.TerminalsIn.max === 0 && !fullyConnectedModels[i].value.signalRerouting) {
           sourcesModels.push(fullyConnectedModels[i]);
         } else if (!!fullyConnectedModels[i].value.fInEO) {
@@ -1054,7 +1054,7 @@ const simVue = new Vue({
       for (let i = 0; i < inModel.children.length; i++) {
         if (inModel.children[i].style.search("umk_input") >= 0) {
           try {
-            console.log(inModel.children[i].edges[0].source.style);
+            //console.log(inModel.children[i].edges[0].source.style);
             if (
               modelSources.indexOf(
                 inModel.children[i].edges[0].source.parent

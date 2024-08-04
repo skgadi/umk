@@ -106,7 +106,7 @@ class umk_1590046975775 extends umk_model {
     blockUtils.integrate(pData);
     //console.log("Test item");
     this.outputs[0] = math.add(math.multiply(this.CompParams.inputs[2], this.CompParams.x[0]),
-    math.multiply(this.CompParams.inputs[3], this.CompParams.matInp));
+    math.multiply(this.inputs[3],this.inputs[4]));
     /*if (!t) {
       this.outputs[0] = math.zeros(this.CompParams.outDims[0], this.CompParams.outDims[1]);
     } else {
