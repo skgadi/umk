@@ -1,7 +1,7 @@
 {
   "name": "uyamak",
   "productName": "Uyamak",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Open-source software for model based numerical simulation ",
   "main": "src/index.js",
   "scripts": {
