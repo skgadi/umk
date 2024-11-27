@@ -1,3 +1,5 @@
+console.warn( "THREE.KMZLoader: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
+
 THREE.KMZLoader = function ( manager ) {
 
 	THREE.Loader.call( this, manager );
@@ -16,7 +18,6 @@ THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
-		loader.setWithCredentials( scope.withCredentials );
 		loader.load( url, function ( text ) {
 
 			try {
@@ -47,11 +48,11 @@ THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		function findFile( url ) {
 
-			for ( var path in zip ) {
+			for ( var path in zip.files ) {
 
 				if ( path.substr( - url.length ) === url ) {
 
-					return zip[ path ];
+					return zip.files[ path ];
 
 				}
 
@@ -68,7 +69,7 @@ THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 				console.log( 'Loading', url );
 
-				var blob = new Blob( [ image.buffer ], { type: 'application/octet-stream' } );
+				var blob = new Blob( [ image.asArrayBuffer() ], { type: 'application/octet-stream' } );
 				return URL.createObjectURL( blob );
 
 			}
@@ -79,18 +80,18 @@ THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		//
 
-		var zip = fflate.unzipSync( new Uint8Array( data ) ); // eslint-disable-line no-undef
+		var zip = new JSZip( data );
 
-		if ( zip[ 'doc.kml' ] ) {
+		if ( zip.files[ 'doc.kml' ] ) {
 
-			var xml = new DOMParser().parseFromString( fflate.strFromU8( zip[ 'doc.kml' ] ), 'application/xml' ); // eslint-disable-line no-undef
+			var xml = new DOMParser().parseFromString( zip.files[ 'doc.kml' ].asText(), 'application/xml' );
 
 			var model = xml.querySelector( 'Placemark Model Link href' );
 
 			if ( model ) {
 
 				var loader = new THREE.ColladaLoader( manager );
-				return loader.parse( fflate.strFromU8( zip[ model.textContent ] ) ); // eslint-disable-line no-undef
+				return loader.parse( zip.files[ model.textContent ].asText() );
 
 			}
 
@@ -98,14 +99,14 @@ THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			console.warn( 'KMZLoader: Missing doc.kml file.' );
 
-			for ( var path in zip ) {
+			for ( var path in zip.files ) {
 
 				var extension = path.split( '.' ).pop().toLowerCase();
 
 				if ( extension === 'dae' ) {
 
 					var loader = new THREE.ColladaLoader( manager );
-					return loader.parse( fflate.strFromU8( zip[ path ] ) ); // eslint-disable-line no-undef
+					return loader.parse( zip.files[ path ].asText() );
 
 				}
 

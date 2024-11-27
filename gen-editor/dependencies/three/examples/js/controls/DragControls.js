@@ -1,3 +1,5 @@
+console.warn( "THREE.DragControls: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
+
 THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	var _plane = new THREE.Plane();
@@ -18,25 +20,25 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	function activate() {
 
-		_domElement.addEventListener( 'pointermove', onPointerMove );
-		_domElement.addEventListener( 'pointerdown', onPointerDown );
-		_domElement.addEventListener( 'pointerup', onPointerCancel );
-		_domElement.addEventListener( 'pointerleave', onPointerCancel );
-		_domElement.addEventListener( 'touchmove', onTouchMove );
-		_domElement.addEventListener( 'touchstart', onTouchStart );
-		_domElement.addEventListener( 'touchend', onTouchEnd );
+		_domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+		_domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+		_domElement.addEventListener( 'mouseup', onDocumentMouseCancel, false );
+		_domElement.addEventListener( 'mouseleave', onDocumentMouseCancel, false );
+		_domElement.addEventListener( 'touchmove', onDocumentTouchMove, false );
+		_domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
+		_domElement.addEventListener( 'touchend', onDocumentTouchEnd, false );
 
 	}
 
 	function deactivate() {
 
-		_domElement.removeEventListener( 'pointermove', onPointerMove );
-		_domElement.removeEventListener( 'pointerdown', onPointerDown );
-		_domElement.removeEventListener( 'pointerup', onPointerCancel );
-		_domElement.removeEventListener( 'pointerleave', onPointerCancel );
-		_domElement.removeEventListener( 'touchmove', onTouchMove );
-		_domElement.removeEventListener( 'touchstart', onTouchStart );
-		_domElement.removeEventListener( 'touchend', onTouchEnd );
+		_domElement.removeEventListener( 'mousemove', onDocumentMouseMove, false );
+		_domElement.removeEventListener( 'mousedown', onDocumentMouseDown, false );
+		_domElement.removeEventListener( 'mouseup', onDocumentMouseCancel, false );
+		_domElement.removeEventListener( 'mouseleave', onDocumentMouseCancel, false );
+		_domElement.removeEventListener( 'touchmove', onDocumentTouchMove, false );
+		_domElement.removeEventListener( 'touchstart', onDocumentTouchStart, false );
+		_domElement.removeEventListener( 'touchend', onDocumentTouchEnd, false );
 
 		_domElement.style.cursor = '';
 
@@ -54,24 +56,9 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onPointerMove( event ) {
+	function onDocumentMouseMove( event ) {
 
 		event.preventDefault();
-
-		switch ( event.pointerType ) {
-
-			case 'mouse':
-			case 'pen':
-				onMouseMove( event );
-				break;
-
-			// TODO touch
-
-		}
-
-	}
-
-	function onMouseMove( event ) {
 
 		var rect = _domElement.getBoundingClientRect();
 
@@ -129,24 +116,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onPointerDown( event ) {
-
-		event.preventDefault();
-
-		switch ( event.pointerType ) {
-
-			case 'mouse':
-			case 'pen':
-				onMouseDown( event );
-				break;
-
-			// TODO touch
-
-		}
-
-	}
-
-	function onMouseDown( event ) {
+	function onDocumentMouseDown( event ) {
 
 		event.preventDefault();
 
@@ -161,7 +131,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 
-				_inverseMatrix.copy( _selected.parent.matrixWorld ).invert();
+				_inverseMatrix.getInverse( _selected.parent.matrixWorld );
 				_offset.copy( _intersection ).sub( _worldPosition.setFromMatrixPosition( _selected.matrixWorld ) );
 
 			}
@@ -175,24 +145,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onPointerCancel( event ) {
-
-		event.preventDefault();
-
-		switch ( event.pointerType ) {
-
-			case 'mouse':
-			case 'pen':
-				onMouseCancel( event );
-				break;
-
-			// TODO touch
-
-		}
-
-	}
-
-	function onMouseCancel( event ) {
+	function onDocumentMouseCancel( event ) {
 
 		event.preventDefault();
 
@@ -208,7 +161,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onTouchMove( event ) {
+	function onDocumentTouchMove( event ) {
 
 		event.preventDefault();
 		event = event.changedTouches[ 0 ];
@@ -236,7 +189,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onTouchStart( event ) {
+	function onDocumentTouchStart( event ) {
 
 		event.preventDefault();
 		event = event.changedTouches[ 0 ];
@@ -259,7 +212,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 
-				_inverseMatrix.copy( _selected.parent.matrixWorld ).invert();
+				_inverseMatrix.getInverse( _selected.parent.matrixWorld );
 				_offset.copy( _intersection ).sub( _worldPosition.setFromMatrixPosition( _selected.matrixWorld ) );
 
 			}
@@ -273,7 +226,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 	}
 
-	function onTouchEnd( event ) {
+	function onDocumentTouchEnd( event ) {
 
 		event.preventDefault();
 

@@ -880,11 +880,11 @@ var mxUtils =
 			}
 			else if (node.nodeType == mxConstants.NODETYPE_TEXT)
 			{
-				var value = mxUtils.trim(mxUtils.getTextContent(node));
+				var value = mxUtils.getTextContent(node);
 				
 				if (value.length > 0)
 				{
-					result.push(indent + mxUtils.htmlEntities(value, false) + newline);
+					result.push(indent + mxUtils.htmlEntities(mxUtils.trim(value), false) + newline);
 				}
 			}
 			else if (node.nodeType == mxConstants.NODETYPE_CDATA)
@@ -2635,18 +2635,14 @@ var mxUtils =
 	},
 
 	/**
-	 * Function: intersectsHotspot
+	 * Function: intersects
 	 * 
-	 * Returns true if the state and the hotspot intersect.
+	 * Returns true if the two rectangles intersect.
 	 * 
 	 * Parameters:
 	 * 
-	 * state - <mxCellState>
-	 * x - X-coordinate.
-	 * y - Y-coordinate.
-	 * hotspot - Optional size of the hostpot.
-	 * min - Optional min size of the hostpot.
-	 * max - Optional max size of the hostpot.
+	 * a - <mxRectangle> to be checked for intersection.
+	 * b - <mxRectangle> to be checked for intersection.
 	 */
 	intersectsHotspot: function(state, x, y, hotspot, min, max)
 	{

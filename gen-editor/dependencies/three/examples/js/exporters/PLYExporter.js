@@ -1,3 +1,4 @@
+console.warn( "THREE.PLYExporter: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
 /**
  * https://github.com/gkjohnson/ply-exporter-js
  *
@@ -37,15 +38,19 @@ THREE.PLYExporter.prototype = {
 					var mesh = child;
 					var geometry = mesh.geometry;
 
-					if ( geometry.isBufferGeometry !== true ) {
+					if ( geometry.isGeometry === true ) {
 
-						throw new Error( 'THREE.PLYExporter: Geometry is not of type THREE.BufferGeometry.' );
+						geometry = geomToBufferGeom.get( geometry );
 
 					}
 
-					if ( geometry.hasAttribute( 'position' ) === true ) {
+					if ( geometry.isBufferGeometry === true ) {
 
-						cb( mesh, geometry );
+						if ( geometry.getAttribute( 'position' ) !== undefined ) {
+
+							cb( mesh, geometry );
+
+						}
 
 					}
 
@@ -65,6 +70,7 @@ THREE.PLYExporter.prototype = {
 		options = Object.assign( defaultOptions, options );
 
 		var excludeAttributes = options.excludeAttributes;
+		var geomToBufferGeom = new WeakMap();
 		var includeNormals = false;
 		var includeColors = false;
 		var includeUVs = false;
@@ -80,32 +86,38 @@ THREE.PLYExporter.prototype = {
 				var mesh = child;
 				var geometry = mesh.geometry;
 
-				if ( geometry.isBufferGeometry !== true ) {
+				if ( geometry.isGeometry === true ) {
 
-					throw new Error( 'THREE.PLYExporter: Geometry is not of type THREE.BufferGeometry.' );
-
-				}
-
-				var vertices = geometry.getAttribute( 'position' );
-				var normals = geometry.getAttribute( 'normal' );
-				var uvs = geometry.getAttribute( 'uv' );
-				var colors = geometry.getAttribute( 'color' );
-				var indices = geometry.getIndex();
-
-				if ( vertices === undefined ) {
-
-					return;
+					var bufferGeometry = geomToBufferGeom.get( geometry ) || new THREE.BufferGeometry().setFromObject( mesh );
+					geomToBufferGeom.set( geometry, bufferGeometry );
+					geometry = bufferGeometry;
 
 				}
 
-				vertexCount += vertices.count;
-				faceCount += indices ? indices.count / 3 : vertices.count / 3;
+				if ( geometry.isBufferGeometry === true ) {
 
-				if ( normals !== undefined ) includeNormals = true;
+					var vertices = geometry.getAttribute( 'position' );
+					var normals = geometry.getAttribute( 'normal' );
+					var uvs = geometry.getAttribute( 'uv' );
+					var colors = geometry.getAttribute( 'color' );
+					var indices = geometry.getIndex();
 
-				if ( uvs !== undefined ) includeUVs = true;
+					if ( vertices === undefined ) {
 
-				if ( colors !== undefined ) includeColors = true;
+						return;
+
+					}
+
+					vertexCount += vertices.count;
+					faceCount += indices ? indices.count / 3 : vertices.count / 3;
+
+					if ( normals !== undefined ) includeNormals = true;
+
+					if ( uvs !== undefined ) includeUVs = true;
+
+					if ( colors !== undefined ) includeColors = true;
+
+				}
 
 			}
 
@@ -179,7 +191,7 @@ THREE.PLYExporter.prototype = {
 			// faces
 			header +=
 				`element face ${faceCount}\n` +
-				'property list uchar int vertex_index\n';
+				`property list uchar int vertex_index\n`;
 
 		}
 

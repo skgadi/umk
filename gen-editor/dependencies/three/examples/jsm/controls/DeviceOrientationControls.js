@@ -1,10 +1,9 @@
 import {
 	Euler,
-	EventDispatcher,
 	MathUtils,
 	Quaternion,
 	Vector3
-} from '../../../build/three.module.js';
+} from "../../../build/three.module.js";
 
 /**
  * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
@@ -13,8 +12,6 @@ import {
 var DeviceOrientationControls = function ( object ) {
 
 	var scope = this;
-	var changeEvent = { type: 'change' };
-	var EPS = 0.000001;
 
 	this.object = object;
 	this.object.rotation.reorder( 'YXZ' );
@@ -76,8 +73,8 @@ var DeviceOrientationControls = function ( object ) {
 
 				if ( response == 'granted' ) {
 
-					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
-					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
+					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
 
 				}
 
@@ -89,8 +86,8 @@ var DeviceOrientationControls = function ( object ) {
 
 		} else {
 
-			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
-			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
+			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
 
 		}
 
@@ -100,48 +97,35 @@ var DeviceOrientationControls = function ( object ) {
 
 	this.disconnect = function () {
 
-		window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent );
-		window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
+		window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+		window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
 
 		scope.enabled = false;
 
 	};
 
-	this.update = ( function () {
+	this.update = function () {
 
-		var lastQuaternion = new Quaternion();
+		if ( scope.enabled === false ) return;
 
-		return function () {
+		var device = scope.deviceOrientation;
 
-			if ( scope.enabled === false ) return;
+		if ( device ) {
 
-			var device = scope.deviceOrientation;
+			var alpha = device.alpha ? MathUtils.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
 
-			if ( device ) {
+			var beta = device.beta ? MathUtils.degToRad( device.beta ) : 0; // X'
 
-				var alpha = device.alpha ? MathUtils.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
+			var gamma = device.gamma ? MathUtils.degToRad( device.gamma ) : 0; // Y''
 
-				var beta = device.beta ? MathUtils.degToRad( device.beta ) : 0; // X'
+			var orient = scope.screenOrientation ? MathUtils.degToRad( scope.screenOrientation ) : 0; // O
 
-				var gamma = device.gamma ? MathUtils.degToRad( device.gamma ) : 0; // Y''
+			setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
 
-				var orient = scope.screenOrientation ? MathUtils.degToRad( scope.screenOrientation ) : 0; // O
-
-				setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
-
-				if ( 8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) > EPS ) {
-
-					lastQuaternion.copy( scope.object.quaternion );
-					scope.dispatchEvent( changeEvent );
-
-				}
-
-			}
-
-		};
+		}
 
 
-	} )();
+	};
 
 	this.dispose = function () {
 
@@ -152,8 +136,5 @@ var DeviceOrientationControls = function ( object ) {
 	this.connect();
 
 };
-
-DeviceOrientationControls.prototype = Object.create( EventDispatcher.prototype );
-DeviceOrientationControls.prototype.constructor = DeviceOrientationControls;
 
 export { DeviceOrientationControls };

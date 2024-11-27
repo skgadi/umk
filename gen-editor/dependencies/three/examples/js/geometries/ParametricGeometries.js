@@ -1,3 +1,4 @@
+console.warn( "THREE.ParametricGeometries: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/#manual/en/introduction/Installation." );
 /**
  * Experimenting of primitive geometry creation using Surface Parametric equations
  */
@@ -143,7 +144,7 @@ THREE.ParametricGeometries.TubeGeometry = function ( path, segments, radius, seg
 
 };
 
-THREE.ParametricGeometries.TubeGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.TubeGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.ParametricGeometries.TubeGeometry.prototype.constructor = THREE.ParametricGeometries.TubeGeometry;
 
 
@@ -194,7 +195,7 @@ THREE.ParametricGeometries.TorusKnotGeometry = function ( radius, tube, segments
 
 };
 
-THREE.ParametricGeometries.TorusKnotGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.TorusKnotGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.ParametricGeometries.TorusKnotGeometry.prototype.constructor = THREE.ParametricGeometries.TorusKnotGeometry;
 
 
@@ -222,7 +223,7 @@ THREE.ParametricGeometries.SphereGeometry = function ( size, u, v ) {
 
 };
 
-THREE.ParametricGeometries.SphereGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.SphereGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.ParametricGeometries.SphereGeometry.prototype.constructor = THREE.ParametricGeometries.SphereGeometry;
 
 
@@ -248,5 +249,5 @@ THREE.ParametricGeometries.PlaneGeometry = function ( width, depth, segmentsWidt
 
 };
 
-THREE.ParametricGeometries.PlaneGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.PlaneGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.ParametricGeometries.PlaneGeometry.prototype.constructor = THREE.ParametricGeometries.PlaneGeometry;

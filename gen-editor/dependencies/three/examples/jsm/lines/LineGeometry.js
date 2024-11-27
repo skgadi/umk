@@ -1,4 +1,5 @@
-import { LineSegmentsGeometry } from '../lines/LineSegmentsGeometry.js';
+
+import { LineSegmentsGeometry } from "../lines/LineSegmentsGeometry.js";
 
 var LineGeometry = function () {
 
@@ -70,8 +71,7 @@ LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prot
 
 		if ( geometry.isGeometry ) {
 
-			console.error( 'THREE.LineGeometry no longer supports Geometry. Use THREE.BufferGeometry instead.' );
-			return;
+			this.setPositions( geometry.vertices );
 
 		} else if ( geometry.isBufferGeometry ) {
 

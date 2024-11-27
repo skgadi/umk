@@ -6,8 +6,7 @@ import {
 	Loader,
 	LoaderUtils,
 	Vector3
-} from '../../../build/three.module.js';
-
+} from "../../../build/three.module.js";
 /**
  * Description: A THREE loader for STL ASCII files, as created by Solidworks and other CAD programs.
  *
@@ -74,12 +73,10 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var scope = this;
 
-		var loader = new FileLoader( this.manager );
-		loader.setPath( this.path );
+		var loader = new FileLoader( scope.manager );
+		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
-		loader.setWithCredentials( this.withCredentials );
-
 		loader.load( url, function ( text ) {
 
 			try {

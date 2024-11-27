@@ -46,8 +46,6 @@
   pointer-events: none;
   position: absolute;
   top: 20px;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
   white-space: nowrap;
   z-index: 12;
@@ -144,20 +142,15 @@
   padding: 6px 0 5px;
 }
 
-.apexcharts-tooltip-box, .apexcharts-custom-tooltip {
+.apexcharts-tooltip-candlestick {
   padding: 4px 8px;
 }
 
-.apexcharts-tooltip-boxPlot {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-.apexcharts-tooltip-box>div {
+.apexcharts-tooltip-candlestick>div {
   margin: 4px 0;
 }
 
-.apexcharts-tooltip-box span.value {
+.apexcharts-tooltip-candlestick span.value {
   font-weight: bold;
 }
 

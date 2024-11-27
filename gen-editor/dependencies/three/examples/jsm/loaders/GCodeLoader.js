@@ -7,8 +7,7 @@ import {
 	LineBasicMaterial,
 	LineSegments,
 	Loader
-} from '../../../build/three.module.js';
-
+} from "../../../build/three.module.js";
 /**
  * GCodeLoader is used to load gcode files usually used for 3D printing or CNC applications.
  *
@@ -37,7 +36,6 @@ GCodeLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setRequestHeader( scope.requestHeader );
-		loader.setWithCredentials( scope.withCredentials );
 		loader.load( url, function ( text ) {
 
 			try {

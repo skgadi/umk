@@ -29,10 +29,9 @@ import {
 	Uint16BufferAttribute,
 	Vector3,
 	VectorKeyframeTrack
-} from '../../../build/three.module.js';
-import { TGALoader } from '../loaders/TGALoader.js';
-import { MMDParser } from '../libs/mmdparser.module.js';
-
+} from "../../../build/three.module.js";
+import { TGALoader } from "../loaders/TGALoader.js";
+import { MMDParser } from "../libs/mmdparser.module.js";
 /**
  * Dependencies
  *  - mmd-parser https://github.com/takahirox/mmd-parser
@@ -218,7 +217,6 @@ var MMDLoader = ( function () {
 				.setPath( this.path )
 				.setResponseType( 'arraybuffer' )
 				.setRequestHeader( this.requestHeader )
-				.setWithCredentials( this.withCredentials )
 				.load( url, function ( buffer ) {
 
 					onLoad( parser.parsePmd( buffer, true ) );
@@ -244,7 +242,6 @@ var MMDLoader = ( function () {
 				.setPath( this.path )
 				.setResponseType( 'arraybuffer' )
 				.setRequestHeader( this.requestHeader )
-				.setWithCredentials( this.withCredentials )
 				.load( url, function ( buffer ) {
 
 					onLoad( parser.parsePmx( buffer, true ) );
@@ -275,8 +272,7 @@ var MMDLoader = ( function () {
 				.setMimeType( undefined )
 				.setPath( this.animationPath )
 				.setResponseType( 'arraybuffer' )
-				.setRequestHeader( this.requestHeader )
-				.setWithCredentials( this.withCredentials );
+				.setRequestHeader( this.requestHeader );
 
 			for ( var i = 0, il = urls.length; i < il; i ++ ) {
 
@@ -310,7 +306,6 @@ var MMDLoader = ( function () {
 				.setPath( this.animationPath )
 				.setResponseType( 'text' )
 				.setRequestHeader( this.requestHeader )
-				.setWithCredentials( this.withCredentials )
 				.load( url, function ( text ) {
 
 					onLoad( parser.parseVpd( text, true ) );
@@ -338,7 +333,7 @@ var MMDLoader = ( function () {
 
 				}
 
-				this.parser = new MMDParser.Parser(); // eslint-disable-line no-undef
+				this.parser = new MMDParser.Parser();
 
 			}
 
@@ -1056,6 +1051,7 @@ var MMDLoader = ( function () {
 				 *
 				 * MMD         MeshToonMaterial
 				 * diffuse  -  color
+				 * specular -  specular
 				 * ambient  -  emissive * a
 				 *               (a = 1.0 without map texture or 0.2 with map texture)
 				 *
@@ -1064,7 +1060,9 @@ var MMDLoader = ( function () {
 				 */
 				params.color = new Color().fromArray( material.diffuse );
 				params.opacity = material.diffuse[ 3 ];
+				params.specular = new Color().fromArray( material.specular );
 				params.emissive = new Color().fromArray( material.ambient );
+				params.shininess = Math.max( material.shininess, 1e-4 ); // to prevent pow( 0.0, 0.0 )
 				params.transparent = params.opacity !== 1.0;
 
 				//

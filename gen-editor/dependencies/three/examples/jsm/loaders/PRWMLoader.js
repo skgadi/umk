@@ -3,8 +3,7 @@ import {
 	BufferGeometry,
 	FileLoader,
 	Loader
-} from '../../../build/three.module.js';
-
+} from "../../../build/three.module.js";
 /**
  * See https://github.com/kchapelier/PRWM for more informations about this file format
  */
@@ -246,7 +245,6 @@ var PRWMLoader = ( function () {
 			loader.setPath( scope.path );
 			loader.setResponseType( 'arraybuffer' );
 			loader.setRequestHeader( scope.requestHeader );
-			loader.setWithCredentials( scope.withCredentials );
 
 			url = url.replace( /\*/g, isBigEndianPlatform() ? 'be' : 'le' );
 
