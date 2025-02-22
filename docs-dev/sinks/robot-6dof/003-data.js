@@ -43,12 +43,12 @@ function setValue(val) {
   document.getElementById('ctl-slider').value = val;
   document.getElementById('ctl-info').innerHTML = "t=" +
     limitDecimalsTo3(item.t) +
-    "; &beta;<sub>1</sub>=" + limitDecimalsTo3(item.v[0].r[0][0]) +
-    "; &beta;<sub>2</sub>=" + limitDecimalsTo3(item.v[1].r[0][0]) +
-    "; &beta;<sub>3</sub>=" + limitDecimalsTo3(item.v[2].r[0][0]) +
-    "; &beta;<sub>4</sub>=" + limitDecimalsTo3(item.v[3].r[0][0]) +
-    "; &beta;<sub>5</sub>=" + limitDecimalsTo3(item.v[4].r[0][0]) +
-    "; &beta;<sub>6</sub>=" + limitDecimalsTo3(item.v[5].r[0][0]) +
+    "; &theta;<sub>1</sub>=" + limitDecimalsTo3(item.v[0].r[0][0]) +
+    "; &theta;<sub>2</sub>=" + limitDecimalsTo3(item.v[1].r[0][0]) +
+    "; &theta;<sub>3</sub>=" + limitDecimalsTo3(item.v[2].r[0][0]) +
+    "; &theta;<sub>4</sub>=" + limitDecimalsTo3(item.v[3].r[0][0]) +
+    "; &theta;<sub>5</sub>=" + limitDecimalsTo3(item.v[4].r[0][0]) +
+    "; &theta;<sub>6</sub>=" + limitDecimalsTo3(item.v[5].r[0][0]) +
     "; x<sub>w</sub>=" + limitDecimalsTo3(xyzPos.x) +
     "; y<sub>w</sub>=" + limitDecimalsTo3(xyzPos.y) +
     "; z<sub>w</sub>=" + limitDecimalsTo3(xyzPos.z) +
@@ -62,25 +62,25 @@ function limitDecimalsTo3(value) {
 
 function getXYZPosition() {
   const degToRad = Math.PI / 180;
-  const beta_1 = state.pos.joint_1 * degToRad;
-  const beta_2 = state.pos.joint_2 * degToRad;
-  const beta_3 = state.pos.joint_3 * degToRad;
-  const theta_1 = beta_1;
-  const theta_2 =  Math.PI / 2 - beta_2;
-  const theta_3 = beta_3 - Math.PI / 2;
-  const theta_2PlusTheta_3 = theta_2 + theta_3;
-  const cosTheta_1 = Math.cos(theta_1);
-  const sinTheta_1 = Math.sin(theta_1);
-  const cosTheta_2 = Math.cos(theta_2);
-  const sinTheta_2 = Math.sin(theta_2);
-  const cosTheta_1PlusTheta_2 = Math.cos(theta_2PlusTheta_3);
-  const sinTheta_1PlusTheta_2 = Math.sin(theta_2PlusTheta_3);
+  const theta_1 = state.pos.joint_1 * degToRad;
+  const theta_2 = state.pos.joint_2 * degToRad;
+  const theta_3 = state.pos.joint_3 * degToRad;
+  const beta_1 = theta_1;
+  const beta_2 =  Math.PI / 2 - theta_2;
+  const beta_3 = -theta_3 - Math.PI / 2;
+  const beta_2PlusBeta_3 = beta_2 + beta_3;
+  const cosBeta_1 = Math.cos(beta_1);
+  const sinBeta_1 = Math.sin(beta_1);
+  const cosBeta_2 = Math.cos(beta_2);
+  const sinBeta_2 = Math.sin(beta_2);
+  const cosBeta_1PlusBeta_2 = Math.cos(beta_2PlusBeta_3);
+  const sinBeta_1PlusBeta_2 = Math.sin(beta_2PlusBeta_3);
   const d_1 = 0.4865;
   const a_1 = 0.15;
   const a_2 = 0.475;
   const a_3 = 0.6;
-  const x = cosTheta_1 * (a_2 * cosTheta_2 + a_3 * cosTheta_1PlusTheta_2) + a_1 * cosTheta_1;
-  const y = sinTheta_1 * (a_2 * cosTheta_2 + a_3 * cosTheta_1PlusTheta_2) + a_1 * sinTheta_1;
-  const z = d_1 + a_2 * sinTheta_2 + a_3 * sinTheta_1PlusTheta_2;
+  const x = cosBeta_1 * (a_2 * cosBeta_2 + a_3 * cosBeta_1PlusBeta_2) + a_1 * cosBeta_1;
+  const y = sinBeta_1 * (a_2 * cosBeta_2 + a_3 * cosBeta_1PlusBeta_2) + a_1 * sinBeta_1;
+  const z = d_1 + a_2 * sinBeta_2 + a_3 * sinBeta_1PlusBeta_2;
   return {x, y, z};
 }
