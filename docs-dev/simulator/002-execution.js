@@ -69,6 +69,7 @@ const exec = {
       this.setParams(tempModel);
       return tempModel;
     });
+    gskSerialPort.initializeHardwareForUpdatedCells(this.cells);
     //console.log(this.cells);
   },
   updCell: function (value, index) {
@@ -148,6 +149,7 @@ const exec = {
     //console.log(this.t);
   },
   Init: function () {
+    console.log("Initializing simulation...");
     let that = this;
     this.cells.forEach(function (model) {
       try {
@@ -173,6 +175,7 @@ const exec = {
     this.prevT = performance.now();
     //console.log("Init");
     this.setRemainingSteps();
+    gskSerialPort.openRequiredPorts();
   },
   End: function () {
     this.cells.forEach(function (model) {
@@ -183,6 +186,7 @@ const exec = {
     postMessage({
       ended: true
     });
+    gskSerialPort.closeRequiredPorts();
   },
   loop: function (N = null) {
     let w = 0; //wait time in milli seconds;

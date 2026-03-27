@@ -242,7 +242,7 @@ const simVue = new Vue({
                   if (prepCell.isPopup) {
                     popup.sendParams(prepCell);
                   }
-                  //console.log(prepCell);
+                  console.log(prepCell);
                   prepCell.sIndexes = this.cellsWithSInfo[idx].sIndexes; //Prepared cell with updated sources
                   //console.log(prepCell);
                   out = {
@@ -305,6 +305,11 @@ const simVue = new Vue({
                 steps: 0
               };
               break;
+            case "serialPorts":
+              out = {
+                serialPorts: hardwareVue.allConnectedPorts()
+              };
+            break;
             default:
               break;
           }
@@ -363,6 +368,17 @@ const simVue = new Vue({
         this.exeOrder = this.getExecutionOrder().eo;
         if (this.exeOrder.length > 0) {
           if (varManagerVue.checkAllCellsParams()) {
+            // Validate serial Ports            
+            if (!hardwareVue.checkIsReadyToSimulate(this.exeOrder)) {
+              new Noty({
+                text: "Found unconnected ports or duplicate pin combinations. Please fix the issues highlighted in the graph and try again.",
+                timeout: 5000,
+                theme: "nest",
+                type: 'warning'
+              }).show();
+              throw ("Ports not properly configured");
+            }
+
             if (!this.simWorker) {
               this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
             }
@@ -407,6 +423,7 @@ const simVue = new Vue({
             footerVue.presTime = 0;
 
 
+            this.informSim("serialPorts");
             this.informSim("cells");
             this.informSim("simSettings");
           } else {
@@ -1212,6 +1229,6 @@ const simVue = new Vue({
       return arr.filter(function (ele) {
         return ele != value;
       });
-    }
+    },
   }
 });

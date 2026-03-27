@@ -32,9 +32,9 @@ onmessage = function (oEvent) {
         case "recData":
           exec.recData();
           break;
-          /*case "results":
-          exec.updResHandler(oEvent.data.results);
-          break;*/
+        case "serialPorts":
+          gskSerialPort.setFriendlyNames(oEvent.data.serialPorts);
+          break;
         default:
           break;
       }
