@@ -68,17 +68,26 @@ const hardwareVue = new Vue({
     },
 
     pinConfigurations (cells) {
-      const out =  cells.filter(cell => cell.isSerial).reduce((acc, cell) => {
-        const portName = cell.Parameters.port.Value[0][0];
-        const allPins = Object.keys(cell.Parameters).filter(param => param.startsWith("pin"));
+      const out =  cells.filter(cell => cell.value.isSerial).reduce((acc, cell) => {
+        const portName = cell.value.Parameters.port.Value[0][0];
+        const allPins = Object.keys(cell.value.Parameters).filter(param => param.startsWith("pin"));
         const pinCombinations = allPins.reduce((combos, pin) => {
-          const pinValue = cell.Parameters[pin].Value[0][0];
+          const pinValue = cell.value.Parameters[pin].Value[0][0];
           // check duplicate combinations
-          if (acc.portsPinCombinations.some(c => c.port === portName && c.pin === pinValue) || combos.some(c => c.port === portName && c.pin === pinValue)) {
-            acc.duplicatePinCombinations.push({port: portName, pin: pinValue, cell: cell});
+          if (acc.portsPinCombinations.some
+            (c => c.port === portName 
+              && c.pin === pinValue
+              && c.type !== cell.value.constructor.name
+            )
+            || combos.some
+            (c => c.port === portName
+              && c.pin === pinValue
+              && c.type !== cell.value.constructor.name
+            )) {
+            acc.duplicatePinCombinations.push({port: portName, pin: pinValue, cell: cell, type: cell.value.constructor.name});
           }
 
-          combos.push({port: portName, pin: pinValue});
+          combos.push({port: portName, pin: pinValue, type: cell.value.constructor.name});
           return combos;
         }, []);
         acc.portsPinCombinations.push(...pinCombinations);
@@ -91,6 +100,7 @@ const hardwareVue = new Vue({
       out.duplicatePinCombinations.forEach(combo => {
         mainSystem.graph.setCellWarning(combo.cell, "Duplicate pin combination");
       });
+      console.log(out);
       return out;
     },
     checkIfAllPortsAreConnected(cells) {

@@ -1,7 +1,7 @@
-class umk_1774369913335 extends umk_model {
+class umk_1774706876440 extends umk_model {
   Icon() {
     return {
-      html:  "<center style='font-size: 12px;'><i class='fab fa-usb'></i><br/>" + this.Parameters.port.Value[0][0] + "<br/> DI: " + this.Parameters.pin.Value[0][0] + "</center>",
+      html:  "<center style='font-size: 12px;'><i class='fab fa-usb'></i><br/>" + this.Parameters.port.Value[0][0] + "<br/> DO: " + this.Parameters.pin.Value[0][0] + "</center>",
       inLabels: null,
       outLabels: null,
       splStyle: ""
@@ -12,7 +12,7 @@ class umk_1774369913335 extends umk_model {
     this.outputs[0] = 1;
   }
   Details() {
-    return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> DI: " + this.Parameters.pin.Value[0][0] + "</center>";
+    return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> DO: " + this.Parameters.pin.Value[0][0] + "</center>";
   }
   constructor(obj) {
     super(Object.assign({
@@ -28,6 +28,7 @@ class umk_1774369913335 extends umk_model {
             ['Port 1']
           ]
         },
+
         "pin": {
           "Name": {
             "en-us": "Digital Port/pin",
@@ -48,7 +49,7 @@ class umk_1774369913335 extends umk_model {
         }
       },
       isSerial: true, //shows that this block is associated with serial communication (COM port)
-      TerminalsOut: {
+      TerminalsIn: {
         min: 1,
         max: 1,
         value: 1,
