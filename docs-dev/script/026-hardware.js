@@ -12,20 +12,30 @@ const hardwareVue = new Vue({
   },
   mounted() {
     this.isSerialSupported = "serial" in navigator;
-    // get all the connected ports
-    if (this.isSerialSupported) {
-      navigator.serial.getPorts().then(ports => {
-        ports.forEach(port => {
-          const friendlyName = this.getANameForPort('Port ' + (this.selectedPorts.length + 1));
-          this.selectedPorts.push({portDetails: port, friendlyName: friendlyName});
-        });
-      });
-    }
-
+    this.refreshConnectedPorts(false);
   },
   methods: {
     toggleDisplay() {
       this.display = !this.display;
+    },
+    async refreshConnectedPorts(askConfirmation = true) {
+      try {
+        // get all the connected ports
+        if (this.isSerialSupported) {
+          if (askConfirmation && !confirm("Refreshing connected ports. This may remove the existing port names. Are you sure?")) {
+            return;
+          }
+          this.selectedPorts = [];
+          navigator.serial.getPorts().then(ports => {
+            ports.forEach(port => {
+              const friendlyName = this.getANameForPort('Port ' + (this.selectedPorts.length + 1));
+              this.selectedPorts.push({portDetails: port, friendlyName: friendlyName});
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error refreshing connected ports:", error);
+      }
     },
     async addANewPort() {
       try {

@@ -374,6 +374,7 @@
         <h1 class="center" v-text="GUIText[settings.lang].serialPorts"></h1>
         <div v-if="isSerialSupported">
           <button @click="addANewPort">Add New Port</button>
+          <button @click="refreshConnectedPorts">Refresh ports</button>
         </div>
         <div v-else class="center">
           <i class="fas fa-2x fa-info-circle"></i>
