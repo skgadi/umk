@@ -10,6 +10,8 @@ class umk_1586108946421 extends umk_model {
   Evaluate() {
     //console.log(this.Parameters.constant.Value);
     this.outputs[0] = this.Parameters.constant.Value;
+    console.log(JSON.stringify(this.outputs[0]));
+
   }
   Details() {
     return TeX.prepDisp("y(t) := " + TeX.frmArray(this.Parameters.constant.Value));

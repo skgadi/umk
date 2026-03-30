@@ -26,6 +26,7 @@ class umk_model {
     this.isPopup = false; // shows that this block generates a popup window
     this.isOut = false; //shows that this is a output
     this.isSerial = false; //shows that this block is associated with serial communication (COM port)
+    this.portDetails = null; // if it is associated with serial communication, this will have the details of the port
     this.showInpOnHtml = false; //update screen while simulating 
     this.Icon_Temp_Html = null; //This is used internal to the Icon function
     this.temp_exec = {}; //This is temporary item used by execute command of simulation

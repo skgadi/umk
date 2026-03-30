@@ -8,8 +8,7 @@ class umk_1774714186082 extends umk_model {
     };
   }
   Evaluate() {
-    //console.log(this.Parameters.constant.Value);
-    this.outputs[0] = 1;
+    this.outputs[0] = math.matrix(this.portDetails.recValue? [[this.portDetails.recValue]] : [[0]]);
   }
   Details() {
     return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> AI: " + this.Parameters.pin.Value[0][0] + "</center>";
@@ -36,15 +35,13 @@ class umk_1774714186082 extends umk_model {
           },
           "Dimension": "Scalar",
           "Type": "Options",
-          "Options" : Object.fromEntries(Array.from({length: 40}, (_, i) => [
-            String(i),
-            {
-              "en-us": "GPIO" + String(i),
-              "es-mx": "GPIO" + String(i)
-            }
-          ])),
+          "Options" : Object.fromEntries([2, 4, 5, 13, 14, 15, 16, 17,18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39]
+            .map((ele)=>[String(ele), {
+              "en-us": "GPIO"+ele,
+              "es-mx": "GPIO"+ele
+            }])),
           "Value": [
-            ['1']
+            ['5']
           ]
         }
       },

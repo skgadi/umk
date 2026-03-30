@@ -1,40 +1,33 @@
-import { TempNode } from '../core/TempNode.js';
+import Node from '../core/Node.js';
+import PropertyNode from '../core/PropertyNode.js';
+import ContextNode from '../core/ContextNode.js';
 
-function CondNode( a, b, op, ifNode, elseNode ) {
+class CondNode extends Node {
 
-	TempNode.call( this );
+	constructor( condNode, ifNode, elseNode = null ) {
 
-	this.a = a;
-	this.b = b;
+		super();
 
-	this.op = op;
+		this.condNode = condNode;
 
-	this.ifNode = ifNode;
-	this.elseNode = elseNode;
+		this.ifNode = ifNode;
+		this.elseNode = elseNode;
 
-}
+	}
 
-CondNode.EQUAL = '==';
-CondNode.NOT_EQUAL = '!=';
-CondNode.GREATER = '>';
-CondNode.GREATER_EQUAL = '>=';
-CondNode.LESS = '<';
-CondNode.LESS_EQUAL = '<=';
+	getNodeType( builder ) {
 
-CondNode.prototype = Object.create( TempNode.prototype );
-CondNode.prototype.constructor = CondNode;
-CondNode.prototype.nodeType = "Cond";
+		const ifType = this.ifNode.getNodeType( builder );
 
-CondNode.prototype.getType = function ( builder ) {
+		if ( this.elseNode !== null ) {
 
-	if ( this.ifNode ) {
+			const elseType = this.elseNode.getNodeType( builder );
 
-		var ifType = this.ifNode.getType( builder );
-		var elseType = this.elseNode.getType( builder );
+			if ( builder.getTypeLength( elseType ) > builder.getTypeLength( ifType ) ) {
 
-		if ( builder.getTypeLength( elseType ) > builder.getTypeLength( ifType ) ) {
+				return elseType;
 
-			return elseType;
+			}
 
 		}
 
@@ -42,83 +35,38 @@ CondNode.prototype.getType = function ( builder ) {
 
 	}
 
-	return 'b';
+	generate( builder ) {
 
-};
+		const type = this.getNodeType( builder );
+		const context = { tempWrite: false };
 
-CondNode.prototype.getCondType = function ( builder ) {
+		const needsProperty = this.ifNode.getNodeType( builder ) !== 'void' || ( this.elseNode && this.elseNode.getNodeType( builder ) !== 'void' );
+		const nodeProperty = needsProperty ? new PropertyNode( type ).build( builder ) : '';
 
-	if ( builder.getTypeLength( this.b.getType( builder ) ) > builder.getTypeLength( this.a.getType( builder ) ) ) {
+		const nodeSnippet = new ContextNode( this.condNode/*, context*/ ).build( builder, 'bool' );
 
-		return this.b.getType( builder );
+		builder.addFlowCode( `if ( ${nodeSnippet} ) {\n\n\t\t`, false );
 
-	}
+		let ifSnippet = new ContextNode( this.ifNode, context ).build( builder, type );
 
-	return this.a.getType( builder );
+		ifSnippet = needsProperty ? nodeProperty + ' = ' + ifSnippet + ';' : ifSnippet;
 
-};
+		builder.addFlowCode( ifSnippet + '\n\n\t}', false );
 
-CondNode.prototype.generate = function ( builder, output ) {
+		let elseSnippet = this.elseNode ? new ContextNode( this.elseNode, context ).build( builder, type ) : null;
 
-	var type = this.getType( builder ),
-		condType = this.getCondType( builder ),
-		a = this.a.build( builder, condType ),
-		b = this.b.build( builder, condType ),
-		code;
+		if ( elseSnippet ) {
 
-	if ( this.ifNode ) {
+			elseSnippet = nodeProperty ? nodeProperty + ' = ' + elseSnippet + ';' : elseSnippet;
 
-		var ifCode = this.ifNode.build( builder, type ),
-			elseCode = this.elseNode.build( builder, type );
+			builder.addFlowCode( 'else {\n\n\t\t' + elseSnippet + '\n\n\t}', false );
 
-		code = '( ' + [ a, this.op, b, '?', ifCode, ':', elseCode ].join( ' ' ) + ' )';
+		}
 
-	} else {
-
-		code = '( ' + a + ' ' + this.op + ' ' + b + ' )';
+		return nodeProperty;
 
 	}
 
-	return builder.format( code, this.getType( builder ), output );
+}
 
-};
-
-CondNode.prototype.copy = function ( source ) {
-
-	TempNode.prototype.copy.call( this, source );
-
-	this.a = source.a;
-	this.b = source.b;
-
-	this.op = source.op;
-
-	this.ifNode = source.ifNode;
-	this.elseNode = source.elseNode;
-
-	return this;
-
-};
-
-CondNode.prototype.toJSON = function ( meta ) {
-
-	var data = this.getJSONNode( meta );
-
-	if ( ! data ) {
-
-		data = this.createJSONNode( meta );
-
-		data.a = this.a.toJSON( meta ).uuid;
-		data.b = this.b.toJSON( meta ).uuid;
-
-		data.op = this.op;
-
-		if ( data.ifNode ) data.ifNode = this.ifNode.toJSON( meta ).uuid;
-		if ( data.elseNode ) data.elseNode = this.elseNode.toJSON( meta ).uuid;
-
-	}
-
-	return data;
-
-};
-
-export { CondNode };
+export default CondNode;

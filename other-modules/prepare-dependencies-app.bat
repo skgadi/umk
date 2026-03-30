@@ -1,5 +1,5 @@
 rmdir /s/q ..\docs-dev\dependencies
-xcopy .\node_modules\cbor2\lib ..\docs-dev\dependencies\cbor2 /y/s/q/i
+xcopy .\node_modules\cbor-web\dist ..\docs-dev\dependencies\cbor-web /y/s/q/i
 xcopy .\node_modules\mathjs\lib\browser ..\docs-dev\dependencies\mathjs /y/s/q/i
 xcopy .\node_modules\katex\dist ..\docs-dev\dependencies\katex /y/s/q/i
 xcopy .\node_modules\js-polyfills ..\docs-dev\dependencies\js-polyfills /y/s/q/i

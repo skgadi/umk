@@ -2,6 +2,8 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "apexcharts": "^3.54.1",
+    "cbor": "^10.0.3",
+    "cbor-web": "^10.0.3",
     "cbor2": "^1.12.0",
     "jquery": "^3.7.1",
     "js-polyfills": "^0.1.43",

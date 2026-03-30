@@ -8,8 +8,8 @@ class umk_1774714206020 extends umk_model {
     };
   }
   Evaluate() {
-    //console.log(this.Parameters.constant.Value);
-    this.outputs[0] = 1;
+    //console.log(this.portDetails.recValue);
+    this.outputs[0] = math.matrix(this.portDetails.recValue? [[this.portDetails.recValue]] : [[0]]);
   }
   Details() {
     return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> Encoder: " + this.Parameters.pin_A.Value[0][0] + " , " + this.Parameters.pin_B.Value[0][0] + "</center>";
@@ -42,15 +42,13 @@ class umk_1774714206020 extends umk_model {
           },
           "Dimension": "Scalar",
           "Type": "Options",
-          "Options" : Object.fromEntries(Array.from({length: 40}, (_, i) => [
-            String(i),
-            {
-              "en-us": "GPIO" + String(i),
-              "es-mx": "GPIO" + String(i)
-            }
-          ])),
+          "Options" : Object.fromEntries([2, 4, 5, 13, 14, 15, 16, 17,18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39]
+            .map((ele)=>[String(ele), {
+              "en-us": "GPIO"+ele,
+              "es-mx": "GPIO"+ele
+            }])),
           "Value": [
-            ['1']
+            ['14']
           ]
         },
         "pin_B": {
@@ -60,15 +58,13 @@ class umk_1774714206020 extends umk_model {
           },
           "Dimension": "Scalar",
           "Type": "Options",
-          "Options" : Object.fromEntries(Array.from({length: 40}, (_, i) => [
-            String(i),
-            {
-              "en-us": "GPIO" + String(i),
-              "es-mx": "GPIO" + String(i)
-            }
-          ])),
+          "Options" : Object.fromEntries([2, 4, 5, 13, 14, 15, 16, 17,18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39]
+            .map((ele)=>[String(ele), {
+              "en-us": "GPIO"+ele,
+              "es-mx": "GPIO"+ele
+            }])),
           "Value": [
-            ['2']
+            ['15']
           ]
         }
       },

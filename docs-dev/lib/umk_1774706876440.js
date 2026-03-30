@@ -8,8 +8,7 @@ class umk_1774706876440 extends umk_model {
     };
   }
   Evaluate() {
-    //console.log(this.Parameters.constant.Value);
-    this.outputs[0] = 1;
+    this.portDetails.sendValue = this.inputs[0].get([0,0]) ? 1 : 0;
   }
   Details() {
     return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> DO: " + this.Parameters.pin.Value[0][0] + "</center>";
@@ -36,17 +35,28 @@ class umk_1774706876440 extends umk_model {
           },
           "Dimension": "Scalar",
           "Type": "Options",
-          "Options" : Object.fromEntries(Array.from({length: 40}, (_, i) => [
-            String(i),
-            {
-              "en-us": "GPIO" + String(i),
-              "es-mx": "GPIO" + String(i)
-            }
-          ])),
+          "Options" : Object.fromEntries([2, 4, 5, 12, 13, 14, 15, 16, 17,18, 19, 21, 22, 23, 25, 26, 27, 32, 33]
+            .map((ele)=>[String(ele), {
+              "en-us": "GPIO"+ele,
+              "es-mx": "GPIO"+ele
+            }])),
           "Value": [
-            ['1']
+            ['4']
           ]
-        }
+        },
+
+        "ic": {
+          "Name": {
+            "en-us": "Set $(y_0) = \\texttt{true}$",
+            "es-mx": "Establecer $(y_0) = \\texttt{true}$"
+          },
+          "Dimension": "Scalar",
+          "Type": "Checkbox",
+          "Value": [
+            [false]
+          ]
+        },
+
       },
       isSerial: true, //shows that this block is associated with serial communication (COM port)
       TerminalsIn: {

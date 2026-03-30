@@ -110,7 +110,7 @@ const hardwareVue = new Vue({
       out.duplicatePinCombinations.forEach(combo => {
         mainSystem.graph.setCellWarning(combo.cell, "Duplicate pin combination");
       });
-      console.log(out);
+      //console.log(out);
       return out;
     },
     checkIfAllPortsAreConnected(cells) {

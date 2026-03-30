@@ -78,7 +78,7 @@ const exec = {
     this.cells[index] = tempModel;
     //console.log(index);
   },
-  simulate: function () {
+  simulate: async function () {
     let model;
     let store = false;
     let tempOut = {};
@@ -96,6 +96,7 @@ const exec = {
         }
         model.beforeEC(this.t, this.k, this.simSettings);
       }
+      await gskSerialPort.applyReadWrite();
       //console.log(this.cells.length);
       for (let i = 0; i < this.cells.length; i++) {
         model = this.cells[i];
@@ -148,7 +149,7 @@ const exec = {
     this.k++;
     //console.log(this.t);
   },
-  Init: function () {
+  Init: async function () {
     console.log("Initializing simulation...");
     let that = this;
     this.cells.forEach(function (model) {
@@ -175,7 +176,7 @@ const exec = {
     this.prevT = performance.now();
     //console.log("Init");
     this.setRemainingSteps();
-    gskSerialPort.openRequiredPorts();
+    await gskSerialPort.initHardwareForSimulation();
   },
   End: function () {
     this.cells.forEach(function (model) {
@@ -188,7 +189,7 @@ const exec = {
     });
     gskSerialPort.closeRequiredPorts();
   },
-  loop: function (N = null) {
+  loop: async function (N = null) {
     let w = 0; //wait time in milli seconds;
     if (!N) {
       if (this.t === 0) {
@@ -217,7 +218,7 @@ const exec = {
       this.prevT = performance.now();
       //console.log(this.prevT);
       //}
-      this.simulate();
+      await this.simulate();
       this.rSteps--;
     }
     //console.log(this.results.length);
@@ -235,8 +236,8 @@ const exec = {
       //console.log(this.isCont);
       //console.log(this.recAck);
       if (this.isCont && this.recAck) {
-        setTimeout(() => {
-          this.loop();
+        setTimeout(async () => {
+          await this.loop();
         });
       }
     }
@@ -246,22 +247,24 @@ const exec = {
     //console.log(this.simSettings);
     //console.log(this.rSteps);
   },
-  oneRun: function () {
+  oneRun: async function () {
     if (!this.inPrg) {
-      this.Init();
+      await this.Init();
     }
     this.isCont = false;
-    this.loop(1);
-    this.End();
+    await this.loop(1);
+    await this.End();
   },
-  start: function () {
+  start: async function () {
     if (!this.inPrg) {
-      this.Init();
+      await this.Init();
     }
     this.isCont = true;
     //console.log("start pressed");
     //this.recAck = true;
-    setTimeout(this.loop());
+    setTimeout(async () => {
+      await this.loop();
+    });
   },
   stop: function () {
     this.rSteps = 0;
@@ -272,23 +275,25 @@ const exec = {
       paused: true
     });
   },
-  steps: function () {
+  steps: async function () {
     if (!this.inPrg) {
-      this.Init();
+      await this.Init();
     }
     this.isCont = false;
     postMessage({
       paused: true
     });
-    setTimeout(this.loop(this.simSettings.steps));
+    setTimeout(async () => {
+      await this.loop(this.simSettings.steps);
+    });
     //this.loop(this.simSettings.steps);
   },
   recData: function() {
     //console.log('Received acknowledgement');
     this.recAck = true;
     if (this.isCont && this.recAck) {
-      setTimeout(() => {
-        this.loop();
+      setTimeout(async () => {
+        await this.loop();
       });
     }
   }
