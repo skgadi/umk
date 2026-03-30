@@ -373,8 +373,22 @@
         ></span>
         <h1 class="center" v-text="GUIText[settings.lang].serialPorts"></h1>
         <div v-if="isSerialSupported">
-          <button @click="addANewPort">Add New Port</button>
-          <button @click="refreshConnectedPorts">Refresh ports</button>
+          <div style="display: flex; column-gap: 20px; justify-content: center">
+            <div
+              @click="refreshConnectedPorts"
+              class="matrix-builder-btn"
+              title="Refresh ports"
+            >
+              <i class="fas fa-sync"></i>
+            </div>
+            <div
+              @click="addANewPort"
+              class="matrix-builder-btn"
+              title="Add new port"
+            >
+              <i class="fas fa-plus"></i>
+            </div>
+          </div>
         </div>
         <div v-else class="center">
           <i class="fas fa-2x fa-info-circle"></i>
@@ -386,25 +400,36 @@
           <div class="no-col-break limit-250 margin-center">
             <h2 v-text="GUIText[settings.lang].selectedPorts"></h2>
             <template v-for="(item, idx) in selectedPorts">
-              <div class="expandable-x">
-                <div class="expandable-x">
-                  <template v-if="editFriendlyName.idx === idx">
-                    <input
-                      type="text"
-                      v-model="editFriendlyName.val"
-                      @keyup.enter="setFriendlyName(idx)"
-                      @keyup.esc="editFriendlyNameByIdx (-1)"
-                    />
-                  </template>
-                  <template v-else>
-                    <span
-                      v-text="(idx+1)+'.' + item.friendlyName"
-                      class="gap-right"
-                      @click="editFriendlyNameByIdx(idx)"
-                    ></span>
-                  </template>
-                </div>
-              </div>
+              <template v-if="editFriendlyName.idx === idx">
+                <input
+                  type="text"
+                  v-model="editFriendlyName.val"
+                  @keyup.enter="setFriendlyName(idx)"
+                  @keyup.esc="editFriendlyNameByIdx (-1)"
+                />
+                <i
+                  class="fas fa-check pointer"
+                  style="margin-left: 16px"
+                  @click="setFriendlyName(idx)"
+                ></i>
+                <i
+                  class="fas fa-times pointer"
+                  style="margin-left: 8px"
+                  @click="editFriendlyNameByIdx(-1)"
+                ></i>
+              </template>
+              <template v-else>
+                <span
+                  v-text="(idx+1)+'.' + item.friendlyName"
+                  class="gap-right"
+                  @click="editFriendlyNameByIdx(idx)"
+                ></span>
+                <i
+                  class="fas fa-pen pointer"
+                  style="margin-left: 16px"
+                  @click="editFriendlyNameByIdx(idx)"
+                ></i>
+              </template>
             </template>
           </div>
         </div>
@@ -1412,6 +1437,29 @@
     <!--script type="text/javascript" src="dependencies/dexie/dexie.min.js"></script-->
 
     <!--Uyamak libraries-->
+    <script type="module">
+      import {
+        Transport,
+        IEspLoaderTerminal,
+        LoaderOptions,
+        ESPLoader,
+        FlashOptions,
+        FlashModeValues,
+        FlashFreqValues,
+        FlashSizeValues,
+      } from "./dependencies/esptool-js/index.js";
+
+      const esptool = {
+        ESPLoader,
+        Transport,
+        LoaderOptions,
+        FlashOptions,
+        FlashModeValues,
+        FlashFreqValues,
+        FlashSizeValues,
+        IEspLoaderTerminal,
+      };
+    </script>
     <script src="lib.min.js?bv=30"></script>
     <script src="script.min.js?bv=30"></script>
   </body>
