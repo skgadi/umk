@@ -155,18 +155,18 @@ async clearBuffers() {
         case "umk_1774369913335":
           return {type:"DI", pin, sendValue:0};
         case "umk_1774706876440":
-          return {type:"DO", pin, initVal: math.number(cell.Parameters.ic.Value).get([0,0]), sendValue: math.number(cell.Parameters.ic.Value).get([0,0])};
+          return {type:"DO", pin, initVal: math.matrix(cell.Parameters.ic.Value).get([0,0]), sendValue: math.matrix(cell.Parameters.ic.Value).get([0,0])};
         case "umk_1774714186082":
           return {type:"AI", pin, sendValue:0};
         case "umk_1774714197073":
           return {
             type:"PM",
             pin,
-            initVal: math.number(cell.Parameters.ic.Value).get([0,0]),
-            freq: math.number(cell.Parameters.freq.Value).get([0,0]),
-            res: math.number(cell.Parameters.res.Value).get([0,0]),
+            initVal: math.matrix(cell.Parameters.ic.Value).get([0,0]),
+            freq: math.matrix(cell.Parameters.freq.Value).get([0,0]),
+            res: math.matrix(cell.Parameters.res.Value).get([0,0]),
             ch: this.lastPWMChannel++,
-            sendValue: math.number(cell.Parameters.ic.Value).get([0,0])
+            sendValue: math.matrix(cell.Parameters.ic.Value).get([0,0])
           };
         case "umk_1774714206020":
           return {type:"EN", pins, sendValue:0};

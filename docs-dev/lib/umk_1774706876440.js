@@ -8,6 +8,7 @@ class umk_1774706876440 extends umk_model {
     };
   }
   Evaluate() {
+    //console.log(this.inputs[0]);
     this.portDetails.sendValue = this.inputs[0].get([0,0]) ? true : false;
   }
   Details() {
