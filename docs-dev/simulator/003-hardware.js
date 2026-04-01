@@ -32,7 +32,7 @@ async clearBuffers() {
           nullCount = 0; 
         }
       }
-      console.log(`Finished clearing buffer for port ${portDetail.port}`);
+      //console.log(`Finished clearing buffer for port ${portDetail.port}`);
     } catch (error) {
       console.error(`Error clearing buffers for port ${portDetail.port}:`, error);
     }
@@ -78,7 +78,7 @@ async clearBuffers() {
         //console.log("Binary to send for port " + pinDetailsPerPort.port + ": ", binToSend.toHex());
         await pinDetailsPerPort.writer.write(binToSend);
         const value = await this.readWithTimeout(pinDetailsPerPort.reader, 1000); // Attempt to read with a timeout to avoid hanging
-        //console.log("Received value from port " + pinDetailsPerPort.port + ": ", value);
+        //console.log("Received value from port " + pinDetailsPerPort.port + ": ", value.toHex());
         const decodedValue = cbor.decode(value); // error may occur here if value is null or not properly formatted, which is why we have the try-catch
         // Assuming the decoded value is an array of values corresponding to the config order
         if (decodedValue) {
@@ -101,6 +101,7 @@ async clearBuffers() {
       const thisPinConfig = this.getPinConfig(cell);
       //console.log(`Pin config for cell ${cell.id}:`, thisPinConfig);
       cell.portDetails = thisPinConfig; // Store the port details reference in the cell for later use
+      //console.log(`Port details for cell ${cell.id} after assignment:`, cell.portDetails);
       // If port doesn't exist add a new entry
       const existingPort = this.findOrCreatePortFromPinDetails(cell.Parameters.port.Value[0][0]);
       // If the pin config is already not in the config array, add it
@@ -148,23 +149,24 @@ async clearBuffers() {
       } catch (error) {
         //console.error(`Error parsing pins for cell ${cell.id}:`, error);
       }
+      console.log(`Getting pin config for cell ${cell.id} with type ${cell.constructor.name}, pin: ${pin}, pins: ${pins}`);
 
       switch (cell.id) {
         case "umk_1774369913335":
           return {type:"DI", pin, sendValue:0};
         case "umk_1774706876440":
-          return {type:"DO", pin, initVal: cell.Parameters.ic.Value[0][0], sendValue: cell.Parameters.ic.Value[0][0]};
+          return {type:"DO", pin, initVal: math.number(cell.Parameters.ic.Value).get([0,0]), sendValue: math.number(cell.Parameters.ic.Value).get([0,0])};
         case "umk_1774714186082":
           return {type:"AI", pin, sendValue:0};
         case "umk_1774714197073":
           return {
             type:"PM",
             pin,
-            initVal: cell.Parameters.ic.Value[0][0],
-            freq: cell.Parameters.freq.Value[0][0],
-            res: cell.Parameters.res.Value[0][0],
+            initVal: math.number(cell.Parameters.ic.Value).get([0,0]),
+            freq: math.number(cell.Parameters.freq.Value).get([0,0]),
+            res: math.number(cell.Parameters.res.Value).get([0,0]),
             ch: this.lastPWMChannel++,
-            sendValue: math.evaluate(cell.Parameters.ic.Value).toArray()[0][0]
+            sendValue: math.number(cell.Parameters.ic.Value).get([0,0])
           };
         case "umk_1774714206020":
           return {type:"EN", pins, sendValue:0};
@@ -172,7 +174,7 @@ async clearBuffers() {
           return null;     
       }
     } catch (error) {
-      //console.error(`Error getting pin config for cell ${cell.id}:`, error);
+      console.error(`Error getting pin config for cell ${cell.id}:`, error);
       return null;
     }
   }

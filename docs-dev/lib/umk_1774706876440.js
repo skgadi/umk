@@ -8,7 +8,7 @@ class umk_1774706876440 extends umk_model {
     };
   }
   Evaluate() {
-    this.portDetails.sendValue = this.inputs[0].get([0,0]) ? 1 : 0;
+    this.portDetails.sendValue = this.inputs[0].get([0,0]) ? true : false;
   }
   Details() {
     return "<center><i class='fab fa-usb'></i><br/> " + this.Parameters.port.Value[0][0] + "<br/> DO: " + this.Parameters.pin.Value[0][0] + "</center>";

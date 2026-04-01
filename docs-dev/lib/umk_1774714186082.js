@@ -35,13 +35,13 @@ class umk_1774714186082 extends umk_model {
           },
           "Dimension": "Scalar",
           "Type": "Options",
-          "Options" : Object.fromEntries([2, 4, 5, 13, 14, 15, 16, 17,18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39]
+          "Options" : Object.fromEntries([2, 4, 13, 14, 15, 25, 26, 27, 32, 33, 34, 35, 36, 39]
             .map((ele)=>[String(ele), {
               "en-us": "GPIO"+ele,
               "es-mx": "GPIO"+ele
             }])),
           "Value": [
-            ['5']
+            ['25']
           ]
         }
       },
