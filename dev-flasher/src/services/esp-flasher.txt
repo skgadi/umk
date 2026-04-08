@@ -1,0 +1,19 @@
+import type { FlashFreqValues, FlashModeValues, FlashOptions, FlashSizeValues } from "esptool-js";
+
+const getFlashOptions = (firmwareData: Uint8Array, callBack: (fileIndex: number, written: number, total: number) => void): FlashOptions => {
+
+const flashOptions: FlashOptions = {
+      fileArray: [{ data: firmwareData, address: 0x1000 }],
+      flashMode: "dio" as FlashModeValues,
+      flashFreq: "40m" as FlashFreqValues,
+      flashSize: "4MB" as FlashSizeValues,
+      eraseAll: false,
+      compress: true,
+      reportProgress: (fileIndex, written, total) => {
+        callBack(fileIndex, written, total);
+      },
+    };
+    return flashOptions;
+};
+
+const 
