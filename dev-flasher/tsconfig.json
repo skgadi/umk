@@ -1,0 +1,8 @@
+{
+  "extends": "./.quasar/tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "w3c-web-serial"
+    ]
+  }
+}
