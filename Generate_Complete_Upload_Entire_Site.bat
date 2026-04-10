@@ -25,7 +25,9 @@ mkdir .\internet\static\app\latest\sinks\css
 copy /y .\docs-dev\sinks\*.min.* .\internet\static\app\latest\sinks
 copy /y .\docs-dev\sinks\css\*.min.css .\internet\static\app\latest\sinks\css
 
-
+rem Add flasher files
+mkdir .\internet\static\app\latest\flasher
+copy /y .\docs-dev\flasher\ .\internet\static\app\latest\flasher /y/s/q/i
 
 rem generate the hugo files (static website)
 echo Generating the hugo files... Please wait. This may take a while.
