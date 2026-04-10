@@ -38,8 +38,11 @@ xcopy .\dev-flasher\dist\spa .\internet\static\app\latest\flasher /y/s/q/i
 rem generate the hugo files (static website)
 cd .\internet
 hugo --destination "../docs/" --cleanDestinationDir --minify --quiet 
-
 cd ..
+
+rem create .nojekyll file to prevent github pages from ignoring files starting with underscore
+copy NUL .\docs\.nojekyll
+
 
 git add .
 git commit -am "Generating and pushing into server."
