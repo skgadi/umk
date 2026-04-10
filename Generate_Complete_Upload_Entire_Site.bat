@@ -1,4 +1,5 @@
 rem rmdir /s/q .\docs
+
 rmdir /s/q .\internet\static\app\latest
 xcopy .\docs-dev\dependencies .\internet\static\app\latest\dependencies /y/s/q/i
 xcopy .\docs-dev\css\fonts .\internet\static\app\latest\css\fonts /y/s/q/i
@@ -22,6 +23,20 @@ mkdir .\internet\static\app\latest\sinks\css
 copy /y .\docs-dev\sinks\*.min.* .\internet\static\app\latest\sinks
 copy /y .\docs-dev\sinks\css\*.min.css .\internet\static\app\latest\sinks\css
 
+rem generate the flasher files
+cd dev-flasher
+@echo off
+call yarn install
+call yarn build
+cd ..
+
+rem copy the flasher files to the website .\internet\static\flasher\latest
+rmdir /s/q .\internet\static\flasher\latest
+mkdir .\internet\static\flasher\latest
+xcopy .\dev-flasher\dist\spa .\internet\static\flasher\latest /y/s/q/i
+
+
+rem generate the hugo files (static website)
 cd .\internet
 hugo --destination "../docs/" --cleanDestinationDir --minify --quiet 
 
