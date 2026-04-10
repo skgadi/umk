@@ -39,6 +39,9 @@ rem create .nojekyll file to prevent github pages from ignoring files starting w
 copy NUL .\docs\.nojekyll
 
 
+rem make the app pwa by running python script
+python .\make-app-pwa.py
+
 git add .
 git commit -am "Generating and pushing into server."
 git push

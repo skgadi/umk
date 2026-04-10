@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-cache-cf7e05811a';
+const CACHE_NAME = 'pwa-cache-af2e75a0f3';
 const URLS_TO_CACHE = [
   "/.nojekyll",
   "/404.html",
