@@ -51,7 +51,7 @@ export default defineConfig((ctx) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: '/app/latest/flasher/',
+      publicPath: 'app/latest/flasher/',
       // analyze: true,
       // env: {},
       // rawDefine: {}

@@ -136,6 +136,10 @@ const hardwareVue = new Vue({
         return false;
       }
       return true;
-    }
+    },
+     flashFirmware() {
+      // redirect to the relative flasher on a new window
+      window.open("./flasher", "_blank");
+     }
   },
 });

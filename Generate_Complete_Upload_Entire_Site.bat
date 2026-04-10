@@ -1,5 +1,7 @@
-rem rmdir /s/q .\docs
+rem generate the flasher files and place them in the dev-docs folder
+call .\build-uyamak-flasher.cmd
 
+rem copy the files from the dev-docs folder to the internet folder
 rmdir /s/q .\internet\static\app\latest
 xcopy .\docs-dev\dependencies .\internet\static\app\latest\dependencies /y/s/q/i
 xcopy .\docs-dev\css\fonts .\internet\static\app\latest\css\fonts /y/s/q/i
@@ -23,19 +25,10 @@ mkdir .\internet\static\app\latest\sinks\css
 copy /y .\docs-dev\sinks\*.min.* .\internet\static\app\latest\sinks
 copy /y .\docs-dev\sinks\css\*.min.css .\internet\static\app\latest\sinks\css
 
-rem generate the flasher files
-cd dev-flasher
-@echo off
-call yarn install
-call yarn build
-cd ..
-
-rem copy the flasher files to the website .\internet\static\app\latest\flasher
-mkdir .\internet\static\app\latest\flasher
-xcopy .\dev-flasher\dist\spa .\internet\static\app\latest\flasher /y/s/q/i
 
 
 rem generate the hugo files (static website)
+echo Generating the hugo files... Please wait. This may take a while.
 cd .\internet
 hugo --destination "../docs/" --cleanDestinationDir --minify --quiet 
 cd ..
