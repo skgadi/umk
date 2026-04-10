@@ -1,15 +1,29 @@
 <template>
   <template v-if="isSerialSupported">
-    <div class="column items-center q-pa-md">
+    <div class="column items-center q-pa-md" style="max-width: 800px; margin: 0 auto">
       <div class="text-h5">Welcome to the Flasher for Uyamak</div>
       <p class="text-caption text-italic">
         This tool allows you to flash firmware onto your Uyamak devices using the Web Serial API.
         Please connect a compatible device and select it to get started.
       </p>
+      <div class="text-caption" style="text-align: justify">
+        Supported devices include those based on the <code>ESP32-D0WD</code>,
+        <code>ESP32-D2WD</code>, and <code>ESP32-V3</code> chips. Please ensure your device is in
+        bootloader mode before attempting to flash. To enter bootloader mode, typically you need to
+        hold the "<code>BOOT</code>" button while pressing the "<code>RESET</code>" button on your
+        device, then release the "<code>RESET</code>" button first. Refer to your device's
+        documentation for specific instructions.
+        <ol>
+          <li>Connect your ESP32 device to your computer via USB.</li>
+          <li>Select the device by clicking on button "<code>Select a device</code>".</li>
+          <li>Click "<code>Fetch Device Info</code>" to verify the connection.</li>
+          <li>Click "<code>Proceed to Flashing</code>" to start the flashing process.</li>
+        </ol>
+      </div>
       <q-btn
+        push
         no-caps
-        outline
-        rounded
+        color="primary"
         v-if="!selectedPort"
         label="Select a device"
         icon="mdi-serial-port"
@@ -91,6 +105,7 @@
 <script setup lang="ts">
 import LogWindow from 'src/components/Flasher/LogWindow.vue';
 
+//import firmwareEsp32D0wdBlinkPin4 from 'assets/firmware-bins/esp32-d0wd-blink-pin-4.bin?url';
 import firmwareEsp32D0wd from 'assets/firmware-bins/esp32-d0wd.bin?url';
 import firmwareEsp32D2wd from 'assets/firmware-bins/esp32-d0wd.bin?url'; // Test if the same firmware works for both D0WD and D2WD variants
 import firmwareEsp32V3 from 'assets/firmware-bins/esp32-d0wd.bin?url'; // Test if the same firmware works for ESP32-V3 variant as well
@@ -151,9 +166,6 @@ const getChipName = async () => {
       alert('Loader not initialized. Refresh the page and select a device.');
       return;
     }
-    alert(
-      'Please press the BOOT button on your device to enter flashing mode, then click OK to continue.',
-    );
     chipName.value = await espLoader.value.main();
   } catch (error) {
     console.warn('Error fetching chip name:', error);
@@ -283,7 +295,6 @@ const flashDevice = async () => {
         console.log(`Progress: ${((written / total) * 100).toFixed(1)}%`);
       },
     };
-
     await espLoader.value.writeFlash(flashOptions);
     await espLoader.value.after('hard_reset');
     await closeTransporterAndSerialPort();
@@ -302,7 +313,7 @@ onMounted(async () => {
   const newAcceptableChips: { chipNameStartsWith: string; binData: Uint8Array }[] = [
     {
       chipNameStartsWith: 'ESP32-D0WD',
-      binData: await loadUnit8ArrayFromFile(firmwareEsp32D0wd),
+      binData: await loadUnit8ArrayFromFile(firmwareEsp32D0wd), //firmwareEsp32D0wd),
     },
     {
       chipNameStartsWith: 'ESP32-D2WD',

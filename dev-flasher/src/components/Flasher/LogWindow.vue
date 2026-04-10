@@ -7,7 +7,7 @@
       height: 500px;
       width: 100%;
       background-color: cadetblue;
-      color: white;
+      color: #001f3f;
       padding: 8px;
       border-radius: 8px;
       font-family: monospace;
