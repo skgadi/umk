@@ -30,10 +30,9 @@ call yarn install
 call yarn build
 cd ..
 
-rem copy the flasher files to the website .\internet\static\flasher\latest
-rmdir /s/q .\internet\static\flasher\latest
-mkdir .\internet\static\flasher\latest
-xcopy .\dev-flasher\dist\spa .\internet\static\flasher\latest /y/s/q/i
+rem copy the flasher files to the website .\internet\static\app\latest\flasher
+mkdir .\internet\static\app\latest\flasher
+xcopy .\dev-flasher\dist\spa .\internet\static\app\latest\flasher /y/s/q/i
 
 
 rem generate the hugo files (static website)
