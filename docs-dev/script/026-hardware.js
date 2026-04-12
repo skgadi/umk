@@ -139,7 +139,7 @@ const hardwareVue = new Vue({
     },
      flashFirmware() {
       // redirect to the relative flasher on a new window
-      window.open("./flasher", "_blank");
+      window.open("https://umk.skgadi.com/app/latest/flasher/#/", "_blank");
      }
   },
 });
