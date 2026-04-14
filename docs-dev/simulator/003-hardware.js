@@ -220,7 +220,7 @@ async clearBuffers() {
     }
     return this.connectedPorts[idx];
   }
-  async openAPort(friendlyName, options={ baudRate: 921600, dataBits: 8, stopBits: 1, parity: "none" }) {
+  async openAPort(friendlyName, options={ baudRate: 115200, dataBits: 8, stopBits: 1, parity: "none" }) {
     const port = this.getAPort(friendlyName);
     if (port) {
       return await port.open(options);

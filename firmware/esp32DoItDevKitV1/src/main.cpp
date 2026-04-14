@@ -14,7 +14,7 @@ void setup() {
                     // the task. */
                 NULL); /* Task handle. */
 
-    Serial.begin(921600);
+    Serial.begin(115200);
 
     // delay(10000);
 }
