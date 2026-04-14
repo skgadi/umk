@@ -146,10 +146,11 @@ const onSelectDevice = async () => {
     await closeTransporterAndSerialPort(); // Ensure any previously opened port is closed before selecting a new one
     selectedPort.value = null; // Reset selected port
     // Optionally, filter by USB vendor/product IDs
-    const portFilters = [
-      { usbVendorId: 0x10c4, usbProductId: 0xea60 }, // Example: Silicon Labs CP210x
-    ];
-    selectedPort.value = await navigator.serial.requestPort({ filters: portFilters });
+    //const portFilters = [
+    //  { usbVendorId: 0x10c4, usbProductId: 0xea60 }, // Example: Silicon Labs CP210x
+    //];
+    //selectedPort.value = await navigator.serial.requestPort({ filters: portFilters });
+    selectedPort.value = await navigator.serial.requestPort();
   } catch (error) {
     alert('Device selection was cancelled or failed. Please try again.');
     console.warn('Error selecting device:', error);
