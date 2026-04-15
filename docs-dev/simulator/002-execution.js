@@ -176,7 +176,21 @@ const exec = {
     this.prevT = performance.now();
     //console.log("Init");
     this.setRemainingSteps();
-    await gskSerialPort.initHardwareForSimulation();
+
+    const hardwareInitResult = await gskSerialPort.initHardwareForSimulation();
+    if (hardwareInitResult.isError) {
+      postMessage({
+        error: {
+          desc: "simErr",
+          log: hardwareInitResult.message,
+          cid: hardwareInitResult.cid
+        }
+      });
+
+      //console.log(this);
+      this.End();
+      //throw ("Error in hardware initialization: " + hardwareInitResult.message);
+    }
   },
   End: function () {
     this.cells.forEach(function (model) {

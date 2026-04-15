@@ -25,7 +25,7 @@ async clearBuffers() {
 
       let nullCount = 0;
       while (nullCount < 5) {
-        const result = await this.readWithTimeout(portDetail.reader, 100);
+        const result = await this.readWithTimeout(portDetail.reader, 10);
         if (result === null) {
           nullCount++;
         } else {
@@ -34,7 +34,7 @@ async clearBuffers() {
       }
       //console.log(`Finished clearing buffer for port ${portDetail.port}`);
     } catch (error) {
-      console.error(`Error clearing buffers for port ${portDetail.port}:`, error);
+      //console.error(`Error clearing buffers for port ${portDetail.port}:`, error);
     }
   });
 
@@ -77,7 +77,7 @@ async clearBuffers() {
         const binToSend = cbor.encode(sendValue);
         //console.log("Binary to send for port " + pinDetailsPerPort.port + ": ", binToSend.toHex());
         await pinDetailsPerPort.writer.write(binToSend);
-        const value = await this.readWithTimeout(pinDetailsPerPort.reader, 1000); // Attempt to read with a timeout to avoid hanging
+        const value = await this.readWithTimeout(pinDetailsPerPort.reader, 100); // Attempt to read with a timeout to avoid hanging
         //console.log("Received value from port " + pinDetailsPerPort.port + ": ", value.toHex());
         const decodedValue = cbor.decode(value); // error may occur here if value is null or not properly formatted, which is why we have the try-catch
         // Assuming the decoded value is an array of values corresponding to the config order
@@ -88,6 +88,7 @@ async clearBuffers() {
           });
         }        
       } catch (error) {
+        await this.initHardwareForSimulation(); // Re-initialize hardware to recover from error state
         //console.log(`Error applying read/write for cell with port ${pinDetailsPerPort.port}:`, error);
       }
     }
@@ -149,7 +150,7 @@ async clearBuffers() {
       } catch (error) {
         //console.error(`Error parsing pins for cell ${cell.id}:`, error);
       }
-      console.log(`Getting pin config for cell ${cell.id} with type ${cell.constructor.name}, pin: ${pin}, pins: ${pins}`);
+      //console.log(`Getting pin config for cell ${cell.id} with type ${cell.constructor.name}, pin: ${pin}, pins: ${pins}`);
 
       switch (cell.id) {
         case "umk_1774369913335":
@@ -174,7 +175,7 @@ async clearBuffers() {
           return null;     
       }
     } catch (error) {
-      console.error(`Error getting pin config for cell ${cell.id}:`, error);
+      //console.error(`Error getting pin config for cell ${cell.id}:`, error);
       return null;
     }
   }
@@ -183,7 +184,7 @@ async clearBuffers() {
     this.pinDetails.forEach(portDetail => {
       const port = this.getAPort(portDetail.port);
       if (!port) {
-        console.error(`Port ${portDetail.port} not found among connected ports.`);
+        //console.warn(`Port ${portDetail.port} not found among connected ports.`);
         return;
       }
       portDetail.writer = port.writable.getWriter();
@@ -197,12 +198,12 @@ async clearBuffers() {
         const { sendValue, recValue, ...rest } = cfg;
         return rest;
       });
-      console.log("Configuration to send for port " + portDetail.port + ": ", config);
+      //console.log("Configuration to send for port " + portDetail.port + ": ", config);
       const binToSend = cbor.encode(config);
-      console.log("Binary to send for port " + portDetail.port + ": ", binToSend.toHex());
+      //console.log("Binary to send for port " + portDetail.port + ": ", binToSend.toHex());
       await portDetail.writer.write(binToSend);
       const readValue = await this.readWithTimeout(portDetail.reader, 1000); // Attempt to read with a timeout to avoid hanging
-      console.log("Received value from port " + portDetail.port + ": ", readValue);
+      //console.log("Received value from port " + portDetail.port + ": ", readValue);
     }
   }
 
@@ -258,28 +259,26 @@ async clearBuffers() {
       this.preparePinDetails();
       //console.log("Pin details prepared:", JSON.stringify(this.pinDetails));
     } catch (error) {
-      console.error("Error initializing hardware for updated cells:", error);
+      console.warn("Error initializing hardware for updated cells:", error);
     }
   }
   async initHardwareForSimulation() {
-    await this.openRequiredPorts();
-    this.prepareReadersAndWriters();
-    await this.clearBuffers();
-    console.log("Initializing hardware for simulation...");
-    await this.writeAllConfiguration();
+    try {
+      await this.openRequiredPorts();
+      this.prepareReadersAndWriters();
+      await this.clearBuffers();
+      //console.log("Initializing hardware for simulation...");
+      await this.writeAllConfiguration();
+      return {isError: false};
+    } catch (error) {
+      //console.warn("Error during hardware initialization for simulation:", error);
+      return {isError: true, message : error, cid: this.cellsWithHardware.length > 0 ? this.cellsWithHardware[0].cid : null};
+    }
   }
   async openRequiredPorts() {
-    try {
-      await this.setConnectedPorts();
-    } catch (error) {
-      console.error("Error setting connected ports:", error);
-    }
+    await this.setConnectedPorts();
     for (const portDetails of this.pinDetails) {
-      try {
-        await this.openAPort(portDetails.port);
-      } catch (error) {
-        console.error(`Error opening port ${portDetails.port}:`, error);
-      }
+      await this.openAPort(portDetails.port);
     }
   }
   async closeRequiredPorts() {
@@ -289,7 +288,7 @@ async clearBuffers() {
         await this.closeAPort(portDetails.port);
         //console.log(`Port ${portDetails.port} closed successfully.`);
       } catch (error) {
-        console.error(`Error closing port ${portDetails.port}:`, error);
+        console.warn(`Error closing port ${portDetails.port}:`, error);
       }
     }
   }
