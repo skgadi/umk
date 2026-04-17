@@ -52,6 +52,19 @@ def create_manifest():
                 "sizes": "512x512",
                 "type": "image/png"
             }
+        ],
+        "screenshots": [
+            {
+                "src": "/images/screenshot-wide.png",
+                "sizes": "1280x720",
+                "type": "image/png",
+                "form_factor": "wide"
+            },
+            {
+                "src": "/images/screenshot-mobile.png",
+                "sizes": "720x1280",
+                "type": "image/png"
+            }
         ]
     }
 
@@ -69,18 +82,17 @@ def create_sw(files):
 const CACHE_NAME = "{cache_name}";
 const FILES = {json.dumps(files, indent=2)};
 
-// INSTALL (SAFE)
+// INSTALL
 self.addEventListener("install", event => {{
   event.waitUntil(
     caches.open(CACHE_NAME).then(async cache => {{
       for (const url of FILES) {{
         try {{
-          const response = await fetch(url);
-          if (!response.ok) throw new Error("Bad response");
-          await cache.put(url, response.clone());
-          console.log("Cached:", url);
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("Bad response");
+          await cache.put(url, res.clone());
         }} catch (err) {{
-          console.warn("Skipped:", url, err);
+          console.warn("Skipped:", url);
         }}
       }}
     }})
@@ -99,12 +111,26 @@ self.addEventListener("activate", event => {{
     )
   );
   self.clients.claim();
+
+  // Notify clients app is ready
+  self.clients.matchAll().then(clients => {{
+    clients.forEach(client => {{
+      client.postMessage({{ type: "READY" }});
+    }});
+  }});
 }});
 
-// FETCH
+// FETCH (FIXED)
 self.addEventListener("fetch", event => {{
   const req = event.request;
 
+  // ✅ Only GET
+  if (req.method !== "GET") return;
+
+  // ✅ Only http/https
+  if (!req.url.startsWith("http")) return;
+
+  // Navigation
   if (req.mode === "navigate") {{
     event.respondWith(
       fetch(req)
@@ -118,9 +144,12 @@ self.addEventListener("fetch", event => {{
     return;
   }}
 
+  // Assets
   event.respondWith(
     caches.match(req).then(res => {{
       return res || fetch(req).then(net => {{
+        if (!net || net.status !== 200) return net;
+
         return caches.open(CACHE_NAME).then(c => {{
           c.put(req, net.clone());
           return net;
@@ -152,7 +181,26 @@ def inject():
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register('/service-worker.js').then(reg => {
+
+      // READY MESSAGE
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'READY') {
+          alert("✅ App is ready for offline use!");
+        }
+      });
+
+      // UPDATE DETECTED
+      reg.onupdatefound = () => {
+        const newWorker = reg.installing;
+        newWorker.onstatechange = () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            alert("🔄 New version available. Refresh to update.");
+          }
+        };
+      };
+
+    });
   });
 }
 </script>
@@ -177,4 +225,4 @@ if __name__ == "__main__":
     print("Injecting into HTML...")
     inject()
 
-    print("✅ DONE! Your site is now a PWA.")
+    print("✅ DONE! Your site is now a production-ready PWA.")

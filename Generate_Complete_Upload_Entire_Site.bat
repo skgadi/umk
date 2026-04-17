@@ -39,7 +39,7 @@ rem create .nojekyll file to prevent github pages from ignoring files starting w
 copy NUL .\docs\.nojekyll
 
 rem Make the elements in docs folder as PWA
-python .\make-docs-pwa.py
+rem python .\make-docs-pwa.py
 
 
 rem Add, commit and push the changes to the server
