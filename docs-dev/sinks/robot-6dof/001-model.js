@@ -65,7 +65,7 @@ function init() {
 
   scene.add(dae);
 
-  particleLight = new THREE.Mesh(new THREE.SphereBufferGeometry(4, 8, 8), new THREE.MeshBasicMaterial({
+  particleLight = new THREE.Mesh(new THREE.THREE.Mesh((4, 8, 8), new THREE.MeshBasicMaterial({
     color: 0xffffff
   }));
   scene.add(particleLight);
