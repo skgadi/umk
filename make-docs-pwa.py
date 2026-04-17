@@ -5,8 +5,8 @@ import hashlib
 
 DOCS_DIR = Path("./docs")
 
-APP_NAME = "My Hugo App"
-SHORT_NAME = "HugoApp"
+APP_NAME = "Uyamak"
+SHORT_NAME = "Umk"
 
 IGNORE_EXT = {".map", ".tmp"}
 

@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "pwa-87867e11cf";
+const CACHE_NAME = "pwa-c5ca3e7da5";
 const FILES = [
   "/.nojekyll",
   "/404.html",
@@ -3016,7 +3016,6 @@ const FILES = [
   "/images/umk-logo.png",
   "/index.html",
   "/index.xml",
-  "/manifest.json",
   "/script/config.min.js",
   "/script/config/000-google-analytics.js",
   "/script/config/001-firebase-config.js",
@@ -3028,7 +3027,6 @@ const FILES = [
   "/script/index/001-funcs.js",
   "/script/index/002-carousel.js",
   "/script/index/003-scroll.js",
-  "/service-worker.js",
   "/sitemap.xml",
   "/tags/index.xml"
 ];

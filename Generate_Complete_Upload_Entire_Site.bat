@@ -38,7 +38,11 @@ cd ..
 rem create .nojekyll file to prevent github pages from ignoring files starting with underscore
 copy NUL .\docs\.nojekyll
 
+rem Make the elements in docs folder as PWA
+python .\make-docs-pwa.py
 
+
+rem Add, commit and push the changes to the server
 
 git add .
 git commit -am "Generating and pushing into server."
