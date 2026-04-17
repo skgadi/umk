@@ -1,1 +1,30 @@
-<!doctype html><html><head><title>HTML Redirect</title><meta http-equiv=refresh content="1; url = latest"></head><body><h1 style=text-align:center;color:green>Uyamak editor</h1><p style=text-align:center>If your browser supports Refresh, you'll be redirected to the app. If it takes longer, please <a href=/latest/>click here</a>.</p></body></html>
+<!doctype html><html><head><title>HTML Redirect</title><meta http-equiv=refresh content="1; url = latest"><link rel="manifest" href="/manifest.json">
+</head><body><h1 style=text-align:center;color:green>Uyamak editor</h1><p style=text-align:center>If your browser supports Refresh, you'll be redirected to the app. If it takes longer, please <a href=/latest/>click here</a>.</p>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(reg => {
+
+      // READY MESSAGE
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'READY') {
+          alert("✅ App is ready for offline use!");
+        }
+      });
+
+      // UPDATE DETECTED
+      reg.onupdatefound = () => {
+        const newWorker = reg.installing;
+        newWorker.onstatechange = () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            alert("🔄 New version available. Refresh to update.");
+          }
+        };
+      };
+
+    });
+  });
+}
+</script>
+
+</body></html>

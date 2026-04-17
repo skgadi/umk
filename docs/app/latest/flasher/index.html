@@ -6,4 +6,33 @@
   <link rel="modulepreload" crossorigin href="/app/latest/flasher/assets/key-composition-BVdZMWra.js">
   <link rel="modulepreload" crossorigin href="/app/latest/flasher/assets/History-Cy7NOB4Q.js">
   <link rel="stylesheet" crossorigin href="/app/latest/flasher/assets/index-D52lpbxU.css">
-</head><body><div id=q-app></div></body></html>
+<link rel="manifest" href="/manifest.json">
+</head><body><div id=q-app></div>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(reg => {
+
+      // READY MESSAGE
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'READY') {
+          alert("✅ App is ready for offline use!");
+        }
+      });
+
+      // UPDATE DETECTED
+      reg.onupdatefound = () => {
+        const newWorker = reg.installing;
+        newWorker.onstatechange = () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            alert("🔄 New version available. Refresh to update.");
+          }
+        };
+      };
+
+    });
+  });
+}
+</script>
+
+</body></html>

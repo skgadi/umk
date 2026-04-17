@@ -68,7 +68,7 @@ def create_manifest():
         ]
     }
 
-    with open(DOCS_DIR / "manifest.json", "w") as f:
+    with open(DOCS_DIR / "manifest.json", "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
 # -----------------------
@@ -160,7 +160,7 @@ self.addEventListener("fetch", event => {{
 }});
 """
 
-    with open(DOCS_DIR / "service-worker.js", "w") as f:
+    with open(DOCS_DIR / "service-worker.js", "w", encoding="utf-8") as f:
         f.write(sw)
 
 # -----------------------

@@ -1,2 +1,31 @@
-<html><head><title>Not ready</title></head><body><div style=max-width:500px;margin:auto;text-align:justify;font-size:24px><p>Oops! It looks like you've stumbled upon a part of our website that is still under construction. We apologize for the inconvenience. It's possible that the page you're trying to access is temporarily missing or undergoing development. Please check back in a few days to see if it's available. In the meantime, if you need assistance or have any questions, feel free to contact our team for more information. Thank you for your patience and understanding.</p><div><a style=float:right href=https://skgadi.com/contact/ target=_blank>Contact page</a>
-<a style=float:left href=/>Home</a></div></div></body></html>
+<html><head><title>Not ready</title><link rel="manifest" href="/manifest.json">
+</head><body><div style=max-width:500px;margin:auto;text-align:justify;font-size:24px><p>Oops! It looks like you've stumbled upon a part of our website that is still under construction. We apologize for the inconvenience. It's possible that the page you're trying to access is temporarily missing or undergoing development. Please check back in a few days to see if it's available. In the meantime, if you need assistance or have any questions, feel free to contact our team for more information. Thank you for your patience and understanding.</p><div><a style=float:right href=https://skgadi.com/contact/ target=_blank>Contact page</a>
+<a style=float:left href=/>Home</a></div></div>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(reg => {
+
+      // READY MESSAGE
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'READY') {
+          alert("✅ App is ready for offline use!");
+        }
+      });
+
+      // UPDATE DETECTED
+      reg.onupdatefound = () => {
+        const newWorker = reg.installing;
+        newWorker.onstatechange = () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            alert("🔄 New version available. Refresh to update.");
+          }
+        };
+      };
+
+    });
+  });
+}
+</script>
+
+</body></html>
