@@ -8,21 +8,21 @@ const exec = {
     steps: 1,
     sOEvery: 1,
     pckSize: 2000,
-    it: "fe" //Integreation type
+    it: "fe", //Integreation type
   },
   t: 0, //Current simulation time
   k: 0, //step count
   s4Out: 0, //Steps for out
   prevT: 0, // time in milliseconds
   isCont: true, // Is it set to run continously?
-  inPrg: false, // Is simulation in progress? 
+  inPrg: false, // Is simulation in progress?
   rSteps: 0, // Number of steps remaining to run
   results: [], // results are stored temporarily here
   recAck: true, //Received acknowledgement from the main thread
   setSimSettings: function (settings) {
     this.simSettings.hs = settings.h / 1000;
     this.simSettings.h = settings.h;
-    this.simSettings.T = (settings.T < 0) ? Infinity : settings.T;
+    this.simSettings.T = settings.T < 0 ? Infinity : settings.T;
     this.simSettings.realtime = settings.realtime;
     this.simSettings.steps = settings.steps;
     this.simSettings.sOEvery = settings.sOEvery - 1;
@@ -39,10 +39,14 @@ const exec = {
       if (!!cellVal.Parameters) {
         let params = Object.keys(cellVal.Parameters);
         for (let i = 0; i < params.length; i++) {
-          if (cellVal.Parameters[params[i]].Type === "Complex" ||
+          if (
+            cellVal.Parameters[params[i]].Type === "Complex" ||
             cellVal.Parameters[params[i]].Type === "Real" ||
-            cellVal.Parameters[params[i]].Type === "Integer") {
-            cellVal.Parameters[params[i]].Value = math.evaluate(cellVal.Parameters[params[i]].Value);
+            cellVal.Parameters[params[i]].Type === "Integer"
+          ) {
+            cellVal.Parameters[params[i]].Value = math.evaluate(
+              cellVal.Parameters[params[i]].Value,
+            );
           }
         }
       }
@@ -92,7 +96,8 @@ const exec = {
         //console.log(model.cid);
         for (let j = 0; j < model.TerminalsIn.value; j++) {
           //console.log(model.sIndexes);
-          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
+          model.inputs[j] =
+            this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         model.beforeEC(this.t, this.k, this.simSettings);
       }
@@ -103,7 +108,8 @@ const exec = {
         //console.log(model.cid);
         for (let j = 0; j < model.TerminalsIn.value; j++) {
           //console.log(model.sIndexes);
-          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
+          model.inputs[j] =
+            this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         //console.log(model.cid);
         model.Evaluate(this.t, this.k, this.simSettings);
@@ -121,7 +127,7 @@ const exec = {
       if (store) {
         this.results.push({
           t: this.t,
-          o: tempOut
+          o: tempOut,
         });
       }
       for (let i = 0; i < this.cells.length; i++) {
@@ -129,7 +135,8 @@ const exec = {
         //console.log(model.cid);
         for (let j = 0; j < model.TerminalsIn.value; j++) {
           //console.log(model.sIndexes);
-          model.inputs[j] = this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
+          model.inputs[j] =
+            this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         model.afterEC(this.t, this.k, this.simSettings);
       }
@@ -139,11 +146,11 @@ const exec = {
         error: {
           desc: "simErr",
           log: e,
-          cid: model.cid
-        }
+          cid: model.cid,
+        },
       });
-      this.End();
-      throw ("Error in simulation");
+      await this.End();
+      throw "Error in simulation";
     } /**/
     this.t += this.simSettings.hs;
     this.k++;
@@ -161,11 +168,11 @@ const exec = {
           error: {
             desc: "simErr",
             log: e,
-            cid: model.cid
-          }
+            cid: model.cid,
+          },
         });
         that.End();
-        throw ("Error in simulation");
+        throw "Error in simulation";
       }
       //console.log(model.id);
       //console.log(model.isOut);
@@ -183,25 +190,26 @@ const exec = {
         error: {
           desc: "simErr",
           log: hardwareInitResult.message,
-          cid: hardwareInitResult.cid
-        }
+          cid: hardwareInitResult.cid,
+        },
       });
 
       //console.log(this);
-      this.End();
+      await this.End();
       //throw ("Error in hardware initialization: " + hardwareInitResult.message);
     }
   },
-  End: function () {
+  End: async function () {
     this.cells.forEach(function (model) {
       model.End();
     });
     this.inPrg = false;
     //console.log(this.t);
     postMessage({
-      ended: true
+      ended: true,
     });
-    gskSerialPort.closeRequiredPorts();
+    await gskSerialPort.applyReadWrite();
+    await gskSerialPort.closeRequiredPorts();
   },
   loop: async function (N = null) {
     let w = 0; //wait time in milli seconds;
@@ -212,7 +220,10 @@ const exec = {
       } else {
         if (this.simSettings.realtime) {
           let maxStepsPerSecond = 1 / this.simSettings.hs;
-          N = Math.max(0, Math.min(this.simSettings.pckSize, maxStepsPerSecond, this.rSteps));
+          N = Math.max(
+            0,
+            Math.min(this.simSettings.pckSize, maxStepsPerSecond, this.rSteps),
+          );
           w = this.simSettings.h;
         } else {
           N = Math.min(this.simSettings.pckSize, this.rSteps);
@@ -228,7 +239,7 @@ const exec = {
     //console.log("N: " + N);
     for (let i = 0; i < N; i++) {
       //if (this.simSettings.realtime) {
-      while ((performance.now() - this.prevT) < w) {}
+      while (performance.now() - this.prevT < w) {}
       this.prevT = performance.now();
       //console.log(this.prevT);
       //}
@@ -238,13 +249,13 @@ const exec = {
     //console.log(this.results.length);
     if (!!this.results.length) {
       postMessage({
-        put: this.results
+        put: this.results,
       });
       this.results = [];
-      this.recAck=false;
+      this.recAck = false;
     }
     if (this.rSteps <= 0) {
-      this.End();
+      await this.End();
     } else {
       //console.log("not eded yet");
       //console.log(this.isCont);
@@ -257,7 +268,8 @@ const exec = {
     }
   },
   setRemainingSteps: function () {
-    this.rSteps = Math.ceil((this.simSettings.T - this.t) / this.simSettings.hs) + 1;
+    this.rSteps =
+      Math.ceil((this.simSettings.T - this.t) / this.simSettings.hs) + 1;
     //console.log(this.simSettings);
     //console.log(this.rSteps);
   },
@@ -286,7 +298,7 @@ const exec = {
   pause: function () {
     this.isCont = false;
     postMessage({
-      paused: true
+      paused: true,
     });
   },
   steps: async function () {
@@ -295,14 +307,14 @@ const exec = {
     }
     this.isCont = false;
     postMessage({
-      paused: true
+      paused: true,
     });
     setTimeout(async () => {
       await this.loop(this.simSettings.steps);
     });
     //this.loop(this.simSettings.steps);
   },
-  recData: function() {
+  recData: function () {
     //console.log('Received acknowledgement');
     this.recAck = true;
     if (this.isCont && this.recAck) {
@@ -310,5 +322,5 @@ const exec = {
         await this.loop();
       });
     }
-  }
+  },
 };
