@@ -3033,59 +3033,83 @@ const FILES = [
   "/tags/index.xml"
 ];
 
-// INSTALL
+// INSTALL (progress + safe caching)
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async cache => {
+      let completed = 0;
+
       for (const url of FILES) {
         try {
           const res = await fetch(url);
-          if (!res.ok) throw new Error("Bad response");
+          if (!res.ok || res.status === 206) throw new Error();
           await cache.put(url, res.clone());
-        } catch (err) {
+        } catch (e) {
           console.warn("Skipped:", url);
         }
+
+        completed++;
+
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+          client.postMessage({
+            type: "CACHE_PROGRESS",
+            done: completed,
+            total: FILES.length
+          });
+        });
       }
+
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({ type: "CACHE_COMPLETE" });
+      });
     })
   );
+
   self.skipWaiting();
 });
 
-// ACTIVATE
+// ACTIVATE (cleanup + update notify)
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
+    caches.keys().then(async keys => {
+      await Promise.all(
         keys.filter(k => k !== CACHE_NAME)
             .map(k => caches.delete(k))
-      )
-    )
-  );
-  self.clients.claim();
+      );
 
-  // Notify clients app is ready
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => {
-      client.postMessage({ type: "READY" });
-    });
-  });
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({ type: "NEW_VERSION" });
+      });
+    })
+  );
+
+  self.clients.claim();
 });
 
-// FETCH (FIXED)
+// FETCH (SAFE)
 self.addEventListener("fetch", event => {
   const req = event.request;
 
-  // ✅ Only GET
+  // Ignore non-GET
   if (req.method !== "GET") return;
 
-  // ✅ Only http/https
-  if (!req.url.startsWith("http")) return;
+  const url = new URL(req.url);
+
+  // Ignore unsupported schemes
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
+  // Optional: restrict to same origin
+  if (url.origin !== self.location.origin) return;
 
   // Navigation
   if (req.mode === "navigate") {
     event.respondWith(
       fetch(req)
         .then(res => {
+          if (res.status === 206) return res;
           const copy = res.clone();
           caches.open(CACHE_NAME).then(c => c.put(req, copy));
           return res;
@@ -3095,11 +3119,13 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // Assets
+  // Static assets
   event.respondWith(
     caches.match(req).then(res => {
-      return res || fetch(req).then(net => {
-        if (!net || net.status !== 200) return net;
+      if (res) return res;
+
+      return fetch(req).then(net => {
+        if (!net.ok || net.status === 206) return net;
 
         return caches.open(CACHE_NAME).then(c => {
           c.put(req, net.clone());

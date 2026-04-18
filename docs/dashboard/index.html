@@ -1,28 +1,61 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><title>Dashboard</title><link type=text/css rel=stylesheet href=https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css><link type=text/css rel=stylesheet href=https://umk.skgadi.com//css/dashboard.min.css><link rel="manifest" href="/manifest.json">
-</head><body><div id=signed-out><div id=firebaseui-auth-container></div></div><div id=signed-in><button>Sign out</button></div><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js></script><script src=https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-C8DJLT8TXF"></script><script src=https://umk.skgadi.com//script/config.min.js></script><script src=https://umk.skgadi.com//script/dashboard.min.js></script>
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Dashboard</title><link type=text/css rel=stylesheet href=https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css><link type=text/css rel=stylesheet href=https://umk.skgadi.com//css/dashboard.min.css></head><body><div id=signed-out><div id=firebaseui-auth-container></div></div><div id=signed-in><button>Sign out</button></div><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js></script><script src=https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js></script><script src=https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-C8DJLT8TXF"></script><script src=https://umk.skgadi.com//script/config.min.js></script><script src=https://umk.skgadi.com//script/dashboard.min.js></script>
+<link rel="manifest" href="/manifest.json">
+
+<div id="pwa-status" style="
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: #222;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-family: sans-serif;
+  z-index: 9999;
+  display: none;
+">
+  <div id="pwa-text">Installing...</div>
+  <div style="background:#555; height:6px; border-radius:5px; margin-top:8px;">
+    <div id="pwa-bar" style="
+      height:6px;
+      width:0%;
+      background:#4caf50;
+      border-radius:5px;
+      transition: width 0.2s;
+    "></div>
+  </div>
+</div>
+
 <script>
+const box = document.getElementById("pwa-status");
+const text = document.getElementById("pwa-text");
+const bar = document.getElementById("pwa-bar");
+
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').then(reg => {
+  navigator.serviceWorker.register('/service-worker.js');
 
-      // READY MESSAGE
-      navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data && event.data.type === 'READY') {
-          alert("✅ App is ready for offline use!");
-        }
-      });
+  navigator.serviceWorker.addEventListener('message', event => {
+    const data = event.data;
 
-      // UPDATE DETECTED
-      reg.onupdatefound = () => {
-        const newWorker = reg.installing;
-        newWorker.onstatechange = () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            alert("🔄 New version available. Refresh to update.");
-          }
-        };
-      };
+    if (data.type === "CACHE_PROGRESS") {
+      box.style.display = "block";
+      const percent = Math.round((data.done / data.total) * 100);
+      text.innerText = "Installing... " + percent + "%";
+      bar.style.width = percent + "%";
+    }
 
-    });
+    if (data.type === "CACHE_COMPLETE") {
+      text.innerText = "Offline ready!";
+      bar.style.width = "100%";
+      setTimeout(() => box.style.display = "none", 3000);
+    }
+
+    if (data.type === "NEW_VERSION") {
+      box.style.display = "block";
+      text.innerText = "New version updated!";
+      bar.style.width = "100%";
+      setTimeout(() => box.style.display = "none", 4000);
+    }
   });
 }
 </script>
