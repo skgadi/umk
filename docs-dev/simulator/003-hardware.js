@@ -15,33 +15,32 @@ class GskSerialPort {
     return inCell.portDetails.recValue;
   }
 
+  async clearBuffers() {
+    // Create an array of promises, one for each port
+    const clearPromises = this.pinDetails.map(async (portDetail) => {
+      try {
+        // 1. Trigger write
+        portDetail.writer.write(new Uint8Array([0]));
 
-async clearBuffers() {
-  // Create an array of promises, one for each port
-  const clearPromises = this.pinDetails.map(async (portDetail) => {
-    try {
-      // 1. Trigger write
-      portDetail.writer.write(new Uint8Array([0]));
-
-      let nullCount = 0;
-      while (nullCount < 5) {
-        const result = await this.readWithTimeout(portDetail.reader, 10);
-        if (result === null) {
-          nullCount++;
-        } else {
-          nullCount = 0; 
+        let nullCount = 0;
+        while (nullCount < 5) {
+          const result = await this.readWithTimeout(portDetail.reader, 10);
+          if (result === null) {
+            nullCount++;
+          } else {
+            nullCount = 0;
+          }
         }
+        //console.log(`Finished clearing buffer for port ${portDetail.port}`);
+      } catch (error) {
+        //console.error(`Error clearing buffers for port ${portDetail.port}:`, error);
       }
-      //console.log(`Finished clearing buffer for port ${portDetail.port}`);
-    } catch (error) {
-      //console.error(`Error clearing buffers for port ${portDetail.port}:`, error);
-    }
-  });
+    });
 
-  // Execute all clear operations in parallel and wait for all to finish
-  await Promise.all(clearPromises);
-}
-  
+    // Execute all clear operations in parallel and wait for all to finish
+    await Promise.all(clearPromises);
+  }
+
   async readWithTimeout(reader, timeoutMs) {
     let timeoutId;
 
@@ -56,9 +55,9 @@ async clearBuffers() {
 
       // 3. Check if we got a result object or the null from timeout
       if (result && !result.done) {
-        return result.value; 
+        return result.value;
       }
-      
+
       return null; // Returns null if timeout reached or stream is done
     } catch (error) {
       return null; // Returns null if an actual read error occurs
@@ -67,13 +66,13 @@ async clearBuffers() {
     }
   }
 
-
-
-  async applyReadWrite(){
+  async applyReadWrite() {
     //console.log(JSON.stringify(this.pinDetails));
     for (const pinDetailsPerPort of this.pinDetails) {
       try {
-        const sendValue = pinDetailsPerPort.config.map(config => config.sendValue);
+        const sendValue = pinDetailsPerPort.config.map(
+          (config) => config.sendValue,
+        );
         const binToSend = cbor.encode(sendValue);
         //console.log("Binary to send for port " + pinDetailsPerPort.port + ": ", binToSend.toHex());
         await pinDetailsPerPort.writer.write(binToSend);
@@ -86,7 +85,7 @@ async clearBuffers() {
           pinDetailsPerPort.config.forEach((config, index) => {
             config.recValue = decodedValue[index];
           });
-        }        
+        }
       } catch (error) {
         await this.initHardwareForSimulation(); // Re-initialize hardware to recover from error state
         //console.log(`Error applying read/write for cell with port ${pinDetailsPerPort.port}:`, error);
@@ -97,16 +96,23 @@ async clearBuffers() {
   preparePinDetails() {
     // Resetting the PWM channel count before preparing pin details to ensure correct channel assignment on each preparation
     this.lastPWMChannel = 0;
-    this.cellsWithHardware.forEach(cell => {
+    this.cellsWithHardware.forEach((cell) => {
       //console.log(`Preparing pin details for cell ${cell.id} with port ${cell.Parameters.port.Value[0][0]}`);
       const thisPinConfig = this.getPinConfig(cell);
       //console.log(`Pin config for cell ${cell.id}:`, thisPinConfig);
       cell.portDetails = thisPinConfig; // Store the port details reference in the cell for later use
       //console.log(`Port details for cell ${cell.id} after assignment:`, cell.portDetails);
       // If port doesn't exist add a new entry
-      const existingPort = this.findOrCreatePortFromPinDetails(cell.Parameters.port.Value[0][0]);
+      const existingPort = this.findOrCreatePortFromPinDetails(
+        cell.Parameters.port.Value[0][0],
+      );
       // If the pin config is already not in the config array, add it
-      if (thisPinConfig && !existingPort.config.some(config => JSON.stringify(config) === JSON.stringify(thisPinConfig))) {
+      if (
+        thisPinConfig &&
+        !existingPort.config.some(
+          (config) => JSON.stringify(config) === JSON.stringify(thisPinConfig),
+        )
+      ) {
         existingPort.config.push(thisPinConfig);
       }
       //console.log(`Updated pin details for port ${existingPort.port}:`, existingPort.config);
@@ -114,26 +120,25 @@ async clearBuffers() {
     //console.log("Pin details before sorting:", JSON.stringify(this.pinDetails));
 
     // sort such that the order is DO, PM, DI, AI, EN
-    this.pinDetails.forEach(portDetail => {
+    this.pinDetails.forEach((portDetail) => {
       portDetail.config = portDetail.config.sort((a, b) => {
         const order = ["DO", "PM", "DI", "AI", "EN"];
         return order.indexOf(a.type) - order.indexOf(b.type);
       });
       //console.log ("from preparePinDetails: " + JSON.stringify(portDetail));
     });
-
   }
 
   findOrCreatePortFromPinDetails(port) {
-      const portDetail = this.pinDetails.find(detail => detail.port === port);
-      if (portDetail) {
-        return portDetail;
-      }
-      this.pinDetails.push({
-        port: port,
-        config: []
-      });
-      return this.pinDetails[this.pinDetails.length - 1];
+    const portDetail = this.pinDetails.find((detail) => detail.port === port);
+    if (portDetail) {
+      return portDetail;
+    }
+    this.pinDetails.push({
+      port: port,
+      config: [],
+    });
+    return this.pinDetails[this.pinDetails.length - 1];
   }
 
   getPinConfig(cell) {
@@ -146,7 +151,10 @@ async clearBuffers() {
         //console.error(`Error parsing pin for cell ${cell.id}:`, error);
       }
       try {
-        pins = [parseInt(cell.Parameters.pin_A.Value[0][0]), parseInt(cell.Parameters.pin_B.Value[0][0])];
+        pins = [
+          parseInt(cell.Parameters.pin_A.Value[0][0]),
+          parseInt(cell.Parameters.pin_B.Value[0][0]),
+        ];
       } catch (error) {
         //console.error(`Error parsing pins for cell ${cell.id}:`, error);
       }
@@ -154,25 +162,30 @@ async clearBuffers() {
 
       switch (cell.id) {
         case "umk_1774369913335":
-          return {type:"DI", pin, sendValue:0};
+          return { type: "DI", pin, sendValue: 0 };
         case "umk_1774706876440":
-          return {type:"DO", pin, initVal: math.matrix(cell.Parameters.ic.Value).get([0,0]), sendValue: math.matrix(cell.Parameters.ic.Value).get([0,0])};
+          return {
+            type: "DO",
+            pin,
+            initVal: math.matrix(cell.Parameters.ic.Value).get([0, 0]),
+            sendValue: math.matrix(cell.Parameters.ic.Value).get([0, 0]),
+          };
         case "umk_1774714186082":
-          return {type:"AI", pin, sendValue:0};
+          return { type: "AI", pin, sendValue: 0 };
         case "umk_1774714197073":
           return {
-            type:"PM",
+            type: "PM",
             pin,
-            initVal: math.matrix(cell.Parameters.ic.Value).get([0,0]),
-            freq: math.matrix(cell.Parameters.freq.Value).get([0,0]),
-            res: math.matrix(cell.Parameters.res.Value).get([0,0]),
+            initVal: math.matrix(cell.Parameters.ic.Value).get([0, 0]),
+            freq: math.matrix(cell.Parameters.freq.Value).get([0, 0]),
+            res: math.matrix(cell.Parameters.res.Value).get([0, 0]),
             ch: this.lastPWMChannel++,
-            sendValue: math.matrix(cell.Parameters.ic.Value).get([0,0])
+            sendValue: math.matrix(cell.Parameters.ic.Value).get([0, 0]),
           };
         case "umk_1774714206020":
-          return {type:"EN", pins, sendValue:0};
+          return { type: "EN", pins, sendValue: 0 };
         default:
-          return null;     
+          return null;
       }
     } catch (error) {
       //console.error(`Error getting pin config for cell ${cell.id}:`, error);
@@ -180,8 +193,8 @@ async clearBuffers() {
     }
   }
 
-  prepareReadersAndWriters () {
-    this.pinDetails.forEach(portDetail => {
+  prepareReadersAndWriters() {
+    this.pinDetails.forEach((portDetail) => {
       const port = this.getAPort(portDetail.port);
       if (!port) {
         //console.warn(`Port ${portDetail.port} not found among connected ports.`);
@@ -194,7 +207,7 @@ async clearBuffers() {
 
   async writeAllConfiguration() {
     for (const portDetail of this.pinDetails) {
-      const config = portDetail.config.map(cfg => {
+      const config = portDetail.config.map((cfg) => {
         const { sendValue, recValue, ...rest } = cfg;
         return rest;
       });
@@ -214,14 +227,17 @@ async clearBuffers() {
     this.connectedPorts = await navigator.serial.getPorts();
   }
   getAPort(friendlyName) {
-    const idx = this.friendlyNames.findIndex(p => p === friendlyName);
+    const idx = this.friendlyNames.findIndex((p) => p === friendlyName);
     if (idx === -1) {
       //console.log("Port not found: " + friendlyName);
       return null;
     }
     return this.connectedPorts[idx];
   }
-  async openAPort(friendlyName, options={ baudRate: 115200, dataBits: 8, stopBits: 1, parity: "none" }) {
+  async openAPort(
+    friendlyName,
+    options = { baudRate: 115200, dataBits: 8, stopBits: 1, parity: "none" },
+  ) {
     const port = this.getAPort(friendlyName);
     if (port) {
       return await port.open(options);
@@ -250,7 +266,7 @@ async clearBuffers() {
     }
   }
   findCellsWithHardware(cells) {
-    this.cellsWithHardware = cells.filter(cell => cell.isSerial);
+    this.cellsWithHardware = cells.filter((cell) => cell.isSerial);
     //console.log("Cells with hardware:", JSON.stringify(this.cellsWithHardware.map(cell => cell.id)));
   }
   initializeHardwareForUpdatedCells(cells) {
@@ -269,10 +285,17 @@ async clearBuffers() {
       await this.clearBuffers();
       //console.log("Initializing hardware for simulation...");
       await this.writeAllConfiguration();
-      return {isError: false};
+      return { isError: false };
     } catch (error) {
       //console.warn("Error during hardware initialization for simulation:", error);
-      return {isError: true, message : error, cid: this.cellsWithHardware.length > 0 ? this.cellsWithHardware[0].cid : null};
+      return {
+        isError: true,
+        message: error,
+        cid:
+          this.cellsWithHardware.length > 0
+            ? this.cellsWithHardware[0].cid
+            : null,
+      };
     }
   }
   async openRequiredPorts() {

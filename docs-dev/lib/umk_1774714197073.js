@@ -19,20 +19,31 @@ class umk_1774714197073 extends umk_model {
 
   End() {
     if (this.Parameters.isCustomValueForEnd.Value[0][0]) {
-      this.portDetails.sendValue = this.getRightValueToOutput(
-        this.Parameters.customValueForEnd.Value[0][0],
-      );
+      let finalValue = 0;
+      try {
+        finalValue = this.getRightValueToOutput(
+          this.Parameters.customValueForEnd.Value.get([0, 0]),
+        );
+      } catch {
+        finalValue = 0;
+      } finally {
+        this.portDetails.sendValue = finalValue;
+      }
     }
   }
 
   getRightValueToOutput(inValue) {
-    let outValue = 0;
     try {
-      if (inValue > 0 && inValue <= 100) {
-        outValue = inValue;
-      }
-    } catch (error) {}
-    return outValue;
+      let outValue = 0;
+      try {
+        if (inValue > 0 && inValue <= 100) {
+          outValue = inValue;
+        }
+      } catch (error) {}
+      return outValue;
+    } catch {
+      return 0;
+    }
   }
 
   invalidParams() {
@@ -141,8 +152,8 @@ class umk_1774714197073 extends umk_model {
 
             isCustomValueForEnd: {
               Name: {
-                "en-us": "Custom value for end condition",
-                "es-mx": "Valor personalizado para condición de fin",
+                "en-us": "Use Custom end condition",
+                "es-mx": "Usar Valor personalizado para condición de fin",
               },
               Dimension: "Scalar",
               Type: "Checkbox",
@@ -151,11 +162,11 @@ class umk_1774714197073 extends umk_model {
 
             customValueForEnd: {
               Name: {
-                "en-us": "Custom value for end condition",
-                "es-mx": "Valor personalizado para condición de fin",
+                "en-us": "Final condition value",
+                "es-mx": "Valor de condición finals",
               },
               Dimension: "Scalar",
-              Type: "Integer",
+              Type: "Real",
               Value: [[0]],
             },
           },

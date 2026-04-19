@@ -80,8 +80,8 @@ class umk_1774706876440 extends umk_model {
 
             isCustomValueForEnd: {
               Name: {
-                "en-us": "Custom value for end condition",
-                "es-mx": "Valor personalizado para condición de fin",
+                "en-us": "Use Custom end condition",
+                "es-mx": "Usar Valor personalizado para condición de fin",
               },
               Dimension: "Scalar",
               Type: "Checkbox",
@@ -90,8 +90,9 @@ class umk_1774706876440 extends umk_model {
 
             customValueForEnd: {
               Name: {
-                "en-us": "Custom value for end condition",
-                "es-mx": "Valor personalizado para condición de fin",
+                "en-us": "Set final condition value to $(\\texttt{true})$",
+                "es-mx":
+                  "Establecer el valor de la condición final a $(\\texttt{true})$",
               },
               Dimension: "Scalar",
               Type: "Checkbox",

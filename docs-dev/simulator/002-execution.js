@@ -294,6 +294,7 @@ const exec = {
   },
   stop: function () {
     this.rSteps = 0;
+    this.End();
   },
   pause: function () {
     this.isCont = false;

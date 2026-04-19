@@ -3,14 +3,14 @@ const simVue = new Vue({
   data: {
     mode: "mDesign",
     disp: {
-      "oneRun": true,
-      "run": true,
+      oneRun: true,
+      run: true,
       //"endTime": true,
       //"endTime": true,
-      "stop": false,
-      "pause": false,
+      stop: false,
+      pause: false,
       //"noOfSteps": true,
-      "forward": true,
+      forward: true,
     },
     simSettings: {
       h: 10, //Step size
@@ -19,7 +19,7 @@ const simVue = new Vue({
       steps: 1,
       sOEvery: 1,
       mHis: 1000,
-      it: "fe" //Integreation type
+      it: "fe", //Integreation type
     },
     results: {},
     lastItem: {},
@@ -28,7 +28,7 @@ const simVue = new Vue({
     exeOrder: [],
     updScreen: null,
     dispCells: [],
-    dispExecOrdInProg: false
+    dispExecOrdInProg: false,
   },
   mounted: function () {
     footerVue.$set(footerVue.$data, "totalTime", this.simSettings.T);
@@ -75,46 +75,46 @@ const simVue = new Vue({
         if (!!this.simWorker) {
           this.informSim("simSettings");
         }
-      }
+      },
     },
     mode: function () {
       footerVue.$set(footerVue.$data, "mode", this.mode);
       switch (this.mode) {
-        case 'mDesign': {
+        case "mDesign": {
           this.disp = {
-            "oneRun": true,
-            "run": true,
-            "stop": false,
-            "pause": false,
-            "forward": true
+            oneRun: true,
+            run: true,
+            stop: false,
+            pause: false,
+            forward: true,
           };
           editorVue.rpSettings.fEditMode = true;
           break;
         }
-        case 'mSim': {
+        case "mSim": {
           this.disp = {
-            "oneRun": false,
-            "run": false,
-            "stop": true,
-            "pause": true,
-            "forward": false
+            oneRun: false,
+            run: false,
+            stop: true,
+            pause: true,
+            forward: false,
           };
           editorVue.rpSettings.fEditMode = false;
           break;
         }
-        case 'mSimPause': {
+        case "mSimPause": {
           this.disp = {
-            "oneRun": false,
-            "run": true,
-            "stop": true,
-            "pause": false,
-            "forward": true
+            oneRun: false,
+            run: true,
+            stop: true,
+            pause: false,
+            forward: true,
           };
           editorVue.rpSettings.fEditMode = false;
           break;
         }
       }
-    }
+    },
   },
 
   methods: {
@@ -124,7 +124,9 @@ const simVue = new Vue({
         for (let j = 0; j < keys.length; j++) {
           if (this.dispCells)
             try {
-              this.results[i].o[keys[j]] = math.evaluate(this.results[i].o[keys[j]]);
+              this.results[i].o[keys[j]] = math.evaluate(
+                this.results[i].o[keys[j]],
+              );
             } catch (e) {
               console.log(keys);
               console.log(i);
@@ -137,7 +139,9 @@ const simVue = new Vue({
     },
     updateSources: function (inCells) {
       for (let i = 0; i < inCells.length; i++) {
-        let sModels = this.getSourcesWithIndexes(mainSystem.graph.getModel().cells[inCells[i].cid]);
+        let sModels = this.getSourcesWithIndexes(
+          mainSystem.graph.getModel().cells[inCells[i].cid],
+        );
         //let Sources = [];
         let sIndexes = [];
         /*for (let j = 0; j < sModels.length; j++) {
@@ -148,14 +152,15 @@ const simVue = new Vue({
             cell: inCells.findIndex(function (ele) {
               return sModels[j].model.id === ele.cid;
             }),
-            index: sModels[j].index
+            index: sModels[j].index,
           });
         }
         inCells[i].sIndexes = sIndexes;
       }
       return inCells;
     },
-    pCell4Exp: function (inCell) { //Prepare cell for export
+    pCell4Exp: function (inCell) {
+      //Prepare cell for export
       try {
         let cellVal = JSON.parse2(JSON.stringify2(inCell.value));
         cellVal.cid = inCell.id;
@@ -165,11 +170,14 @@ const simVue = new Vue({
         if (!!cellVal.Parameters) {
           let params = Object.keys(cellVal.Parameters);
           for (let i = 0; i < params.length; i++) {
-            if (cellVal.Parameters[params[i]].Type === "Complex" ||
+            if (
+              cellVal.Parameters[params[i]].Type === "Complex" ||
               cellVal.Parameters[params[i]].Type === "Real" ||
-              cellVal.Parameters[params[i]].Type === "Integer") {
-              cellVal.Parameters[params[i]].Value =
-                varManagerVue.getVarValue(cellVal.Parameters[params[i]].Value);
+              cellVal.Parameters[params[i]].Type === "Integer"
+            ) {
+              cellVal.Parameters[params[i]].Value = varManagerVue.getVarValue(
+                cellVal.Parameters[params[i]].Value,
+              );
             }
           }
         }
@@ -177,17 +185,21 @@ const simVue = new Vue({
         if (!!cellVal.Parameters) {
           let params = Object.keys(cellVal.Parameters);
           for (let i = 0; i < params.length; i++) {
-            if (cellVal.Parameters[params[i]].Type === "Complex" ||
+            if (
+              cellVal.Parameters[params[i]].Type === "Complex" ||
               cellVal.Parameters[params[i]].Type === "Real" ||
-              cellVal.Parameters[params[i]].Type === "Integer") {
-              cellVal.Parameters[params[i]].Value = cellVal.Parameters[params[i]].Value.toString();
+              cellVal.Parameters[params[i]].Type === "Integer"
+            ) {
+              cellVal.Parameters[params[i]].Value =
+                cellVal.Parameters[params[i]].Value.toString();
             }
           }
         }
         if (!!cellVal.CompParams) {
           let params = Object.keys(cellVal.CompParams);
           for (let i = 0; i < params.length; i++) {
-            cellVal.CompParams[params[i]] = cellVal.CompParams[params[i]].toString();
+            cellVal.CompParams[params[i]] =
+              cellVal.CompParams[params[i]].toString();
           }
         }
         //check if it ia display cell
@@ -199,7 +211,7 @@ const simVue = new Vue({
         console.log(e);
         throw {
           cell: inCell,
-          errM: String(e)
+          errM: String(e),
         };
       }
     },
@@ -209,12 +221,12 @@ const simVue = new Vue({
         if (window.Worker) {
           let out = {};
           switch (abt) {
-            case 'cells':
+            case "cells":
               try {
                 this.dispCells = [];
                 let tempCells = this.exeOrder.map((ele) => {
                   //console.log(ele);
-                  let prepCell = this.pCell4Exp(ele)
+                  let prepCell = this.pCell4Exp(ele);
                   if (prepCell.isPopup) {
                     popup.sendParams(prepCell);
                   }
@@ -223,20 +235,20 @@ const simVue = new Vue({
                 //console.log(tempCells);
                 this.cellsWithSInfo = this.updateSources(tempCells);
                 out = {
-                  cells: this.cellsWithSInfo
+                  cells: this.cellsWithSInfo,
                 };
                 //console.log(this.cellsWithSInfo);
               } catch (e) {
                 console.log(e);
                 out = {};
-                throw (e);
+                throw e;
               }
               break;
-            case 'updateCell':
+            case "updateCell":
               try {
                 let idx = this.exeOrder.findIndex(function (ele) {
                   return option === ele.id;
-                })
+                });
                 if (idx >= 0) {
                   let prepCell = this.pCell4Exp(this.exeOrder[idx]);
                   if (prepCell.isPopup) {
@@ -248,19 +260,19 @@ const simVue = new Vue({
                   out = {
                     updateCell: {
                       v: prepCell, //value
-                      i: idx //index
-                    }
-                  }
-                };
+                      i: idx, //index
+                    },
+                  };
+                }
               } catch (e) {
                 console.log(e);
                 out = {};
-                throw (e);
+                throw e;
               }
               break;
-            case 'simSettings':
+            case "simSettings":
               out = {
-                simSettings: this.simSettings
+                simSettings: this.simSettings,
               };
               break;
             case "oneRun":
@@ -268,7 +280,7 @@ const simVue = new Vue({
                 this.initSim();
               }
               out = {
-                oneRun: 0
+                oneRun: 0,
               };
               this.mode = "mSim";
               break;
@@ -277,14 +289,14 @@ const simVue = new Vue({
                 this.initSim();
               }
               out = {
-                start: 0
+                start: 0,
               };
               this.mode = "mSim";
               break;
             case "stop":
               if (!!this.simWorker) {
                 out = {
-                  stop: 0
+                  stop: 0,
                 };
               }
               this.endSim();
@@ -293,7 +305,7 @@ const simVue = new Vue({
               //this.mode = "mSimPause";
               if (!!this.simWorker) {
                 out = {
-                  pause: 0
+                  pause: 0,
                 };
               }
               break;
@@ -302,14 +314,14 @@ const simVue = new Vue({
                 this.initSim();
               }
               out = {
-                steps: 0
+                steps: 0,
               };
               break;
             case "serialPorts":
               out = {
-                serialPorts: hardwareVue.allConnectedPorts()
+                serialPorts: hardwareVue.allConnectedPorts(),
               };
-            break;
+              break;
             default:
               break;
           }
@@ -323,7 +335,7 @@ const simVue = new Vue({
             text: GUIText[settings.lang].k169,
             timeout: 5000,
             theme: "nest",
-            type: 'warning'
+            type: "warning",
           }).show();
         }
       } catch (e) {
@@ -335,7 +347,8 @@ const simVue = new Vue({
         throw e;
       }
     },
-    propOuts: function () { // propagate the outputs
+    propOuts: function () {
+      // propagate the outputs
       this.setAllDisplays();
       //this.resStr2Math();
       const keys = Object.keys(popup.refsForSinks);
@@ -348,8 +361,14 @@ const simVue = new Vue({
       footerVue.presTime = this.lastItem.t;
       for (let i = 0; i < this.dispCells.length; i++) {
         let cell = mainSystem.graph.getModel().getCell(this.dispCells[i]);
-        const limitDecimals = parseInt(cell.value.Parameters.decPlaces.Value[0][0]);
-        cell.value.Icon(TeX.prepDisp(TeX.frmStr(this.lastItem.o[this.dispCells[i]][0], limitDecimals)));
+        const limitDecimals = parseInt(
+          cell.value.Parameters.decPlaces.Value[0][0],
+        );
+        cell.value.Icon(
+          TeX.prepDisp(
+            TeX.frmStr(this.lastItem.o[this.dispCells[i]][0], limitDecimals),
+          ),
+        );
         mainSystem.graph.refresh(cell);
       }
     },
@@ -360,7 +379,9 @@ const simVue = new Vue({
         if (!this.results[cid]) {
           this.results[cid] = [];
         }
-        this.results[cid] = (this.results[cid].concat(popup.preparedData[cid])).slice(-settings.maxTotalHistory);
+        this.results[cid] = this.results[cid]
+          .concat(popup.preparedData[cid])
+          .slice(-settings.maxTotalHistory);
       }
     },
     initSim: function () {
@@ -368,19 +389,21 @@ const simVue = new Vue({
         this.exeOrder = this.getExecutionOrder().eo;
         if (this.exeOrder.length > 0) {
           if (varManagerVue.checkAllCellsParams()) {
-            // Validate serial Ports            
+            // Validate serial Ports
             if (!hardwareVue.checkIsReadyToSimulate(this.exeOrder)) {
               new Noty({
                 text: "Found unconnected ports or duplicate pin combinations. Please fix the issues highlighted in the graph and try again.",
                 timeout: 5000,
                 theme: "nest",
-                type: 'warning'
+                type: "warning",
               }).show();
-              throw ("Ports not properly configured");
+              throw "Ports not properly configured";
             }
 
             if (!this.simWorker) {
-              this.simWorker = new Worker('simulator.min.js?date=' + Date.now());
+              this.simWorker = new Worker(
+                "simulator.min.js?date=" + Date.now(),
+              );
             }
             this.simWorker.onmessage = function (event) {
               //console.log(event.data);
@@ -392,7 +415,6 @@ const simVue = new Vue({
                 simVue.updateResults();
                 //console.log(simVue.lastItem);
 
-
                 //simVue.results = event.data.put;
                 //simVue.results = simVue.results.slice(-settings.maxTotalHistory);
                 setTimeout(function () {
@@ -401,11 +423,11 @@ const simVue = new Vue({
                 setTimeout(() => {
                   if (simVue.simWorker) {
                     simVue.simWorker.postMessage({
-                      "recData": true
+                      recData: true,
                     });
                   }
                 }, settings.waitUpdGraphs);
-                umk_audio.play("sim_recPacket", 0.10);
+                umk_audio.play("sim_recPacket", 0.1);
               } else if (event.data.ended) {
                 simVue.endSim();
                 umk_audio.play("sim_finished", 0.5);
@@ -413,15 +435,20 @@ const simVue = new Vue({
                 simVue.mode = "mSimPause";
               } else if (event.data.error) {
                 //console.log(event.data.error.cid);
-                mainSystem.graph.setCellWarning(mainSystem.graph.getModel().getCell(event.data.error.cid), "<b>" + GUIText[settings.lang][event.data.error.desc] + "</b>\n" + event.data.error.log.message);
+                mainSystem.graph.setCellWarning(
+                  mainSystem.graph.getModel().getCell(event.data.error.cid),
+                  "<b>" +
+                    GUIText[settings.lang][event.data.error.desc] +
+                    "</b>\n" +
+                    event.data.error.log.message,
+                );
               }
-            }
+            };
             this.results = {};
             popup.resetAll();
 
             //set time =0
             footerVue.presTime = 0;
-
 
             this.informSim("serialPorts");
             this.informSim("cells");
@@ -431,7 +458,7 @@ const simVue = new Vue({
               text: GUIText[settings.lang].k173,
               timeout: 5000,
               theme: "nest",
-              type: 'warning'
+              type: "warning",
             }).show();
           }
         } else {
@@ -439,25 +466,29 @@ const simVue = new Vue({
             text: GUIText[settings.lang].k170,
             timeout: 5000,
             theme: "nest",
-            type: 'warning'
+            type: "warning",
           }).show();
-          throw ("Nothing to execute");
+          throw "Nothing to execute";
         }
       } else {
         new Noty({
           text: GUIText[settings.lang].k169,
           timeout: 5000,
           theme: "nest",
-          type: 'warning'
+          type: "warning",
         }).show();
-
+      }
+    },
+    endSimNow: function () {
+      if (!!this.simWorker) {
+        this.simWorker.terminate();
+        this.simWorker = null;
       }
     },
     endSim: function () {
-      if (!!this.simWorker) {
-        this.simWorker.terminate();
-      }
-      this.simWorker = null;
+      setTimeout(() => {
+        simVue.endSimNow();
+      }, 5000);
       this.mode = "mDesign";
     },
     displayExecutionOrder: function () {
@@ -474,20 +505,35 @@ const simVue = new Vue({
     dispExecOrdNow: function () {
       this.dispExecOrdInProg = false;
       let allTheModels = this.getAllTheModels();
-      this.showExecutionOrderMessage(allTheModels, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>");
+      this.showExecutionOrderMessage(
+        allTheModels,
+        "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-project-diagram fa-stack-1x'></i></span>",
+      );
       let executionOrderAndErros = this.getExecutionOrder();
       let executionOrder = executionOrderAndErros.eo;
       for (let i = 0; i < executionOrder.length; i++) {
-        this.showExecutionOrderMessage([executionOrder[i]], "&#x2713;&nbsp;" + (i + 1));
+        this.showExecutionOrderMessage(
+          [executionOrder[i]],
+          "&#x2713;&nbsp;" + (i + 1),
+        );
       }
       this.showExecutionOrderMessage(
         executionOrderAndErros.al,
         "&times;:&nbsp;&#x21ab;",
-        GUIText[settings.lang].aLoop
+        GUIText[settings.lang].aLoop,
       );
-      this.showExecutionOrderMessage(executionOrderAndErros.ne, "<i class='fas fa-times'></i>");
-      this.showExecutionOrderMessage(executionOrderAndErros.pc, "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-plug fa-stack-1x'></i></span>");
-      this.showExecutionOrderMessage(executionOrderAndErros.sr, "<i class='fas fa-route'></i>");
+      this.showExecutionOrderMessage(
+        executionOrderAndErros.ne,
+        "<i class='fas fa-times'></i>",
+      );
+      this.showExecutionOrderMessage(
+        executionOrderAndErros.pc,
+        "<span class='fa-stack eo_icon'><i class='fas fa-ban fa-stack-2x'></i><i class='fas fa-plug fa-stack-1x'></i></span>",
+      );
+      this.showExecutionOrderMessage(
+        executionOrderAndErros.sr,
+        "<i class='fas fa-route'></i>",
+      );
       mainSystem.refresh();
     },
 
@@ -513,7 +559,7 @@ const simVue = new Vue({
       for (let i = 0; i < firstModels.length; i++) {
         fullyConnectedModels = this.arrayRemove(
           fullyConnectedModels,
-          firstModels[i]
+          firstModels[i],
         );
       }
       let ExecutionOrder = [];
@@ -523,13 +569,17 @@ const simVue = new Vue({
           let mSources = this.getSourcesWithIndexes(fullyConnectedModels[i]);
           let addThisToOrder = true;
           for (let j = 0; j < mSources.length; j++) {
-            if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
-              (sourcesModels.indexOf(mSources[j].model) < 0) &&
-              (fInEOModels.indexOf(mSources[j].model) < 0)) {
+            if (
+              ExecutionOrder.indexOf(mSources[j].model) < 0 &&
+              sourcesModels.indexOf(mSources[j].model) < 0 &&
+              fInEOModels.indexOf(mSources[j].model) < 0
+            ) {
               addThisToOrder = false;
             }
-            if ((fInEOModels.indexOf(mSources[j].model) >= 0) &&
-              (fInEOModelsOrdered.indexOf(mSources[j].model) < 0)) {
+            if (
+              fInEOModels.indexOf(mSources[j].model) >= 0 &&
+              fInEOModelsOrdered.indexOf(mSources[j].model) < 0
+            ) {
               fInEOModelsOrdered.push(mSources[j].model);
               fInEOModels = this.arrayRemove(fInEOModels, mSources[j].model);
             }
@@ -540,7 +590,7 @@ const simVue = new Vue({
             }
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              fullyConnectedModels[i]
+              fullyConnectedModels[i],
             );
             i = 0;
           } else {
@@ -557,7 +607,7 @@ const simVue = new Vue({
                   aLoopModels.push(targets[k]);
                   fullyConnectedModels = this.arrayRemove(
                     fullyConnectedModels,
-                    targets[k]
+                    targets[k],
                   );
                 }
               }
@@ -565,12 +615,12 @@ const simVue = new Vue({
             if (aLoopModels.length > 0) {
               throw {
                 code: "UMKEOAL",
-                message: "arthematic loop(s) found"
+                message: "arthematic loop(s) found",
               };
             } else {
               throw {
                 code: "UMKEOIC",
-                message: "Incomplete/improper connections detected"
+                message: "Incomplete/improper connections detected",
               };
             }
           }
@@ -580,10 +630,13 @@ const simVue = new Vue({
       }
       //console.log(ExecutionOrder);
       return {
-        eo: sourcesModels.concat(fInEOModels).concat(fInEOModelsOrdered).concat(ExecutionOrder),
+        eo: sourcesModels
+          .concat(fInEOModels)
+          .concat(fInEOModelsOrdered)
+          .concat(ExecutionOrder),
         ne: fullyConnectedModels,
         al: aLoopModels,
-        pc: allConnectedModels.pc
+        pc: allConnectedModels.pc,
       };
     },
 
@@ -606,7 +659,7 @@ const simVue = new Vue({
       for (let i = 0; i < firstModels.length; i++) {
         fullyConnectedModels = this.arrayRemove(
           fullyConnectedModels,
-          firstModels[i]
+          firstModels[i],
         );
       }
 
@@ -625,7 +678,7 @@ const simVue = new Vue({
             ExecutionOrder.push(fullyConnectedModels[i]);
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              fullyConnectedModels[i]
+              fullyConnectedModels[i],
             );
             i = 0;
           } else {
@@ -642,7 +695,7 @@ const simVue = new Vue({
                   aLoopModels.push(targets[k]);
                   fullyConnectedModels = this.arrayRemove(
                     fullyConnectedModels,
-                    targets[k]
+                    targets[k],
                   );
                 }
               }
@@ -650,12 +703,12 @@ const simVue = new Vue({
             if (aLoopModels.length > 0) {
               throw {
                 code: "UMKEOAL",
-                message: "arthematic loop(s) found"
+                message: "arthematic loop(s) found",
               };
             } else {
               throw {
                 code: "UMKEOIC",
-                message: "Incomplete/improper connections detected"
+                message: "Incomplete/improper connections detected",
               };
             }
           }
@@ -688,7 +741,7 @@ const simVue = new Vue({
         eo: ExecutionOrder,
         ne: fullyConnectedModels,
         al: aLoopModels,
-        pc: allConnectedModels.pc
+        pc: allConnectedModels.pc,
       };
     },
 
@@ -706,7 +759,10 @@ const simVue = new Vue({
 
       //Obtaining first executing models
       for (let i = 0; i < fullyConnectedModels.length; i++) {
-        if (fullyConnectedModels[i].value.TerminalsIn.max === 0 && !fullyConnectedModels[i].value.signalRerouting) {
+        if (
+          fullyConnectedModels[i].value.TerminalsIn.max === 0 &&
+          !fullyConnectedModels[i].value.signalRerouting
+        ) {
           sourcesModels.push(fullyConnectedModels[i]);
         } else if (!!fullyConnectedModels[i].value.fInEO) {
           fInEOModels.push(fullyConnectedModels[i]);
@@ -718,7 +774,7 @@ const simVue = new Vue({
       for (let i = 0; i < firstModels.length; i++) {
         fullyConnectedModels = this.arrayRemove(
           fullyConnectedModels,
-          firstModels[i]
+          firstModels[i],
         );
       }
 
@@ -734,7 +790,6 @@ const simVue = new Vue({
       }
       fullyConnectedModels = tempfullyConnectedModels;
 
-
       let ExecutionOrder = [];
       let i = 0;
       try {
@@ -744,8 +799,10 @@ const simVue = new Vue({
           //console.log(mSources);
           let addThisToOrder = true;
           for (let j = 0; j < mSources.length; j++) {
-            if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
-              (sourcesModels.indexOf(mSources[j].model) < 0)) {
+            if (
+              ExecutionOrder.indexOf(mSources[j].model) < 0 &&
+              sourcesModels.indexOf(mSources[j].model) < 0
+            ) {
               addThisToOrder = false;
             }
           }
@@ -756,10 +813,13 @@ const simVue = new Vue({
             ExecutionOrder.push(fullyConnectedModels[i]);
             //console.log("b");
             //console.log(fullyConnectedModels[i]);
-            fInEOModels = this.arrayRemove(fInEOModels, fullyConnectedModels[i]);
+            fInEOModels = this.arrayRemove(
+              fInEOModels,
+              fullyConnectedModels[i],
+            );
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              fullyConnectedModels[i]
+              fullyConnectedModels[i],
             );
             i = 0;
           } else {
@@ -772,7 +832,7 @@ const simVue = new Vue({
             //console.log(firstCellFromFInEOModels);
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              firstCellFromFInEOModels
+              firstCellFromFInEOModels,
             );
             i = 0;
           } else if (
@@ -787,7 +847,7 @@ const simVue = new Vue({
                   aLoopModels.push(targets[k]);
                   fullyConnectedModels = this.arrayRemove(
                     fullyConnectedModels,
-                    targets[k]
+                    targets[k],
                   );
                 }
               }
@@ -795,12 +855,12 @@ const simVue = new Vue({
             if (aLoopModels.length > 0) {
               throw {
                 code: "UMKEOAL",
-                message: "arthematic loop(s) found"
+                message: "arthematic loop(s) found",
               };
             } else {
               throw {
                 code: "UMKEOIC",
-                message: "Incomplete/improper connections detected"
+                message: "Incomplete/improper connections detected",
               };
             }
           }
@@ -832,11 +892,11 @@ const simVue = new Vue({
 
       //remove all the fInEOModelsOrdered elements from ExecutionOrder
       for (let i = 0; i < fInEOModelsOrdered.length; i++) {
-        ExecutionOrder = this.arrayRemove(ExecutionOrder, fInEOModelsOrdered[i]);
+        ExecutionOrder = this.arrayRemove(
+          ExecutionOrder,
+          fInEOModelsOrdered[i],
+        );
       }
-
-      
-
 
       //console.log(fInEOModelsOrdered);
       //console.log(sourcesModels);
@@ -847,7 +907,7 @@ const simVue = new Vue({
         ne: fullyConnectedModels,
         al: aLoopModels,
         pc: allConnectedModels.pc,
-        sr: signalRouteBlocks
+        sr: signalRouteBlocks,
       };
     },
 
@@ -871,7 +931,10 @@ const simVue = new Vue({
       //Obtaining first executing models
       for (let i = 0; i < fullyConnectedModels.length; i++) {
         //console.log(fullyConnectedModels[i].value);
-        if (fullyConnectedModels[i].value.TerminalsIn.max === 0 && !fullyConnectedModels[i].value.signalRerouting) {
+        if (
+          fullyConnectedModels[i].value.TerminalsIn.max === 0 &&
+          !fullyConnectedModels[i].value.signalRerouting
+        ) {
           sourcesModels.push(fullyConnectedModels[i]);
         } else if (!!fullyConnectedModels[i].value.fInEO) {
           fInEOModels.push(fullyConnectedModels[i]);
@@ -883,7 +946,7 @@ const simVue = new Vue({
       for (let i = 0; i < firstModels.length; i++) {
         fullyConnectedModels = this.arrayRemove(
           fullyConnectedModels,
-          firstModels[i]
+          firstModels[i],
         );
       }
 
@@ -899,7 +962,6 @@ const simVue = new Vue({
       }
       fullyConnectedModels = tempfullyConnectedModels;
 
-
       let ExecutionOrder = [];
       let i = 0;
 
@@ -912,8 +974,10 @@ const simVue = new Vue({
           //console.log(mSources);
           let addThisToOrder = true;
           for (let j = 0; j < mSources.length; j++) {
-            if ((ExecutionOrder.indexOf(mSources[j].model) < 0) &&
-              (sourcesModels.indexOf(mSources[j].model) < 0)) {
+            if (
+              ExecutionOrder.indexOf(mSources[j].model) < 0 &&
+              sourcesModels.indexOf(mSources[j].model) < 0
+            ) {
               addThisToOrder = false;
             } else {
               //console.log(fullyConnectedModels[i].children[fullyConnectedModels[i].children.length - 1].value);
@@ -927,10 +991,13 @@ const simVue = new Vue({
             ExecutionOrder.push(fullyConnectedModels[i]);
             //console.log("b");
             //console.log(fullyConnectedModels[i]);
-            fInEOModels = this.arrayRemove(fInEOModels, fullyConnectedModels[i]);
+            fInEOModels = this.arrayRemove(
+              fInEOModels,
+              fullyConnectedModels[i],
+            );
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              fullyConnectedModels[i]
+              fullyConnectedModels[i],
             );
             i = 0;
           } else {
@@ -944,7 +1011,7 @@ const simVue = new Vue({
             //console.log(firstCellFromFInEOModels);
             fullyConnectedModels = this.arrayRemove(
               fullyConnectedModels,
-              firstCellFromFInEOModels
+              firstCellFromFInEOModels,
             );
             i = 0;
           } else if (
@@ -959,7 +1026,7 @@ const simVue = new Vue({
                   aLoopModels.push(targets[k]);
                   fullyConnectedModels = this.arrayRemove(
                     fullyConnectedModels,
-                    targets[k]
+                    targets[k],
                   );
                 }
               }
@@ -967,12 +1034,12 @@ const simVue = new Vue({
             if (aLoopModels.length > 0) {
               throw {
                 code: "UMKEOAL",
-                message: "arthematic loop(s) found"
+                message: "arthematic loop(s) found",
               };
             } else {
               throw {
                 code: "UMKEOIC",
-                message: "Incomplete/improper connections detected"
+                message: "Incomplete/improper connections detected",
               };
             }
           }
@@ -1007,9 +1074,6 @@ const simVue = new Vue({
         ExecutionOrder = this.arrayRemove(ExecutionOrder, fInEOModelsOrdered[i]);
       }*/
 
-      
-
-
       //console.log(fInEOModelsOrdered);
       //console.log(sourcesModels);
       //console.log(ExecutionOrder);
@@ -1019,7 +1083,7 @@ const simVue = new Vue({
         ne: fullyConnectedModels,
         al: aLoopModels,
         pc: allConnectedModels.pc,
-        sr: signalRouteBlocks
+        sr: signalRouteBlocks,
       };
     },
 
@@ -1035,17 +1099,24 @@ const simVue = new Vue({
     obtainTheSrcAndIdxFor: function (childItem) {
       const srcItem = {
         model: null,
-        index: null
+        index: null,
       };
       let nodeItems = mainSystem.graph.getNodeCells(childItem);
       for (let j = 0; j < nodeItems.length; j++) {
-        if (!!nodeItems[j] && !!nodeItems[j].style && nodeItems[j].style.search("umk_output") >= 0) {
+        if (
+          !!nodeItems[j] &&
+          !!nodeItems[j].style &&
+          nodeItems[j].style.search("umk_output") >= 0
+        ) {
           if (!nodeItems[j].value.signalRerouting) {
             srcItem.model = nodeItems[j].parent;
           }
           let outIdx = -1;
           for (let k = 0; k < nodeItems[j].parent.children.length; k++) {
-            if (!!nodeItems[j].parent.children[k].style && nodeItems[j].parent.children[k].style.search("umk_output") >= 0) {
+            if (
+              !!nodeItems[j].parent.children[k].style &&
+              nodeItems[j].parent.children[k].style.search("umk_output") >= 0
+            ) {
               outIdx++;
               if (nodeItems[j] === nodeItems[j].parent.children[k]) {
                 if (!nodeItems[j].parent.value.signalRerouting) {
@@ -1053,7 +1124,10 @@ const simVue = new Vue({
                   //console.log("Not entered to tag");
                 } else {
                   //console.log("Entered to tag: "+outIdx);
-                  const tempSrc = signalRouteVue.tags[nodeItems[j].parent.value.Parameters.tag.Value[outIdx][0]];
+                  const tempSrc =
+                    signalRouteVue.tags[
+                      nodeItems[j].parent.value.Parameters.tag.Value[outIdx][0]
+                    ];
                   srcItem.model = tempSrc.source.model;
                   srcItem.index = tempSrc.source.index;
                 }
@@ -1073,9 +1147,8 @@ const simVue = new Vue({
           try {
             //console.log(inModel.children[i].edges[0].source.style);
             if (
-              modelSources.indexOf(
-                inModel.children[i].edges[0].source.parent
-              ) < 0
+              modelSources.indexOf(inModel.children[i].edges[0].source.parent) <
+              0
             ) {
               //if ( inModel !== inModel.children[i].edges[0].source.parent ) {}
               modelSources.push(inModel.children[i].edges[0].source.parent);
@@ -1119,15 +1192,27 @@ const simVue = new Vue({
     getTargetsOfAModel: function (inModel) {
       let modelTargets = [];
       for (let i = 0; i < inModel.children.length; i++) {
-        if ((!!inModel.children[i]) && (!!inModel.children[i].style) && (inModel.children[i].style.search("umk_output") >= 0)) {
+        if (
+          !!inModel.children[i] &&
+          !!inModel.children[i].style &&
+          inModel.children[i].style.search("umk_output") >= 0
+        ) {
           let allNodeCells = mainSystem.graph.getNodeCells(inModel.children[i]);
           //console.log(allNodeCells);
           for (let j = 0; j < allNodeCells.length; j++) {
-            if (!!allNodeCells[j] && !!allNodeCells[j].style && !!allNodeCells[j].style.search("umk_input") >= 0)
-              if ((modelTargets.indexOf(allNodeCells[j].parent) < 0) && (inModel !== allNodeCells[j].parent)) {
+            if (
+              !!allNodeCells[j] &&
+              !!allNodeCells[j].style &&
+              !!allNodeCells[j].style.search("umk_input") >= 0
+            )
+              if (
+                modelTargets.indexOf(allNodeCells[j].parent) < 0 &&
+                inModel !== allNodeCells[j].parent
+              ) {
                 modelTargets.push(allNodeCells[j].parent);
               }
-            try {} catch (e) {}
+            try {
+            } catch (e) {}
           }
         }
       }
@@ -1138,7 +1223,9 @@ const simVue = new Vue({
       //let parent = mainSystem.graph.getDefaultParent();
       let allTheBlocks = [];
       if (mainSystem.graph.getDefaultParent().children) {
-        allTheBlocks = allTheBlocks.concat(mainSystem.graph.getDefaultParent().children);
+        allTheBlocks = allTheBlocks.concat(
+          mainSystem.graph.getDefaultParent().children,
+        );
       }
       for (let i = 0; i < allTheBlocks.length; i++) {
         if (allTheBlocks[i].children) {
@@ -1161,7 +1248,9 @@ const simVue = new Vue({
       //let parent = mainSystem.graph.getDefaultParent();
       let allTheBlocks = [];
       if (mainSystem.graph.getDefaultParent().children) {
-        allTheBlocks = allTheBlocks.concat(mainSystem.graph.getDefaultParent().children);
+        allTheBlocks = allTheBlocks.concat(
+          mainSystem.graph.getDefaultParent().children,
+        );
       }
       for (let i = 0; i < allTheBlocks.length; i++) {
         if (allTheBlocks[i].children) {
@@ -1171,11 +1260,13 @@ const simVue = new Vue({
 
       let allConnectedBlocks = [];
       for (let i = 0; i < allTheBlocks.length; i++) {
-        if (allTheBlocks[i].isVertex() &&
+        if (
+          allTheBlocks[i].isVertex() &&
           !!allTheBlocks[i].style &&
-          ((allTheBlocks[i].style.search("umk_input") >= 0) || (allTheBlocks[i].style.search("umk_output") >= 0)) &&
-          (!!allTheBlocks[i].edges) &&
-          (allTheBlocks[i].edges.length > 0)
+          (allTheBlocks[i].style.search("umk_input") >= 0 ||
+            allTheBlocks[i].style.search("umk_output") >= 0) &&
+          !!allTheBlocks[i].edges &&
+          allTheBlocks[i].edges.length > 0
         ) {
           if (allConnectedBlocks.indexOf(allTheBlocks[i].parent) < 0) {
             allConnectedBlocks.push(allTheBlocks[i].parent);
@@ -1189,7 +1280,7 @@ const simVue = new Vue({
         let isFullyConnected = true;
         for (let j = 0; j < allConnectedBlocks[i].children.length; j++) {
           if (
-            (allConnectedBlocks[i].children[j].style.search("umk_input") >= 0) &&
+            allConnectedBlocks[i].children[j].style.search("umk_input") >= 0 &&
             (!allConnectedBlocks[i].children[j].edges ||
               allConnectedBlocks[i].children[j].edges.length < 1)
           ) {
@@ -1206,7 +1297,7 @@ const simVue = new Vue({
       return {
         ac: allConnectedBlocks,
         fc: allFullyConnectedBlocks,
-        pc: allPartiallyConnectedBlocks
+        pc: allPartiallyConnectedBlocks,
       };
     },
 
@@ -1221,14 +1312,12 @@ const simVue = new Vue({
       }
     },
 
-    getTagLabelsInfo: function () {
-
-    },
+    getTagLabelsInfo: function () {},
 
     arrayRemove: function (arr, value) {
       return arr.filter(function (ele) {
         return ele != value;
       });
     },
-  }
+  },
 });
