@@ -5,6 +5,7 @@ class GskSerialPort {
     this.cellsWithHardware = [];
     this.pinDetails = [];
     this.lastPWMChannel = 0; // To keep track of the last assigned PWM channel
+    this.missedReads = 0; // Counter for missed reads to help with debugging and error handling
   }
 
   setValuesFromACell(inCell, value) {
@@ -53,8 +54,10 @@ class GskSerialPort {
       // 2. Race the reader against the timeout
       const result = await Promise.race([reader.read(), timeoutPromise]);
 
+      //console.log("Read result:", result);
       // 3. Check if we got a result object or the null from timeout
-      if (result && !result.done) {
+      if (result && result.value.length > 0) {
+        //console.log("Received data:", result.value.toHex());
         return result.value;
       }
 
@@ -63,6 +66,7 @@ class GskSerialPort {
       return null; // Returns null if an actual read error occurs
     } finally {
       clearTimeout(timeoutId);
+      //return null;
     }
   }
 
@@ -77,7 +81,10 @@ class GskSerialPort {
         //console.log("Binary to send for port " + pinDetailsPerPort.port + ": ", binToSend.toHex());
         await pinDetailsPerPort.writer.write(binToSend);
         const value = await this.readWithTimeout(pinDetailsPerPort.reader, 100); // Attempt to read with a timeout to avoid hanging
-        //console.log("Received value from port " + pinDetailsPerPort.port + ": ", value.toHex());
+        //console.log(
+        //  "Received value from port " + pinDetailsPerPort.port + ": ",
+        //  value,
+        //);
         const decodedValue = cbor.decode(value); // error may occur here if value is null or not properly formatted, which is why we have the try-catch
         // Assuming the decoded value is an array of values corresponding to the config order
         if (decodedValue) {
@@ -87,8 +94,12 @@ class GskSerialPort {
           });
         }
       } catch (error) {
+        this.missedReads++;
         await this.initHardwareForSimulation(); // Re-initialize hardware to recover from error state
-        //console.log(`Error applying read/write for cell with port ${pinDetailsPerPort.port}:`, error);
+        //console.log(
+        //  `Error applying read/write for cell with port ${pinDetailsPerPort.port}:`,
+        //  error,
+        //);
       }
     }
   }
@@ -213,7 +224,10 @@ class GskSerialPort {
       });
       //console.log("Configuration to send for port " + portDetail.port + ": ", config);
       const binToSend = cbor.encode(config);
-      //console.log("Binary to send for port " + portDetail.port + ": ", binToSend.toHex());
+      //console.log(
+      //  "Binary to send for port " + portDetail.port + ": ",
+      //  binToSend.toHex(),
+      //);
       await portDetail.writer.write(binToSend);
       const readValue = await this.readWithTimeout(portDetail.reader, 1000); // Attempt to read with a timeout to avoid hanging
       //console.log("Received value from port " + portDetail.port + ": ", readValue);
@@ -273,6 +287,7 @@ class GskSerialPort {
     try {
       this.findCellsWithHardware(cells);
       this.preparePinDetails();
+      this.missedReads = 0; // Reset missed reads counter whenever we prepare pin details, as this indicates a new simulation run or hardware configurations
       //console.log("Pin details prepared:", JSON.stringify(this.pinDetails));
     } catch (error) {
       console.warn("Error initializing hardware for updated cells:", error);
@@ -314,6 +329,10 @@ class GskSerialPort {
         console.warn(`Error closing port ${portDetails.port}:`, error);
       }
     }
+  }
+
+  getMissedReads() {
+    return this.missedReads;
   }
 }
 

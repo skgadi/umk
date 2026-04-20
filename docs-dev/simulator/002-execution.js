@@ -112,7 +112,12 @@ const exec = {
             this.cells[model.sIndexes[j].cell].outputs[model.sIndexes[j].index];
         }
         //console.log(model.cid);
-        model.Evaluate(this.t, this.k, this.simSettings);
+        model.Evaluate(
+          this.t,
+          this.k,
+          this.simSettings,
+          gskSerialPort.getMissedReads(),
+        );
         //console.log(this.t);
         if (model.isOut && store) {
           tempOut[model.cid] = [];

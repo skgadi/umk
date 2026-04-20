@@ -28,7 +28,12 @@ class umk_1774706876440 extends umk_model {
       this.Parameters.port.Value[0][0] +
       "<br/> DO: " +
       this.Parameters.pin.Value[0][0] +
-      "</center>"
+      "</center>" +
+      `
+      <div>
+      This block sends a digital output signal to the specified pin of the selected port. The output will be 1 (true) if the input signal is non-zero and 0 (false) if the input signal is zero. You can also specify a custom value to be sent when the simulation ends.
+      </div>
+      `
     );
   }
   constructor(obj) {

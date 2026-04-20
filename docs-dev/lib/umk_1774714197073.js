@@ -80,7 +80,10 @@ class umk_1774714197073 extends umk_model {
       this.Parameters.freq.Value[0][0] +
       "<br/> Resolution: " +
       this.Parameters.res.Value[0][0] +
-      "</center>"
+      "</center>" +
+      `<div>
+      The duty cycle of the PWM signal will be determined by the input value to the block, which should be a real number between 0 and 100.
+      </div>`
     );
   }
   constructor(obj) {
