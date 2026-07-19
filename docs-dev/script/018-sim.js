@@ -404,7 +404,29 @@ const simVue = new Vue({
               this.simWorker = new Worker(
                 "simulator.min.js?date=" + Date.now(),
               );
+              /**
+               * Use this as a template if you want to use SharedArrayBuffer for better performance.
+               */
+
+              /*
+              // 1. Allocate large buffers (adjust sizes based on maximum 1-second footprint)
+              const maxElementsPerSec = 1000;
+              const maxDataUnitsPerSec = 50000; // Total capacity for variable data parts
+  
+              const metaBuffer = new SharedArrayBuffer(maxElementsPerSec * 2 * Int32Array.BYTES_PER_ELEMENT); // [Offset, Length] pairs
+              const dataBuffer = new SharedArrayBuffer(maxDataUnitsPerSec * Float64Array.BYTES_PER_ELEMENT); // Actual data values
+  
+              const metaArray = new Int32Array(metaBuffer);
+              const dataArray = new Float64Array(dataBuffer);
+  
+              // Track how many items are currently ready to read
+              const countBuffer = new SharedArrayBuffer(4);
+              const countArray = new Int32Array(countBuffer);
+  
+              this.simWorker.postMessage({ metaBuffer, dataBuffer, countBuffer });
+              */
             }
+
             this.simWorker.onmessage = function (event) {
               //console.log(event.data);
               if (event.data.put) {
