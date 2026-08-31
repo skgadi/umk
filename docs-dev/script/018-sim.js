@@ -255,7 +255,7 @@ const simVue = new Vue({
                   if (prepCell.isPopup) {
                     popup.sendParams(prepCell);
                   }
-                  console.log(prepCell);
+                  //console.log(prepCell);
                   prepCell.sIndexes = this.cellsWithSInfo[idx].sIndexes; //Prepared cell with updated sources
                   //console.log(prepCell);
                   out = {

@@ -24,6 +24,7 @@ const exec = {
     this.simSettings.h = settings.h;
     this.simSettings.T = settings.T < 0 ? Infinity : settings.T;
     this.simSettings.realtime = settings.realtime;
+    this.simSettings.stackOutput = settings.stackOutput;
     this.simSettings.steps = settings.steps;
     this.simSettings.sOEvery = settings.sOEvery - 1;
     this.simSettings.it = settings.it;
@@ -223,17 +224,30 @@ const exec = {
         N = 1;
         //w = 1;
       } else {
-        if (this.simSettings.realtime) {
-          let maxStepsPerSecond = 1 / this.simSettings.hs;
+        if (this.simSettings.stackOutput) {
+          let maxStepsPerSecond = 300 / this.simSettings.hs;
           N = Math.max(
             0,
             Math.min(this.simSettings.pckSize, maxStepsPerSecond, this.rSteps),
           );
           w = this.simSettings.h;
         } else {
-          N = Math.min(this.simSettings.pckSize, this.rSteps);
-          //console.log(this.simSettings.pckSize);
-          //w = 1000 / N;
+          if (this.simSettings.realtime) {
+            let maxStepsPerSecond = 1 / this.simSettings.hs;
+            N = Math.max(
+              0,
+              Math.min(
+                this.simSettings.pckSize,
+                maxStepsPerSecond,
+                this.rSteps,
+              ),
+            );
+            w = this.simSettings.h;
+          } else {
+            N = Math.min(this.simSettings.pckSize, this.rSteps);
+            //console.log(this.simSettings.pckSize);
+            //w = 1000 / N;
+          }
         }
       }
     } else {
