@@ -298,6 +298,7 @@ class GskSerialPort {
       detail.reader = port.readable.getReader();
       detail.writer = port.writable.getWriter();
       detail.state = "connected";
+      detail.counters.reconnects++;
 
       this._startReaderLoop(detail);
 
@@ -359,7 +360,6 @@ class GskSerialPort {
         detail.counters.malformedFrames++;
         detail.state = "error";
 
-        // Do not guess where the next raw-CBOR object begins.
         this._rejectAllWaiters(detail, error);
         throw error;
       }
@@ -447,9 +447,7 @@ class GskSerialPort {
 
     // A queued unsolicited/late frame makes response ownership ambiguous.
     if (detail.frames.length > 0) {
-      throw new Error(
-        "Unexpected old response; port must be reinitialized: " + detail.port,
-      );
+      detail.frames = [];
     }
 
     // Install the waiter before writing so a fast response is not lost.
@@ -468,8 +466,6 @@ class GskSerialPort {
     try {
       frame = await responsePromise;
     } catch (error) {
-      // With raw CBOR, a late response cannot be matched to its command.
-      // Stop this port instead of silently shifting the simulation data.
       detail.state = "error";
       throw error;
     }
@@ -522,7 +518,6 @@ class GskSerialPort {
   }
 
   async clearBuffers() {
-    // The persistent reader owns all reads. Never drain the reader here.
     this.pinDetails.forEach((detail) => {
       detail.frames = [];
     });
@@ -779,8 +774,9 @@ class GskSerialPort {
     var run = async () => {
       for (var detail of this.pinDetails) {
         try {
+          // If port is not ready or in error state, attempt recovery
           if (detail.state !== "connected" || !detail.writer) {
-            throw new Error("Port is not ready: " + detail.port);
+            await this._recoverPort(detail);
           }
 
           var sendValues = detail.config.map((config) => config.sendValue);
@@ -805,12 +801,10 @@ class GskSerialPort {
         } catch (error) {
           this.missedReads++;
           console.warn("Hardware exchange failed for " + detail.port, error);
+          detail.state = "error";
 
-          // Do not reinitialize all ports inside this loop.
-          // A failed raw-CBOR exchange must be explicitly recovered.
-          if (detail.state === "connected") {
-            detail.state = "error";
-          }
+          // Clean up streams so the next cycle can attempt re-opening cleanly
+          await this._releaseStreams(detail, false).catch(() => {});
         }
       }
     };
@@ -823,6 +817,45 @@ class GskSerialPort {
     );
 
     await current;
+  }
+
+  async _recoverPort(detail) {
+    detail.state = "opening";
+    this._rejectAllWaiters(
+      detail,
+      new Error("Recovering port: " + detail.port),
+    );
+    await this._releaseStreams(detail, false);
+
+    var port = this.getAPort(detail.port);
+    if (!port) {
+      detail.state = "disconnected";
+      throw new Error("Port not ready: " + detail.port);
+    }
+
+    if (!port.readable && !port.writable) {
+      await port.open({
+        baudRate: 115200,
+        dataBits: 8,
+        stopBits: 1,
+        parity: "none",
+      });
+    }
+
+    if (!port.readable || !port.writable) {
+      detail.state = "error";
+      throw new Error("Port streams unavailable: " + detail.port);
+    }
+
+    detail.portObject = port;
+    detail.reader = port.readable.getReader();
+    detail.writer = port.writable.getWriter();
+    detail.rxBuffer = new Uint8Array();
+    detail.frames = [];
+    detail.state = "connected";
+
+    this._startReaderLoop(detail);
+    await this._writeConfigurationForPort(detail);
   }
 
   getMissedReads() {
