@@ -18,17 +18,17 @@ class umk_1774714197073 extends umk_model {
   }
 
   End() {
-    if (this.Parameters.isCustomValueForEnd.Value[0][0]) {
-      let finalValue = 0;
-      try {
+    let finalValue = 0;
+    try {
+      if (this.Parameters.isCustomValueForEnd.Value[0][0]) {
         finalValue = this.getRightValueToOutput(
           this.Parameters.customValueForEnd.Value.get([0, 0]),
         );
-      } catch {
-        finalValue = 0;
-      } finally {
-        this.portDetails.sendValue = finalValue;
       }
+    } catch {
+      finalValue = 0;
+    } finally {
+      this.portDetails.sendValue = finalValue;
     }
   }
 
