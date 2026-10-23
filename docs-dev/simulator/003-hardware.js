@@ -1,138 +1,110 @@
 /*
  * Uyamak serial hardware access.
- * Plain JavaScript; no TypeScript syntax or imports required.
  *
- * Protocol assumptions:
- *   - One command produces one CBOR response.
- *   - CBOR objects use definite lengths.
- *   - Commands are not pipelined.
+ * - Preserves existing CBOR payloads and pin configuration.
+ * - Flushes ESP32 startup/boot messages before configuration.
+ * - Uses one continuous reader per port.
+ * - Automatically retries connection recovery.
+ * - Resends configuration after reconnection.
+ * - Never blindly replays a failed runtime command.
  *
- * Keep these helper names prefixed with GskSerial to avoid collisions
- * with the other JavaScript files in the worker bundle.
+ * Requires global `cbor` and `math` libraries.
  */
 
 function GskSerialGetCborLength(data, offset, depth) {
   offset = offset || 0;
   depth = depth || 0;
 
-  if (depth > 64) {
-    throw new Error("CBOR nesting depth exceeded");
-  }
-
-  if (offset >= data.length) {
-    return null;
-  }
+  if (depth > 32) throw new Error("CBOR nesting limit exceeded");
+  if (offset >= data.length) return null;
 
   var initial = data[offset];
   var major = initial >> 5;
   var ai = initial & 31;
-  var headerLength;
-  var argument;
 
-  // Indefinite-length CBOR needs a different parser.
   if (ai === 31) {
-    throw new Error("Indefinite-length CBOR is unsupported");
+    throw new Error("Indefinite-length CBOR unsupported");
   }
 
-  if (ai < 24) {
-    headerLength = 1;
-    argument = ai;
-  } else if (ai === 24) {
-    headerLength = 2;
-    if (offset + headerLength > data.length) return null;
-    argument = data[offset + 1];
-  } else if (ai === 25) {
-    headerLength = 3;
-    if (offset + headerLength > data.length) return null;
+  var header;
+  if (ai < 24) header = 1;
+  else if (ai === 24) header = 2;
+  else if (ai === 25) header = 3;
+  else if (ai === 26) header = 5;
+  else if (ai === 27) header = 9;
+  else throw new Error("Invalid CBOR header");
 
-    // Major type 7 uses these bytes as float data, not a length.
-    argument = data[offset + 1] * 256 + data[offset + 2];
-  } else if (ai === 26) {
-    headerLength = 5;
-    if (offset + headerLength > data.length) return null;
+  if (offset + header > data.length) return null;
 
-    argument = 0;
-    for (var i = 1; i <= 4; i++) {
-      argument = argument * 256 + data[offset + i];
-    }
-  } else if (ai === 27) {
-    headerLength = 9;
-    if (offset + headerLength > data.length) return null;
-
-    argument = 0;
-
-    // Float64 is fixed-size data, not an integer length.
-    if (major !== 7) {
-      for (var j = 1; j <= 8; j++) {
-        argument = argument * 256 + data[offset + j];
-      }
-
-      if (!Number.isSafeInteger(argument)) {
-        throw new Error("CBOR length exceeds JavaScript safe integer range");
-      }
-    }
-  } else {
-    throw new Error("Invalid CBOR additional information");
-  }
-
-  // Integers, booleans, null, simple values and floating-point values.
   if (major === 0 || major === 1 || major === 7) {
-    return headerLength;
+    return header;
   }
 
-  // Byte strings and text strings.
+  var arg = ai < 24 ? ai : 0;
+
+  if (ai >= 24) {
+    for (var i = 1; i < header; i++) {
+      arg = arg * 256 + data[offset + i];
+    }
+
+    if (!Number.isSafeInteger(arg)) {
+      throw new Error("CBOR length exceeds safe integer range");
+    }
+  }
+
   if (major === 2 || major === 3) {
-    var stringLength = headerLength + argument;
-
-    if (!Number.isSafeInteger(stringLength)) {
-      throw new Error("CBOR string length is invalid");
+    if (arg > 131072) {
+      throw new Error("CBOR string exceeds size limit");
     }
 
-    return offset + stringLength <= data.length ? stringLength : null;
+    var total = header + arg;
+    return offset + total <= data.length ? total : null;
   }
 
-  // Tagged value: tag header followed by one CBOR object.
   if (major === 6) {
-    var taggedLength = GskSerialGetCborLength(
-      data,
-      offset + headerLength,
-      depth + 1,
-    );
-
-    return taggedLength === null ? null : headerLength + taggedLength;
+    var tagged = GskSerialGetCborLength(data, offset + header, depth + 1);
+    return tagged === null ? null : header + tagged;
   }
 
-  // Arrays and maps.
-  if (major === 4 || major === 5) {
-    var count = major === 5 ? argument * 2 : argument;
-
-    if (!Number.isSafeInteger(count) || count > 1000000) {
-      throw new Error("CBOR collection length is invalid");
-    }
-
-    var cursor = offset + headerLength;
-
-    for (var k = 0; k < count; k++) {
-      var itemLength = GskSerialGetCborLength(data, cursor, depth + 1);
-
-      if (itemLength === null) {
-        return null;
-      }
-
-      cursor += itemLength;
-    }
-
-    return cursor - offset;
+  if (major !== 4 && major !== 5) {
+    throw new Error("Unsupported CBOR major type");
   }
 
-  throw new Error("Unsupported CBOR major type");
+  var count = major === 5 ? arg * 2 : arg;
+
+  if (!Number.isSafeInteger(count) || count > 100000) {
+    throw new Error("CBOR collection exceeds limit");
+  }
+
+  var cursor = offset + header;
+
+  for (var k = 0; k < count; k++) {
+    var len = GskSerialGetCborLength(data, cursor, depth + 1);
+    if (len === null) return null;
+
+    cursor += len;
+
+    if (cursor - offset > 131072) {
+      throw new Error("CBOR frame exceeds size limit");
+    }
+  }
+
+  return cursor - offset;
 }
 
-function GskSerialConcatBytes(first, second) {
-  var result = new Uint8Array(first.length + second.length);
-  result.set(first);
-  result.set(second, first.length);
+function GskSerialConcatBytes(a, b) {
+  var result = new Uint8Array(a.length + b.length);
+  result.set(a);
+  result.set(b, a.length);
   return result;
+}
+
+function GskSerialHex(data, limit) {
+  return Array.from(data.slice(0, limit || 24))
+    .map(function (b) {
+      return b.toString(16).padStart(2, "0");
+    })
+    .join(" ");
 }
 
 class GskSerialPort {
@@ -144,349 +116,157 @@ class GskSerialPort {
     this.lastPWMChannel = 0;
     this.missedReads = 0;
 
-    // All exchanges are serialized across simulation calls.
     this._exchangeTail = Promise.resolve();
-
     this._responseTimeoutMs = 250;
-    this._maxReceiveBufferBytes = 1024 * 1024;
-    this._maxQueuedFrames = 32;
+    this._configurationTimeoutMs = 1000;
+    this._maxReceiveBytes = 256 * 1024;
     this._listenersInstalled = false;
+    this._shuttingDown = false;
+
+    this._startupQuietMs = 300;
+    this._startupMaxWaitMs = 2500;
+    this._reconnectInitialDelayMs = 500;
+    this._reconnectMaxDelayMs = 5000;
   }
 
-  setValuesFromACell(inCell, value) {
-    if (inCell.portDetails) {
-      inCell.portDetails.sendValue = value;
+  setValuesFromACell(cell, value) {
+    if (cell && cell.portDetails) {
+      cell.portDetails.sendValue = value;
     }
   }
 
-  getValuesForACell(inCell) {
-    return inCell.portDetails ? inCell.portDetails.recValue : undefined;
+  getValuesForACell(cell) {
+    return cell && cell.portDetails ? cell.portDetails.recValue : undefined;
   }
 
   setFriendlyNames(ports) {
-    this.friendlyNames = ports;
+    this.friendlyNames = ports || [];
   }
 
   async setConnectedPorts() {
+    if (!navigator.serial) {
+      throw new Error("Web Serial API unavailable");
+    }
+
     this.connectedPorts = await navigator.serial.getPorts();
     this._installConnectionListeners();
   }
 
-  getAPort(friendlyName) {
-    var index = this.friendlyNames.indexOf(friendlyName);
-
-    if (index < 0) {
-      return null;
-    }
-
-    return this.connectedPorts[index] || null;
+  getAPort(name) {
+    var index = this.friendlyNames.indexOf(name);
+    return index < 0 ? null : this.connectedPorts[index] || null;
   }
 
-  async openAPort(
-    friendlyName,
-    options = {
-      baudRate: 115200,
-      dataBits: 8,
-      stopBits: 1,
-      parity: "none",
-    },
-  ) {
-    var port = this.getAPort(friendlyName);
+  async openAPort(name, options) {
+    var port = this.getAPort(name);
 
-    if (!port) {
-      throw new Error("Port not found: " + friendlyName);
-    }
+    if (!port) throw new Error("Port not found: " + name);
 
-    if (port.readable && port.writable) {
-      return;
-    }
+    if (port.readable && port.writable) return;
 
     if (port.readable || port.writable) {
-      throw new Error("Port is partially open: " + friendlyName);
+      throw new Error("Port partially open: " + name);
     }
 
-    await port.open(options);
+    await port.open(
+      options || {
+        baudRate: 115200,
+        dataBits: 8,
+        stopBits: 1,
+        parity: "none",
+      },
+    );
   }
 
   _installConnectionListeners() {
-    if (this._listenersInstalled) {
-      return;
-    }
+    if (this._listenersInstalled || !navigator.serial) return;
 
     this._listenersInstalled = true;
 
-    navigator.serial.addEventListener("disconnect", (event) => {
-      var port = event.target;
-
-      this.pinDetails.forEach((detail) => {
-        if (detail.portObject === port) {
-          void this._handleDisconnect(detail);
-        }
-      });
-    });
-
-    navigator.serial.addEventListener("connect", (event) => {
-      void this._handleConnect(event.target);
-    });
-  }
-
-  async _handleDisconnect(detail) {
-    if (detail.state === "disconnected") {
-      return;
-    }
-
-    detail.state = "disconnected";
-    detail.generation++;
-    detail.counters.disconnects++;
-
-    this._rejectAllWaiters(
-      detail,
-      new Error("Serial port disconnected: " + detail.port),
+    navigator.serial.addEventListener(
+      "disconnect",
+      function (event) {
+        this.pinDetails.forEach(
+          function (detail) {
+            if (detail.portObject === event.target) {
+              this._stopPort(
+                detail,
+                new Error("Serial disconnected: " + detail.port),
+                true,
+              );
+            }
+          }.bind(this),
+        );
+      }.bind(this),
     );
 
-    detail.rxBuffer = new Uint8Array();
-    detail.frames = [];
-
-    await this._releaseStreams(detail, false);
-  }
-
-  async _handleConnect(port) {
-    await this.setConnectedPorts();
-
-    var detail = this.pinDetails.find((item) => {
-      return item.portObject === port || this.getAPort(item.port) === port;
-    });
-
-    if (!detail || detail._recoveryPromise) {
-      return;
-    }
-
-    detail._recoveryPromise = this._reconnectDetail(detail, port).finally(
-      () => {
-        detail._recoveryPromise = null;
-      },
+    navigator.serial.addEventListener(
+      "connect",
+      function (event) {
+        this.pinDetails.forEach(
+          function (detail) {
+            if (
+              detail.portObject === event.target &&
+              detail.state === "error" &&
+              !this._shuttingDown
+            ) {
+              this._scheduleReconnect(detail);
+            }
+          }.bind(this),
+        );
+      }.bind(this),
     );
-
-    await detail._recoveryPromise;
   }
 
-  async _reconnectDetail(detail, port) {
-    if (detail.state === "connected") {
+  _stopPort(detail, error, reconnect) {
+    if (this._shuttingDown || detail.state === "closed") {
+      detail.state = "closed";
       return;
     }
 
-    detail.state = "opening";
-    detail.generation++;
-    detail.rxBuffer = new Uint8Array();
-    detail.frames = [];
+    var wasConnected = detail.state === "connected";
 
-    try {
-      if (!port.readable && !port.writable) {
-        await port.open({
-          baudRate: 115200,
-          dataBits: 8,
-          stopBits: 1,
-          parity: "none",
-        });
-      }
+    detail.state = "error";
+    detail.readyForRuntime = false;
+    detail.lastError = String(error && (error.message || error));
 
-      if (!port.readable || !port.writable) {
-        throw new Error("Serial streams are unavailable");
-      }
+    if (wasConnected) detail.generation++;
 
-      detail.portObject = port;
-      detail.reader = port.readable.getReader();
-      detail.writer = port.writable.getWriter();
-      detail.state = "connected";
-      detail.counters.reconnects++;
-
-      this._startReaderLoop(detail);
-
-      // Restore configuration before resuming simulation exchanges.
-      await this._writeConfigurationForPort(detail);
-    } catch (error) {
-      detail.state = "error";
-      console.warn("Serial reconnect failed:", detail.port, error);
-      await this._releaseStreams(detail, true);
-    }
-  }
-
-  _startReaderLoop(detail) {
-    var reader = detail.reader;
-    var generation = detail.generation;
-
-    detail.readerTask = (async () => {
-      try {
-        while (detail.reader === reader && detail.generation === generation) {
-          var result = await reader.read();
-
-          if (result.done) {
-            break;
-          }
-
-          if (!result.value || result.value.length === 0) {
-            continue;
-          }
-
-          detail.counters.bytesReceived += result.value.length;
-          detail.rxBuffer = GskSerialConcatBytes(detail.rxBuffer, result.value);
-
-          if (detail.rxBuffer.length > this._maxReceiveBufferBytes) {
-            throw new Error("Serial receive buffer limit exceeded");
-          }
-
-          this._extractFrames(detail);
-        }
-      } catch (error) {
-        if (detail.generation === generation && detail.state === "connected") {
-          console.warn("Serial reader failed:", detail.port, error);
-          void this._handleDisconnect(detail);
-        }
-      } finally {
-        if (detail.generation === generation && detail.state === "connected") {
-          void this._handleDisconnect(detail);
-        }
-      }
-    })();
-  }
-
-  _extractFrames(detail) {
-    while (detail.rxBuffer.length > 0) {
-      var frameLength;
-
-      try {
-        frameLength = GskSerialGetCborLength(detail.rxBuffer);
-      } catch (error) {
-        detail.counters.malformedFrames++;
-        detail.state = "error";
-
-        this._rejectAllWaiters(detail, error);
-        throw error;
-      }
-
-      if (frameLength === null) {
-        return;
-      }
-
-      var frame = detail.rxBuffer.slice(0, frameLength);
-      detail.rxBuffer = detail.rxBuffer.slice(frameLength);
-      detail.counters.framesReceived++;
-
-      this._deliverFrame(detail, frame);
-    }
-  }
-
-  _deliverFrame(detail, frame) {
-    var waiter = detail.waiters.shift();
-
-    if (waiter) {
-      clearTimeout(waiter.timeoutId);
-      waiter.resolve(frame);
-      return;
-    }
-
-    if (detail.frames.length >= this._maxQueuedFrames) {
-      detail.counters.malformedFrames++;
-      detail.state = "error";
-
-      this._rejectAllWaiters(
-        detail,
-        new Error("Unexpected serial frame queue overflow"),
-      );
-
-      return;
-    }
-
-    detail.frames.push(frame);
-  }
-
-  _nextFrame(detail, timeoutMs) {
-    if (detail.frames.length > 0) {
-      return Promise.resolve(detail.frames.shift());
-    }
-
-    if (detail.state !== "connected") {
-      return Promise.reject(new Error("Port is not connected: " + detail.port));
-    }
-
-    return new Promise((resolve, reject) => {
-      var waiter = {
-        resolve,
-        reject,
-        timeoutId: null,
-      };
-
-      waiter.timeoutId = setTimeout(() => {
-        var index = detail.waiters.indexOf(waiter);
-
-        if (index >= 0) {
-          detail.waiters.splice(index, 1);
-        }
-
-        detail.counters.timeouts++;
-        this.missedReads++;
-
-        reject(new Error("Serial response timeout: " + detail.port));
-      }, timeoutMs);
-
-      detail.waiters.push(waiter);
-    });
-  }
-
-  _rejectAllWaiters(detail, error) {
-    detail.waiters.splice(0).forEach((waiter) => {
+    detail.waiters.splice(0).forEach(function (waiter) {
       clearTimeout(waiter.timeoutId);
       waiter.reject(error);
     });
-  }
 
-  async _exchange(detail, payload, timeoutMs) {
-    if (detail.state !== "connected" || !detail.writer) {
-      throw new Error("Port unavailable: " + detail.port);
-    }
-
-    // A queued unsolicited/late frame makes response ownership ambiguous.
-    if (detail.frames.length > 0) {
-      detail.frames = [];
-    }
-
-    // Install the waiter before writing so a fast response is not lost.
-    var responsePromise = this._nextFrame(detail, timeoutMs);
-
-    try {
-      await detail.writer.write(payload);
-    } catch (error) {
-      this._rejectAllWaiters(detail, error);
-      await responsePromise.catch(() => undefined);
-      throw error;
-    }
-
-    var frame;
-
-    try {
-      frame = await responsePromise;
-    } catch (error) {
-      detail.state = "error";
-      throw error;
-    }
-
-    try {
-      return cbor.decode(frame);
-    } catch (error) {
-      detail.counters.decodeErrors++;
-      detail.state = "error";
-      throw new Error("Invalid CBOR response: " + detail.port);
+    if (reconnect !== false) {
+      this._scheduleReconnect(detail);
     }
   }
 
-  async _releaseStreams(detail, closePort) {
+  _scheduleReconnect(detail) {
+    if (this._shuttingDown || detail.reconnectTask) return;
+
+    detail.reconnectTask = this._reconnectPort(detail)
+      .catch(function (error) {
+        detail.lastError = String(error && (error.message || error));
+        console.warn("[Uyamak] Reconnection loop ended:", detail.port, error);
+      })
+      .finally(function () {
+        detail.reconnectTask = null;
+      });
+  }
+
+  async _delay(ms) {
+    await new Promise(function (resolve) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  async _releaseDetailStreams(detail) {
     var reader = detail.reader;
     var writer = detail.writer;
-    var port = detail.portObject;
 
     detail.reader = null;
     detail.writer = null;
-    detail.generation++;
 
     if (reader) {
       try {
@@ -500,40 +280,347 @@ class GskSerialPort {
 
     if (writer) {
       try {
-        await writer.abort();
-      } catch (error) {}
-
-      try {
         writer.releaseLock();
-      } catch (error) {}
-    }
-
-    if (closePort && port) {
-      try {
-        if (port.readable || port.writable) {
-          await port.close();
-        }
       } catch (error) {}
     }
   }
 
-  async clearBuffers() {
-    this.pinDetails.forEach((detail) => {
-      detail.frames = [];
+  async _reconnectPort(detail) {
+    var delay = this._reconnectInitialDelayMs;
+
+    while (!this._shuttingDown) {
+      try {
+        await this._delay(delay);
+        if (this._shuttingDown) return;
+
+        // Refresh the authorized device list on every attempt.
+        this.connectedPorts = await navigator.serial.getPorts();
+
+        var port = detail.portObject;
+
+        if (!port || !this.connectedPorts.includes(port)) {
+          var index = this.friendlyNames.indexOf(detail.port);
+          port = index >= 0 ? this.connectedPorts[index] : null;
+        }
+
+        if (!port || !this.connectedPorts.includes(port)) {
+          throw new Error(
+            "Authorized serial port unavailable; reconnect the device",
+          );
+        }
+
+        await this._releaseDetailStreams(detail);
+
+        if (!port.readable && !port.writable) {
+          await port.open({
+            baudRate: 115200,
+            dataBits: 8,
+            stopBits: 1,
+            parity: "none",
+          });
+        }
+
+        if (!port.readable || !port.writable) {
+          throw new Error("Serial streams unavailable after reopening");
+        }
+
+        detail.portObject = port;
+        detail.reader = port.readable.getReader();
+        detail.writer = port.writable.getWriter();
+
+        detail.generation++;
+        detail.state = "connected";
+        detail.readyForRuntime = false;
+        detail.rxBuffer = new Uint8Array(0);
+        detail.waiters = [];
+        detail.flushing = true;
+        detail.flushLastByteAt = Date.now();
+
+        this._startReader(detail);
+        await this._flushStartupData(detail);
+
+        if (this._shuttingDown || detail.state !== "connected") {
+          throw new Error("Port became unavailable during startup flush");
+        }
+
+        // The port is not exposed to runtime ticks until configuration
+        // has been sent and acknowledged.
+        await this._writeConfigurationForPort(detail);
+
+        if (this._shuttingDown || detail.state !== "connected") {
+          throw new Error("Port became unavailable while restoring config");
+        }
+
+        detail.readyForRuntime = true;
+        detail.reconnectAttempts = 0;
+        detail.counters.reconnectSuccesses++;
+
+        console.info("[Uyamak] Serial port recovered:", detail.port);
+        return;
+      } catch (error) {
+        if (this._shuttingDown) return;
+
+        detail.lastError = String(error && (error.message || error));
+        detail.state = "error";
+        detail.readyForRuntime = false;
+        detail.counters.reconnectAttempts++;
+
+        await this._releaseDetailStreams(detail);
+
+        console.warn(
+          "[Uyamak] Retrying serial connection:",
+          detail.port,
+          detail.lastError,
+        );
+
+        await this._delay(delay);
+        delay = Math.min(delay * 2, this._reconnectMaxDelayMs);
+      }
+    }
+  }
+
+  _resetBuffer(detail) {
+    detail.rxBuffer = new Uint8Array(0);
+  }
+
+  async _flushStartupData(detail) {
+    var start = Date.now();
+
+    while (!this._shuttingDown && detail.state === "connected") {
+      var quietFor = Date.now() - detail.flushLastByteAt;
+      var elapsed = Date.now() - start;
+
+      if (quietFor >= this._startupQuietMs) break;
+      if (elapsed >= this._startupMaxWaitMs) break;
+
+      await this._delay(25);
+    }
+
+    if (detail.state !== "connected") {
+      throw new Error("Port disconnected during startup flush");
+    }
+
+    detail.rxBuffer = new Uint8Array(0);
+    detail.flushing = false;
+  }
+
+  _startReader(detail) {
+    var reader = detail.reader;
+    var generation = detail.generation;
+
+    detail.readerTask = async function () {
+      try {
+        while (detail.reader === reader && detail.generation === generation) {
+          var result = await reader.read();
+
+          if (result.done) break;
+          if (!result.value || !result.value.length) continue;
+
+          detail.counters.bytesReceived += result.value.length;
+
+          if (detail.flushing) {
+            detail.flushLastByteAt = Date.now();
+            continue;
+          }
+
+          if (
+            detail.rxBuffer.length + result.value.length >
+            this._maxReceiveBytes
+          ) {
+            throw new Error("Serial receive buffer limit exceeded");
+          }
+
+          detail.rxBuffer = GskSerialConcatBytes(detail.rxBuffer, result.value);
+
+          this._extractFrames(detail);
+        }
+      } catch (error) {
+        if (detail.generation === generation && !this._shuttingDown) {
+          detail.counters.readerErrors++;
+          detail.lastError = String(error && (error.message || error));
+
+          console.error("[Uyamak] Serial reader stopped:", detail.port, error);
+
+          this._stopPort(detail, error, true);
+        }
+      } finally {
+        if (
+          detail.generation === generation &&
+          detail.state === "connected" &&
+          !this._shuttingDown
+        ) {
+          this._stopPort(
+            detail,
+            new Error("Serial reader ended: " + detail.port),
+            true,
+          );
+        }
+      }
+    }.call(this);
+  }
+
+  _extractFrames(detail) {
+    while (detail.rxBuffer.length > 0) {
+      var length;
+
+      try {
+        length = GskSerialGetCborLength(detail.rxBuffer, 0, 0);
+      } catch (error) {
+        detail.counters.malformedFrames++;
+        detail.lastError = error.message;
+        detail.lastBadHex = GskSerialHex(detail.rxBuffer);
+
+        console.error(
+          "[Uyamak] Invalid bytes on CBOR UART. Reconnecting to " +
+            "resynchronize the stream.",
+          {
+            port: detail.port,
+            error: error.message,
+            bytes: detail.lastBadHex,
+          },
+        );
+
+        throw error;
+      }
+
+      if (length === null) return;
+
+      var frame = detail.rxBuffer.slice(0, length);
+      detail.rxBuffer = detail.rxBuffer.slice(length);
+      detail.counters.framesReceived++;
+
+      var decoded;
+
+      try {
+        decoded = cbor.decode(frame);
+      } catch (error) {
+        detail.counters.decodeErrors++;
+        throw new Error("CBOR decode failed: " + error.message);
+      }
+
+      var waiter = detail.waiters[0];
+
+      if (!waiter) {
+        detail.counters.unsolicitedFrames++;
+        detail.lastUnexpected = decoded;
+        continue;
+      }
+
+      var accepted = false;
+
+      try {
+        accepted = waiter.accept(decoded);
+      } catch (error) {
+        detail.lastError = "Response validator failed: " + error.message;
+      }
+
+      if (!accepted) {
+        detail.counters.unexpectedFrames++;
+        detail.lastUnexpected = decoded;
+        detail.lastUnexpectedHex = GskSerialHex(frame);
+        continue;
+      }
+
+      detail.waiters.shift();
+      clearTimeout(waiter.timeoutId);
+      waiter.resolve(decoded);
+    }
+  }
+
+  _nextResponse(detail, timeoutMs, accept, label) {
+    if (detail.state !== "connected") {
+      return Promise.reject(new Error("Port not ready: " + detail.port));
+    }
+
+    return new Promise(function (resolve, reject) {
+      var waiter = {
+        resolve: resolve,
+        reject: reject,
+        accept: accept,
+        timeoutId: null,
+      };
+
+      waiter.timeoutId = setTimeout(function () {
+        var index = detail.waiters.indexOf(waiter);
+        if (index >= 0) detail.waiters.splice(index, 1);
+
+        detail.counters.timeouts++;
+
+        reject(
+          new Error(
+            "Timeout waiting for " +
+              label +
+              " on " +
+              detail.port +
+              "; last unexpected value=" +
+              JSON.stringify(detail.lastUnexpected) +
+              "; bytes=" +
+              (detail.lastUnexpectedHex || detail.lastBadHex || "none"),
+          ),
+        );
+      }, timeoutMs);
+
+      detail.waiters.push(waiter);
     });
+  }
+
+  async _exchange(detail, payload, timeoutMs, accept, label) {
+    var run = async function () {
+      if (detail.state !== "connected" || !detail.writer) {
+        throw new Error("Port unavailable: " + detail.port);
+      }
+
+      var responsePromise = this._nextResponse(
+        detail,
+        timeoutMs,
+        accept,
+        label,
+      );
+
+      try {
+        await detail.writer.write(payload);
+      } catch (error) {
+        responsePromise.catch(function () {});
+        this._stopPort(detail, error, true);
+        throw error;
+      }
+
+      try {
+        return await responsePromise;
+      } catch (error) {
+        // A timeout can leave the byte stream out of sync. Recover by
+        // flushing/reopening instead of blindly retrying the same command.
+        if (detail.state === "connected") {
+          this._stopPort(detail, error, true);
+        }
+        throw error;
+      }
+    }.bind(this);
+
+    var current = detail.exchangeTail.then(run, run);
+
+    detail.exchangeTail = current.then(
+      function () {},
+      function () {},
+    );
+
+    return current;
   }
 
   async prepareReadersAndWriters() {
     for (var detail of this.pinDetails) {
-      if (detail.state === "connected" && detail.reader && detail.writer) {
-        continue;
-      }
-
       var port = this.getAPort(detail.port);
 
       if (!port) {
-        detail.state = "disconnected";
+        throw new Error("Port not found: " + detail.port);
+      }
+
+      if (detail.reader && detail.writer && detail.state === "connected") {
         continue;
+      }
+
+      if (detail.reader || detail.writer) {
+        await this._releaseDetailStreams(detail);
       }
 
       if (!port.readable && !port.writable) {
@@ -546,43 +633,77 @@ class GskSerialPort {
       }
 
       if (!port.readable || !port.writable) {
-        throw new Error("Cannot acquire serial streams: " + detail.port);
+        throw new Error("Port streams unavailable: " + detail.port);
       }
 
       detail.portObject = port;
       detail.reader = port.readable.getReader();
       detail.writer = port.writable.getWriter();
-      detail.rxBuffer = new Uint8Array();
-      detail.frames = [];
       detail.state = "connected";
+      detail.readyForRuntime = false;
+      detail.generation++;
+      detail.flushing = true;
+      detail.flushLastByteAt = Date.now();
 
-      this._startReaderLoop(detail);
+      this._resetBuffer(detail);
+      this._startReader(detail);
+      await this._flushStartupData(detail);
     }
   }
 
+  async openRequiredPorts() {
+    await this.setConnectedPorts();
+
+    for (var detail of this.pinDetails) {
+      await this.openAPort(detail.port);
+      detail.portObject = this.getAPort(detail.port);
+    }
+  }
+
+  async clearBuffers() {
+    // The continuous reader performs the flush. Never create a second
+    // reader and never send dummy bytes to clear the stream.
+    this.pinDetails.forEach(function (detail) {
+      detail.lastUnexpected = undefined;
+      detail.lastUnexpectedHex = undefined;
+    });
+  }
+
   async _writeConfigurationForPort(detail) {
-    var config = detail.config.map((cfg) => {
+    var config = detail.config.map(function (item) {
       var copy = {};
-      Object.keys(cfg).forEach((key) => {
+
+      Object.keys(item).forEach(function (key) {
         if (key !== "sendValue" && key !== "recValue") {
-          copy[key] = cfg[key];
+          copy[key] = item[key];
         }
       });
+
       return copy;
     });
 
-    await this._exchange(detail, cbor.encode(config), 1000);
+    await this._exchange(
+      detail,
+      cbor.encode(config),
+      this._configurationTimeoutMs,
+      function () {
+        return true;
+      },
+      "configuration response",
+    );
   }
 
   async writeAllConfiguration() {
     for (var detail of this.pinDetails) {
       await this._writeConfigurationForPort(detail);
+      detail.readyForRuntime = true;
     }
   }
 
   async initHardwareForSimulation() {
+    this._shuttingDown = false;
+
     try {
-      await this.setConnectedPorts();
       await this.openRequiredPorts();
       await this.prepareReadersAndWriters();
       await this.clearBuffers();
@@ -593,64 +714,17 @@ class GskSerialPort {
       return {
         isError: true,
         message: error,
-        cid:
-          this.cellsWithHardware.length > 0
-            ? this.cellsWithHardware[0].cid
-            : null,
+        cid: this.cellsWithHardware.length
+          ? this.cellsWithHardware[0].cid
+          : null,
       };
     }
   }
 
-  async openRequiredPorts() {
-    await this.setConnectedPorts();
-
-    for (var detail of this.pinDetails) {
-      var port = this.getAPort(detail.port);
-
-      if (!port) {
-        detail.state = "disconnected";
-        continue;
-      }
-
-      detail.portObject = port;
-
-      if (!port.readable && !port.writable) {
-        await port.open({
-          baudRate: 115200,
-          dataBits: 8,
-          stopBits: 1,
-          parity: "none",
-        });
-      }
-    }
-  }
-
-  async closeRequiredPorts() {
-    for (var detail of this.pinDetails) {
-      detail.state = "closed";
-      this._rejectAllWaiters(detail, new Error("Serial port closed"));
-      await this._releaseStreams(detail, true);
-    }
-  }
-
-  async releaseAllWritersNReaders() {
-    for (var detail of this.pinDetails) {
-      await this._releaseStreams(detail, false);
-    }
-  }
-
-  async closeAPort(friendlyName) {
-    var port = this.getAPort(friendlyName);
-
-    if (!port) {
-      throw new Error("Port not found: " + friendlyName);
-    }
-
-    await port.close();
-  }
-
   findCellsWithHardware(cells) {
-    this.cellsWithHardware = cells.filter((cell) => cell.isSerial);
+    this.cellsWithHardware = (cells || []).filter(function (cell) {
+      return cell.isSerial;
+    });
   }
 
   initializeHardwareForUpdatedCells(cells) {
@@ -659,56 +733,70 @@ class GskSerialPort {
     this.pinDetails = [];
     this.lastPWMChannel = 0;
     this.missedReads = 0;
+    this._shuttingDown = false;
 
-    this.cellsWithHardware.forEach((cell) => {
-      var pinConfig = this.getPinConfig(cell);
+    this.cellsWithHardware.forEach(
+      function (cell) {
+        var pinConfig = this.getPinConfig(cell);
+        if (!pinConfig) return;
 
-      if (!pinConfig) {
-        return;
-      }
+        cell.portDetails = pinConfig;
+        var name = cell.Parameters.port.Value[0][0];
 
-      cell.portDetails = pinConfig;
+        var detail = this.pinDetails.find(function (item) {
+          return item.port === name;
+        });
 
-      var portName = cell.Parameters.port.Value[0][0];
-      var detail = this.pinDetails.find((item) => item.port === portName);
+        if (!detail) {
+          detail = {
+            port: name,
+            config: [],
+            state: "closed",
+            readyForRuntime: false,
+            portObject: null,
+            reader: null,
+            writer: null,
+            readerTask: null,
+            generation: 0,
+            rxBuffer: new Uint8Array(0),
+            waiters: [],
+            exchangeTail: Promise.resolve(),
+            flushing: false,
+            flushLastByteAt: 0,
+            reconnectTask: null,
+            reconnectAttempts: 0,
+            lastUnexpected: undefined,
+            lastUnexpectedHex: undefined,
+            lastBadHex: undefined,
+            lastError: null,
+            counters: {
+              bytesReceived: 0,
+              framesReceived: 0,
+              unsolicitedFrames: 0,
+              unexpectedFrames: 0,
+              malformedFrames: 0,
+              timeouts: 0,
+              decodeErrors: 0,
+              readerErrors: 0,
+              responseShapeErrors: 0,
+              reconnectAttempts: 0,
+              reconnectSuccesses: 0,
+            },
+          };
 
-      if (!detail) {
-        detail = {
-          port: portName,
-          config: [],
-          state: "closed",
-          portObject: null,
-          reader: null,
-          writer: null,
-          readerTask: null,
-          generation: 0,
-          rxBuffer: new Uint8Array(),
-          frames: [],
-          waiters: [],
-          _recoveryPromise: null,
-          counters: {
-            bytesReceived: 0,
-            framesReceived: 0,
-            malformedFrames: 0,
-            timeouts: 0,
-            decodeErrors: 0,
-            disconnects: 0,
-            reconnects: 0,
-          },
-        };
+          this.pinDetails.push(detail);
+        }
 
-        this.pinDetails.push(detail);
-      }
-
-      detail.config.push(pinConfig);
-    });
+        detail.config.push(pinConfig);
+      }.bind(this),
+    );
 
     var order = ["DO", "PM", "DI", "AI", "EN"];
 
-    this.pinDetails.forEach((detail) => {
-      detail.config.sort(
-        (a, b) => order.indexOf(a.type) - order.indexOf(b.type),
-      );
+    this.pinDetails.forEach(function (detail) {
+      detail.config.sort(function (a, b) {
+        return order.indexOf(a.type) - order.indexOf(b.type);
+      });
     });
   }
 
@@ -718,13 +806,13 @@ class GskSerialPort {
       var pins;
 
       try {
-        pin = parseInt(cell.Parameters.pin.Value[0][0]);
+        pin = parseInt(cell.Parameters.pin.Value[0][0], 10);
       } catch (error) {}
 
       try {
         pins = [
-          parseInt(cell.Parameters.pin_A.Value[0][0]),
-          parseInt(cell.Parameters.pin_B.Value[0][0]),
+          parseInt(cell.Parameters.pin_A.Value[0][0], 10),
+          parseInt(cell.Parameters.pin_B.Value[0][0], 10),
         ];
       } catch (error) {}
 
@@ -733,12 +821,12 @@ class GskSerialPort {
           return { type: "DI", pin: pin, sendValue: 0 };
 
         case "umk_1774706876440": {
-          var doInit = math.matrix(cell.Parameters.ic.Value).get([0, 0]);
+          var initialDO = math.matrix(cell.Parameters.ic.Value).get([0, 0]);
           return {
             type: "DO",
             pin: pin,
-            initVal: doInit,
-            sendValue: doInit,
+            initVal: initialDO,
+            sendValue: initialDO,
           };
         }
 
@@ -746,15 +834,15 @@ class GskSerialPort {
           return { type: "AI", pin: pin, sendValue: 0 };
 
         case "umk_1774714197073": {
-          var pwmInit = math.matrix(cell.Parameters.ic.Value).get([0, 0]);
+          var initialPWM = math.matrix(cell.Parameters.ic.Value).get([0, 0]);
           return {
             type: "PM",
             pin: pin,
-            initVal: pwmInit,
+            initVal: initialPWM,
             freq: math.matrix(cell.Parameters.freq.Value).get([0, 0]),
             res: math.matrix(cell.Parameters.res.Value).get([0, 0]),
             ch: this.lastPWMChannel++,
-            sendValue: pwmInit,
+            sendValue: initialPWM,
           };
         }
 
@@ -771,91 +859,101 @@ class GskSerialPort {
   }
 
   async applyReadWrite() {
-    var run = async () => {
+    var run = async function () {
       for (var detail of this.pinDetails) {
         try {
-          // If port is not ready or in error state, attempt recovery
-          if (detail.state !== "connected" || !detail.writer) {
-            await this._recoverPort(detail);
+          if (
+            detail.state !== "connected" ||
+            !detail.readyForRuntime ||
+            !detail.writer ||
+            !detail.reader
+          ) {
+            this.missedReads++;
+            continue;
           }
 
-          var sendValues = detail.config.map((config) => config.sendValue);
+          var values = detail.config.map(function (item) {
+            return item.sendValue;
+          });
 
           var response = await this._exchange(
             detail,
-            cbor.encode(sendValues),
+            cbor.encode(values),
             this._responseTimeoutMs,
+            function (decoded) {
+              return (
+                Array.isArray(decoded) &&
+                decoded.length === detail.config.length
+              );
+            },
+            "runtime array response (" + detail.config.length + " values)",
           );
 
-          if (
-            !Array.isArray(response) ||
-            response.length !== detail.config.length
-          ) {
-            detail.state = "error";
-            throw new Error("Unexpected response size from " + detail.port);
-          }
-
-          detail.config.forEach((config, index) => {
+          detail.config.forEach(function (config, index) {
             config.recValue = response[index];
           });
         } catch (error) {
           this.missedReads++;
-          console.warn("Hardware exchange failed for " + detail.port, error);
-          detail.state = "error";
+          detail.counters.responseShapeErrors =
+            (detail.counters.responseShapeErrors || 0) + 1;
 
-          // Clean up streams so the next cycle can attempt re-opening cleanly
-          await this._releaseStreams(detail, false).catch(() => {});
+          console.error("Hardware exchange failed for " + detail.port, error);
+
+          if (detail.state === "connected") {
+            this._stopPort(detail, error, true);
+          }
         }
       }
-    };
+    }.bind(this);
 
     var current = this._exchangeTail.then(run, run);
 
     this._exchangeTail = current.then(
-      () => undefined,
-      () => undefined,
+      function () {},
+      function () {},
     );
 
-    await current;
+    return current;
   }
 
-  async _recoverPort(detail) {
-    detail.state = "opening";
-    this._rejectAllWaiters(
-      detail,
-      new Error("Recovering port: " + detail.port),
-    );
-    await this._releaseStreams(detail, false);
+  async releaseAllWritersNReaders() {
+    this._shuttingDown = true;
 
-    var port = this.getAPort(detail.port);
-    if (!port) {
-      detail.state = "disconnected";
-      throw new Error("Port not ready: " + detail.port);
+    for (var detail of this.pinDetails) {
+      this._stopPort(detail, new Error("Serial streams released"), false);
+
+      detail.generation++;
+      detail.readyForRuntime = false;
+
+      await this._releaseDetailStreams(detail);
+
+      detail.state = "closed";
+      detail.flushing = false;
+      detail.rxBuffer = new Uint8Array(0);
     }
+  }
 
-    if (!port.readable && !port.writable) {
-      await port.open({
-        baudRate: 115200,
-        dataBits: 8,
-        stopBits: 1,
-        parity: "none",
-      });
+  async closeRequiredPorts() {
+    await this.releaseAllWritersNReaders();
+
+    for (var detail of this.pinDetails) {
+      var port = detail.portObject;
+      if (!port) continue;
+
+      try {
+        if (port.readable || port.writable) {
+          await port.close();
+        }
+      } catch (error) {
+        console.warn("Could not close " + detail.port, error);
+      }
     }
+  }
 
-    if (!port.readable || !port.writable) {
-      detail.state = "error";
-      throw new Error("Port streams unavailable: " + detail.port);
-    }
-
-    detail.portObject = port;
-    detail.reader = port.readable.getReader();
-    detail.writer = port.writable.getWriter();
-    detail.rxBuffer = new Uint8Array();
-    detail.frames = [];
-    detail.state = "connected";
-
-    this._startReaderLoop(detail);
-    await this._writeConfigurationForPort(detail);
+  async closeAPort(name) {
+    var port = this.getAPort(name);
+    if (!port) throw new Error("Port not found: " + name);
+    await port.close();
   }
 
   getMissedReads() {
@@ -865,19 +963,21 @@ class GskSerialPort {
   getDiagnostics() {
     return {
       missedReads: this.missedReads,
-      ports: this.pinDetails.map((detail) => ({
-        port: detail.port,
-        state: detail.state,
-        bytesReceived: detail.counters.bytesReceived,
-        framesReceived: detail.counters.framesReceived,
-        malformedFrames: detail.counters.malformedFrames,
-        timeouts: detail.counters.timeouts,
-        decodeErrors: detail.counters.decodeErrors,
-        disconnects: detail.counters.disconnects,
-        reconnects: detail.counters.reconnects,
-        bufferedBytes: detail.rxBuffer.length,
-        queuedFrames: detail.frames.length,
-      })),
+      ports: this.pinDetails.map(function (detail) {
+        return {
+          port: detail.port,
+          state: detail.state,
+          readyForRuntime: !!detail.readyForRuntime,
+          reconnecting: !!detail.reconnectTask,
+          flushing: !!detail.flushing,
+          counters: Object.assign({}, detail.counters),
+          bufferedBytes: detail.rxBuffer.length,
+          lastUnexpected: detail.lastUnexpected,
+          lastUnexpectedHex: detail.lastUnexpectedHex,
+          lastBadHex: detail.lastBadHex,
+          lastError: detail.lastError,
+        };
+      }),
     };
   }
 }
